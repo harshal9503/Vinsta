@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
   Image,
   Dimensions,
+  Platform,
 } from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import CheckBox from '@react-native-community/checkbox';
@@ -25,7 +26,7 @@ const AVATAR_SIZE = 80;
 const WelcomeScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { mobile: mobileFromOtp } = route.params || {};
+  const {mobile: mobileFromOtp} = route.params || {};
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -43,7 +44,6 @@ const WelcomeScreen = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      // Use mobile from OTP screen if available, otherwise use saved phone
       if (mobileFromOtp) {
         setMobile(mobileFromOtp);
       } else {
@@ -125,12 +125,29 @@ const WelcomeScreen = () => {
     navigation.navigate('TermsConditions');
   };
 
+  // Platform-specific CheckBox color config and size adjustment
+  const checkBoxProps =
+    Platform.OS === 'ios'
+      ? {
+          onCheckColor: COLORS.secondary,
+          onFillColor: COLORS.primary,
+          onTintColor: COLORS.primary,
+          tintColor: COLORS.primary,
+          boxType: 'square',
+          lineWidth: 1.5,
+          animationDuration: 0.1,
+          style: {width: 20, height: 20},
+        }
+      : {
+          tintColors: {true: COLORS.primary, false: COLORS.primary},
+          style: {width: 20, height: 20},
+        };
+
   return (
     <ScrollView
       contentContainerStyle={styles.container}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}>
-      
       {/* Title */}
       <View style={{marginTop: 20}} />
       <Text style={styles.title}>Welcome</Text>
@@ -175,7 +192,9 @@ const WelcomeScreen = () => {
       />
 
       {/* Profile Photo */}
-      <Text style={styles.label}>Profile photo <Text style={styles.required}>*</Text></Text>
+      <Text style={styles.label}>
+        Profile photo <Text style={styles.required}>*</Text>
+      </Text>
       <View style={styles.avatarRow}>
         <TouchableOpacity
           style={styles.avatarWrapper}
@@ -189,7 +208,6 @@ const WelcomeScreen = () => {
             <Text style={styles.cameraBadgeText}>📷</Text>
           </View>
         </TouchableOpacity>
-
         <View style={{flex: 1}}>
           <Text style={styles.avatarHelpTitle}>Add a face to your profile</Text>
           <Text style={styles.avatarHelpText}>
@@ -213,9 +231,9 @@ const WelcomeScreen = () => {
         <CheckBox
           value={accepted}
           onValueChange={setAccepted}
-          tintColors={{true: COLORS.primary, false: COLORS.primary}}
+          {...checkBoxProps}
         />
-        <Text style={styles.termsText}>
+        <Text style={styles.termsTextWithSpace}>
           I accept{' '}
           <Text style={styles.link} onPress={handleTermsPress}>
             terms & conditions.
@@ -382,9 +400,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 18,
   },
-  termsText: {
+  termsTextWithSpace: {
     fontSize: 13,
     color: COLORS.text,
+    marginLeft: 8, // extra spacing after checkbox
   },
   link: {
     color: COLORS.primary,
@@ -408,7 +427,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
   },
-
   /** POPUP **/
   popupOverlay: {
     flex: 1,
