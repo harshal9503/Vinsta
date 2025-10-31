@@ -12,6 +12,18 @@ import SignInScreen from '../AuthScreens/SignInScreen';
 import OtpVerificationScreen from '../AuthScreens/OtpVerificationScreen';
 import WelcomeScreen from '../AuthScreens/WelcomeScreen';
 import BottomTabNavigator from './BottomTabNavigator';
+import profileEdit from '../components/Profile/profileEdit';
+import favourite from '../components/Profile/favourite';
+import myOffer from '../components/Profile/myOffer';
+import refer from '../components/Profile/refer';
+import support from '../components/Profile/support';
+import settings from '../components/Profile/settings';
+import help from '../components/Profile/help';
+import address from '../components/Profile/address';
+import myOrder from '../components/Profile/myOrder';
+import subscription from '../components/Profile/subscription';
+import wallet from '../components/Profile/wallet';
+
 
 const Stack = createStackNavigator();
 
@@ -26,6 +38,17 @@ const AppNavigator = () => (
       <Stack.Screen name="SignIn" component={SignInScreen} />
       <Stack.Screen name="OtpVerification" component={OtpVerificationScreen} />
       <Stack.Screen name="Welcome" component={WelcomeScreen} />
+      <Stack.Screen name="ProfileEdit" component={profileEdit} />
+      <Stack.Screen name="Favourite" component={favourite} />
+      <Stack.Screen name="MyOffer" component={myOffer} />
+      <Stack.Screen name="Refer" component={refer} />
+      <Stack.Screen name="Support" component={support} />
+      <Stack.Screen name="Settings" component={settings} />
+      <Stack.Screen name="Help" component={help} />
+      <Stack.Screen name="Address" component={address} />
+      <Stack.Screen name="MyOrder" component={myOrder} />
+      <Stack.Screen name="Subscription" component={subscription} />
+      <Stack.Screen name="Wallet" component={wallet} />
   <Stack.Screen name="Home" component={BottomTabNavigator} />
     </Stack.Navigator>
   </NavigationContainer>
