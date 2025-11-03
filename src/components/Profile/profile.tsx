@@ -23,20 +23,75 @@ const Profile = () => {
   const [popupAction, setPopupAction] = useState<null | (() => void)>(null);
 
   const topOptions = [
-    { id: 1, icon: require('../../assets/address.png'), label: 'Address', route: 'Address' },
-    { id: 2, icon: require('../../assets/myorders.png'), label: 'My Order', route: 'MyOrder' },
-    { id: 3, icon: require('../../assets/subscription.png'), label: 'My Subscription', route: 'Subscription' },
-    { id: 4, icon: require('../../assets/wallet1.png'), label: 'Wallet', route: 'Wallet' },
+    {
+      id: 1,
+      icon: require('../../assets/address.png'),
+      label: 'Address',
+      route: 'Address',
+    },
+    {
+      id: 2,
+      icon: require('../../assets/myorders.png'),
+      label: 'My Order',
+      route: 'MyOrder',
+    },
+    {
+      id: 3,
+      icon: require('../../assets/subscription.png'),
+      label: 'My Subscription',
+      route: 'Subscription',
+    },
+    {
+      id: 4,
+      icon: require('../../assets/wallet1.png'),
+      label: 'Wallet',
+      route: 'Wallet',
+    },
   ];
 
   const bottomOptions = [
-    { id: 1, icon: require('../../assets/profile.png'), label: 'Profile' },
-    { id: 2, icon: require('../../assets/favourite.png'), label: "Favourite's" },
-    { id: 3, icon: require('../../assets/offers.png'), label: "My Offer’s" },
-    { id: 4, icon: require('../../assets/refer.png'), label: 'Refer To Earn' },
-    { id: 5, icon: require('../../assets/dark.png'), label: 'Dark Mode' },
-    { id: 6, icon: require('../../assets/support.png'), label: 'Support' },
-    { id: 7, icon: require('../../assets/settings.png'), label: "Setting’s" },
+    {
+      id: 1,
+      icon: require('../../assets/profile.png'),
+      label: 'Profile',
+      route: null,
+    },
+    {
+      id: 2,
+      icon: require('../../assets/favourite.png'),
+      label: "Favourite's",
+      route: 'Favourite',
+    },
+    {
+      id: 3,
+      icon: require('../../assets/offers.png'),
+      label: "My Offer's",
+      route: 'MyOffer',
+    },
+    {
+      id: 4,
+      icon: require('../../assets/refer.png'),
+      label: 'Refer To Earn',
+      route: null,
+    },
+    {
+      id: 5,
+      icon: require('../../assets/dark.png'),
+      label: 'Dark Mode',
+      route: null,
+    },
+    {
+      id: 6,
+      icon: require('../../assets/support.png'),
+      label: 'Support',
+      route: 'Support',
+    },
+    {
+      id: 7,
+      icon: require('../../assets/settings.png'),
+      label: "Setting's",
+      route: 'Settings',
+    },
   ];
 
   const openPopup = (message: string, onConfirm: () => void) => {
@@ -45,9 +100,21 @@ const Profile = () => {
     setShowPopup(true);
   };
 
+  const handleBottomOptionPress = (item: any) => {
+    if (item.route) {
+      navigation.navigate(item.route);
+    }
+    // You can add additional logic here for items without routes
+    // For example, toggle dark mode, show refer screen, etc.
+  };
+
   return (
     <View style={styles.container}>
-      <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
 
       {/* ===== Background Image under header ===== */}
       <Image source={require('../../assets/bg.png')} style={styles.bgImage} />
@@ -56,7 +123,10 @@ const Profile = () => {
       <View style={styles.fixedHeader}>
         <View style={styles.backRow}>
           <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-            <Image source={require('../../assets/back.png')} style={styles.backIcon} />
+            <Image
+              source={require('../../assets/back.png')}
+              style={styles.backIcon}
+            />
           </TouchableOpacity>
           <Text style={styles.helpText}>Help</Text>
         </View>
@@ -66,30 +136,37 @@ const Profile = () => {
       <ScrollView
         style={{ flex: 1 }}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 60 }}>
-        
+        contentContainerStyle={{ paddingBottom: 60 }}
+      >
         {/* ===== Profile Header ===== */}
         <View style={styles.profileHeader}>
           <View style={styles.userRow}>
-            <Image source={require('../../assets/user.png')} style={styles.userImage} />
+            <Image
+              source={require('../../assets/user.png')}
+              style={styles.userImage}
+            />
             <View style={styles.userInfo}>
               <Text style={styles.userName}>Harshal Sharma</Text>
               <Text style={styles.userEmail}>harshal@gmail.com</Text>
               <Text style={styles.userPhone}>+91 1234567890</Text>
             </View>
             <TouchableOpacity style={styles.editButton}>
-              <Image source={require('../../assets/edit.png')} style={styles.editIcon} />
+              <Image
+                source={require('../../assets/edit.png')}
+                style={styles.editIcon}
+              />
             </TouchableOpacity>
           </View>
         </View>
 
         {/* ===== Top Options ===== */}
         <View style={styles.topOptionsContainer}>
-          {topOptions.map((item) => (
+          {topOptions.map(item => (
             <TouchableOpacity
               key={item.id}
               style={styles.topOption}
-              onPress={() => navigation.navigate(item.route)}>
+              onPress={() => navigation.navigate(item.route)}
+            >
               <Image source={item.icon} style={styles.topIcon} />
               <Text style={styles.topLabel}>{item.label}</Text>
             </TouchableOpacity>
@@ -98,8 +175,12 @@ const Profile = () => {
 
         {/* ===== Bottom Options ===== */}
         <View style={styles.bottomSection}>
-          {bottomOptions.map((item) => (
-            <TouchableOpacity key={item.id} style={styles.optionRow}>
+          {bottomOptions.map(item => (
+            <TouchableOpacity
+              key={item.id}
+              style={styles.optionRow}
+              onPress={() => handleBottomOptionPress(item)}
+            >
               <View style={styles.optionLeft}>
                 <Image source={item.icon} style={styles.optionIcon} />
                 <Text style={styles.optionLabel}>{item.label}</Text>
@@ -116,15 +197,18 @@ const Profile = () => {
             style={styles.optionRow}
             onPress={() =>
               openPopup('Are you sure you want to logout?', () =>
-                navigation.navigate('SignIn')
+                navigation.navigate('SignIn'),
               )
-            }>
+            }
+          >
             <View style={styles.optionLeft}>
               <Image
                 source={require('../../assets/logout.png')}
                 style={styles.optionIcon}
               />
-              <Text style={[styles.optionLabel, { color: '#E53935' }]}>Logout</Text>
+              <Text style={[styles.optionLabel, { color: '#E53935' }]}>
+                Logout
+              </Text>
             </View>
           </TouchableOpacity>
 
@@ -133,9 +217,10 @@ const Profile = () => {
             style={styles.optionRow}
             onPress={() =>
               openPopup('Are you sure you want to delete your account?', () =>
-                navigation.navigate('SignIn')
+                navigation.navigate('SignIn'),
               )
-            }>
+            }
+          >
             <View style={styles.optionLeft}>
               <Image
                 source={require('../../assets/delete.png')}
@@ -154,7 +239,8 @@ const Profile = () => {
         transparent
         visible={showPopup}
         animationType="fade"
-        onRequestClose={() => setShowPopup(false)}>
+        onRequestClose={() => setShowPopup(false)}
+      >
         <View style={styles.popupOverlay}>
           <View style={styles.popupBox}>
             <Text style={styles.popupText}>{popupMessage}</Text>
@@ -163,7 +249,8 @@ const Profile = () => {
               onPress={() => {
                 setShowPopup(false);
                 popupAction && popupAction();
-              }}>
+              }}
+            >
               <Text style={styles.popupButtonText}>OK</Text>
             </TouchableOpacity>
           </View>

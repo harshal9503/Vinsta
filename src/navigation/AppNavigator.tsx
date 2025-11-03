@@ -12,13 +12,18 @@ import SignInScreen from '../AuthScreens/SignInScreen';
 import OtpVerificationScreen from '../AuthScreens/OtpVerificationScreen';
 import WelcomeScreen from '../AuthScreens/WelcomeScreen';
 import BottomTabNavigator from './BottomTabNavigator';
+import Favourite from '../components/Profile/Favourite';
+import settings from '../components/Profile/settings';
+import support from '../components/Profile/support';
 
 const Stack = createStackNavigator();
 
-
 const AppNavigator = () => (
   <NavigationContainer>
-    <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      initialRouteName="Splash"
+      screenOptions={{ headerShown: false }}
+    >
       <Stack.Screen name="Splash" component={SplashScreen} />
       <Stack.Screen name="Onboarding1" component={Onboarding1} />
       <Stack.Screen name="Onboarding2" component={Onboarding2} />
@@ -26,7 +31,10 @@ const AppNavigator = () => (
       <Stack.Screen name="SignIn" component={SignInScreen} />
       <Stack.Screen name="OtpVerification" component={OtpVerificationScreen} />
       <Stack.Screen name="Welcome" component={WelcomeScreen} />
-  <Stack.Screen name="Home" component={BottomTabNavigator} />
+      <Stack.Screen name="Favourite" component={Favourite} />
+      <Stack.Screen name="Settings" component={settings} />
+      <Stack.Screen name="Support" component={support} />
+      <Stack.Screen name="Home" component={BottomTabNavigator} />
     </Stack.Navigator>
   </NavigationContainer>
 );
