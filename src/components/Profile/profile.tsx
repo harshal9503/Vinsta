@@ -50,48 +50,13 @@ const Profile = () => {
   ];
 
   const bottomOptions = [
-    {
-      id: 1,
-      icon: require('../../assets/profile.png'),
-      label: 'Profile',
-      route: null,
-    },
-    {
-      id: 2,
-      icon: require('../../assets/favourite.png'),
-      label: "Favourite's",
-      route: 'Favourite',
-    },
-    {
-      id: 3,
-      icon: require('../../assets/offers.png'),
-      label: "My Offer's",
-      route: 'MyOffer',
-    },
-    {
-      id: 4,
-      icon: require('../../assets/refer.png'),
-      label: 'Refer To Earn',
-      route: null,
-    },
-    {
-      id: 5,
-      icon: require('../../assets/dark.png'),
-      label: 'Dark Mode',
-      route: null,
-    },
-    {
-      id: 6,
-      icon: require('../../assets/support.png'),
-      label: 'Support',
-      route: 'Support',
-    },
-    {
-      id: 7,
-      icon: require('../../assets/settings.png'),
-      label: "Setting's",
-      route: 'Settings',
-    },
+    { id: 1, icon: require('../../assets/profile.png'), label: 'Profile', route: 'ProfileEdit' },
+    { id: 2, icon: require('../../assets/favourite.png'), label: "Favourite's", route: 'Favourite' },
+    { id: 3, icon: require('../../assets/offers.png'), label: "My Offer's", route: 'MyOffer' },
+    { id: 4, icon: require('../../assets/refer.png'), label: 'Refer To Earn', route: 'Refer' },
+    { id: 5, icon: require('../../assets/dark.png'), label: 'Dark Mode', route: 'DarkMode' },
+    { id: 6, icon: require('../../assets/support.png'), label: 'Support', route: 'Support' },
+    { id: 7, icon: require('../../assets/settings.png'), label: "Setting's", route: 'Settings' },
   ];
 
   const openPopup = (message: string, onConfirm: () => void) => {
@@ -100,12 +65,12 @@ const Profile = () => {
     setShowPopup(true);
   };
 
-  const handleBottomOptionPress = (item: any) => {
-    if (item.route) {
-      navigation.navigate(item.route);
+  const handleNavigation = (route: string) => {
+    if (route === 'DarkMode') {
+      // Handle dark mode toggle here if needed
+      return;
     }
-    // You can add additional logic here for items without routes
-    // For example, toggle dark mode, show refer screen, etc.
+    navigation.navigate(route);
   };
 
   return (
@@ -128,7 +93,9 @@ const Profile = () => {
               style={styles.backIcon}
             />
           </TouchableOpacity>
-          <Text style={styles.helpText}>Help</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Help')}>
+            <Text style={styles.helpText}>Help</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -150,11 +117,10 @@ const Profile = () => {
               <Text style={styles.userEmail}>harshal@gmail.com</Text>
               <Text style={styles.userPhone}>+91 1234567890</Text>
             </View>
-            <TouchableOpacity style={styles.editButton}>
-              <Image
-                source={require('../../assets/edit.png')}
-                style={styles.editIcon}
-              />
+            <TouchableOpacity 
+              style={styles.editButton}
+              onPress={() => navigation.navigate('ProfileEdit')}>
+              <Image source={require('../../assets/edit.png')} style={styles.editIcon} />
             </TouchableOpacity>
           </View>
         </View>
@@ -175,12 +141,11 @@ const Profile = () => {
 
         {/* ===== Bottom Options ===== */}
         <View style={styles.bottomSection}>
-          {bottomOptions.map(item => (
-            <TouchableOpacity
-              key={item.id}
+          {bottomOptions.map((item) => (
+            <TouchableOpacity 
+              key={item.id} 
               style={styles.optionRow}
-              onPress={() => handleBottomOptionPress(item)}
-            >
+              onPress={() => handleNavigation(item.route)}>
               <View style={styles.optionLeft}>
                 <Image source={item.icon} style={styles.optionIcon} />
                 <Text style={styles.optionLabel}>{item.label}</Text>
@@ -244,15 +209,21 @@ const Profile = () => {
         <View style={styles.popupOverlay}>
           <View style={styles.popupBox}>
             <Text style={styles.popupText}>{popupMessage}</Text>
-            <TouchableOpacity
-              style={styles.popupButton}
-              onPress={() => {
-                setShowPopup(false);
-                popupAction && popupAction();
-              }}
-            >
-              <Text style={styles.popupButtonText}>OK</Text>
-            </TouchableOpacity>
+            <View style={styles.popupButtonsContainer}>
+              <TouchableOpacity
+                style={[styles.popupButton, styles.popupCancelButton]}
+                onPress={() => setShowPopup(false)}>
+                <Text style={[styles.popupButtonText, { color: COLORS.text }]}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.popupButton, styles.popupConfirmButton]}
+                onPress={() => {
+                  setShowPopup(false);
+                  popupAction && popupAction();
+                }}>
+                <Text style={styles.popupButtonText}>OK</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -284,7 +255,7 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 10,
     backgroundColor: 'transparent', // bg.png behind it
-    paddingTop: height * 0.06,
+    paddingTop: height * 0.07,
     paddingBottom: 10,
   },
   backRow: {
@@ -465,18 +436,33 @@ const styles = StyleSheet.create({
     fontSize: width * 0.04,
     color: COLORS.text,
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
+    fontWeight: '500',
+  },
+  popupButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
   },
   popupButton: {
-    backgroundColor: COLORS.primary,
     borderRadius: 8,
-    paddingVertical: 8,
+    paddingVertical: 10,
     paddingHorizontal: 20,
+    minWidth: 80,
+    alignItems: 'center',
+  },
+  popupCancelButton: {
+    backgroundColor: '#f0f0f0',
+    marginRight: 10,
+  },
+  popupConfirmButton: {
+    backgroundColor: COLORS.primary,
+    marginLeft: 10,
   },
   popupButtonText: {
     color: COLORS.secondary,
     fontWeight: '700',
-    fontSize: width * 0.04,
+    fontSize: width * 0.035,
   },
 });
 
