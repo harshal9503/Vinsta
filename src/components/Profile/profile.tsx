@@ -36,7 +36,7 @@ const Profile = () => {
     { id: 4, icon: require('../../assets/refer.png'), label: 'Refer To Earn', route: 'Refer' },
     { id: 5, icon: require('../../assets/dark.png'), label: 'Dark Mode', route: 'DarkMode' },
     { id: 6, icon: require('../../assets/support.png'), label: 'Support', route: 'Support' },
-    { id: 7, icon: require('../../assets/settings.png'), label: "Setting's", route: 'Settings' },
+    { id: 7, icon: require('../../assets/settings1.png'), label: "Setting's", route: 'Settings' },
   ];
 
   const openPopup = (message: string, onConfirm: () => void) => {
@@ -134,13 +134,13 @@ const Profile = () => {
                 navigation.navigate('SignIn')
               )
             }>
-            <View style={styles.optionLeft}>
+            {/* <View style={styles.optionLeft}>
               <Image
                 source={require('../../assets/logout.png')}
                 style={styles.optionIcon}
               />
               <Text style={[styles.optionLabel, { color: '#E53935' }]}>Logout</Text>
-            </View>
+            </View> */}
           </TouchableOpacity>
 
           {/* ===== Delete Account ===== */}
@@ -151,7 +151,7 @@ const Profile = () => {
                 navigation.navigate('SignIn')
               )
             }>
-            <View style={styles.optionLeft}>
+            {/* <View style={styles.optionLeft}>
               <Image
                 source={require('../../assets/delete.png')}
                 style={styles.optionIcon}
@@ -159,7 +159,7 @@ const Profile = () => {
               <Text style={[styles.optionLabel, { color: '#E53935' }]}>
                 Delete Account
               </Text>
-            </View>
+            </View> */}
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 14,
+    paddingVertical: 15,
     borderBottomWidth: 0.5,
     borderBottomColor: '#eee',
   },
