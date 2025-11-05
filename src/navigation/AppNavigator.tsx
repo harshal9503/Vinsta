@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-// Import all components with proper PascalCase naming
+// Auth Screens
 import SplashScreen from '../AuthScreens/SplashScreen';
 import Onboarding1 from '../AuthScreens/Onboarding1';
 import Onboarding2 from '../AuthScreens/Onboarding2';
@@ -12,7 +12,7 @@ import OtpVerificationScreen from '../AuthScreens/OtpVerificationScreen';
 import WelcomeScreen from '../AuthScreens/WelcomeScreen';
 import BottomTabNavigator from './BottomTabNavigator';
 
-// Profile components
+// Profile
 import ProfileEdit from '../components/Profile/profileEdit';
 import Favourite from '../components/Profile/favourite';
 import MyOffer from '../components/Profile/myOffer';
@@ -25,7 +25,7 @@ import MyOrder from '../components/Profile/myOrder';
 import Subscription from '../components/Profile/subscription';
 import Wallet from '../components/Profile/wallet';
 
-// Settings components
+// Settings
 import AccountManagement from '../components/Profile/Settings/AccountManagement';
 import AccountSetting from '../components/Profile/Settings/AccountSetting';
 import SoundAndVoice from '../components/Profile/Settings/SoundAndVoice';   
@@ -33,6 +33,10 @@ import Language from '../components/Profile/Settings/Language';
 import NotificationSetting from '../components/Profile/Settings/NotificationSetting';
 import ShareApp from '../components/Profile/Settings/ShareApp';
 import AboutUs from '../components/Profile/Settings/AboutUs';
+// Home
+import Search from '../components/HomeScreen/search/search';
+import restaurentDetails from '../components/HomeScreen/search/restaurentDetails';
+import fooddetails from '../components/HomeScreen/search/fooddetails';
 
 const Stack = createStackNavigator();
 
@@ -70,6 +74,11 @@ const AppNavigator = () => (
       <Stack.Screen name="ShareApp" component={ShareApp} />
       <Stack.Screen name="AboutUs" component={AboutUs} />
       
+      {/* Home */}
+      <Stack.Screen name="Search" component={Search} />
+      <Stack.Screen name="restaurentDetails" component={restaurentDetails} />
+      <Stack.Screen name="fooddetails" component={fooddetails} />
+
       {/* Main App */}
       <Stack.Screen name="Home" component={BottomTabNavigator} />
     </Stack.Navigator>
