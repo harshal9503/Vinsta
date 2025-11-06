@@ -11,6 +11,7 @@ import {
   ScrollView,
   Modal,
   Dimensions,
+  StatusBar,
 } from 'react-native';
 import { COLORS } from '../../theme/colors';
 
@@ -56,7 +57,7 @@ const Notification = () => {
       {
         id: 1,
         title: 'Time for your evening tea!',
-        message: 'Don’t forget your favorite masala chai — order now!',
+        message: 'Don\'t forget your favorite masala chai — order now!',
         icon: require('../../assets/noti.png'),
       },
       {
@@ -104,12 +105,15 @@ const Notification = () => {
 
   return (
     <View style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image source={require('../../assets/back.png')} style={styles.backIcon} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Notification</Text>
+        <View style={{ width: 22 }} />
       </View>
 
       {/* Tabs */}
@@ -128,7 +132,7 @@ const Notification = () => {
         ))}
       </View>
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 60 }} showsVerticalScrollIndicator={false}>
         {/* Recent Section */}
         <View style={styles.sectionHeaderRow}>
           <View style={styles.sectionLeft}>
@@ -224,33 +228,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.secondary,
-    marginTop: 20,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 55,
-    paddingHorizontal: 20,
+    justifyContent: 'space-between',
+    paddingTop: height * 0.07,
     paddingBottom: 10,
+    paddingHorizontal: 20,
   },
   backIcon: {
-    width: 20,
-    height: 20,
+    width: 22,
+    height: 22,
     resizeMode: 'contain',
+    tintColor: '#000',
   },
   headerTitle: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 18,
+    fontSize: width * 0.045,
     fontWeight: '700',
-    color: COLORS.text,
-    marginRight: 20,
+    color: '#000',
   },
   tabsRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
+    backgroundColor: '#fff',
   },
   tabButton: {
     alignItems: 'center',
@@ -315,9 +318,20 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     paddingHorizontal: 20,
     paddingVertical: 14,
+    backgroundColor: '#fff',
+    marginHorizontal: 20,
+    marginBottom: 8,
+    borderRadius: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
   unreadHighlight: {
     backgroundColor: '#FFF6F0',
+    borderLeftWidth: 3,
+    borderLeftColor: COLORS.primary,
   },
   iconCircle: {
     width: 50,
@@ -328,6 +342,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
+    backgroundColor: '#fff',
   },
   icon: {
     width: 28,
@@ -341,11 +356,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     color: COLORS.text,
+    marginBottom: 4,
   },
   notificationMessage: {
     fontSize: 13,
     color: '#444',
-    marginTop: 2,
     lineHeight: 18,
   },
 
@@ -355,43 +370,46 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.4)',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 20,
   },
   popupBox: {
-    width: width * 0.8,
+    width: width * 0.85,
     backgroundColor: COLORS.secondary,
-    borderRadius: 12,
-    padding: 20,
+    borderRadius: 16,
+    padding: 24,
     alignItems: 'center',
-    shadowColor: COLORS.shadow,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 6,
+    shadowRadius: 8,
+    elevation: 8,
   },
   popupTitle: {
     fontSize: width * 0.045,
     color: COLORS.text,
     fontWeight: '700',
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: 12,
   },
   popupText: {
-    fontSize: width * 0.04,
-    color: COLORS.text,
+    fontSize: width * 0.038,
+    color: '#444',
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
     lineHeight: 20,
   },
   popupButton: {
     backgroundColor: COLORS.primary,
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 20,
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    minWidth: 120,
+    alignItems: 'center',
   },
   popupButtonText: {
     color: COLORS.secondary,
     fontWeight: '700',
-    fontSize: width * 0.04,
+    fontSize: width * 0.038,
   },
 });
 

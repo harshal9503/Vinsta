@@ -31,14 +31,23 @@ const ProfileEdit = () => {
   const [pickerVisible, setPickerVisible] = useState(false);
 
   const defaultUserImage = require('../../assets/user.png');
-  const closeIcon = require('../../assets/close.png');
+  const closeIcon = require('../../assets/close1.png');
+
+  const clearField = (field: string) => {
+    // Clear the specified field and stay in editable mode for typing
+    if (field === 'name') setName('');
+    else if (field === 'phone') setPhone('');
+    else if (field === 'email') setEmail('');
+    else if (field === 'address') setAddress('');
+    setEditableField(field);
+  };
 
   const handleSave = () => {
     Alert.alert('Profile Updated', 'Your details have been saved successfully!');
     setEditableField(null);
   };
 
-  const handleEdit = (field: string) => {
+  const setFieldEditable = (field: string) => {
     setEditableField(field);
   };
 
@@ -115,10 +124,17 @@ const ProfileEdit = () => {
               editable={editableField === 'name'}
               placeholder="Enter your name"
               placeholderTextColor="#999"
+              onPressIn={() => setFieldEditable('name')}
             />
-            <TouchableOpacity onPress={() => handleEdit('name')}>
-              <Image source={require('../../assets/edit.png')} style={styles.editIcon} />
-            </TouchableOpacity>
+            {editableField === 'name' ? (
+              <TouchableOpacity onPress={() => clearField('name')}>
+                <Image source={closeIcon} style={styles.closeIcon} />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={() => setFieldEditable('name')}>
+                <Image source={closeIcon} style={[styles.closeIcon, {opacity: 0.3}]} />
+              </TouchableOpacity>
+            )}
           </View>
 
           {/* Phone Number */}
@@ -132,13 +148,20 @@ const ProfileEdit = () => {
               keyboardType="phone-pad"
               placeholder="Enter phone number"
               placeholderTextColor="#999"
+              onPressIn={() => setFieldEditable('phone')}
             />
-            <TouchableOpacity onPress={() => handleEdit('phone')}>
-              <Image source={require('../../assets/edit.png')} style={styles.editIcon} />
-            </TouchableOpacity>
+            {editableField === 'phone' ? (
+              <TouchableOpacity onPress={() => clearField('phone')}>
+                <Image source={closeIcon} style={styles.closeIcon} />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={() => setFieldEditable('phone')}>
+                <Image source={closeIcon} style={[styles.closeIcon, {opacity: 0.3}]} />
+              </TouchableOpacity>
+            )}
           </View>
 
-          {/* Gmail */}
+          {/* Email */}
           <Text style={styles.label}>Gmail</Text>
           <View style={styles.inputBox}>
             <TextInput
@@ -149,10 +172,17 @@ const ProfileEdit = () => {
               keyboardType="email-address"
               placeholder="Enter email"
               placeholderTextColor="#999"
+              onPressIn={() => setFieldEditable('email')}
             />
-            <TouchableOpacity onPress={() => handleEdit('email')}>
-              <Image source={require('../../assets/edit.png')} style={styles.editIcon} />
-            </TouchableOpacity>
+            {editableField === 'email' ? (
+              <TouchableOpacity onPress={() => clearField('email')}>
+                <Image source={closeIcon} style={styles.closeIcon} />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={() => setFieldEditable('email')}>
+                <Image source={closeIcon} style={[styles.closeIcon, {opacity: 0.3}]} />
+              </TouchableOpacity>
+            )}
           </View>
 
           {/* Address */}
@@ -166,10 +196,17 @@ const ProfileEdit = () => {
               placeholder="Enter address"
               placeholderTextColor="#999"
               multiline={true}
+              onPressIn={() => setFieldEditable('address')}
             />
-            <TouchableOpacity onPress={() => handleEdit('address')}>
-              <Image source={require('../../assets/edit.png')} style={styles.editIcon} />
-            </TouchableOpacity>
+            {editableField === 'address' ? (
+              <TouchableOpacity onPress={() => clearField('address')}>
+                <Image source={closeIcon} style={styles.closeIcon} />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={() => setFieldEditable('address')}>
+                <Image source={closeIcon} style={[styles.closeIcon, {opacity: 0.3}]} />
+              </TouchableOpacity>
+            )}
           </View>
 
           {/* Save Button */}
@@ -326,7 +363,7 @@ const styles = StyleSheet.create({
     padding: 0,
     margin: 0,
   },
-  editIcon: {
+  closeIcon: {
     width: 18,
     height: 18,
     resizeMode: 'contain',
@@ -409,10 +446,5 @@ const styles = StyleSheet.create({
     right: 15,
     padding: 4,
     zIndex: 1,
-  },
-  closeIcon: {
-    width: 18,
-    height: 18,
-    tintColor: COLORS.text,
   },
 });

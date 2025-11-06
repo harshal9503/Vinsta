@@ -16,45 +16,183 @@ import {
 import { COLORS } from '../../theme/colors';
 import { useNavigation } from '@react-navigation/native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
+
+// Calculate responsive dimensions with iOS optimizations
+const isTablet = width >= 768;
+const isSmallScreen = width < 380;
+const screenRatio = width / height;
+const isIOS = Platform.OS === 'ios';
+
+// iOS-specific font scaling
+const fontScale = (size) => {
+  if (isIOS) {
+    return isTablet ? size * 0.85 : size * 0.95;
+  }
+  return isTablet ? size * 0.85 : size;
+};
+
+// iOS-specific dimension scaling
+const scaleSize = (size) => {
+  if (isIOS) {
+    return isTablet ? size * 0.9 : size * 1.02;
+  }
+  return size;
+};
 
 const categories = [
   { name: 'Burger', img: require('../../assets/burger.png') },
   { name: 'Mexican', img: require('../../assets/burger.png') },
   { name: 'Asian', img: require('../../assets/burger.png') },
-];
-const restaurants = [
-  { name: 'Bistro Excellence', img: require('../../assets/featuredrestaurant.png') },
-  { name: 'Elite-Ember', img: require('../../assets/featuredrestaurant.png') },
-];
-const products = [
-  { name: 'Cheese Burger', price: '$45.50', img: require('../../assets/b1.png'), oldPrice: '$50.50' },
-  { name: 'Cheese Burger', price: '$45.50', img: require('../../assets/b2.png'), oldPrice: '$50.50' },
-  { name: 'Cheese Burger', price: '$45.50', img: require('../../assets/b1.png'), oldPrice: '$50.50' },
-  { name: 'Cheese Burger', price: '$45.50', img: require('../../assets/b3.png'), oldPrice: '$50.50' },
+  { name: 'Donut', img: require('../../assets/donut.png') },
 ];
 
-const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 24;
+// Separate veg and non-veg restaurants
+const vegRestaurants = [
+  { 
+    id: 1,
+    name: 'Bistro Excellence', 
+    img: require('../../assets/featuredrestaurant.png'),
+    rating: 4.4,
+    deliveryTime: '10-15 mins',
+    tags: ['Burger', 'Chicken', 'FastFood']
+  },
+  { 
+    id: 2,
+    name: 'Elite-Ember', 
+    img: require('../../assets/featuredrestaurant.png'),
+    rating: 4.4,
+    deliveryTime: '10-15 mins',
+    tags: ['Burger', 'Chicken', 'FastFood']
+  },
+];
+
+const nonVegRestaurants = [
+  { 
+    id: 2,
+    name: 'Elite-Ember', 
+    img: require('../../assets/featuredrestaurant.png'),
+    rating: 4.4,
+    deliveryTime: '10-15 mins',
+    tags: ['Chicken', 'Mutton', 'Seafood']
+  },
+  { 
+    id: 1,
+    name: 'Bistro Excellence', 
+    img: require('../../assets/featuredrestaurant.png'),
+    rating: 4.4,
+    deliveryTime: '10-15 mins',
+    tags: ['Chicken', 'Mutton', 'Seafood']
+  },
+];
+
+// Separate veg and non-veg products
+const vegProducts = [
+  { 
+    id: 1,
+    name: 'Veg Cheese Burger', 
+    price: '$45.50', 
+    img: require('../../assets/b1.png'), 
+    oldPrice: '$50.50',
+    rating: 4.4,
+    deliveryTime: '10-15 mins'
+  },
+  { 
+    id: 2,
+    name: 'Veg Delight Burger', 
+    price: '$45.50', 
+    img: require('../../assets/b2.png'), 
+    oldPrice: '$50.50',
+    rating: 4.4,
+    deliveryTime: '10-15 mins'
+  },
+  { 
+    id: 3,
+    name: 'Garden Fresh Burger', 
+    price: '$45.50', 
+    img: require('../../assets/b1.png'), 
+    oldPrice: '$50.50',
+    rating: 4.4,
+    deliveryTime: '10-15 mins'
+  },
+  { 
+    id: 4,
+    name: 'Veggie Supreme', 
+    price: '$45.50', 
+    img: require('../../assets/b3.png'), 
+    oldPrice: '$50.50',
+    rating: 4.4,
+    deliveryTime: '10-15 mins'
+  },
+];
+
+const nonVegProducts = [
+  { 
+    id: 1,
+    name: 'Chicken Deluxe', 
+    price: '$55.50', 
+    img: require('../../assets/non1.png'), 
+    oldPrice: '$60.50',
+    rating: 4.4,
+    deliveryTime: '10-15 mins'
+  },
+  { 
+    id: 2,
+    name: 'Beef Special', 
+    price: '$65.50', 
+    img: require('../../assets/non2.png'), 
+    oldPrice: '$70.50',
+    rating: 4.4,
+    deliveryTime: '10-15 mins'
+  },
+  { 
+    id: 3,
+    name: 'Mutton Classic', 
+    price: '$75.50', 
+    img: require('../../assets/non3.png'), 
+    oldPrice: '$80.50',
+    rating: 4.4,
+    deliveryTime: '10-15 mins'
+  },
+  { 
+    id: 4,
+    name: 'Seafood Combo', 
+    price: '$85.50', 
+    img: require('../../assets/non1.png'), 
+    oldPrice: '$90.50',
+    rating: 4.4,
+    deliveryTime: '10-15 mins'
+  },
+];
 
 const HomeScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState('Burger');
   const navigation = useNavigation<any>();
-  const [isVegMode, setIsVegMode] = useState(false);
+  const [isVegMode, setIsVegMode] = useState(true);
   const toggleAnim = useState(new Animated.Value(0))[0];
+  const insets = useSafeAreaInsets();
 
   const toggleSwitch = () => {
     Animated.timing(toggleAnim, {
-      toValue: isVegMode ? 0 : 1,
+      toValue: isVegMode ? 1 : 0,
       duration: 200,
       useNativeDriver: false,
     }).start();
     setIsVegMode(!isVegMode);
   };
 
+  // Calculate proper toggle dimensions
+  const switchWidth = isTablet ? scaleSize(wp('14%')) : scaleSize(wp('17%'));
+  const switchHeight = isTablet ? hp('3.5%') : hp('4%');
+  const circleSize = isTablet ? hp('2.8%') : hp('3.2%');
+  const padding = wp('0.8%');
+  const maxTranslateX = switchWidth - circleSize - (padding * 2);
+
   const translateX = toggleAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [wp('0%'), wp('3.5%')],
+    outputRange: [padding, maxTranslateX],
   });
 
   const toggleBgColor = toggleAnim.interpolate({
@@ -62,14 +200,72 @@ const HomeScreen = () => {
     outputRange: ['green', 'red'],
   });
 
+  // Navigation handlers
+  const handleTodayOfferViewAll = () => {
+    navigation.navigate('todayOfferView');
+  };
+
+  const handleViewOffers = () => {
+    navigation.navigate('todayOfferView');
+  };
+
+  const handleFeaturedRestaurantViewAll = () => {
+    navigation.navigate('featuredRestrorents');
+  };
+
+  const handleRestaurantPress = (restaurant) => {
+    navigation.navigate('restaurentDetails', { restaurant });
+  };
+
+  const handleBestBurgerViewAll = () => {
+    navigation.navigate('bestBurger');
+  };
+
+  const handleProductPress = (product) => {
+    navigation.navigate('fooddetails', { product });
+  };
+
+  const handleWalletPress = () => {
+    navigation.navigate('Wallet');
+  };
+
+  const handleCartPress = () => {
+    navigation.navigate('Cart');
+  };
+
+  // Calculate proper status bar height for both platforms
+  const getStatusBarHeight = () => {
+    if (isIOS) {
+      return Math.max(insets.top, 20);
+    } else {
+      return StatusBar.currentHeight || 0;
+    }
+  };
+
+  // Get current restaurants and products based on mode
+  const getCurrentRestaurants = () => {
+    return isVegMode ? vegRestaurants : nonVegRestaurants;
+  };
+
+  const getCurrentProducts = () => {
+    return isVegMode ? vegProducts : nonVegProducts;
+  };
+
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.background }}>
-      <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
-      <View style={{ backgroundColor: COLORS.primary, height: STATUSBAR_HEIGHT }} />
+    <View style={styles.container}>
+      <StatusBar 
+        backgroundColor={COLORS.primary} 
+        barStyle="light-content" 
+        translucent={false}
+      />
+      
+      <View style={[styles.statusBarArea, { height: getStatusBarHeight() }]} />
 
       <ScrollView 
         showsVerticalScrollIndicator={false} 
         contentContainerStyle={styles.scrollContent}
+        bounces={isIOS}
+        scrollEventThrottle={16}
       >
         {/* Header */}
         <View style={styles.headerContainer}>
@@ -83,10 +279,10 @@ const HomeScreen = () => {
               <Text style={styles.addressText}>4102 Pretty View Lane</Text>
             </View>
             <View style={styles.walletBagRow}>
-              <TouchableOpacity style={styles.walletBtn}>
+              <TouchableOpacity style={styles.walletBtn} activeOpacity={0.7} onPress={handleWalletPress}>
                 <Image source={require('../../assets/wallet.png')} style={styles.walletIcon} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.bagBtn}>
+              <TouchableOpacity style={styles.bagBtn} activeOpacity={0.7} onPress={handleCartPress}>
                 <Image source={require('../../assets/bag.png')} style={styles.bagIcon} />
               </TouchableOpacity>
             </View>
@@ -98,28 +294,46 @@ const HomeScreen = () => {
             </Text>
             <View style={styles.vegContainer}>
               <TouchableOpacity
-                style={[
-                  styles.switchOuter,
-                  { backgroundColor: '#fff' },
-                ]}
+                style={[styles.switchOuter, { 
+                  width: switchWidth, 
+                  height: switchHeight 
+                }]}
                 onPress={toggleSwitch}
                 activeOpacity={0.8}
               >
+                <View style={styles.switchBackground} />
+                
                 <Animated.View
                   style={[
                     styles.switchCircle,
                     { 
+                      width: circleSize,
+                      height: circleSize,
+                      borderRadius: circleSize / 2,
                       transform: [{ translateX }], 
                       backgroundColor: toggleBgColor 
                     },
                   ]}
                 />
-                <View style={styles.switchTextContainer}>
-                  {!isVegMode && <Text style={styles.switchText}>OFF</Text>}
-                  {isVegMode && <Text style={styles.switchText}>ON</Text>}
+                
+                <View style={styles.switchLabelsContainer}>
+                  <Text style={[styles.switchTextLeft, { 
+                    color: isVegMode ? '#fff' : '#000',
+                    fontWeight: isVegMode ? '700' : '500'
+                  }]}>
+                    OFF
+                  </Text>
+                  <Text style={[styles.switchTextRight, { 
+                    color: !isVegMode ? '#fff' : '#000',
+                    fontWeight: !isVegMode ? '700' : '500'
+                  }]}>
+                    OFF
+                  </Text>
                 </View>
               </TouchableOpacity>
-              <Text style={styles.vegModeTxt}>Veg Mode</Text>
+              <Text style={styles.vegModeTxt}>
+                {isVegMode ? 'Veg Mode' : 'Non-Veg Mode'}
+              </Text>
             </View>
           </View>
 
@@ -146,10 +360,10 @@ const HomeScreen = () => {
 
         {/* Main Content */}
         <View style={styles.mainContent}>
-          {/* Offers */}
+          {/* Today's Offers */}
           <View style={styles.sectionRowBetween}>
             <Text style={styles.sectionTitle}>Today's Offer's</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handleTodayOfferViewAll} activeOpacity={0.7}>
               <Text style={styles.sectionLink}>View All</Text>
             </TouchableOpacity>
           </View>
@@ -158,13 +372,23 @@ const HomeScreen = () => {
           <View style={styles.offerCard}>
             <View style={styles.offerContent}>
               <Text style={styles.offerHeader}>Free Delivery</Text>
-              <Text style={styles.offerSubTxt}>Enjoy exclusive discount on tasty{'\n'}food today!</Text>
-              <TouchableOpacity style={styles.offerButton}>
+              <Text style={styles.offerSubTxt}>
+                Enjoy exclusive discount on tasty{'\n'}food today!
+              </Text>
+              <TouchableOpacity 
+                style={styles.offerButton} 
+                onPress={handleViewOffers}
+                activeOpacity={0.8}
+              >
                 <Text style={styles.offerBtnText}>VIEW OFFER'S</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.offerImageWrap}>
-              <Image source={require('../../assets/todayoffer.png')} style={styles.offerImage} />
+              <Image 
+                source={require('../../assets/todayoffer.png')} 
+                style={styles.offerImage}
+                resizeMode="contain"
+              />
             </View>
           </View>
 
@@ -173,6 +397,7 @@ const HomeScreen = () => {
             horizontal 
             showsHorizontalScrollIndicator={false} 
             contentContainerStyle={styles.categorySliderContent}
+            bounces={false}
           >
             {categories.map((cat) => (
               <TouchableOpacity
@@ -182,8 +407,13 @@ const HomeScreen = () => {
                   selectedCategory === cat.name && styles.categoryBtnActive,
                 ]}
                 onPress={() => setSelectedCategory(cat.name)}
+                activeOpacity={0.8}
               >
-                <Image source={cat.img} style={styles.categoryIcon} />
+                <Image 
+                  source={cat.img} 
+                  style={styles.categoryIcon}
+                  resizeMode="contain"
+                />
                 <Text
                   style={[
                     styles.categoryTxt,
@@ -199,10 +429,14 @@ const HomeScreen = () => {
           {/* Featured Restaurants */}
           <View style={styles.sectionRowBetween}>
             <View style={styles.sectionTitleRow}>
-              <Image source={require('../../assets/feature.png')} style={styles.sectionIcon} />
+              <Image 
+                source={require('../../assets/feature.png')} 
+                style={styles.sectionIcon}
+                resizeMode="contain"
+              />
               <Text style={styles.sectionTitle}>Featured restaurants</Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handleFeaturedRestaurantViewAll} activeOpacity={0.7}>
               <Text style={styles.sectionLink}>View All</Text>
             </TouchableOpacity>
           </View>
@@ -211,83 +445,147 @@ const HomeScreen = () => {
             horizontal 
             showsHorizontalScrollIndicator={false} 
             contentContainerStyle={styles.restaurantScrollContent}
+            bounces={false}
           >
-            {restaurants.map((r, index) => (
-              <View key={r.name + index} style={styles.restaurantCard}>
-                <Image source={r.img} style={styles.restaurantImg} />
-                <View style={styles.iconWrapper}>
-                  <Image source={require('../../assets/heart.png')} style={styles.heartIcon} />
-                </View>
+            {getCurrentRestaurants().map((restaurant) => (
+              <TouchableOpacity
+                key={restaurant.id}
+                style={styles.restaurantCard}
+                onPress={() => handleRestaurantPress(restaurant)}
+                activeOpacity={0.8}
+              >
+                <View style={styles.imageContainer}>
+                  <Image 
+                    source={restaurant.img} 
+                    style={styles.restaurantImg}
+                    resizeMode="cover"
+                  />
+                  
+                  <TouchableOpacity style={styles.iconWrapper} activeOpacity={0.7}>
+                    <Image 
+                      source={require('../../assets/heart.png')} 
+                      style={styles.heartIcon}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
 
-                <View style={styles.ratingWrapper}>
-                  <Image source={require('../../assets/star.png')} style={styles.starIcon} />
-                  <Text style={styles.ratingText}>4.4</Text>
+                  <View style={styles.ratingBadge}>
+                    <Image 
+                      source={require('../../assets/star.png')} 
+                      style={styles.starIcon}
+                      resizeMode="contain"
+                    />
+                    <Text style={styles.ratingText}>{restaurant.rating}</Text>
+                  </View>
                 </View>
-                <Text style={styles.restaurantTitle}>{r.name}</Text>
+                
+                <Text style={styles.restaurantTitle}>{restaurant.name}</Text>
+                
                 <View style={styles.restaurantInfoRow}>
-                  <Image source={require('../../assets/bike.png')} style={styles.infoIcon} />
+                  <Image 
+                    source={require('../../assets/bike.png')} 
+                    style={styles.infoIcon}
+                    resizeMode="contain"
+                  />
                   <Text style={styles.infoTxt}>free delivery</Text>
-                  <Image source={require('../../assets/clock.png')} style={styles.infoIcon} />
-                  <Text style={styles.infoTxt}>10-15 mins</Text>
+                  <Image 
+                    source={require('../../assets/clock.png')} 
+                    style={styles.infoIcon}
+                    resizeMode="contain"
+                  />
+                  <Text style={styles.infoTxt}>{restaurant.deliveryTime}</Text>
                 </View>
+                
                 <View style={styles.tagsContainer}>
-                  <Text style={styles.restaurantTags}>Burger</Text>
-                  <Text style={styles.restaurantTags}>Chicken</Text>
-                  <Text style={styles.restaurantTags}>FastFood</Text>
+                  {restaurant.tags.map((tag, index) => (
+                    <Text key={index} style={styles.restaurantTags}>{tag}</Text>
+                  ))}
                 </View>
-              </View>
+              </TouchableOpacity>
             ))}
           </ScrollView>
 
-          {/* Product List */}
+          {/* Best-Rated Burgers */}
           <View style={styles.sectionRowBetween}>
             <View style={styles.sectionTitleRow}>
-              <Image source={require('../../assets/popular.png')} style={styles.sectionIcon} />
-              <Text style={styles.sectionTitle}>Best-Rated Burgers</Text>
+              <Image 
+                source={require('../../assets/popular.png')} 
+                style={styles.sectionIcon}
+                resizeMode="contain"
+              />
+              <Text style={styles.sectionTitle}>
+                {isVegMode ? 'Best-Rated Burgers' : 'Best-Rated Non-Veg'}
+              </Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handleBestBurgerViewAll} activeOpacity={0.7}>
               <Text style={styles.sectionLink}>View All</Text>
             </TouchableOpacity>
           </View>
           
           <FlatList
-            data={products}
-            keyExtractor={(item, index) => index.toString()}
+            data={getCurrentProducts()}
+            keyExtractor={(item) => item.id.toString()}
             numColumns={2}
             scrollEnabled={false}
             contentContainerStyle={styles.productGrid}
+            columnWrapperStyle={styles.productRow}
             renderItem={({ item }) => (
-              <View style={styles.productCard}>
-                <Image source={item.img} style={styles.productImg} />
-                <View style={[styles.iconWrapper, styles.productHeartWrapper]}>
-                  <Image source={require('../../assets/heart.png')} style={styles.heartIcon} />
-                </View>
+              <TouchableOpacity
+                style={styles.productCard}
+                onPress={() => handleProductPress(item)}
+                activeOpacity={0.8}
+              >
+                <View style={styles.imageContainer}>
+                  <Image 
+                    source={item.img} 
+                    style={styles.productImg}
+                    resizeMode="cover"
+                  />
+                  
+                  <TouchableOpacity style={styles.productHeartWrapper} activeOpacity={0.7}>
+                    <Image 
+                      source={require('../../assets/heart.png')} 
+                      style={styles.heartIcon}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
 
-                <View style={[styles.ratingWrapper, styles.productRatingWrapper]}>
-                  <Image source={require('../../assets/star.png')} style={styles.starIcon} />
-                  <Text style={styles.ratingText}>4.4</Text>
+                  <View style={styles.productRatingBadge}>
+                    <Image 
+                      source={require('../../assets/star.png')} 
+                      style={styles.starIcon}
+                      resizeMode="contain"
+                    />
+                    <Text style={styles.ratingText}>{item.rating}</Text>
+                  </View>
                 </View>
                 
-                <Text style={styles.productTitle}>{item.name}</Text>
+                <Text style={styles.productTitle} numberOfLines={2}>{item.name}</Text>
 
                 <View style={styles.priceRow}>
-                 <View style={styles.priceContainer}>
-                   <Text style={styles.productPrice}>{item.price}</Text>
-                  <Text style={styles.oldPrice}>
-                    {item.oldPrice}
-                  </Text>
-                 </View>
+                  <View style={styles.priceContainer}>
+                    <Text style={styles.productPrice}>{item.price}</Text>
+                    <Text style={styles.oldPrice}>{item.oldPrice}</Text>
+                  </View>
 
-                  <TouchableOpacity style={styles.plusBtn}>
-                    <Image source={require('../../assets/plus.png')} style={styles.plusIcon} />
+                  <TouchableOpacity style={styles.plusBtn} activeOpacity={0.7}>
+                    <Image 
+                      source={require('../../assets/plus.png')} 
+                      style={styles.plusIcon}
+                      resizeMode="contain"
+                    />
                   </TouchableOpacity>
                 </View>
 
                 <View style={styles.deliveryTimeRow}>
-                  <Image source={require('../../assets/clock.png')} style={styles.infoIcon} />
-                  <Text style={styles.infoTxt}>10-15 mins</Text>
+                  <Image 
+                    source={require('../../assets/clock.png')} 
+                    style={styles.infoIcon}
+                    resizeMode="contain"
+                  />
+                  <Text style={styles.infoTxt}>{item.deliveryTime}</Text>
                 </View>
-              </View>
+              </TouchableOpacity>
             )}
           />
 
@@ -296,11 +594,16 @@ const HomeScreen = () => {
             <Image 
               source={require('../../assets/walk.png')} 
               style={styles.bottomImage}
+              resizeMode="contain"
             />
             <View style={styles.bottomTextContainer}>
               <Text style={styles.reachingTxt}>Reaching at your doorstep</Text>
               <View style={styles.deliveryTimeContainer}>
-                <Image source={require('../../assets/clock.png')} style={styles.deliveryClockIcon} />
+                <Image 
+                  source={require('../../assets/clock.png')} 
+                  style={styles.deliveryClockIcon}
+                  resizeMode="contain"
+                />
                 <Text style={styles.getDeliveredTxt}>Get delivered in 15 minutes</Text>
               </View>
             </View>
@@ -312,23 +615,31 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+  },
+  statusBarArea: {
+    backgroundColor: COLORS.primary,
+    width: '100%',
+  },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: hp('2%'),
+    paddingBottom: isIOS ? hp('4%') : hp('3%'),
   },
   headerContainer: {
     backgroundColor: COLORS.primary,
-    paddingHorizontal: wp('4.5%'),
-    paddingTop: hp('4%'),
-    borderBottomLeftRadius: wp('4%'),
-    borderBottomRightRadius: wp('4%'),
-    paddingBottom: hp('4%'),
+    paddingHorizontal: scaleSize(wp('4.5%')),
+    paddingTop: isIOS ? hp('2.5%') : hp('3%'),
+    borderBottomLeftRadius: scaleSize(wp('6%')),
+    borderBottomRightRadius: scaleSize(wp('6%')),
+    paddingBottom: isIOS ? hp('3.5%') : hp('4%'),
   },
   rowJustify: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: hp('1%'),
+    marginBottom: hp('1.5%'),
   },
   locationContainer: {
     flex: 1,
@@ -339,26 +650,30 @@ const styles = StyleSheet.create({
     marginBottom: hp('0.5%'),
   },
   icon: { 
-    width: wp('5%'), 
-    height: wp('5%'), 
+    width: isTablet ? scaleSize(wp('4%')) : scaleSize(wp('5%')), 
+    height: isTablet ? scaleSize(wp('4%')) : scaleSize(wp('5%')), 
     marginRight: wp('1.2%') 
   },
   locationText: {
     color: COLORS.secondary,
-    fontSize: wp('3.3%'),
-    fontWeight: '500',
+    fontSize: fontScale(isTablet ? wp('2.8%') : wp('3.3%')),
+    fontWeight: isIOS ? '600' : '500',
     marginRight: wp('0.5%'),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   dropdownIcon: {
-    width: wp('2%'),
-    height: wp('1%'),
+    width: isTablet ? scaleSize(wp('1.5%')) : scaleSize(wp('2%')),
+    height: isTablet ? scaleSize(wp('0.8%')) : scaleSize(wp('1%')),
     tintColor: COLORS.secondary,
     marginLeft: wp('2%'),
   },
   addressText: {
     color: COLORS.secondary,
-    fontSize: wp('3%'),
-    fontWeight: '400',
+    fontSize: fontScale(isTablet ? wp('2.5%') : wp('3%')),
+    fontWeight: isIOS ? '500' : '400',
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   walletBagRow: { 
     flexDirection: 'row', 
@@ -366,78 +681,144 @@ const styles = StyleSheet.create({
   },
   walletBtn: { 
     backgroundColor: '#fff', 
-    padding: wp('2.5%'), 
+    padding: isTablet ? scaleSize(wp('2%')) : scaleSize(wp('2.5%')), 
     borderRadius: wp('50%'),
     alignItems: 'center',
     justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   bagBtn: { 
     backgroundColor: '#fff', 
-    padding: wp('2.2%'), 
+    padding: isTablet ? scaleSize(wp('1.8%')) : scaleSize(wp('2.2%')), 
     borderRadius: wp('50%'),
     alignItems: 'center',
     justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   walletIcon: { 
-    width: wp('4.5%'), 
-    height: wp('4.5%'), 
-  tintColor: COLORS.primary
+    width: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4.5%')), 
+    height: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4.5%')), 
+    tintColor: COLORS.primary
   },
   bagIcon: { 
-    width: wp('4.5%'), 
-    height: wp('4.5%') ,
+    width: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4.5%')), 
+    height: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4.5%')),
     tintColor: COLORS.primary
   },
   titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: hp('1%'),
+    marginBottom: hp('2%'),
   },
   headerTitle: {
     color: COLORS.secondary,
-    fontWeight: '700',
-    fontSize: wp('5.5%'),
-    lineHeight: hp('3.4%'),
+    fontWeight: isIOS ? '800' : '700',
+    fontSize: fontScale(isTablet ? wp('4.5%') : wp('5.5%')),
+    lineHeight: isTablet ? hp('3%') : hp('3.4%'),
     flex: 1,
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   vegContainer: {
     alignItems: 'center',
     marginLeft: wp('2%'),
   },
   switchOuter: {
-    width: wp('17%'),
-    height: hp('4%'),
     borderRadius: hp('2.25%'),
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    overflow: 'hidden',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  switchBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.1)',
+    borderRadius: hp('2.25%'),
+  },
+  switchCircle: {
+    position: 'absolute',
+    left: 0,
+    top: '50%',
+    marginTop: -(isTablet ? hp('2.8%') : hp('3.2%')) / 2,
+    zIndex: 2,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  switchLabelsContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: wp('1.5%'),
+    paddingHorizontal: wp('2.5%'),
+    zIndex: 1,
   },
-  switchTextContainer: {
-    width: wp('6%'),
-    alignItems: 'center',
+  switchTextLeft: {
+    fontSize: fontScale(isTablet ? wp('2.2%') : wp('2.5%')),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
-  switchText: {
-    color: '#000',
-    fontWeight: '700',
-    fontSize: wp('3%'),
-  },
-  switchCircle: {
-    width: hp('3%'),
-    height: hp('3%'),
-    borderRadius: hp('1.5%'),
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
+  switchTextRight: {
+    fontSize: fontScale(isTablet ? wp('2.2%') : wp('2.5%')),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   vegModeTxt: {
     marginTop: hp('0.8%'),
     color: COLORS.secondary,
-    fontSize: wp('3%'),
-    fontWeight: '600',
+    fontSize: fontScale(isTablet ? wp('2.5%') : wp('3%')),
+    fontWeight: isIOS ? '700' : '600',
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   searchContainer: {
     flexDirection: 'row',
@@ -447,40 +828,62 @@ const styles = StyleSheet.create({
   },
   searchBarContainer: {
     backgroundColor: '#fff',
-    borderRadius: wp('2.5%'),
-    paddingVertical: hp('1.5%'),
+    borderRadius: scaleSize(wp('3%')),
+    paddingVertical: isIOS ? hp('1.8%') : hp('1.5%'),
     paddingHorizontal: wp('3%'),
-    elevation: 3,
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
     marginRight: wp('3%'),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   searchIcon: {
-    width: wp('5%'),
-    height: wp('5%'),
+    width: isTablet ? scaleSize(wp('4%')) : scaleSize(wp('5%')),
+    height: isTablet ? scaleSize(wp('4%')) : scaleSize(wp('5%')),
     resizeMode: 'contain',
     marginRight: wp('2%'),
     tintColor: '#999',
   },
   searchPlaceholder: {
     flex: 1,
-    fontSize: wp('3.5%'),
+    fontSize: fontScale(isTablet ? wp('3%') : wp('3.5%')),
     color: '#999',
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   filterBtn: {
     backgroundColor: '#fff',
-    borderRadius: wp('2.5%'),
-    padding: wp('3%'),
-    elevation: 3,
+    borderRadius: scaleSize(wp('3%')),
+    padding: scaleSize(wp('3%')),
     justifyContent: 'center',
     alignItems: 'center',
-    width: wp('13%'),
-    height: wp('13%'),
+    width: isTablet ? scaleSize(wp('11%')) : scaleSize(wp('13%')),
+    height: isTablet ? scaleSize(wp('11%')) : scaleSize(wp('13%')),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   filterIcon: {
-    width: wp('6%'),
-    height: wp('6%'),
+    width: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
+    height: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
     resizeMode: 'contain',
   },
   mainContent: {
@@ -502,65 +905,84 @@ const styles = StyleSheet.create({
     gap: wp('2%'),
   },
   sectionIcon: {
-    width: wp('6%'),
-    height: wp('6%'),
+    width: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
+    height: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
   },
   sectionTitle: {
-    fontSize: wp('4.2%'),
-    fontWeight: '700',
+    fontSize: fontScale(isTablet ? wp('3.5%') : wp('4.2%')),
+    fontWeight: isIOS ? '800' : '700',
     color: COLORS.textDark,
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   sectionLink: {
-    fontSize: wp('3.5%'),
+    fontSize: fontScale(isTablet ? wp('3%') : wp('3.5%')),
     color: COLORS.primary,
-    fontWeight: '500',
+    fontWeight: isIOS ? '600' : '500',
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   offerCard: {
-    borderRadius: wp('4%'),
+    borderRadius: scaleSize(wp('4%')),
     backgroundColor: COLORS.secondary,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: wp('4%'),
-    elevation: 3,
-    shadowColor: COLORS.cardShadow,
-    marginBottom: hp('1%'),
+    padding: scaleSize(wp('4%')),
+    marginBottom: hp('2%'),
+    ...Platform.select({
+      ios: {
+        shadowColor: COLORS.cardShadow || '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   offerContent: {
     flex: 1,
     marginRight: wp('2%'),
   },
   offerHeader: {
-    fontSize: wp('4.5%'),
-    fontWeight: 'bold',
+    fontSize: fontScale(isTablet ? wp('3.8%') : wp('4.5%')),
+    fontWeight: isIOS ? '800' : 'bold',
     color: COLORS.primary,
     marginBottom: hp('0.5%'),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   offerSubTxt: {
     color: COLORS.textLight,
-    fontSize: wp('3.5%'),
+    fontSize: fontScale(isTablet ? wp('3%') : wp('3.5%')),
     marginBottom: hp('1.5%'),
     lineHeight: hp('2.2%'),
+    includeFontPadding: false,
   },
   offerButton: {
     backgroundColor: COLORS.primary,
-    borderRadius: wp('2%'),
-    paddingVertical: hp('1%'),
+    borderRadius: scaleSize(wp('2%')),
+    paddingVertical: isIOS ? hp('1.2%') : hp('1%'),
     paddingHorizontal: wp('4%'),
     alignSelf: 'flex-start',
   },
   offerBtnText: {
     color: COLORS.secondary,
-    fontWeight: '700',
-    fontSize: wp('3%'),
+    fontWeight: isIOS ? '800' : '700',
+    fontSize: fontScale(isTablet ? wp('2.5%') : wp('3%')),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   offerImageWrap: {
-    width: wp('30%'),
-    height: wp('30%'),
+    width: isTablet ? scaleSize(wp('25%')) : scaleSize(wp('30%')),
+    height: isTablet ? scaleSize(wp('25%')) : scaleSize(wp('30%')),
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   offerImage: {
     width: '100%',
     height: '100%',
-    resizeMode: 'contain',
   },
   categorySliderContent: {
     paddingVertical: hp('1%'),
@@ -572,27 +994,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: wp('3%'),
-    paddingVertical: hp('1.2%'),
+    paddingVertical: isIOS ? hp('1.4%') : hp('1.2%'),
     paddingHorizontal: wp('4%'),
     flexDirection: 'row',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    minWidth: isTablet ? scaleSize(wp('18%')) : scaleSize(wp('22%')),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   categoryBtnActive: {
     backgroundColor: COLORS.primary,
   },
   categoryIcon: {
-    width: wp('6%'),
-    height: wp('6%'),
+    width: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
+    height: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
     marginRight: wp('2%'),
   },
   categoryTxt: {
     color: COLORS.primary,
-    fontWeight: '600',
-    fontSize: wp('3.5%'),
+    fontWeight: isIOS ? '700' : '600',
+    fontSize: fontScale(isTablet ? wp('3%') : wp('3.5%')),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   categoryTxtActive: {
     color: COLORS.secondary,
@@ -602,73 +1033,99 @@ const styles = StyleSheet.create({
     paddingBottom: hp('1%'),
   },
   restaurantCard: {
-    width: wp('55%'),
+    width: isTablet ? scaleSize(wp('48%')) : scaleSize(wp('55%')),
     backgroundColor: COLORS.secondary,
     marginHorizontal: wp('1.5%'),
     marginBottom: hp('1%'),
-    borderRadius: wp('4%'),
-    padding: wp('3%'),
-    shadowColor: COLORS.cardShadow,
-    elevation: 3,
+    borderRadius: scaleSize(wp('4%')),
+    padding: scaleSize(wp('3%')),
+    ...Platform.select({
+      ios: {
+        shadowColor: COLORS.cardShadow || '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  imageContainer: {
     position: 'relative',
+    marginBottom: hp('1%'),
   },
   restaurantImg: {
     width: '100%',
-    height: hp('15%'),
-    borderRadius: wp('3%'),
-    marginBottom: hp('1%'),
+    height: isTablet ? hp('12%') : hp('15%'),
+    borderRadius: scaleSize(wp('3%')),
   },
   iconWrapper: {
     position: 'absolute',
-    top: wp('4%'),
-    right: wp('4%'),
+    top: scaleSize(wp('3%')),
+    right: scaleSize(wp('3%')),
     backgroundColor: COLORS.primary,
-    borderRadius: wp('5%'),
-    padding: wp('2%'),
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 1 },
-    shadowRadius: 2,
+    borderRadius: scaleSize(wp('5%')),
+    padding: scaleSize(wp('2%')),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   heartIcon: {
-    width: wp('4%'),
-    height: wp('4%'),
-    resizeMode: 'contain',
+    width: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4%')),
+    height: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4%')),
     tintColor: '#fff',
   },
-  ratingWrapper: {
+  ratingBadge: {
     position: 'absolute',
-    bottom: hp('9%'),
-    left: wp('4%'),
+    bottom: scaleSize(wp('3%')),
+    left: scaleSize(wp('3%')),
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: COLORS.primary,
-    paddingHorizontal: wp('2%'),
-    paddingVertical: hp('0.5%'),
-    borderRadius: wp('2%'),
-  },
-  productRatingWrapper: {
-    bottom: hp('11%'),
-    left: wp('4%'),
+    paddingHorizontal: wp('2.5%'),
+    paddingVertical: hp('0.6%'),
+    borderRadius: scaleSize(wp('2%')),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   starIcon: {
-    width: wp('3%'),
-    height: wp('3%'),
-    resizeMode: 'contain',
+    width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
+    height: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
     marginRight: wp('1%'),
     tintColor: '#fff',
   },
   ratingText: {
     color: '#fff',
-    fontSize: wp('2.8%'),
-    fontWeight: '600',
+    fontSize: fontScale(isTablet ? wp('2.3%') : wp('2.8%')),
+    fontWeight: isIOS ? '700' : '600',
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   restaurantTitle: {
-    fontWeight: '600',
-    fontSize: wp('3.8%'),
+    fontWeight: isIOS ? '700' : '600',
+    fontSize: fontScale(isTablet ? wp('3.2%') : wp('3.8%')),
     color: COLORS.textDark,
     marginBottom: hp('0.5%'),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   restaurantInfoRow: {
     flexDirection: 'row',
@@ -677,15 +1134,17 @@ const styles = StyleSheet.create({
     gap: wp('1%'),
   },
   infoIcon: {
-    width: wp('3%'),
-    height: wp('3.5%'),
-    tintColor: COLORS.textLight,
+    width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
+    height: isTablet ? scaleSize(wp('3%')) : scaleSize(wp('3.5%')),
+    tintColor: COLORS.primary,
   },
   infoTxt: {
     color: COLORS.textLight,
-    fontSize: wp('3%'),
-    fontWeight: '500',
+    fontSize: fontScale(isTablet ? wp('2.5%') : wp('3%')),
+    fontWeight: isIOS ? '600' : '500',
     marginRight: wp('2%'),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   tagsContainer: {
     flexDirection: 'row',
@@ -694,40 +1153,94 @@ const styles = StyleSheet.create({
   },
   restaurantTags: {
     color: COLORS.primary,
-    fontSize: wp('2.8%'),
-    fontWeight: '400',
+    fontSize: fontScale(isTablet ? wp('2.3%') : wp('2.8%')),
+    fontWeight: isIOS ? '500' : '400',
     backgroundColor: '#f3f1f1',
     paddingHorizontal: wp('2.5%'),
-    paddingVertical: hp('0.3%'),
-    borderRadius: wp('5%'),
+    paddingVertical: isIOS ? hp('0.4%') : hp('0.3%'),
+    borderRadius: scaleSize(wp('5%')),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   productGrid: {
     paddingHorizontal: wp('1%'),
   },
+  productRow: {
+    justifyContent: 'space-between',
+    paddingHorizontal: wp('1%'),
+  },
   productCard: {
     backgroundColor: COLORS.secondary,
-    width: wp('43%'),
-    borderRadius: wp('4%'),
-    padding: wp('3%'),
-    margin: wp('1.5%'),
-    shadowColor: COLORS.cardShadow,
-    elevation: 3,
-    position: 'relative',
+    width: isTablet ? scaleSize(wp('45%')) : scaleSize(wp('43%')),
+    borderRadius: scaleSize(wp('4%')),
+    padding: scaleSize(wp('3%')),
+    marginBottom: hp('2%'),
+    ...Platform.select({
+      ios: {
+        shadowColor: COLORS.cardShadow || '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   productImg: {
     width: '100%',
-    height: hp('16%'),
-    borderRadius: wp('3%'),
-    marginBottom: hp('1%'),
+    height: isTablet ? hp('14%') : hp('16%'),
+    borderRadius: scaleSize(wp('3%')),
   },
   productHeartWrapper: {
+    position: 'absolute',
+    top: scaleSize(wp('3%')),
+    right: scaleSize(wp('3%')),
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: scaleSize(wp('5%')),
+    padding: scaleSize(wp('2%')),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  productRatingBadge: {
+    position: 'absolute',
+    bottom: scaleSize(wp('3%')),
+    left: scaleSize(wp('3%')),
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: wp('2.5%'),
+    paddingVertical: hp('0.6%'),
+    borderRadius: scaleSize(wp('2%')),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   productTitle: {
-    fontWeight: '700',
-    fontSize: wp('3.6%'),
+    fontWeight: isIOS ? '800' : '700',
+    fontSize: fontScale(isTablet ? wp('3.2%') : wp('3.6%')),
     color: COLORS.textDark,
     marginBottom: hp('0.5%'),
+    marginTop: hp('1%'),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   priceRow: {
     flexDirection: 'row',
@@ -739,28 +1252,35 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: wp('1.5%'),
+    flex: 1,
   },
   productPrice: {
     color: '#111',
-    fontWeight: '700',
-    fontSize: wp('3.8%'),
+    fontWeight: isIOS ? '800' : '700',
+    fontSize: fontScale(isTablet ? wp('3.2%') : wp('3.8%')),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   oldPrice: {
     color: 'red',
     textDecorationLine: 'line-through',
-    fontSize: wp('3%'),
-    fontWeight: '500',
+    fontSize: fontScale(isTablet ? wp('2.5%') : wp('3%')),
+    fontWeight: isIOS ? '600' : '500',
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   plusBtn: {
     backgroundColor: COLORS.primary,
     borderRadius: wp('50%'),
-    padding: wp('2%'),
+    padding: scaleSize(wp('2%')),
     alignItems: 'center',
     justifyContent: 'center',
+    minWidth: scaleSize(wp('8%')),
+    minHeight: scaleSize(wp('8%')),
   },
   plusIcon: {
-    width: wp('3.5%'),
-    height: wp('3.5%'),
+    width: isTablet ? scaleSize(wp('3%')) : scaleSize(wp('3.5%')),
+    height: isTablet ? scaleSize(wp('3%')) : scaleSize(wp('3.5%')),
     tintColor: '#fff',
   },
   deliveryTimeRow: {
@@ -777,9 +1297,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp('2%'),
   },
   bottomImage: {
-    width: wp('15%'),
-    height: wp('15%'),
-    resizeMode: 'contain',
+    width: isTablet ? scaleSize(wp('8%')) : scaleSize(wp('10%')),
+    height: isTablet ? scaleSize(wp('8%')) : scaleSize(wp('10%')),
   },
   bottomTextContainer: {
     flex: 1,
@@ -787,9 +1306,11 @@ const styles = StyleSheet.create({
   },
   reachingTxt: {
     color: COLORS.primary,
-    fontWeight: '700',
-    fontSize: wp('3.8%'),
+    fontWeight: isIOS ? '800' : '700',
+    fontSize: fontScale(isTablet ? wp('3.2%') : wp('3.8%')),
     marginBottom: hp('0.5%'),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   deliveryTimeContainer: {
     flexDirection: 'row',
@@ -797,13 +1318,15 @@ const styles = StyleSheet.create({
     gap: wp('1.5%'),
   },
   deliveryClockIcon: {
-    width: wp('3%'),
-    height: wp('3.5%'),
+    width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
+    height: isTablet ? scaleSize(wp('3%')) : scaleSize(wp('3.5%')),
     tintColor: COLORS.textLight,
   },
   getDeliveredTxt: {
     color: COLORS.textLight,
-    fontSize: wp('3.2%'),
+    fontSize: fontScale(isTablet ? wp('2.8%') : wp('3.2%')),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
 });
 

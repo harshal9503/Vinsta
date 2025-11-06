@@ -1,44 +1,436 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, StatusBar } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  StatusBar,
+  Dimensions,
+  Share,
+  Alert,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
+
 const { width, height } = Dimensions.get('window');
 
 const ShareApp = () => {
   const navigation = useNavigation<any>();
 
+  const shareOptions = [
+    {
+      id: 1,
+      name: 'WhatsApp',
+      icon: require('../../../assets/whatsapp.png'),
+    },
+    {
+      id: 2,
+      name: 'Facebook',
+      icon: require('../../../assets/facebook.png'),
+    },
+    {
+      id: 3,
+      name: 'Instagram',
+      icon: require('../../../assets/instagram.png'),
+    },
+    {
+      id: 4,
+      name: 'Twitter',
+      icon: require('../../../assets/twitter.png'),
+    },
+    {
+      id: 5,
+      name: 'Email',
+      icon: require('../../../assets/email.png'),
+    },
+    {
+      id: 6,
+      name: 'Telegram',
+      icon: require('../../../assets/telegram.png'),
+    },
+  ];
+
+  const shareMessage = `Check out this amazing app! Download it now and enjoy great food delivery service. \n\nDownload Link: https://yourapp.com/download`;
+
+  const handleShare = async (platform: string) => {
+    try {
+      if (platform === 'More') {
+        const result = await Share.share({
+          message: shareMessage,
+          title: 'Share App',
+        });
+        
+        if (result.action === Share.sharedAction) {
+          if (result.activityType) {
+            console.log('Shared with', result.activityType);
+          } else {
+            console.log('Shared successfully');
+          }
+        } else if (result.action === Share.dismissedAction) {
+          console.log('Share dismissed');
+        }
+      } else {
+        await Share.share({
+          message: shareMessage,
+          title: `Share on ${platform}`,
+        });
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to share the app');
+    }
+  };
+
+  const referralCode = 'APP2024FRIEND';
+  const referralLink = 'https://yourapp.com/invite/APP2024FRIEND';
+
+  const copyToClipboard = (text: string) => {
+    Alert.alert('Copied!', 'Referral code copied to clipboard');
+  };
+
+  // Split share options into two rows
+  const firstRowOptions = shareOptions.slice(0, 3); // WhatsApp, Facebook, Instagram
+  const secondRowOptions = shareOptions.slice(3); // Twitter, Email
+
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-<Image source={require('../../../assets/back.png')} style={styles.backIcon} />        </TouchableOpacity>
+          <Image source={require('../../../assets/back.png')} style={styles.backIcon} />
+        </TouchableOpacity>
         <Text style={styles.headerTitle}>Share App</Text>
         <View style={{ width: 24 }} />
       </View>
 
-      <View style={styles.content}>
-        <Text style={styles.text}>Invite your friends to Vinsta using share options!</Text>
-      </View>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
+        {/* Hero Section */}
+        <View style={styles.heroSection}>
+          <Image 
+            source={require('../../../assets/Splash.png')} 
+            style={styles.heroImage} 
+          />
+          <Text style={styles.heroTitle}>Share the Love!</Text>
+          <Text style={styles.heroDescription}>
+            Share this app with your friends and family and help them discover amazing food delivery service.
+          </Text>
+        </View>
+
+        {/* Referral Code */}
+        <View style={styles.referralSection}>
+          <Text style={styles.referralTitle}>Your Referral Code</Text>
+          <TouchableOpacity 
+            style={styles.referralCodeBox}
+            onPress={() => copyToClipboard(referralCode)}
+          >
+            <Text style={styles.referralCode}>{referralCode}</Text>
+            <Image 
+              source={require('../../../assets/copy.png')} 
+              style={styles.copyIcon} 
+            />
+          </TouchableOpacity>
+          <Text style={styles.referralNote}>
+            Share this code with your friends for special rewards!
+          </Text>
+        </View>
+
+        {/* Share Options */}
+        <View style={styles.shareSection}>
+          <Text style={styles.shareTitle}>Share Via</Text>
+          
+          {/* First Row - 3 icons */}
+          <View style={styles.shareRow}>
+            {firstRowOptions.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                style={styles.shareOption}
+                onPress={() => handleShare(item.name)}
+              >
+                <View style={styles.shareIconContainer}>
+                  <Image source={item.icon} style={styles.shareIcon} />
+                </View>
+                <Text style={styles.shareOptionText}>{item.name}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* Second Row - 2 icons centered */}
+          <View style={styles.shareRow}>
+            {secondRowOptions.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                style={styles.shareOption}
+                onPress={() => handleShare(item.name)}
+              >
+                <View style={styles.shareIconContainer}>
+                  <Image source={item.icon} style={styles.shareIcon} />
+                </View>
+                <Text style={styles.shareOptionText}>{item.name}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        {/* Benefits */}
+        <View style={styles.benefitsSection}>
+          <Text style={styles.benefitsTitle}>Referral Benefits</Text>
+          <View style={styles.benefitsList}>
+            <View style={styles.benefitItem}>
+              <Image source={require('../../../assets/tick.png')} style={styles.benefitIcon} />
+              <View style={styles.benefitText}>
+                <Text style={styles.benefitTitle}>Get $10 Credit</Text>
+                <Text style={styles.benefitDescription}>
+                  Receive $10 credit when your friend signs up
+                </Text>
+              </View>
+            </View>
+            <View style={styles.benefitItem}>
+              <Image source={require('../../../assets/tick.png')} style={styles.benefitIcon} />
+              <View style={styles.benefitText}>
+                <Text style={styles.benefitTitle}>Friend Gets 20% Off</Text>
+                <Text style={styles.benefitDescription}>
+                  Your friend gets 20% off on their first order
+                </Text>
+              </View>
+            </View>
+            <View style={styles.benefitItem}>
+              <Image source={require('../../../assets/tick.png')} style={styles.benefitIcon} />
+              <View style={styles.benefitText}>
+                <Text style={styles.benefitTitle}>Exclusive Rewards</Text>
+                <Text style={styles.benefitDescription}>
+                  Unlock special rewards for multiple referrals
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* Stats */}
+        <View style={styles.statsSection}>
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>5</Text>
+            <Text style={styles.statLabel}>Friends Joined</Text>
+          </View>
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>$50</Text>
+            <Text style={styles.statLabel}>Total Credit Earned</Text>
+          </View>
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>3</Text>
+            <Text style={styles.statLabel}>Available Rewards</Text>
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 };
 
-export default ShareApp;
-
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.secondary },
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.secondary,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: height * 0.06,
+    paddingTop: height * 0.07,
     paddingBottom: 10,
     paddingHorizontal: 20,
+    backgroundColor: COLORS.secondary,
   },
-  backIcon: { width: 22, height: 22, resizeMode: 'contain', tintColor: COLORS.text },
-  headerTitle: { fontSize: width * 0.045, fontWeight: '700', color: COLORS.text },
-  content: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 24 },
-  text: { fontSize: width * 0.04, color: COLORS.gray, textAlign: 'center' },
+  backIcon: {
+    width: 22,
+    height: 22,
+    resizeMode: 'contain',
+    tintColor: '#000',
+  },
+  headerTitle: {
+    fontSize: width * 0.045,
+    fontWeight: '700',
+    color: '#000',
+  },
+  content: {
+    padding: 20,
+  },
+  heroSection: {
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  heroImage: {
+    width: 120,
+    height: 120,
+    marginBottom: 16,
+  },
+  heroTitle: {
+    fontSize: width * 0.05,
+    fontWeight: '700',
+    color: '#000',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  heroDescription: {
+    fontSize: width * 0.035,
+    color: '#666',
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+  referralSection: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 16,
+    marginBottom: 25,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  referralTitle: {
+    fontSize: width * 0.038,
+    fontWeight: '600',
+    color: '#000',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  referralCodeBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#f0f7ff',
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: COLORS.primary,
+    marginBottom: 12,
+  },
+  referralCode: {
+    fontSize: width * 0.04,
+    fontWeight: '700',
+    color: COLORS.primary,
+    letterSpacing: 2,
+  },
+  copyIcon: {
+    width: 20,
+    height: 20,
+    resizeMode: 'contain',
+    tintColor: COLORS.primary,
+  },
+  referralNote: {
+    fontSize: width * 0.032,
+    color: '#666',
+    textAlign: 'center',
+  },
+  shareSection: {
+    marginBottom: 25,
+  },
+  shareTitle: {
+    fontSize: width * 0.04,
+    fontWeight: '700',
+    color: '#000',
+    marginBottom: 16,
+  },
+  shareRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  shareOption: {
+    width: width * 0.28,
+    alignItems: 'center',
+  },
+  shareIconContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+  shareIcon: {
+    width: 32,
+    height: 32,
+    resizeMode: 'contain',
+  },
+  shareOptionText: {
+    fontSize: width * 0.032,
+    color: '#000',
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+  benefitsSection: {
+    marginBottom: 25,
+  },
+  benefitsTitle: {
+    fontSize: width * 0.04,
+    fontWeight: '700',
+    color: '#000',
+    marginBottom: 16,
+  },
+  benefitsList: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  benefitItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  benefitIcon: {
+    width: 24,
+    height: 24,
+    resizeMode: 'contain',
+    marginRight: 12,
+    tintColor: COLORS.primary,
+  },
+  benefitText: {
+    flex: 1,
+  },
+  benefitTitle: {
+    fontSize: width * 0.035,
+    fontWeight: '600',
+    color: '#000',
+    marginBottom: 4,
+  },
+  benefitDescription: {
+    fontSize: width * 0.032,
+    color: '#666',
+  },
+  statsSection: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  statItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  statNumber: {
+    fontSize: width * 0.05,
+    fontWeight: '700',
+    color: COLORS.primary,
+    marginBottom: 4,
+  },
+  statLabel: {
+    fontSize: width * 0.028,
+    color: '#666',
+    textAlign: 'center',
+  },
 });
+
+export default ShareApp;

@@ -440,6 +440,7 @@ const MyOrders = () => {
               placeholder="Write your review..."
               value={reviewText}
               onChangeText={setReviewText}
+              placeholderTextColor={'#999'}
             />
 
             <View style={styles.modalBtnRow}>
@@ -471,7 +472,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: height * 0.06,
+    paddingTop: height * 0.07,
     paddingHorizontal: 20,
   },
   backIcon: { width: 22, height: 22, tintColor: '#000' },
@@ -586,7 +587,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
-  plusIcon: { width: 28, height: 28 },
+  plusIcon: { width: 20, height: 20 },
   activeTitle: { marginLeft: 8, fontSize: 16, fontWeight: '700', color: '#000' },
 
   subCard: {
@@ -612,7 +613,7 @@ const styles = StyleSheet.create({
   },
   mealGroup: { flexDirection: 'row', alignItems: 'center' },
   tick: { width: 16, height: 16, marginRight: 4 },
-  mealText: { fontSize: 13, color: '#000', fontWeight: '600' },
+  mealText: { fontSize: 13, color: '#E87C23', fontWeight: '600' },
   arrowIcon: { width: 5, height: 8, marginLeft: 6 },
 
   bottomNoteRow: {
@@ -621,8 +622,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 10,
   },
-  cancelNote: { color: '#777', fontSize: 13 },
-  addText: { color: COLORS.primary, fontWeight: '700', fontSize: 13 },
+  cancelNote: { color: '#EA001B', fontSize: 13 },
+  addText: { color: '#259E29', fontWeight: '700', fontSize: 13 },
 
   modalOverlay: {
     flex: 1,

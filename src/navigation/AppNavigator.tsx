@@ -33,10 +33,18 @@ import Language from '../components/Profile/Settings/Language';
 import NotificationSetting from '../components/Profile/Settings/NotificationSetting';
 import ShareApp from '../components/Profile/Settings/ShareApp';
 import AboutUs from '../components/Profile/Settings/AboutUs';
+
 // Home
 import Search from '../components/HomeScreen/search/search';
 import restaurentDetails from '../components/HomeScreen/search/restaurentDetails';
 import fooddetails from '../components/HomeScreen/search/fooddetails';
+import todayOfferView from '../components/HomeScreen/todayOfferView';
+import featuredRestrorents from '../components/HomeScreen/featuredRestrorents';
+import bestBurger from '../components/HomeScreen/bestBurger';
+import Cart from '../components/HomeScreen/Cart';
+import DarkMode from '../components/Profile/DarkMode';
+import PrivacyPolicy from '../components/Profile/Settings/PrivacyPolicy';
+import TermsConditions from '../components/Profile/Settings/TermsConditions';
 
 const Stack = createStackNavigator();
 
@@ -64,6 +72,7 @@ const AppNavigator = () => (
       <Stack.Screen name="MyOrder" component={MyOrder} />
       <Stack.Screen name="Subscription" component={Subscription} />
       <Stack.Screen name="Wallet" component={Wallet} />
+      <Stack.Screen name="DarkMode" component={DarkMode} />
       
       {/* Settings Screens */}
       <Stack.Screen name="AccountManagement" component={AccountManagement} />
@@ -73,12 +82,16 @@ const AppNavigator = () => (
       <Stack.Screen name="NotificationSetting" component={NotificationSetting} />
       <Stack.Screen name="ShareApp" component={ShareApp} />
       <Stack.Screen name="AboutUs" component={AboutUs} />
-      
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
+      <Stack.Screen name="TermsConditions" component={TermsConditions} />
       {/* Home */}
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="restaurentDetails" component={restaurentDetails} />
       <Stack.Screen name="fooddetails" component={fooddetails} />
-
+      <Stack.Screen name="todayOfferView" component={todayOfferView} />
+      <Stack.Screen name="featuredRestrorents" component={featuredRestrorents} />
+      <Stack.Screen name="bestBurger" component={bestBurger} />
+      <Stack.Screen name="Cart" component={Cart} />
       {/* Main App */}
       <Stack.Screen name="Home" component={BottomTabNavigator} />
     </Stack.Navigator>

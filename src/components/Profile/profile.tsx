@@ -32,7 +32,7 @@ const Profile = () => {
   const bottomOptions = [
     { id: 1, icon: require('../../assets/profile.png'), label: 'Profile', route: 'ProfileEdit' },
     { id: 2, icon: require('../../assets/favourite.png'), label: "Favourite's", route: 'Favourite' },
-    { id: 3, icon: require('../../assets/offers.png'), label: "My Offer's", route: 'MyOffer' },
+    { id: 3, icon: require('../../assets/offers.png'), label: "My Offer's", route: 'todayOfferView' },
     { id: 4, icon: require('../../assets/refer.png'), label: 'Refer To Earn', route: 'Refer' },
     { id: 5, icon: require('../../assets/dark.png'), label: 'Dark Mode', route: 'DarkMode' },
     { id: 6, icon: require('../../assets/support.png'), label: 'Support', route: 'Support' },
@@ -46,10 +46,7 @@ const Profile = () => {
   };
 
   const handleNavigation = (route: string) => {
-    if (route === 'DarkMode') {
-      // Handle dark mode toggle here if needed
-      return;
-    }
+    // Remove the early return for DarkMode so it navigates properly
     navigation.navigate(route);
   };
 
@@ -134,13 +131,13 @@ const Profile = () => {
                 navigation.navigate('SignIn')
               )
             }>
-            {/* <View style={styles.optionLeft}>
+            <View style={styles.optionLeft}>
               <Image
                 source={require('../../assets/logout.png')}
                 style={styles.optionIcon}
               />
               <Text style={[styles.optionLabel, { color: '#E53935' }]}>Logout</Text>
-            </View> */}
+            </View>
           </TouchableOpacity>
 
           {/* ===== Delete Account ===== */}
@@ -151,7 +148,7 @@ const Profile = () => {
                 navigation.navigate('SignIn')
               )
             }>
-            {/* <View style={styles.optionLeft}>
+            <View style={styles.optionLeft}>
               <Image
                 source={require('../../assets/delete.png')}
                 style={styles.optionIcon}
@@ -159,7 +156,7 @@ const Profile = () => {
               <Text style={[styles.optionLabel, { color: '#E53935' }]}>
                 Delete Account
               </Text>
-            </View> */}
+            </View>
           </TouchableOpacity>
         </View>
       </ScrollView>

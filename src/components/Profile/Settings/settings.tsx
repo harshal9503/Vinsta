@@ -86,7 +86,7 @@ const Settings = () => {
           </TouchableOpacity>
 
           {/* ===== DELETE ACCOUNT ===== */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.optionRow}
             activeOpacity={0.7}
             onPress={() =>
@@ -97,7 +97,7 @@ const Settings = () => {
               <Image source={require('../../../assets/delete.png')} style={styles.optionIcon} />
               <Text style={[styles.optionLabel, { color: '#E53935' }]}>Delete Account</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </ScrollView>
 
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: height * 0.06,
+    paddingTop: height * 0.07,
     paddingBottom: 10,
     paddingHorizontal: 20,
     backgroundColor: COLORS.secondary,

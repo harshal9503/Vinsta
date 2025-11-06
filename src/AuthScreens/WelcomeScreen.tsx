@@ -13,6 +13,7 @@ import {
   Image,
   Dimensions,
   Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import CheckBox from '@react-native-community/checkbox';
@@ -21,7 +22,7 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {COLORS} from '../theme/colors';
 
 const {width, height} = Dimensions.get('window');
-const AVATAR_SIZE = 80;
+const AVATAR_SIZE = width * 0.2;
 
 const WelcomeScreen = () => {
   const navigation = useNavigation();
@@ -40,7 +41,7 @@ const WelcomeScreen = () => {
   const [pickerVisible, setPickerVisible] = useState(false);
 
   const defaultUserImage = require('../assets/user.png');
-  const closeIcon = require('../assets/close.png'); // close.png icon
+  const closeIcon = require('../assets/close.png');
 
   useEffect(() => {
     const loadData = async () => {
@@ -144,167 +145,190 @@ const WelcomeScreen = () => {
         };
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      keyboardShouldPersistTaps="handled"
-      showsVerticalScrollIndicator={false}>
-      {/* Title */}
-      <View style={{marginTop: 20}} />
-      <Text style={styles.title}>Welcome</Text>
-      <Text style={styles.subtitle}>Fill the details & complete your profile</Text>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}>
+        
+        {/* Title */}
+        <View style={styles.titleSection}>
+          <Text style={styles.title}>Welcome</Text>
+          <Text style={styles.subtitle}>Fill the details & complete your profile</Text>
+        </View>
 
-      {/* Name */}
-      <Text style={styles.label}>
-        Enter Your Name <Text style={styles.required}>*</Text>
-      </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Please enter your name here"
-        placeholderTextColor="#999"
-        value={name}
-        onChangeText={setName}
-      />
+        {/* Profile Photo - Moved to top */}
+        <View style={styles.profileSection}>
+          <Text style={styles.label}>
+            Profile photo <Text style={styles.required}>*</Text>
+          </Text>
+          <View style={styles.avatarRow}>
+            <TouchableOpacity
+              style={styles.avatarWrapper}
+              activeOpacity={0.8}
+              onPress={openPicker}>
+              <Image
+                source={profileImage?.uri ? {uri: profileImage.uri} : defaultUserImage}
+                style={styles.avatar}
+              />
+              <View style={styles.cameraBadge}>
+                <Text style={styles.cameraBadgeText}>📷</Text>
+              </View>
+            </TouchableOpacity>
+            <View style={styles.avatarTextContainer}>
+              <Text style={styles.avatarHelpTitle}>Add a face to your profile</Text>
+              <Text style={styles.avatarHelpText}>
+                Tap to take a photo or upload from gallery. JPG \ PNG up to ~5 MB.
+              </Text>
+            </View>
+          </View>
+        </View>
 
-      {/* Email */}
-      <Text style={styles.label}>
-        Enter Your Email <Text style={styles.required}>*</Text>
-      </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Please enter your email here"
-        keyboardType="email-address"
-        placeholderTextColor="#999"
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-      />
-
-      {/* Mobile */}
-      <Text style={styles.label}>
-        Enter Your Mobile No. <Text style={styles.required}>*</Text>
-      </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Please enter your mobile number"
-        keyboardType="number-pad"
-        value={mobile}
-        editable={false}
-      />
-
-      {/* Profile Photo */}
-      <Text style={styles.label}>
-        Profile photo <Text style={styles.required}>*</Text>
-      </Text>
-      <View style={styles.avatarRow}>
-        <TouchableOpacity
-          style={styles.avatarWrapper}
-          activeOpacity={0.8}
-          onPress={openPicker}>
-          <Image
-            source={profileImage?.uri ? {uri: profileImage.uri} : defaultUserImage}
-            style={styles.avatar}
+        {/* Name */}
+        <View style={styles.inputSection}>
+          <Text style={styles.label}>
+            Enter Your Name <Text style={styles.required}>*</Text>
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Please enter your name here"
+            placeholderTextColor="#999"
+            value={name}
+            onChangeText={setName}
+            returnKeyType="next"
           />
-          <View style={styles.cameraBadge}>
-            <Text style={styles.cameraBadgeText}>📷</Text>
-          </View>
+        </View>
+
+        {/* Email */}
+        <View style={styles.inputSection}>
+          <Text style={styles.label}>
+            Enter Your Email <Text style={styles.required}>*</Text>
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Please enter your email here"
+            keyboardType="email-address"
+            placeholderTextColor="#999"
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            returnKeyType="next"
+          />
+        </View>
+
+        {/* Mobile */}
+        <View style={styles.inputSection}>
+          <Text style={styles.label}>
+            Enter Your Mobile No. <Text style={styles.required}>*</Text>
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Please enter your mobile number"
+            keyboardType="number-pad"
+            value={mobile}
+            editable={false}
+          />
+        </View>
+
+        {/* Reference Code */}
+        <View style={styles.inputSection}>
+          <Text style={styles.label}>Reference Code (Optional)</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Reference code"
+            placeholderTextColor="#999"
+            value={refCode}
+            onChangeText={setRefCode}
+            returnKeyType="done"
+          />
+        </View>
+
+        {/* Terms */}
+        <View style={styles.termsRow}>
+          <CheckBox
+            value={accepted}
+            onValueChange={setAccepted}
+            {...checkBoxProps}
+          />
+          <Text style={styles.termsTextWithSpace}>
+            I accept{' '}
+            <Text style={styles.link} onPress={handleTermsPress}>
+              terms & conditions.
+            </Text>
+          </Text>
+        </View>
+
+        {/* Submit Button */}
+        <TouchableOpacity
+          style={[styles.button, {opacity: loading ? 0.7 : 1}]}
+          onPress={handleSubmit}
+          disabled={loading}>
+          {loading ? (
+            <ActivityIndicator color={COLORS.secondary} size="small" />
+          ) : (
+            <Text style={styles.buttonText}>Submit</Text>
+          )}
         </TouchableOpacity>
-        <View style={{flex: 1}}>
-          <Text style={styles.avatarHelpTitle}>Add a face to your profile</Text>
-          <Text style={styles.avatarHelpText}>
-            Tap to take a photo or upload from gallery. JPG \ PNG up to ~5 MB.
-          </Text>
-        </View>
-      </View>
 
-      {/* Reference Code */}
-      <Text style={styles.label}>Reference Code (Optional)</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Reference code"
-        placeholderTextColor="#999"
-        value={refCode}
-        onChangeText={setRefCode}
-      />
+        {/* Spacer for keyboard */}
+        <View style={styles.bottomSpacer} />
 
-      {/* Terms */}
-      <View style={styles.termsRow}>
-        <CheckBox
-          value={accepted}
-          onValueChange={setAccepted}
-          {...checkBoxProps}
-        />
-        <Text style={styles.termsTextWithSpace}>
-          I accept{' '}
-          <Text style={styles.link} onPress={handleTermsPress}>
-            terms & conditions.
-          </Text>
-        </Text>
-      </View>
-
-      {/* Submit Button */}
-      <TouchableOpacity
-        style={[styles.button, {opacity: loading ? 0.7 : 1}]}
-        onPress={handleSubmit}
-        disabled={loading}>
-        {loading ? (
-          <ActivityIndicator color={COLORS.secondary} size="small" />
-        ) : (
-          <Text style={styles.buttonText}>Submit</Text>
-        )}
-      </TouchableOpacity>
-
-      {/* Popup Modal (same as SignInScreen) */}
-      <Modal
-        transparent
-        visible={popupVisible}
-        animationType="fade"
-        onRequestClose={closePopup}>
-        <View style={styles.popupOverlay}>
-          <View style={styles.popupBox}>
-            <TouchableOpacity style={styles.closeIconWrapper} onPress={closePopup}>
-              <Image
-                source={closeIcon}
-                style={styles.closeIcon}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-            <Text style={styles.popupText}>{popupMessage}</Text>
-            <TouchableOpacity style={styles.popupButton} onPress={closePopup}>
-              <Text style={styles.popupButtonText}>OK</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Image Picker Modal */}
-      <Modal visible={pickerVisible} transparent animationType="fade">
-        <View style={styles.popupOverlay}>
-          <View style={styles.popupBox}>
-            <TouchableOpacity style={styles.closeIconWrapper} onPress={closePicker}>
-              <Image
-                source={closeIcon}
-                style={styles.closeIcon}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-            <Text style={styles.popupTitle}>Change your Profile pic</Text>
-            <TouchableOpacity style={styles.pickerButton} onPress={handleTakePhoto}>
-              <Text style={styles.pickerButtonText}>Take photo</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.pickerButton} onPress={handleChooseFromGallery}>
-              <Text style={styles.pickerButtonText}>Choose from Gallery</Text>
-            </TouchableOpacity>
-            {profileImage && (
-              <TouchableOpacity style={styles.pickerButton} onPress={removeProfileImage}>
-                <Text style={[styles.pickerButtonText, {color: '#FF3B30'}]}>
-                  Remove Profile Photo
-                </Text>
+        {/* Popup Modal */}
+        <Modal
+          transparent
+          visible={popupVisible}
+          animationType="fade"
+          onRequestClose={closePopup}>
+          <View style={styles.popupOverlay}>
+            <View style={styles.popupBox}>
+              <TouchableOpacity style={styles.closeIconWrapper} onPress={closePopup}>
+                <Image
+                  source={closeIcon}
+                  style={styles.closeIcon}
+                  resizeMode="contain"
+                />
               </TouchableOpacity>
-            )}
+              <Text style={styles.popupText}>{popupMessage}</Text>
+              <TouchableOpacity style={styles.popupButton} onPress={closePopup}>
+                <Text style={styles.popupButtonText}>OK</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </Modal>
-    </ScrollView>
+        </Modal>
+
+        {/* Image Picker Modal */}
+        <Modal visible={pickerVisible} transparent animationType="fade">
+          <View style={styles.popupOverlay}>
+            <View style={styles.popupBox}>
+              <TouchableOpacity style={styles.closeIconWrapper} onPress={closePicker}>
+                <Image
+                  source={closeIcon}
+                  style={styles.closeIcon}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+              <Text style={styles.popupTitle}>Change your Profile pic</Text>
+              <TouchableOpacity style={styles.pickerButton} onPress={handleTakePhoto}>
+                <Text style={styles.pickerButtonText}>Take photo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.pickerButton} onPress={handleChooseFromGallery}>
+                <Text style={styles.pickerButtonText}>Choose from Gallery</Text>
+              </TouchableOpacity>
+              {profileImage && (
+                <TouchableOpacity style={styles.pickerButton} onPress={removeProfileImage}>
+                  <Text style={[styles.pickerButtonText, {color: '#FF3B30'}]}>
+                    Remove Profile Photo
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        </Modal>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -312,26 +336,41 @@ const WelcomeScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
-    paddingTop: 80,
-    paddingBottom: 8000,
+    flex: 1,
     backgroundColor: COLORS.secondary,
   },
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: width * 0.05,
+    paddingTop: height * 0.08,
+    paddingBottom: height * 0.1,
+  },
+  titleSection: {
+    marginBottom: height * 0.03,
+  },
   title: {
-    fontSize: 24,
+    fontSize: width * 0.06,
     fontWeight: '700',
     color: COLORS.primary,
-    marginBottom: 4,
+    marginBottom: height * 0.005,
+    textAlign: 'flext-start',
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: width * 0.035,
     color: COLORS.text,
-    marginBottom: 28,
+   
+    textAlign: 'flext-start',
+  },
+  profileSection: {
+    marginBottom: height * 0.03,
+  },
+  inputSection: {
+    marginBottom: height * 0.02,
   },
   label: {
-    fontSize: 14,
+    fontSize: width * 0.035,
     color: COLORS.text,
-    marginBottom: 6,
+    marginBottom: height * 0.008,
     fontWeight: '500',
   },
   required: {
@@ -340,19 +379,18 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: COLORS.primary,
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    marginBottom: 20,
-    fontSize: 14,
+    borderRadius: width * 0.025,
+    paddingHorizontal: width * 0.04,
+    paddingVertical: height * 0.015,
+    fontSize: width * 0.035,
     color: COLORS.text,
     backgroundColor: COLORS.secondary,
+    minHeight: height * 0.06,
   },
   avatarRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    marginBottom: 20,
+    gap: width * 0.03,
   },
   avatarWrapper: {
     width: AVATAR_SIZE,
@@ -368,42 +406,48 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: AVATAR_SIZE / 2,
   },
+  avatarTextContainer: {
+    flex: 1,
+  },
   cameraBadge: {
     position: 'absolute',
     right: -2,
     bottom: -2,
     backgroundColor: COLORS.primary,
-    borderRadius: 16,
-    paddingHorizontal: 6,
-    paddingVertical: 3,
+    borderRadius: width * 0.04,
+    paddingHorizontal: width * 0.015,
+    paddingVertical: height * 0.005,
     borderWidth: 2,
     borderColor: '#fff',
     elevation: 4,
   },
   cameraBadgeText: {
     color: '#fff',
-    fontSize: 11,
-    marginBottom: 6,
-    marginRight: 2,
+    fontSize: width * 0.025,
   },
   avatarHelpTitle: {
-    fontSize: 13,
+    fontSize: width * 0.033,
     fontWeight: '600',
     color: COLORS.text,
+    marginBottom: height * 0.005,
   },
   avatarHelpText: {
-    fontSize: 12,
+    fontSize: width * 0.03,
     color: '#555',
+    lineHeight: height * 0.02,
   },
   termsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 18,
+    marginBottom: height * 0.03,
+    marginTop: height * 0.01,
   },
   termsTextWithSpace: {
-    fontSize: 13,
+    fontSize: width * 0.032,
     color: COLORS.text,
-    marginLeft: 8, // extra spacing after checkbox
+    marginLeft: width * 0.02,
+    flex: 1,
+    lineHeight: height * 0.02,
   },
   link: {
     color: COLORS.primary,
@@ -412,8 +456,8 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: COLORS.primary,
     width: '100%',
-    paddingVertical: 14,
-    borderRadius: 12,
+    paddingVertical: height * 0.02,
+    borderRadius: width * 0.03,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: COLORS.shadow,
@@ -421,11 +465,15 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 4,
+    marginTop: height * 0.01,
   },
   buttonText: {
     color: COLORS.secondary,
-    fontSize: 16,
+    fontSize: width * 0.04,
     fontWeight: '700',
+  },
+  bottomSpacer: {
+    height: height * 0.05,
   },
   /** POPUP **/
   popupOverlay: {
@@ -433,12 +481,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.4)',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: width * 0.05,
   },
   popupBox: {
     width: width * 0.8,
     backgroundColor: COLORS.secondary,
-    borderRadius: 12,
-    padding: 20,
+    borderRadius: width * 0.03,
+    padding: width * 0.05,
     alignItems: 'center',
     position: 'relative',
     shadowColor: COLORS.shadow,
@@ -451,43 +500,47 @@ const styles = StyleSheet.create({
     fontSize: width * 0.04,
     color: COLORS.text,
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: height * 0.02,
+    lineHeight: height * 0.025,
   },
   popupButton: {
     backgroundColor: COLORS.primary,
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 20,
+    borderRadius: width * 0.02,
+    paddingVertical: height * 0.012,
+    paddingHorizontal: width * 0.06,
   },
   popupButtonText: {
     color: COLORS.secondary,
     fontWeight: '700',
-    fontSize: width * 0.04,
+    fontSize: width * 0.035,
   },
   closeIconWrapper: {
     position: 'absolute',
-    top: 10,
-    right: 10,
-    padding: 4,
+    top: width * 0.03,
+    right: width * 0.03,
+    padding: width * 0.01,
   },
   closeIcon: {
-    width: 18,
-    height: 18,
+    width: width * 0.045,
+    height: width * 0.045,
     tintColor: COLORS.text,
   },
   popupTitle: {
-    fontSize: 16,
+    fontSize: width * 0.04,
     fontWeight: '600',
     color: COLORS.text,
-    marginBottom: 10,
+    marginBottom: height * 0.02,
+    textAlign: 'center',
   },
   pickerButton: {
-    paddingVertical: 10,
+    paddingVertical: height * 0.015,
     width: '100%',
     alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
   },
   pickerButtonText: {
-    fontSize: 14,
+    fontSize: width * 0.035,
     color: COLORS.text,
   },
 });
