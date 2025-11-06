@@ -52,11 +52,11 @@ const Profile = () => {
   const bottomOptions = [
     { id: 1, icon: require('../../assets/profile.png'), label: 'Profile', route: 'ProfileEdit' },
     { id: 2, icon: require('../../assets/favourite.png'), label: "Favourite's", route: 'Favourite' },
-    { id: 3, icon: require('../../assets/offers.png'), label: "My Offer's", route: 'MyOffer' },
+    { id: 3, icon: require('../../assets/offers.png'), label: "My Offer's", route: 'todayOfferView' },
     { id: 4, icon: require('../../assets/refer.png'), label: 'Refer To Earn', route: 'Refer' },
     { id: 5, icon: require('../../assets/dark.png'), label: 'Dark Mode', route: 'DarkMode' },
     { id: 6, icon: require('../../assets/support.png'), label: 'Support', route: 'Support' },
-    { id: 7, icon: require('../../assets/settings.png'), label: "Setting's", route: 'Settings' },
+    { id: 7, icon: require('../../assets/settings1.png'), label: "Setting's", route: 'Settings' },
   ];
 
   const openPopup = (message: string, onConfirm: () => void) => {
@@ -66,10 +66,7 @@ const Profile = () => {
   };
 
   const handleNavigation = (route: string) => {
-    if (route === 'DarkMode') {
-      // Handle dark mode toggle here if needed
-      return;
-    }
+    // Remove the early return for DarkMode so it navigates properly
     navigation.navigate(route);
   };
 
@@ -382,7 +379,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 14,
+    paddingVertical: 15,
     borderBottomWidth: 0.5,
     borderBottomColor: '#eee',
   },

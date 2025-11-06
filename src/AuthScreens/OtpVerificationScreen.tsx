@@ -11,8 +11,14 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
+  ScrollView,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Dimensions,
 } from 'react-native';
 import { COLORS } from '../theme/colors';
+
+const { height: screenHeight } = Dimensions.get('window');
 
 const OtpVerificationScreen = ({ navigation, route }: any) => {
   const { mobile } = route.params || {};
@@ -20,8 +26,10 @@ const OtpVerificationScreen = ({ navigation, route }: any) => {
   const [loadingResend, setLoadingResend] = useState(false);
   const [loadingVerify, setLoadingVerify] = useState(false);
   const [timer, setTimer] = useState(60); // Start with 1 minute (60s)
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
 
   const inputs = useRef<TextInput[]>([]);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   // Focus first input on load
   useEffect(() => {
@@ -35,15 +43,46 @@ const OtpVerificationScreen = ({ navigation, route }: any) => {
     return () => clearInterval(interval);
   }, [timer]);
 
+  // Keyboard listeners
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      (e) => {
+        setKeyboardVisible(true);
+        // Scroll to make inputs visible when keyboard appears
+        setTimeout(() => {
+          scrollViewRef.current?.scrollTo({ y: 100, animated: true });
+        }, 100);
+      }
+    );
+    
+    const keyboardDidHideListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   const handleChange = (text: string, index: number) => {
     const newOtp = [...otp];
     newOtp[index] = text;
 
     // Move forward when typing
-    if (text && index < 5) inputs.current[index + 1]?.focus();
+    if (text && index < 5) {
+      inputs.current[index + 1]?.focus();
+    }
 
     // Move backward when deleting
-    if (!text && index > 0) inputs.current[index - 1]?.focus();
+    if (!text && index > 0) {
+      inputs.current[index - 1]?.focus();
+    }
 
     setOtp(newOtp);
   };
@@ -82,84 +121,119 @@ const OtpVerificationScreen = ({ navigation, route }: any) => {
     return `${String(minutes).padStart(2, '0')} : ${String(seconds).padStart(2, '0')}`;
   };
 
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      style={styles.container}
-    >
-      {/* Logo */}
-      <Image
-        source={require('../assets/Splash.png')}
-        style={styles.logo}
-        resizeMode="contain"
-      />
-
-      {/* Title */}
-      <Text style={styles.title}>O.T.P. Verification</Text>
-
-      {/* Subtitle */}
-      <Text style={styles.subtitle}>
-        Enter the code from SMS we sent to {'\n'}
-        <Text style={styles.mobileText}>+91 {mobile}</Text>
-      </Text>
-
-      {/* Timer */}
-      <Text style={styles.timerText}>{formatTime()}</Text>
-
-      {/* OTP Inputs */}
-      <View style={styles.otpContainer}>
-        {otp.map((digit, index) => (
-          <TextInput
-            key={index}
-            ref={(ref) => (inputs.current[index] = ref!)}
-            style={[
-              styles.otpInput,
-              digit !== '' && { borderColor: COLORS.primary },
-            ]}
-            keyboardType="number-pad"
-            maxLength={1}
-            value={digit}
-            onChangeText={(text) => handleChange(text, index)}
-            onKeyPress={(e) => handleKeyPress(e, index)}
-            selectionColor={COLORS.primary}
-            textAlign="center"
-          />
-        ))}
-      </View>
-
-      {/* Verify Button */}
-      <TouchableOpacity
-        style={[
-          styles.button,
-          { opacity: otp.join('').length === 6 ? 1 : 0.6 },
-        ]}
-        onPress={handleVerify}
-        disabled={loadingVerify || otp.join('').length !== 6}
-        activeOpacity={0.8}
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
-        {loadingVerify ? (
-          <ActivityIndicator color={COLORS.secondary} size="small" />
-        ) : (
-          <Text style={styles.buttonText}>Verify</Text>
-        )}
-      </TouchableOpacity>
+        <ScrollView
+          ref={scrollViewRef}
+          contentContainerStyle={[
+            styles.scrollContainer,
+            keyboardVisible && styles.scrollContainerKeyboardVisible
+          ]}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* Logo */}
+          <Image
+            source={require('../assets/Splash.png')}
+            style={[
+              styles.logo,
+              keyboardVisible && styles.logoKeyboardVisible
+            ]}
+            resizeMode="contain"
+          />
 
-      {/* Resend OTP */}
-      <View style={styles.resendContainer}>
-        <Text style={styles.resendText}>Didn’t receive the OTP? </Text>
-        {timer > 0 ? (
-          <Text style={[styles.resendButton, { opacity: 0.5 }]}>Resend</Text>
-        ) : (
-          <TouchableOpacity onPress={handleResend} disabled={loadingResend}>
-            {loadingResend ? (
-              <ActivityIndicator color={COLORS.primary} size="small" />
+          {/* Title */}
+          <Text style={styles.title}>O.T.P. Verification</Text>
+
+          {/* Subtitle */}
+          <Text style={styles.subtitle}>
+            Enter the code from SMS we sent to {'\n'}
+            <Text style={styles.mobileText}>+91 {mobile}</Text>
+          </Text>
+
+          {/* Timer */}
+          <Text style={styles.timerText}>{formatTime()}</Text>
+
+          {/* OTP Inputs */}
+          <View style={styles.otpContainer}>
+            {otp.map((digit, index) => (
+              <TextInput
+                key={index}
+                ref={(ref) => (inputs.current[index] = ref!)}
+                style={[
+                  styles.otpInput,
+                  digit !== '' && { borderColor: COLORS.primary },
+                ]}
+                keyboardType="number-pad"
+                maxLength={1}
+                value={digit}
+                onChangeText={(text) => handleChange(text, index)}
+                onKeyPress={(e) => handleKeyPress(e, index)}
+                selectionColor={COLORS.primary}
+                textAlign="center"
+                onFocus={() => {
+                  if (keyboardVisible) {
+                    setTimeout(() => {
+                      scrollViewRef.current?.scrollTo({ y: 120, animated: true });
+                    }, 100);
+                  }
+                }}
+              />
+            ))}
+          </View>
+
+          {/* Verify Button */}
+          <View style={[
+            styles.buttonContainer,
+            keyboardVisible && styles.buttonContainerKeyboardVisible
+          ]}>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                { opacity: otp.join('').length === 6 ? 1 : 0.6 },
+              ]}
+              onPress={handleVerify}
+              disabled={loadingVerify || otp.join('').length !== 6}
+              activeOpacity={0.8}
+            >
+              {loadingVerify ? (
+                <ActivityIndicator color={COLORS.secondary} size="small" />
+              ) : (
+                <Text style={styles.buttonText}>Verify</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+
+          {/* Resend OTP */}
+          <View style={[
+            styles.resendContainer,
+            keyboardVisible && styles.resendContainerKeyboardVisible
+          ]}>
+            <Text style={styles.resendText}>Didn't receive the OTP? </Text>
+            {timer > 0 ? (
+              <Text style={[styles.resendButton, { opacity: 0.5 }]}>Resend</Text>
             ) : (
-              <Text style={styles.resendButton}>Resend</Text>
+              <TouchableOpacity onPress={handleResend} disabled={loadingResend}>
+                {loadingResend ? (
+                  <ActivityIndicator color={COLORS.primary} size="small" />
+                ) : (
+                  <Text style={styles.resendButton}>Resend</Text>
+                )}
+              </TouchableOpacity>
             )}
-          </TouchableOpacity>
-        )}
-      </View>
-    </KeyboardAvoidingView>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -167,20 +241,35 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.secondary,
+  },
+  scrollContainer: {
+    flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 24,
+    paddingVertical: 40,
+    minHeight: screenHeight,
+  },
+  scrollContainerKeyboardVisible: {
+    justifyContent: 'flex-start',
+    paddingTop: 60,
   },
   logo: {
     width: 90,
     height: 90,
     marginBottom: 40,
   },
+  logoKeyboardVisible: {
+    width: 70,
+    height: 70,
+    marginBottom: 30,
+  },
   title: {
     fontSize: 22,
     color: COLORS.primary,
     fontWeight: '700',
     marginBottom: 8,
+    textAlign: 'center',
   },
   subtitle: {
     textAlign: 'center',
@@ -215,7 +304,15 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     fontWeight: '600',
     textAlign: 'center',
-    textAlignVertical: 'center', // centers cursor vertically on Android
+    textAlignVertical: 'center',
+  },
+  buttonContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  buttonContainerKeyboardVisible: {
+    marginTop: 30,
   },
   button: {
     backgroundColor: COLORS.primary,
@@ -229,7 +326,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 6,
-    marginTop: 10,
   },
   buttonText: {
     color: COLORS.secondary,
@@ -240,6 +336,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 20,
+    marginBottom: 20,
+  },
+  resendContainerKeyboardVisible: {
+    marginTop: 30,
+    marginBottom: 30,
   },
   resendText: {
     color: COLORS.text,

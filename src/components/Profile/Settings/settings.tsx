@@ -12,7 +12,7 @@ import {
   StatusBar,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { COLORS } from '../../theme/colors';
+import { COLORS } from '../../../theme/colors';
 
 const { width, height } = Dimensions.get('window');
 
@@ -22,123 +22,86 @@ const Settings = () => {
   const [popupMessage, setPopupMessage] = useState('');
   const [popupAction, setPopupAction] = useState<null | (() => void)>(null);
 
+  /** ─── Function to open confirmation popup ─── **/
   const openPopup = (message: string, onConfirm: () => void) => {
     setPopupMessage(message);
     setPopupAction(() => onConfirm);
     setShowPopup(true);
   };
 
+  /** ─── Settings options list ─── **/
   const settingsOptions = [
-    { id: 1, label: 'Account Setting', icon: require('../../assets/ac.png') },
-    {
-      id: 2,
-      label: 'Sound’s and voice',
-      icon: require('../../assets/sound.png'),
-    },
-    { id: 3, label: 'Language', icon: require('../../assets/language.png') },
-    {
-      id: 4,
-      label: 'Notification Setting',
-      icon: require('../../assets/notisetting.png'),
-    },
-    {
-      id: 5,
-      label: 'Account management',
-      icon: require('../../assets/acmanage.png'),
-    },
-    { id: 6, label: 'About us', icon: require('../../assets/aboutus.png') },
-    { id: 7, label: 'Share app', icon: require('../../assets/share1.png') },
+    { id: 1, label: 'Account Setting', icon: require('../../../assets/ac.png'), route: 'AccountSetting' },
+    { id: 2, label: "Sound's and voice", icon: require('../../../assets/sound.png'), route: 'SoundAndVoice' },
+    { id: 3, label: 'Language', icon: require('../../../assets/language.png'), route: 'Language' },
+    { id: 4, label: 'Notification Setting', icon: require('../../../assets/notisetting.png'), route: 'NotificationSetting' },
+    { id: 5, label: 'Account management', icon: require('../../../assets/acmanage.png'), route: 'AccountManagement' },
+    { id: 6, label: 'About us', icon: require('../../../assets/aboutus.png'), route: 'AboutUs' },
+    { id: 7, label: 'Share app', icon: require('../../../assets/share1.png'), route: 'ShareApp' },
   ];
 
   return (
     <View style={styles.container}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="transparent"
-        translucent
-      />
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
       {/* ===== HEADER ===== */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={require('../../assets/back.png')}
-            style={styles.backIcon}
-          />
+          <Image source={require('../../../assets/back.png')} style={styles.backIcon} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Setting’s</Text>
-        <View style={{ width: 24 }} /> {/* spacer */}
+        <Text style={styles.headerTitle}>Settings</Text>
+        <View style={{ width: 24 }} />
       </View>
 
-      {/* ===== SCROLL CONTENT ===== */}
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 60 }}
-      >
+      {/* ===== OPTIONS LIST ===== */}
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 60 }}>
         <View style={styles.optionContainer}>
           {settingsOptions.map(item => (
             <TouchableOpacity
               key={item.id}
               style={styles.optionRow}
               activeOpacity={0.7}
-              onPress={() => console.log(item.label)}
+              onPress={() => navigation.navigate(item.route)}
             >
               <View style={styles.optionLeft}>
                 <Image source={item.icon} style={styles.optionIcon} />
                 <Text style={styles.optionLabel}>{item.label}</Text>
               </View>
-              <Image
-                source={require('../../assets/right-arrow.png')}
-                style={styles.arrowIcon}
-              />
+              <Image source={require('../../../assets/right-arrow.png')} style={styles.arrowIcon} />
             </TouchableOpacity>
           ))}
 
-          {/* ===== Logout ===== */}
+          {/* ===== LOG OUT ===== */}
           <TouchableOpacity
             style={styles.optionRow}
             activeOpacity={0.7}
             onPress={() =>
-              openPopup('Are you sure you want to logout?', () =>
-                navigation.navigate('SignIn'),
-              )
+              openPopup('Are you sure you want to logout?', () => navigation.navigate('SignIn'))
             }
           >
             <View style={styles.optionLeft}>
-              <Image
-                source={require('../../assets/logout.png')}
-                style={styles.optionIcon}
-              />
-              <Text style={[styles.optionLabel, { color: '#E53935' }]}>
-                Log out
-              </Text>
+              <Image source={require('../../../assets/logout.png')} style={styles.optionIcon} />
+              <Text style={[styles.optionLabel, { color: '#E53935' }]}>Log out</Text>
             </View>
           </TouchableOpacity>
 
-          {/* ===== Delete Account ===== */}
-          <TouchableOpacity
+          {/* ===== DELETE ACCOUNT ===== */}
+          {/* <TouchableOpacity
             style={styles.optionRow}
             activeOpacity={0.7}
             onPress={() =>
-              openPopup('Are you sure you want to delete your account?', () =>
-                navigation.navigate('SignIn'),
-              )
+              openPopup('Are you sure you want to delete your account?', () => navigation.navigate('SignIn'))
             }
           >
             <View style={styles.optionLeft}>
-              <Image
-                source={require('../../assets/delete.png')}
-                style={styles.optionIcon}
-              />
-              <Text style={[styles.optionLabel, { color: '#E53935' }]}>
-                Delete Account
-              </Text>
+              <Image source={require('../../../assets/delete.png')} style={styles.optionIcon} />
+              <Text style={[styles.optionLabel, { color: '#E53935' }]}>Delete Account</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </ScrollView>
 
-      {/* ===== POPUP MODAL ===== */}
+      {/* ===== CONFIRMATION POPUP ===== */}
       <Modal
         transparent
         visible={showPopup}
@@ -148,15 +111,27 @@ const Settings = () => {
         <View style={styles.popupOverlay}>
           <View style={styles.popupBox}>
             <Text style={styles.popupText}>{popupMessage}</Text>
-            <TouchableOpacity
-              style={styles.popupButton}
-              onPress={() => {
-                setShowPopup(false);
-                popupAction && popupAction();
-              }}
-            >
-              <Text style={styles.popupButtonText}>OK</Text>
-            </TouchableOpacity>
+
+            <View style={styles.popupButtonsRow}>
+              {/* CANCEL */}
+              <TouchableOpacity
+                style={[styles.popupButton, { backgroundColor: '#ccc' }]}
+                onPress={() => setShowPopup(false)}
+              >
+                <Text style={[styles.popupButtonText, { color: '#000' }]}>Cancel</Text>
+              </TouchableOpacity>
+
+              {/* CONFIRM */}
+              <TouchableOpacity
+                style={[styles.popupButton, { backgroundColor: COLORS.primary }]}
+                onPress={() => {
+                  setShowPopup(false);
+                  popupAction && popupAction();
+                }}
+              >
+                <Text style={styles.popupButtonText}>OK</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -166,6 +141,7 @@ const Settings = () => {
 
 export default Settings;
 
+/* ────────────── STYLES ────────────── */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -177,7 +153,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: height * 0.06,
+    paddingTop: height * 0.07,
     paddingBottom: 10,
     paddingHorizontal: 20,
     backgroundColor: COLORS.secondary,
@@ -186,12 +162,12 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     resizeMode: 'contain',
-    tintColor: COLORS.text,
+    tintColor: '#000',
   },
   headerTitle: {
     fontSize: width * 0.045,
     fontWeight: '700',
-    color: COLORS.text,
+    color: '#000',
   },
 
   /** OPTION LIST **/
@@ -216,18 +192,18 @@ const styles = StyleSheet.create({
     height: 22,
     resizeMode: 'contain',
     marginRight: 15,
-    tintColor: '#616161',
+    tintColor: '#000',
   },
   optionLabel: {
     fontSize: width * 0.037,
-    color: COLORS.text,
+    color: '#000',
     fontWeight: '600',
   },
   arrowIcon: {
     width: 14,
     height: 14,
     resizeMode: 'contain',
-    tintColor: '#616161',
+    tintColor: '#000',
   },
 
   /** POPUP **/
@@ -255,15 +231,21 @@ const styles = StyleSheet.create({
   },
   popupText: {
     fontSize: width * 0.04,
-    color: COLORS.text,
+    color: '#000',
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
+  },
+  popupButtonsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
   },
   popupButton: {
-    backgroundColor: COLORS.primary,
+    flex: 1,
+    marginHorizontal: 5,
     borderRadius: 8,
     paddingVertical: 8,
-    paddingHorizontal: 20,
+    alignItems: 'center',
   },
   popupButtonText: {
     color: COLORS.secondary,

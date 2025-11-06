@@ -1,4 +1,3 @@
-// File: src/screens/HomeScreen/HomeScreen.tsx
 import React, { useState } from 'react';
 import {
   View,
@@ -11,107 +10,395 @@ import {
   StyleSheet,
   Dimensions,
   Platform,
+  Animated,
+  FlatList,
 } from 'react-native';
 import { COLORS } from '../../theme/colors';
+import { useNavigation } from '@react-navigation/native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
-// Static data for categories, restaurants, and products
+// Calculate responsive dimensions with iOS optimizations
+const isTablet = width >= 768;
+const isSmallScreen = width < 380;
+const screenRatio = width / height;
+const isIOS = Platform.OS === 'ios';
+
+// iOS-specific font scaling
+const fontScale = (size) => {
+  if (isIOS) {
+    return isTablet ? size * 0.85 : size * 0.95;
+  }
+  return isTablet ? size * 0.85 : size;
+};
+
+// iOS-specific dimension scaling
+const scaleSize = (size) => {
+  if (isIOS) {
+    return isTablet ? size * 0.9 : size * 1.02;
+  }
+  return size;
+};
+
 const categories = [
   { name: 'Burger', img: require('../../assets/burger.png') },
   { name: 'Mexican', img: require('../../assets/burger.png') },
   { name: 'Asian', img: require('../../assets/burger.png') },
-];
-const restaurants = [
-  { name: 'Bistro Excellence', img: require('../../assets/featuredrestaurant.png') },
-  { name: 'Elite-Ember', img: require('../../assets/featuredrestaurant.png') },
-];
-const products = [
-  { name: 'Cheese Burger', price: '₹45.50', img: require('../../assets/burger1.png') },
-  { name: 'Cheese Burger', price: '₹45.50', img: require('../../assets/burger1.png') },
-  { name: 'Cheese Burger', price: '₹45.50', img: require('../../assets/burger1.png') },
-  { name: 'Cheese Burger', price: '₹45.50', img: require('../../assets/burger1.png') },
+  { name: 'Donut', img: require('../../assets/donut.png') },
 ];
 
-const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 24;
+// Separate veg and non-veg restaurants
+const vegRestaurants = [
+  { 
+    id: 1,
+    name: 'Bistro Excellence', 
+    img: require('../../assets/featuredrestaurant.png'),
+    rating: 4.4,
+    deliveryTime: '10-15 mins',
+    tags: ['Burger', 'Chicken', 'FastFood']
+  },
+  { 
+    id: 2,
+    name: 'Elite-Ember', 
+    img: require('../../assets/featuredrestaurant.png'),
+    rating: 4.4,
+    deliveryTime: '10-15 mins',
+    tags: ['Burger', 'Chicken', 'FastFood']
+  },
+];
+
+const nonVegRestaurants = [
+  { 
+    id: 2,
+    name: 'Elite-Ember', 
+    img: require('../../assets/featuredrestaurant.png'),
+    rating: 4.4,
+    deliveryTime: '10-15 mins',
+    tags: ['Chicken', 'Mutton', 'Seafood']
+  },
+  { 
+    id: 1,
+    name: 'Bistro Excellence', 
+    img: require('../../assets/featuredrestaurant.png'),
+    rating: 4.4,
+    deliveryTime: '10-15 mins',
+    tags: ['Chicken', 'Mutton', 'Seafood']
+  },
+];
+
+// Separate veg and non-veg products
+const vegProducts = [
+  { 
+    id: 1,
+    name: 'Veg Cheese Burger', 
+    price: '$45.50', 
+    img: require('../../assets/b1.png'), 
+    oldPrice: '$50.50',
+    rating: 4.4,
+    deliveryTime: '10-15 mins'
+  },
+  { 
+    id: 2,
+    name: 'Veg Delight Burger', 
+    price: '$45.50', 
+    img: require('../../assets/b2.png'), 
+    oldPrice: '$50.50',
+    rating: 4.4,
+    deliveryTime: '10-15 mins'
+  },
+  { 
+    id: 3,
+    name: 'Garden Fresh Burger', 
+    price: '$45.50', 
+    img: require('../../assets/b1.png'), 
+    oldPrice: '$50.50',
+    rating: 4.4,
+    deliveryTime: '10-15 mins'
+  },
+  { 
+    id: 4,
+    name: 'Veggie Supreme', 
+    price: '$45.50', 
+    img: require('../../assets/b3.png'), 
+    oldPrice: '$50.50',
+    rating: 4.4,
+    deliveryTime: '10-15 mins'
+  },
+];
+
+const nonVegProducts = [
+  { 
+    id: 1,
+    name: 'Chicken Deluxe', 
+    price: '$55.50', 
+    img: require('../../assets/non1.png'), 
+    oldPrice: '$60.50',
+    rating: 4.4,
+    deliveryTime: '10-15 mins'
+  },
+  { 
+    id: 2,
+    name: 'Beef Special', 
+    price: '$65.50', 
+    img: require('../../assets/non2.png'), 
+    oldPrice: '$70.50',
+    rating: 4.4,
+    deliveryTime: '10-15 mins'
+  },
+  { 
+    id: 3,
+    name: 'Mutton Classic', 
+    price: '$75.50', 
+    img: require('../../assets/non3.png'), 
+    oldPrice: '$80.50',
+    rating: 4.4,
+    deliveryTime: '10-15 mins'
+  },
+  { 
+    id: 4,
+    name: 'Seafood Combo', 
+    price: '$85.50', 
+    img: require('../../assets/non1.png'), 
+    oldPrice: '$90.50',
+    rating: 4.4,
+    deliveryTime: '10-15 mins'
+  },
+];
 
 const HomeScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState('Burger');
+  const navigation = useNavigation<any>();
+  const [isVegMode, setIsVegMode] = useState(true);
+  const toggleAnim = useState(new Animated.Value(0))[0];
+  const insets = useSafeAreaInsets();
+
+  const toggleSwitch = () => {
+    Animated.timing(toggleAnim, {
+      toValue: isVegMode ? 1 : 0,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+    setIsVegMode(!isVegMode);
+  };
+
+  // Calculate proper toggle dimensions
+  const switchWidth = isTablet ? scaleSize(wp('14%')) : scaleSize(wp('17%'));
+  const switchHeight = isTablet ? hp('3.5%') : hp('4%');
+  const circleSize = isTablet ? hp('2.8%') : hp('3.2%');
+  const padding = wp('0.8%');
+  const maxTranslateX = switchWidth - circleSize - (padding * 2);
+
+  const translateX = toggleAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [padding, maxTranslateX],
+  });
+
+  const toggleBgColor = toggleAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['green', 'red'],
+  });
+
+  // Navigation handlers
+  const handleTodayOfferViewAll = () => {
+    navigation.navigate('todayOfferView');
+  };
+
+  const handleViewOffers = () => {
+    navigation.navigate('todayOfferView');
+  };
+
+  const handleFeaturedRestaurantViewAll = () => {
+    navigation.navigate('featuredRestrorents');
+  };
+
+  const handleRestaurantPress = (restaurant) => {
+    navigation.navigate('restaurentDetails', { restaurant });
+  };
+
+  const handleBestBurgerViewAll = () => {
+    navigation.navigate('bestBurger');
+  };
+
+  const handleProductPress = (product) => {
+    navigation.navigate('fooddetails', { product });
+  };
+
+  const handleWalletPress = () => {
+    navigation.navigate('Wallet');
+  };
+
+  const handleCartPress = () => {
+    navigation.navigate('Cart');
+  };
+
+  // Calculate proper status bar height for both platforms
+  const getStatusBarHeight = () => {
+    if (isIOS) {
+      return Math.max(insets.top, 20);
+    } else {
+      return StatusBar.currentHeight || 0;
+    }
+  };
+
+  // Get current restaurants and products based on mode
+  const getCurrentRestaurants = () => {
+    return isVegMode ? vegRestaurants : nonVegRestaurants;
+  };
+
+  const getCurrentProducts = () => {
+    return isVegMode ? vegProducts : nonVegProducts;
+  };
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.background }}>
-      <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
-      {/* Keep Primary color only for header/status bar */}
-      <View style={{ backgroundColor: COLORS.primary, height: STATUSBAR_HEIGHT }} />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 24 }}
+    <View style={styles.container}>
+      <StatusBar 
+        backgroundColor={COLORS.primary} 
+        barStyle="light-content" 
+        translucent={false}
+      />
+      
+      <View style={[styles.statusBarArea, { height: getStatusBarHeight() }]} />
+
+      <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        contentContainerStyle={styles.scrollContent}
+        bounces={isIOS}
+        scrollEventThrottle={16}
       >
         {/* Header */}
         <View style={styles.headerContainer}>
           <View style={styles.rowJustify}>
-            <View style={styles.locationRow}>
-              <Image source={require('../../assets/location.png')} style={styles.icon} />
-              <Text style={styles.locationText}>4102 Pretty View Lane</Text>
-              <Image source={require('../../assets/dropdown.png')} style={styles.dropdownIcon} />
+            <View style={styles.locationContainer}>
+              <View style={styles.locationRow}>
+                <Image source={require('../../assets/location.png')} style={styles.icon} />
+                <Text style={styles.locationText}>Location</Text>
+                <Image source={require('../../assets/dropdown.png')} style={styles.dropdownIcon} />
+              </View>
+              <Text style={styles.addressText}>4102 Pretty View Lane</Text>
             </View>
             <View style={styles.walletBagRow}>
-              <TouchableOpacity>
+              <TouchableOpacity style={styles.walletBtn} activeOpacity={0.7} onPress={handleWalletPress}>
                 <Image source={require('../../assets/wallet.png')} style={styles.walletIcon} />
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity style={styles.bagBtn} activeOpacity={0.7} onPress={handleCartPress}>
                 <Image source={require('../../assets/bag.png')} style={styles.bagIcon} />
               </TouchableOpacity>
             </View>
           </View>
-          <Text style={styles.headerTitle}>
-            What you{'\n'}Going eat  for today ?
-          </Text>
-          <View style={styles.rowJustify}>
-            <View style={{ flex: 1 }} />
-            <View style={styles.vegRow}>
-              <View style={styles.switchCircleOn} />
-              <Text style={styles.vegModeTxt}>Veg Mode</Text>
+
+          <View style={styles.titleRow}>
+            <Text style={styles.headerTitle}>
+              What you{'\n'}Going eat for today ?
+            </Text>
+            <View style={styles.vegContainer}>
+              <TouchableOpacity
+                style={[styles.switchOuter, { 
+                  width: switchWidth, 
+                  height: switchHeight 
+                }]}
+                onPress={toggleSwitch}
+                activeOpacity={0.8}
+              >
+                <View style={styles.switchBackground} />
+                
+                <Animated.View
+                  style={[
+                    styles.switchCircle,
+                    { 
+                      width: circleSize,
+                      height: circleSize,
+                      borderRadius: circleSize / 2,
+                      transform: [{ translateX }], 
+                      backgroundColor: toggleBgColor 
+                    },
+                  ]}
+                />
+                
+                <View style={styles.switchLabelsContainer}>
+                  <Text style={[styles.switchTextLeft, { 
+                    color: isVegMode ? '#fff' : '#000',
+                    fontWeight: isVegMode ? '700' : '500'
+                  }]}>
+                    OFF
+                  </Text>
+                  <Text style={[styles.switchTextRight, { 
+                    color: !isVegMode ? '#fff' : '#000',
+                    fontWeight: !isVegMode ? '700' : '500'
+                  }]}>
+                    OFF
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <Text style={styles.vegModeTxt}>
+                {isVegMode ? 'Veg Mode' : 'Non-Veg Mode'}
+              </Text>
             </View>
+          </View>
+
+          <View style={styles.searchContainer}>
+            <TouchableOpacity
+              style={styles.searchBarContainer}
+              onPress={() => navigation.navigate('Search')}
+              activeOpacity={0.8}
+            >
+              <Image source={require('../../assets/search.png')} style={styles.searchIcon} />
+              <Text style={styles.searchPlaceholder}>
+                Find for food or restaurant...
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.filterBtn} activeOpacity={0.8}>
+              <Image
+                source={require('../../assets/filter.png')}
+                style={styles.filterIcon}
+              />
+            </TouchableOpacity>
           </View>
         </View>
 
-        {/* Main Content with safe top margin */}
+        {/* Main Content */}
         <View style={styles.mainContent}>
-          {/* Search Bar */}
-          <View style={styles.searchBarContainer}>
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Find for food or restaurant..."
-              placeholderTextColor="#999"
-            />
-            <TouchableOpacity>
-              <Image source={require('../../assets/filter.png')} style={styles.filterIcon} />
-            </TouchableOpacity>
-          </View>
-
           {/* Today's Offers */}
           <View style={styles.sectionRowBetween}>
             <Text style={styles.sectionTitle}>Today's Offer's</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handleTodayOfferViewAll} activeOpacity={0.7}>
               <Text style={styles.sectionLink}>View All</Text>
             </TouchableOpacity>
           </View>
+
+          {/* Offer Card */}
           <View style={styles.offerCard}>
-            <View style={styles.offerImageWrap}>
-              <Image source={require('../../assets/todayoffer.png')} style={styles.offerImage} />
-            </View>
             <View style={styles.offerContent}>
               <Text style={styles.offerHeader}>Free Delivery</Text>
-              <Text style={styles.offerSubTxt}>Enjoy exclusive discount on tasty{'\n'}food today !</Text>
-              <TouchableOpacity style={styles.offerButton}>
-                <Text style={styles.offerBtnText}>VIEW OFFER’S</Text>
+              <Text style={styles.offerSubTxt}>
+                Enjoy exclusive discount on tasty{'\n'}food today!
+              </Text>
+              <TouchableOpacity 
+                style={styles.offerButton} 
+                onPress={handleViewOffers}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.offerBtnText}>VIEW OFFER'S</Text>
               </TouchableOpacity>
+            </View>
+            <View style={styles.offerImageWrap}>
+              <Image 
+                source={require('../../assets/todayoffer.png')} 
+                style={styles.offerImage}
+                resizeMode="contain"
+              />
             </View>
           </View>
 
-          {/* Categories - Slider */}
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categorySlider}>
+          {/* Categories */}
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false} 
+            contentContainerStyle={styles.categorySliderContent}
+            bounces={false}
+          >
             {categories.map((cat) => (
               <TouchableOpacity
                 key={cat.name}
@@ -120,64 +407,206 @@ const HomeScreen = () => {
                   selectedCategory === cat.name && styles.categoryBtnActive,
                 ]}
                 onPress={() => setSelectedCategory(cat.name)}
+                activeOpacity={0.8}
               >
-                <Image source={cat.img} style={styles.categoryIcon} />
-                <Text style={[
-                  styles.categoryTxt,
-                  selectedCategory === cat.name && styles.categoryTxtActive,
-                ]}>{cat.name}</Text>
+                <Image 
+                  source={cat.img} 
+                  style={styles.categoryIcon}
+                  resizeMode="contain"
+                />
+                <Text
+                  style={[
+                    styles.categoryTxt,
+                    selectedCategory === cat.name && styles.categoryTxtActive,
+                  ]}
+                >
+                  {cat.name}
+                </Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
 
-          {/* Featured restaurants */}
+          {/* Featured Restaurants */}
           <View style={styles.sectionRowBetween}>
-            <Text style={styles.sectionTitle}>Featured restaurants</Text>
-            <TouchableOpacity>
+            <View style={styles.sectionTitleRow}>
+              <Image 
+                source={require('../../assets/feature.png')} 
+                style={styles.sectionIcon}
+                resizeMode="contain"
+              />
+              <Text style={styles.sectionTitle}>Featured restaurants</Text>
+            </View>
+            <TouchableOpacity onPress={handleFeaturedRestaurantViewAll} activeOpacity={0.7}>
               <Text style={styles.sectionLink}>View All</Text>
             </TouchableOpacity>
           </View>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{marginBottom: 4}}>
-            {restaurants.map((r, idx) => (
-              <View key={r.name} style={styles.restaurantCard}>
-                <Image source={r.img} style={styles.restaurantImg} />
-                <Text style={styles.restaurantTitle}>{r.name}</Text>
-                <View style={styles.restaurantInfoRow}>
-                  <Image source={require('../../assets/bike.png')} style={styles.infoIcon} />
-                  <Text style={styles.infoTxt}>free delivery</Text>
-                  <Image source={require('../../assets/clock.png')} style={styles.infoIcon} />
-                  <Text style={styles.infoTxt}>10-15 mins</Text>
-                  <Image source={require('../../assets/star.png')} style={styles.infoIcon} />
-                  <Text style={styles.infoTxt}>4.4</Text>
-                  <Image source={require('../../assets/heart.png')} style={styles.heartIcon} />
+
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false} 
+            contentContainerStyle={styles.restaurantScrollContent}
+            bounces={false}
+          >
+            {getCurrentRestaurants().map((restaurant) => (
+              <TouchableOpacity
+                key={restaurant.id}
+                style={styles.restaurantCard}
+                onPress={() => handleRestaurantPress(restaurant)}
+                activeOpacity={0.8}
+              >
+                <View style={styles.imageContainer}>
+                  <Image 
+                    source={restaurant.img} 
+                    style={styles.restaurantImg}
+                    resizeMode="cover"
+                  />
+                  
+                  <TouchableOpacity style={styles.iconWrapper} activeOpacity={0.7}>
+                    <Image 
+                      source={require('../../assets/heart.png')} 
+                      style={styles.heartIcon}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
+
+                  <View style={styles.ratingBadge}>
+                    <Image 
+                      source={require('../../assets/star.png')} 
+                      style={styles.starIcon}
+                      resizeMode="contain"
+                    />
+                    <Text style={styles.ratingText}>{restaurant.rating}</Text>
+                  </View>
                 </View>
-                <Text style={styles.restaurantTags}>Burger   Chicken   Fast Food</Text>
-              </View>
+                
+                <Text style={styles.restaurantTitle}>{restaurant.name}</Text>
+                
+                <View style={styles.restaurantInfoRow}>
+                  <Image 
+                    source={require('../../assets/bike.png')} 
+                    style={styles.infoIcon}
+                    resizeMode="contain"
+                  />
+                  <Text style={styles.infoTxt}>free delivery</Text>
+                  <Image 
+                    source={require('../../assets/clock.png')} 
+                    style={styles.infoIcon}
+                    resizeMode="contain"
+                  />
+                  <Text style={styles.infoTxt}>{restaurant.deliveryTime}</Text>
+                </View>
+                
+                <View style={styles.tagsContainer}>
+                  {restaurant.tags.map((tag, index) => (
+                    <Text key={index} style={styles.restaurantTags}>{tag}</Text>
+                  ))}
+                </View>
+              </TouchableOpacity>
             ))}
           </ScrollView>
 
-          {/* Products List */}
-          <Text style={[styles.sectionTitle, {marginTop: 16}]}>Best-Rated Burgers</Text>
-          <View style={styles.productRow}>
-            {products.map((item, idx) => (
-              <View key={idx} style={styles.productCard}>
-                <Image source={item.img} style={styles.productImg} />
-                <Text style={styles.productTitle}>{item.name}</Text>
+          {/* Best-Rated Burgers */}
+          <View style={styles.sectionRowBetween}>
+            <View style={styles.sectionTitleRow}>
+              <Image 
+                source={require('../../assets/popular.png')} 
+                style={styles.sectionIcon}
+                resizeMode="contain"
+              />
+              <Text style={styles.sectionTitle}>
+                {isVegMode ? 'Best-Rated Burgers' : 'Best-Rated Non-Veg'}
+              </Text>
+            </View>
+            <TouchableOpacity onPress={handleBestBurgerViewAll} activeOpacity={0.7}>
+              <Text style={styles.sectionLink}>View All</Text>
+            </TouchableOpacity>
+          </View>
+          
+          <FlatList
+            data={getCurrentProducts()}
+            keyExtractor={(item) => item.id.toString()}
+            numColumns={2}
+            scrollEnabled={false}
+            contentContainerStyle={styles.productGrid}
+            columnWrapperStyle={styles.productRow}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.productCard}
+                onPress={() => handleProductPress(item)}
+                activeOpacity={0.8}
+              >
+                <View style={styles.imageContainer}>
+                  <Image 
+                    source={item.img} 
+                    style={styles.productImg}
+                    resizeMode="cover"
+                  />
+                  
+                  <TouchableOpacity style={styles.productHeartWrapper} activeOpacity={0.7}>
+                    <Image 
+                      source={require('../../assets/heart.png')} 
+                      style={styles.heartIcon}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
+
+                  <View style={styles.productRatingBadge}>
+                    <Image 
+                      source={require('../../assets/star.png')} 
+                      style={styles.starIcon}
+                      resizeMode="contain"
+                    />
+                    <Text style={styles.ratingText}>{item.rating}</Text>
+                  </View>
+                </View>
+                
+                <Text style={styles.productTitle} numberOfLines={2}>{item.name}</Text>
+
                 <View style={styles.priceRow}>
-                  <Text style={styles.productPrice}>{item.price}</Text>
-                  <TouchableOpacity>
-                    <Image source={require('../../assets/plus.png')} style={styles.plusIcon} />
+                  <View style={styles.priceContainer}>
+                    <Text style={styles.productPrice}>{item.price}</Text>
+                    <Text style={styles.oldPrice}>{item.oldPrice}</Text>
+                  </View>
+
+                  <TouchableOpacity style={styles.plusBtn} activeOpacity={0.7}>
+                    <Image 
+                      source={require('../../assets/plus.png')} 
+                      style={styles.plusIcon}
+                      resizeMode="contain"
+                    />
                   </TouchableOpacity>
                 </View>
-                <Text style={styles.deliveryTxt}>10-15 mins</Text>
-              </View>
-            ))}
-          </View>
 
-          {/* Bottom info text */}
+                <View style={styles.deliveryTimeRow}>
+                  <Image 
+                    source={require('../../assets/clock.png')} 
+                    style={styles.infoIcon}
+                    resizeMode="contain"
+                  />
+                  <Text style={styles.infoTxt}>{item.deliveryTime}</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+
+          {/* Bottom info */}
           <View style={styles.bottomRow}>
-            <Text style={styles.reachingTxt}>Reaching at your doorstep</Text>
-            <Text style={styles.getDeliveredTxt}>Get delivered in 15 minutes</Text>
+            <Image 
+              source={require('../../assets/walk.png')} 
+              style={styles.bottomImage}
+              resizeMode="contain"
+            />
+            <View style={styles.bottomTextContainer}>
+              <Text style={styles.reachingTxt}>Reaching at your doorstep</Text>
+              <View style={styles.deliveryTimeContainer}>
+                <Image 
+                  source={require('../../assets/clock.png')} 
+                  style={styles.deliveryClockIcon}
+                  resizeMode="contain"
+                />
+                <Text style={styles.getDeliveredTxt}>Get delivered in 15 minutes</Text>
+              </View>
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -185,202 +614,720 @@ const HomeScreen = () => {
   );
 };
 
-// Styles below
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+  },
+  statusBarArea: {
+    backgroundColor: COLORS.primary,
+    width: '100%',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: isIOS ? hp('4%') : hp('3%'),
+  },
   headerContainer: {
     backgroundColor: COLORS.primary,
-    paddingHorizontal: 18,
-    paddingTop: 18,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
-    paddingBottom: 14,
+    paddingHorizontal: scaleSize(wp('4.5%')),
+    paddingTop: isIOS ? hp('2.5%') : hp('3%'),
+    borderBottomLeftRadius: scaleSize(wp('6%')),
+    borderBottomRightRadius: scaleSize(wp('6%')),
+    paddingBottom: isIOS ? hp('3.5%') : hp('4%'),
   },
   rowJustify: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    marginBottom: hp('1.5%'),
+  },
+  locationContainer: {
+    flex: 1,
   },
   locationRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: hp('0.5%'),
   },
-  icon: { width: 20, height: 20, marginRight: 6 },
+  icon: { 
+    width: isTablet ? scaleSize(wp('4%')) : scaleSize(wp('5%')), 
+    height: isTablet ? scaleSize(wp('4%')) : scaleSize(wp('5%')), 
+    marginRight: wp('1.2%') 
+  },
   locationText: {
     color: COLORS.secondary,
-    fontSize: 13,
-    fontWeight: '500',
-    marginRight: 2,
+    fontSize: fontScale(isTablet ? wp('2.8%') : wp('3.3%')),
+    fontWeight: isIOS ? '600' : '500',
+    marginRight: wp('0.5%'),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   dropdownIcon: {
-    width: 16,
-    height: 16,
+    width: isTablet ? scaleSize(wp('1.5%')) : scaleSize(wp('2%')),
+    height: isTablet ? scaleSize(wp('0.8%')) : scaleSize(wp('1%')),
     tintColor: COLORS.secondary,
-    marginLeft: 2,
+    marginLeft: wp('2%'),
   },
-  walletBagRow: { flexDirection: 'row', gap: 10 },
-  walletIcon: { width: 24, height: 22, marginRight: 10 },
-  bagIcon: { width: 24, height: 24 },
-  headerTitle: {
+  addressText: {
     color: COLORS.secondary,
-    fontWeight: '700',
-    fontSize: 22,
-    marginTop: 10,
-    marginBottom: 6,
-    lineHeight: 28,
+    fontSize: fontScale(isTablet ? wp('2.5%') : wp('3%')),
+    fontWeight: isIOS ? '500' : '400',
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
-  vegRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 2,
+  walletBagRow: { 
+    flexDirection: 'row', 
+    gap: wp('2.5%') 
   },
-  switchCircleOn: {
-    width: 24,
-    height: 24,
-    borderRadius: 14,
-    backgroundColor: COLORS.secondary,
-    borderColor: '#62c370',
-    borderWidth: 1,
-    marginRight: 7,
+  walletBtn: { 
+    backgroundColor: '#fff', 
+    padding: isTablet ? scaleSize(wp('2%')) : scaleSize(wp('2.5%')), 
+    borderRadius: wp('50%'),
     alignItems: 'center',
     justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
-  vegModeTxt: {
+  bagBtn: { 
+    backgroundColor: '#fff', 
+    padding: isTablet ? scaleSize(wp('1.8%')) : scaleSize(wp('2.2%')), 
+    borderRadius: wp('50%'),
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  walletIcon: { 
+    width: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4.5%')), 
+    height: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4.5%')), 
+    tintColor: COLORS.primary
+  },
+  bagIcon: { 
+    width: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4.5%')), 
+    height: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4.5%')),
+    tintColor: COLORS.primary
+  },
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: hp('2%'),
+  },
+  headerTitle: {
     color: COLORS.secondary,
-    fontSize: 14,
-    fontWeight: '600',
+    fontWeight: isIOS ? '800' : '700',
+    fontSize: fontScale(isTablet ? wp('4.5%') : wp('5.5%')),
+    lineHeight: isTablet ? hp('3%') : hp('3.4%'),
+    flex: 1,
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
-  mainContent: {
-    marginTop: 16,
-    paddingHorizontal: 14,
-    backgroundColor: COLORS.background,
+  vegContainer: {
+    alignItems: 'center',
+    marginLeft: wp('2%'),
   },
-  searchBarContainer: {
-    backgroundColor: COLORS.secondary,
-    borderRadius: 12,
+  switchOuter: {
+    borderRadius: hp('2.25%'),
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    overflow: 'hidden',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  switchBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.1)',
+    borderRadius: hp('2.25%'),
+  },
+  switchCircle: {
+    position: 'absolute',
+    left: 0,
+    top: '50%',
+    marginTop: -(isTablet ? hp('2.8%') : hp('3.2%')) / 2,
+    zIndex: 2,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  switchLabelsContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 16,
-    marginTop: -20,
-    marginBottom: 14,
-    shadowColor: COLORS.cardShadow,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.12,
-    elevation: 3,
+    justifyContent: 'space-between',
+    paddingHorizontal: wp('2.5%'),
+    zIndex: 1,
   },
-  searchInput: {
+  switchTextLeft: {
+    fontSize: fontScale(isTablet ? wp('2.2%') : wp('2.5%')),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  },
+  switchTextRight: {
+    fontSize: fontScale(isTablet ? wp('2.2%') : wp('2.5%')),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  },
+  vegModeTxt: {
+    marginTop: hp('0.8%'),
+    color: COLORS.secondary,
+    fontSize: fontScale(isTablet ? wp('2.5%') : wp('3%')),
+    fontWeight: isIOS ? '700' : '600',
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: hp('1%'),
+  },
+  searchBarContainer: {
+    backgroundColor: '#fff',
+    borderRadius: scaleSize(wp('3%')),
+    paddingVertical: isIOS ? hp('1.8%') : hp('1.5%'),
+    paddingHorizontal: wp('3%'),
+    flexDirection: 'row',
+    alignItems: 'center',
     flex: 1,
-    fontSize: 15,
-    paddingVertical: 12,
-    color: COLORS.textDark,
+    marginRight: wp('3%'),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  searchIcon: {
+    width: isTablet ? scaleSize(wp('4%')) : scaleSize(wp('5%')),
+    height: isTablet ? scaleSize(wp('4%')) : scaleSize(wp('5%')),
+    resizeMode: 'contain',
+    marginRight: wp('2%'),
+    tintColor: '#999',
+  },
+  searchPlaceholder: {
+    flex: 1,
+    fontSize: fontScale(isTablet ? wp('3%') : wp('3.5%')),
+    color: '#999',
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  },
+  filterBtn: {
+    backgroundColor: '#fff',
+    borderRadius: scaleSize(wp('3%')),
+    padding: scaleSize(wp('3%')),
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: isTablet ? scaleSize(wp('11%')) : scaleSize(wp('13%')),
+    height: isTablet ? scaleSize(wp('11%')) : scaleSize(wp('13%')),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   filterIcon: {
-    width: 22, height: 22, marginHorizontal: 12, tintColor: COLORS.primary,
+    width: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
+    height: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
+    resizeMode: 'contain',
+  },
+  mainContent: {
+    marginTop: hp('2%'),
+    paddingHorizontal: wp('4%'),
+    backgroundColor: COLORS.background,
+    flex: 1,
   },
   sectionRowBetween: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 14,
-    marginBottom: 7,
+    marginBottom: hp('1.5%'),
+    marginTop: hp('1%'),
+  },
+  sectionTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp('2%'),
+  },
+  sectionIcon: {
+    width: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
+    height: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
   },
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: fontScale(isTablet ? wp('3.5%') : wp('4.2%')),
+    fontWeight: isIOS ? '800' : '700',
     color: COLORS.textDark,
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   sectionLink: {
-    fontSize: 13,
+    fontSize: fontScale(isTablet ? wp('3%') : wp('3.5%')),
     color: COLORS.primary,
-    fontWeight: '500',
+    fontWeight: isIOS ? '600' : '500',
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   offerCard: {
-    borderRadius: 14,
+    borderRadius: scaleSize(wp('4%')),
     backgroundColor: COLORS.secondary,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
-    elevation: 1,
-    shadowColor: COLORS.cardShadow,
-    marginBottom: 6,
+    padding: scaleSize(wp('4%')),
+    marginBottom: hp('2%'),
+    ...Platform.select({
+      ios: {
+        shadowColor: COLORS.cardShadow || '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
-  offerImageWrap: { marginRight: 18 },
-  offerImage: { width: 70, height: 70, resizeMode: 'contain' },
-  offerContent: { flex: 1 },
-  offerHeader: { fontSize: 16, fontWeight: 'bold', color: COLORS.primary, marginBottom: 3 },
-  offerSubTxt: { color: COLORS.textLight, fontSize: 14, marginBottom: 8 },
+  offerContent: {
+    flex: 1,
+    marginRight: wp('2%'),
+  },
+  offerHeader: {
+    fontSize: fontScale(isTablet ? wp('3.8%') : wp('4.5%')),
+    fontWeight: isIOS ? '800' : 'bold',
+    color: COLORS.primary,
+    marginBottom: hp('0.5%'),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  },
+  offerSubTxt: {
+    color: COLORS.textLight,
+    fontSize: fontScale(isTablet ? wp('3%') : wp('3.5%')),
+    marginBottom: hp('1.5%'),
+    lineHeight: hp('2.2%'),
+    includeFontPadding: false,
+  },
   offerButton: {
     backgroundColor: COLORS.primary,
-    borderRadius: 8,
-    paddingVertical: 6,
-    paddingHorizontal: 14,
+    borderRadius: scaleSize(wp('2%')),
+    paddingVertical: isIOS ? hp('1.2%') : hp('1%'),
+    paddingHorizontal: wp('4%'),
     alignSelf: 'flex-start',
   },
-  offerBtnText: { color: COLORS.secondary, fontWeight: '700', fontSize: 12 },
-  // Categories slider
-  categorySlider: { paddingVertical: 10, marginVertical: 2 },
+  offerBtnText: {
+    color: COLORS.secondary,
+    fontWeight: isIOS ? '800' : '700',
+    fontSize: fontScale(isTablet ? wp('2.5%') : wp('3%')),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  },
+  offerImageWrap: {
+    width: isTablet ? scaleSize(wp('25%')) : scaleSize(wp('30%')),
+    height: isTablet ? scaleSize(wp('25%')) : scaleSize(wp('30%')),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  offerImage: {
+    width: '100%',
+    height: '100%',
+  },
+  categorySliderContent: {
+    paddingVertical: hp('1%'),
+    paddingHorizontal: wp('1%'),
+  },
   categoryBtn: {
-    backgroundColor: COLORS.accent,
-    borderRadius: 13,
+    backgroundColor: '#fff',
+    borderRadius: wp('50%'),
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
-    paddingVertical: 4,
-    paddingHorizontal: 23,
+    marginRight: wp('3%'),
+    paddingVertical: isIOS ? hp('1.4%') : hp('1.2%'),
+    paddingHorizontal: wp('4%'),
     flexDirection: 'row',
+    minWidth: isTablet ? scaleSize(wp('18%')) : scaleSize(wp('22%')),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   categoryBtnActive: {
     backgroundColor: COLORS.primary,
   },
-  categoryIcon: { width: 22, height: 22, marginRight: 7 },
-  categoryTxt: { color: COLORS.primary, fontWeight: '600', fontSize: 14 },
-  categoryTxtActive: { color: COLORS.secondary },
-  // Featured Restaurants
+  categoryIcon: {
+    width: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
+    height: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
+    marginRight: wp('2%'),
+  },
+  categoryTxt: {
+    color: COLORS.primary,
+    fontWeight: isIOS ? '700' : '600',
+    fontSize: fontScale(isTablet ? wp('3%') : wp('3.5%')),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  },
+  categoryTxtActive: {
+    color: COLORS.secondary,
+  },
+  restaurantScrollContent: {
+    paddingHorizontal: wp('1%'),
+    paddingBottom: hp('1%'),
+  },
   restaurantCard: {
-    width: width * 0.60,
+    width: isTablet ? scaleSize(wp('48%')) : scaleSize(wp('55%')),
     backgroundColor: COLORS.secondary,
-    marginHorizontal: 8,
-    marginBottom: 8,
-    borderRadius: 13,
-    padding: 12,
-    shadowColor: COLORS.cardShadow,
-    elevation: 2,
+    marginHorizontal: wp('1.5%'),
+    marginBottom: hp('1%'),
+    borderRadius: scaleSize(wp('4%')),
+    padding: scaleSize(wp('3%')),
+    ...Platform.select({
+      ios: {
+        shadowColor: COLORS.cardShadow || '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
-  restaurantImg: { width: '100%', height: 80, borderRadius: 11, marginBottom: 7 },
-  restaurantTitle: { fontWeight: '600', fontSize: 15, color: COLORS.textDark, marginBottom: 2 },
-  restaurantInfoRow: {
-    flexDirection: 'row', alignItems: 'center', marginVertical: 2, gap: 5,
+  imageContainer: {
+    position: 'relative',
+    marginBottom: hp('1%'),
   },
-  infoIcon: { width: 14, height: 14, marginLeft: 4, marginRight: 2 },
-  heartIcon: { width: 14, height: 14, marginLeft: 3, tintColor: COLORS.primary },
-  infoTxt: { color: COLORS.textLight, fontSize: 12, fontWeight: '500', marginRight: 5 },
-  restaurantTags: { color: COLORS.primary, fontSize: 11, marginTop: 2, fontWeight: '400' },
-  // Product List
-  productRow: {
+  restaurantImg: {
+    width: '100%',
+    height: isTablet ? hp('12%') : hp('15%'),
+    borderRadius: scaleSize(wp('3%')),
+  },
+  iconWrapper: {
+    position: 'absolute',
+    top: scaleSize(wp('3%')),
+    right: scaleSize(wp('3%')),
+    backgroundColor: COLORS.primary,
+    borderRadius: scaleSize(wp('5%')),
+    padding: scaleSize(wp('2%')),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  heartIcon: {
+    width: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4%')),
+    height: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4%')),
+    tintColor: '#fff',
+  },
+  ratingBadge: {
+    position: 'absolute',
+    bottom: scaleSize(wp('3%')),
+    left: scaleSize(wp('3%')),
     flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: wp('2.5%'),
+    paddingVertical: hp('0.6%'),
+    borderRadius: scaleSize(wp('2%')),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  starIcon: {
+    width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
+    height: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
+    marginRight: wp('1%'),
+    tintColor: '#fff',
+  },
+  ratingText: {
+    color: '#fff',
+    fontSize: fontScale(isTablet ? wp('2.3%') : wp('2.8%')),
+    fontWeight: isIOS ? '700' : '600',
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  },
+  restaurantTitle: {
+    fontWeight: isIOS ? '700' : '600',
+    fontSize: fontScale(isTablet ? wp('3.2%') : wp('3.8%')),
+    color: COLORS.textDark,
+    marginBottom: hp('0.5%'),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  },
+  restaurantInfoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: hp('0.5%'),
+    gap: wp('1%'),
+  },
+  infoIcon: {
+    width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
+    height: isTablet ? scaleSize(wp('3%')) : scaleSize(wp('3.5%')),
+    tintColor: COLORS.primary,
+  },
+  infoTxt: {
+    color: COLORS.textLight,
+    fontSize: fontScale(isTablet ? wp('2.5%') : wp('3%')),
+    fontWeight: isIOS ? '600' : '500',
+    marginRight: wp('2%'),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  },
+  tagsContainer: {
+    flexDirection: 'row',
+    gap: wp('1.5%'),
     flexWrap: 'wrap',
-    justifyContent: 'space-evenly',
-    marginTop: 8,
-    marginBottom: 8,
+  },
+  restaurantTags: {
+    color: COLORS.primary,
+    fontSize: fontScale(isTablet ? wp('2.3%') : wp('2.8%')),
+    fontWeight: isIOS ? '500' : '400',
+    backgroundColor: '#f3f1f1',
+    paddingHorizontal: wp('2.5%'),
+    paddingVertical: isIOS ? hp('0.4%') : hp('0.3%'),
+    borderRadius: scaleSize(wp('5%')),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  },
+  productGrid: {
+    paddingHorizontal: wp('1%'),
+  },
+  productRow: {
+    justifyContent: 'space-between',
+    paddingHorizontal: wp('1%'),
   },
   productCard: {
     backgroundColor: COLORS.secondary,
-    width: width * 0.43,
-    borderRadius: 14,
-    padding: 10,
-    margin: 6,
-    shadowColor: COLORS.cardShadow,
-    elevation: 1,
-    alignItems: 'center',
+    width: isTablet ? scaleSize(wp('45%')) : scaleSize(wp('43%')),
+    borderRadius: scaleSize(wp('4%')),
+    padding: scaleSize(wp('3%')),
+    marginBottom: hp('2%'),
+    ...Platform.select({
+      ios: {
+        shadowColor: COLORS.cardShadow || '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
-  productImg: { width: '100%', height: 80, borderRadius: 12, marginBottom: 7 },
-  productTitle: { fontWeight: '700', fontSize: 14, color: COLORS.textDark, marginBottom: 2 },
-  priceRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 4, gap: 7 },
-  productPrice: { color: COLORS.primary, fontWeight: '700', fontSize: 16 },
-  plusIcon: { width: 24, height: 24, marginLeft: 6 },
-  deliveryTxt: { color: COLORS.textLight, fontSize: 12 },
-  bottomRow: { alignItems: 'center', marginTop: 16, marginBottom: 12 },
-  reachingTxt: { color: COLORS.primary, fontWeight: '700', fontSize: 15, marginBottom: 1 },
-  getDeliveredTxt: { color: COLORS.textLight, fontSize: 13 },
+  productImg: {
+    width: '100%',
+    height: isTablet ? hp('14%') : hp('16%'),
+    borderRadius: scaleSize(wp('3%')),
+  },
+  productHeartWrapper: {
+    position: 'absolute',
+    top: scaleSize(wp('3%')),
+    right: scaleSize(wp('3%')),
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: scaleSize(wp('5%')),
+    padding: scaleSize(wp('2%')),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  productRatingBadge: {
+    position: 'absolute',
+    bottom: scaleSize(wp('3%')),
+    left: scaleSize(wp('3%')),
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: wp('2.5%'),
+    paddingVertical: hp('0.6%'),
+    borderRadius: scaleSize(wp('2%')),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  productTitle: {
+    fontWeight: isIOS ? '800' : '700',
+    fontSize: fontScale(isTablet ? wp('3.2%') : wp('3.6%')),
+    color: COLORS.textDark,
+    marginBottom: hp('0.5%'),
+    marginTop: hp('1%'),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  },
+  priceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: hp('0.5%'),
+  },
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp('1.5%'),
+    flex: 1,
+  },
+  productPrice: {
+    color: '#111',
+    fontWeight: isIOS ? '800' : '700',
+    fontSize: fontScale(isTablet ? wp('3.2%') : wp('3.8%')),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  },
+  oldPrice: {
+    color: 'red',
+    textDecorationLine: 'line-through',
+    fontSize: fontScale(isTablet ? wp('2.5%') : wp('3%')),
+    fontWeight: isIOS ? '600' : '500',
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  },
+  plusBtn: {
+    backgroundColor: COLORS.primary,
+    borderRadius: wp('50%'),
+    padding: scaleSize(wp('2%')),
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: scaleSize(wp('8%')),
+    minHeight: scaleSize(wp('8%')),
+  },
+  plusIcon: {
+    width: isTablet ? scaleSize(wp('3%')) : scaleSize(wp('3.5%')),
+    height: isTablet ? scaleSize(wp('3%')) : scaleSize(wp('3.5%')),
+    tintColor: '#fff',
+  },
+  deliveryTimeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp('1%'),
+  },
+  bottomRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: hp('2%'),
+    marginBottom: hp('1%'),
+    paddingHorizontal: wp('2%'),
+  },
+  bottomImage: {
+    width: isTablet ? scaleSize(wp('8%')) : scaleSize(wp('10%')),
+    height: isTablet ? scaleSize(wp('8%')) : scaleSize(wp('10%')),
+  },
+  bottomTextContainer: {
+    flex: 1,
+    marginLeft: wp('4%'),
+  },
+  reachingTxt: {
+    color: COLORS.primary,
+    fontWeight: isIOS ? '800' : '700',
+    fontSize: fontScale(isTablet ? wp('3.2%') : wp('3.8%')),
+    marginBottom: hp('0.5%'),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  },
+  deliveryTimeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp('1.5%'),
+  },
+  deliveryClockIcon: {
+    width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
+    height: isTablet ? scaleSize(wp('3%')) : scaleSize(wp('3.5%')),
+    tintColor: COLORS.textLight,
+  },
+  getDeliveredTxt: {
+    color: COLORS.textLight,
+    fontSize: fontScale(isTablet ? wp('2.8%') : wp('3.2%')),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  },
 });
 
 export default HomeScreen;
