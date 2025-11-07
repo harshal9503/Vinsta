@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -14,7 +14,7 @@ import {
   Platform,
   Alert,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
 
 const { width, height } = Dimensions.get('window');
@@ -29,8 +29,9 @@ interface Address {
   addressType: string;
 }
 
-const Address = () => {
+const ChangeLocation = () => {
   const navigation = useNavigation<any>();
+  const route = useRoute<any>();
 
   const [addresses, setAddresses] = useState<Address[]>([
     {
@@ -54,9 +55,10 @@ const Address = () => {
     },
   ]);
 
+  const [selectedAddress, setSelectedAddress] = useState<Address | null>(
+    addresses[0],
+  );
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [addressToDelete, setAddressToDelete] = useState<number | null>(null);
 
   // Form states
   const [name, setName] = useState('');
@@ -68,24 +70,15 @@ const Address = () => {
   const [pincode, setPincode] = useState('');
   const [addressType, setAddressType] = useState('Home');
 
-  const closeIcon = require('../../assets/close.png');
-
-  const handleDeletePress = (id: number) => {
-    setAddressToDelete(id);
-    setIsDeleteModalVisible(true);
-  };
-
-  const confirmDelete = () => {
-    if (addressToDelete) {
-      setAddresses(addresses.filter(addr => addr.id !== addressToDelete));
-      setIsDeleteModalVisible(false);
-      setAddressToDelete(null);
+  const handleSelectAddress = (address: Address) => {
+    setSelectedAddress(address);
+    if (route.params?.onSelectAddress) {
+      route.params.onSelectAddress({
+        label: address.label,
+        address: address.address,
+      });
     }
-  };
-
-  const cancelDelete = () => {
-    setIsDeleteModalVisible(false);
-    setAddressToDelete(null);
+    navigation.goBack();
   };
 
   const handleAddAddress = () => {
@@ -105,7 +98,7 @@ const Address = () => {
     }
 
     const newAddress: Address = {
-      id: addresses.length > 0 ? Math.max(...addresses.map(a => a.id)) + 1 : 1,
+      id: addresses.length + 1,
       name,
       label: addressType,
       address: `${houseNo}, ${area}, ${city}, ${pincode}`,
@@ -178,52 +171,43 @@ const Address = () => {
       >
         <Text style={styles.title}>Saved Addresses</Text>
 
-        {addresses.length === 0 ? (
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No saved addresses yet</Text>
-            <Text style={styles.emptySubText}>
-              Add your delivery addresses to get started
-            </Text>
-          </View>
-        ) : (
-          addresses.map(address => (
-            <View key={address.id} style={styles.card}>
-              <View style={styles.cardContent}>
-                <View style={styles.cardHeader}>
-                  <View style={styles.labelContainer}>
-                    <Text style={styles.labelIcon}>
-                      {address.addressType === 'Home'
-                        ? '🏠'
-                        : address.addressType === 'Office'
-                        ? '💼'
-                        : '📍'}
-                    </Text>
-                    <Text style={styles.label}>{address.label}</Text>
-                  </View>
-                </View>
-
-                <Text style={styles.nameText}>{address.name}</Text>
-                <Text style={styles.text}>{address.address}</Text>
-                {address.landmark && (
-                  <Text style={styles.landmarkText}>
-                    Landmark: {address.landmark}
-                  </Text>
-                )}
-                <Text style={styles.phoneText}>{address.phone}</Text>
+        {addresses.map(address => (
+          <TouchableOpacity
+            key={address.id}
+            style={[
+              styles.card,
+              selectedAddress?.id === address.id && styles.cardSelected,
+            ]}
+            onPress={() => handleSelectAddress(address)}
+          >
+            <View style={styles.cardHeader}>
+              <View style={styles.labelContainer}>
+                <Text style={styles.labelIcon}>
+                  {address.addressType === 'Home'
+                    ? '🏠'
+                    : address.addressType === 'Office'
+                    ? '💼'
+                    : '📍'}
+                </Text>
+                <Text style={styles.label}>{address.label}</Text>
               </View>
-
-              <TouchableOpacity
-                style={styles.deleteButton}
-                onPress={() => handleDeletePress(address.id)}
-              >
-                <Image
-                  source={require('../../assets/delete.png')}
-                  style={styles.deleteIcon}
-                />
-              </TouchableOpacity>
+              {selectedAddress?.id === address.id && (
+                <View style={styles.selectedBadge}>
+                  <Text style={styles.selectedText}>✓</Text>
+                </View>
+              )}
             </View>
-          ))
-        )}
+
+            <Text style={styles.nameText}>{address.name}</Text>
+            <Text style={styles.text}>{address.address}</Text>
+            {address.landmark && (
+              <Text style={styles.landmarkText}>
+                Landmark: {address.landmark}
+              </Text>
+            )}
+            <Text style={styles.phoneText}>{address.phone}</Text>
+          </TouchableOpacity>
+        ))}
 
         <TouchableOpacity
           style={styles.addButton}
@@ -279,7 +263,7 @@ const Address = () => {
                 <View style={styles.phoneInput}>
                   <Text style={styles.phonePrefix}>+91</Text>
                   <TextInput
-                    style={[styles.input, { flex: 1, marginBottom: 0 }]}
+                    style={[styles.input, { flex: 1, marginTop: 0 }]}
                     placeholder="Enter 10-digit number"
                     placeholderTextColor="#999"
                     value={phone}
@@ -372,53 +356,11 @@ const Address = () => {
           </View>
         </KeyboardAvoidingView>
       </Modal>
-
-      {/* Delete Confirmation Modal */}
-      <Modal
-        transparent
-        visible={isDeleteModalVisible}
-        animationType="fade"
-        onRequestClose={cancelDelete}
-      >
-        <View style={styles.popupOverlay}>
-          <View style={styles.popupBox}>
-            <TouchableOpacity
-              style={styles.closeIconWrapper}
-              onPress={cancelDelete}
-            >
-              <Image
-                source={closeIcon}
-                style={styles.closeIconImage}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-            <Text style={styles.popupTitle}>Delete Address</Text>
-            <Text style={styles.popupText}>
-              Are you sure you want to delete this address? This action cannot
-              be undone.
-            </Text>
-            <View style={styles.popupButtonContainer}>
-              <TouchableOpacity
-                style={[styles.popupButton, styles.cancelButton]}
-                onPress={cancelDelete}
-              >
-                <Text style={styles.cancelButtonText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.popupButton, styles.deleteConfirmButton]}
-                onPress={confirmDelete}
-              >
-                <Text style={styles.deleteButtonText}>Delete</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 };
 
-export default Address;
+export default ChangeLocation;
 
 const styles = StyleSheet.create({
   container: {
@@ -460,25 +402,9 @@ const styles = StyleSheet.create({
     color: '#000',
     marginBottom: 15,
   },
-  emptyContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 60,
-  },
-  emptyText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#666',
-    marginBottom: 8,
-  },
-  emptySubText: {
-    fontSize: 14,
-    color: '#999',
-    textAlign: 'center',
-  },
   card: {
     backgroundColor: '#fff',
-    flexDirection: 'row',
+    padding: 16,
     borderRadius: 12,
     marginBottom: 12,
     elevation: 2,
@@ -486,11 +412,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
-    overflow: 'hidden',
+    borderWidth: 2,
+    borderColor: 'transparent',
   },
-  cardContent: {
-    flex: 1,
-    padding: 16,
+  cardSelected: {
+    borderColor: COLORS.primary,
+    backgroundColor: '#FFF9F0',
   },
   cardHeader: {
     flexDirection: 'row',
@@ -510,6 +437,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: COLORS.primary,
+  },
+  selectedBadge: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: COLORS.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  selectedText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '700',
   },
   nameText: {
     fontSize: 15,
@@ -534,17 +474,6 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: '600',
     marginTop: 4,
-  },
-  deleteButton: {
-    backgroundColor: '#FFE5E5',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  deleteIcon: {
-    width: 24,
-    height: 24,
-    tintColor: '#FF3B30',
   },
   addButton: {
     backgroundColor: COLORS.primary,
@@ -611,7 +540,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#000',
     backgroundColor: '#F9F9F9',
-    marginBottom: 0,
   },
   phoneInput: {
     flexDirection: 'row',
@@ -671,85 +599,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '700',
-  },
-
-  // Delete Popup Styles (Similar to WelcomeScreen)
-  popupOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: width * 0.05,
-  },
-  popupBox: {
-    width: width * 0.85,
-    backgroundColor: '#fff',
-    borderRadius: width * 0.03,
-    padding: width * 0.05,
-    alignItems: 'center',
-    position: 'relative',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 6,
-  },
-  closeIconWrapper: {
-    position: 'absolute',
-    top: width * 0.03,
-    right: width * 0.03,
-    padding: width * 0.01,
-    zIndex: 10,
-  },
-  closeIconImage: {
-    width: width * 0.045,
-    height: width * 0.045,
-    tintColor: '#666',
-  },
-  popupTitle: {
-    fontSize: width * 0.045,
-    fontWeight: '700',
-    color: '#000',
-    marginBottom: height * 0.015,
-    marginTop: height * 0.01,
-    textAlign: 'center',
-  },
-  popupText: {
-    fontSize: width * 0.037,
-    color: '#555',
-    textAlign: 'center',
-    marginBottom: height * 0.025,
-    lineHeight: height * 0.025,
-    paddingHorizontal: width * 0.02,
-  },
-  popupButtonContainer: {
-    flexDirection: 'row',
-    gap: 12,
-    width: '100%',
-  },
-  popupButton: {
-    flex: 1,
-    borderRadius: width * 0.02,
-    paddingVertical: height * 0.014,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cancelButton: {
-    backgroundColor: '#F0F0F0',
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-  },
-  cancelButtonText: {
-    color: '#666',
-    fontWeight: '600',
-    fontSize: width * 0.037,
-  },
-  deleteConfirmButton: {
-    backgroundColor: '#FF3B30',
-  },
-  deleteButtonText: {
-    color: '#fff',
-    fontWeight: '700',
-    fontSize: width * 0.037,
   },
 });

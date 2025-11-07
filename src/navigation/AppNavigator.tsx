@@ -45,6 +45,10 @@ import Cart from '../components/HomeScreen/Cart';
 import DarkMode from '../components/Profile/DarkMode';
 import PrivacyPolicy from '../components/Profile/Settings/PrivacyPolicy';
 import TermsConditions from '../components/Profile/Settings/TermsConditions';
+import MenuScreen from '../components/HomeScreen/search/MenuScreen';
+import ChangeLocation from '../components/HomeScreen/ChangeLocation';
+import PaymentScreen from '../Payment/PaymentScreen';
+import PaymentSuccess from '../Payment/PaymentSuccess';
 
 const Stack = createStackNavigator();
 
@@ -76,6 +80,7 @@ const AppNavigator = () => (
       <Stack.Screen name="Subscription" component={Subscription} />
       <Stack.Screen name="Wallet" component={Wallet} />
       <Stack.Screen name="DarkMode" component={DarkMode} />
+      <Stack.Screen name="ChangeLocation" component={ChangeLocation} />
 
       {/* Settings Screens */}
       <Stack.Screen name="AccountManagement" component={AccountManagement} />
@@ -101,6 +106,10 @@ const AppNavigator = () => (
       />
       <Stack.Screen name="bestBurger" component={bestBurger} />
       <Stack.Screen name="Cart" component={Cart} />
+      <Stack.Screen name="MenuScreen" component={MenuScreen} />
+      <Stack.Screen name="Payment" component={PaymentScreen} />
+      <Stack.Screen name="PaymentSuccess" component={PaymentSuccess} />
+
       {/* Main App */}
       <Stack.Screen name="Home" component={BottomTabNavigator} />
     </Stack.Navigator>

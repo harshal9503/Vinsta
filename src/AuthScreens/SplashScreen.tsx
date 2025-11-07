@@ -4,17 +4,19 @@ import React, { useEffect } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import { COLORS } from '../theme/colors';
 
-
 const SplashScreen = ({ navigation }: any) => {
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.replace('SignIn'); //Home
+      navigation.replace('SignIn'); //Home SignIn
     }, 2000);
     return () => clearTimeout(timer);
   }, [navigation]);
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/Splash.png')} style={{ width: 200, height: 200 }} />
+      <Image
+        source={require('../assets/Splash.png')}
+        style={{ width: 200, height: 200 }}
+      />
     </View>
   );
 };
@@ -22,7 +24,7 @@ const SplashScreen = ({ navigation }: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  backgroundColor: '#FFFFFF',
+    backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
   },
