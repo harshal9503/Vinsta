@@ -70,7 +70,7 @@ const MyOrders = () => {
       restaurant: 'Bistro Excellence',
       price: '₹400 / week',
       duration: '22 - 29 Sep 2025',
-      daysLeft: '6 Day\'s left',
+      daysLeft: "6 Day's left",
       img: require('../../assets/thali.png'),
     },
     {
@@ -79,7 +79,7 @@ const MyOrders = () => {
       restaurant: 'Bistro Excellence',
       price: '₹4900 / month',
       duration: '22 Sep - 21 Oct 2025',
-      daysLeft: '21 Day\'s left',
+      daysLeft: "21 Day's left",
       img: require('../../assets/thali.png'),
     },
   ];
@@ -91,7 +91,7 @@ const MyOrders = () => {
       restaurant: 'Bistro Excellence',
       price: '₹400 / week',
       duration: '22 - 29 Sep 2025',
-      daysLeft: '0 Day\'s left',
+      daysLeft: "0 Day's left",
       img: require('../../assets/poha.png'),
     },
   ];
@@ -101,6 +101,19 @@ const MyOrders = () => {
     setRatingModal(false);
     setSelectedStars(0);
     setReviewText('');
+  };
+
+  // Navigate to OrderDetail with order data
+  const navigateToOrderDetail = (order: any) => {
+    navigation.navigate('OrderDetail', {
+      orderId: order.id,
+      orderTitle: order.title,
+      orderPrice: order.price,
+      orderDate: order.date,
+      orderItems: order.items,
+      orderStatus: order.status,
+      orderImage: order.img,
+    });
   };
 
   return (
@@ -229,17 +242,28 @@ const MyOrders = () => {
                     </View>
 
                     <View style={styles.buttonRow}>
-                      <TouchableOpacity style={styles.cancelBtn}>
+                      <TouchableOpacity
+                        style={styles.cancelBtn}
+                        onPress={() => navigation.navigate('CancelOrder')}
+                      >
                         <Text style={styles.cancelText}>CANCEL</Text>
                       </TouchableOpacity>
-                      <TouchableOpacity style={styles.trackBtn}>
+                      <TouchableOpacity
+                        style={styles.trackBtn}
+                        onPress={() => navigation.navigate('TrackOrder')}
+                      >
                         <Text style={styles.trackText}>TRACK ORDER</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
                 ))
               : pastOrders.map((o) => (
-                  <View key={o.id} style={styles.orderCard}>
+                  <TouchableOpacity 
+                    key={o.id} 
+                    style={styles.orderCard}
+                    onPress={() => navigateToOrderDetail(o)}
+                    activeOpacity={0.7}
+                  >
                     <View style={styles.orderTopRow}>
                       <Image source={o.img} style={styles.foodImg} />
                       <View style={{ flex: 1, marginLeft: 10 }}>
@@ -256,15 +280,24 @@ const MyOrders = () => {
                     <View style={styles.buttonRow}>
                       <TouchableOpacity
                         style={styles.cancelBtn}
-                        onPress={() => setRatingModal(true)}
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          setRatingModal(true);
+                        }}
                       >
                         <Text style={styles.cancelText}>Rate</Text>
                       </TouchableOpacity>
-                      <TouchableOpacity style={styles.trackBtn}>
+                      <TouchableOpacity 
+                        style={styles.trackBtn}
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          navigateToOrderDetail(o);
+                        }}
+                      >
                         <Text style={styles.trackText}>Re-Order</Text>
                       </TouchableOpacity>
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 ))}
           </>
         ) : (
@@ -342,7 +375,7 @@ const MyOrders = () => {
                         style={styles.tick}
                       />
                       <Text style={styles.mealText}>{m}</Text>
-                      {idx < 3 && (
+                      {idx < 2 && (
                         <Image
                           source={require('../../assets/rightarrow.png')}
                           style={styles.arrowIcon}
@@ -405,7 +438,7 @@ const MyOrders = () => {
                 <Text style={styles.orderId}>#265896</Text>
                 <Text style={styles.orderTitle}>Masala Poha</Text>
                 <Text style={styles.orderMeta}>
-                  22 Sep, 9.00 • 3 Items {' '}
+                  22 Sep, 9.00 • 3 Items{' '}
                   <Text style={{ color: 'green' }}>Delivered</Text>
                 </Text>
               </View>
@@ -414,7 +447,7 @@ const MyOrders = () => {
 
             <Text style={styles.howText}>How is your order?</Text>
             <Text style={styles.subHowText}>
-              Please give your rating & also your review...
+              Please give your rating &amp; also your review...
             </Text>
 
             <View style={styles.starRow}>
@@ -477,9 +510,9 @@ const styles = StyleSheet.create({
   },
   backIcon: { width: 22, height: 22, tintColor: '#000' },
   headerTitle: { fontSize: 18, fontWeight: '700', color: '#000' },
-
+  mainTab: { flex: 1 },
   mainTabs: { flexDirection: 'row', justifyContent: 'space-around', marginTop: 20 },
-  mainTabText: { fontSize: 16, color: '#aaa', fontWeight: '600' },
+  mainTabText: { fontSize: 16, color: '#aaa', fontWeight: '600', textAlign: 'center' },
   mainTabTextActive: { color: COLORS.primary },
 
   slider: {
@@ -496,16 +529,14 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
 
-  /** TABS OUTER for shadow/rounded effect **/
   tabRowOuter: {
     marginHorizontal: 20,
     marginBottom: 14,
     backgroundColor: 'transparent',
     borderRadius: 10,
     elevation: 0,
-    marginTop: 20 
+    marginTop: 20,
   },
-  /** TABS INNER with curve and elevation **/
   tabRow: {
     flexDirection: 'row',
     backgroundColor: '#fff',
@@ -675,11 +706,11 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginBottom: 10,
   },
-  starRatingIcon: { 
-    width: 30, 
-    height: 30, 
+  starRatingIcon: {
+    width: 30,
+    height: 30,
     marginHorizontal: 6,
-    resizeMode: 'contain'
+    resizeMode: 'contain',
   },
 
   inputBox: {
@@ -715,7 +746,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  /** RESTAURANT **/
   card: {
     backgroundColor: '#fff',
     borderRadius: 16,

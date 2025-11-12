@@ -23,7 +23,7 @@ import Help from '../components/Profile/help';
 import Address from '../components/Profile/address';
 import MyOrder from '../components/Profile/myOrder';
 import Subscription from '../components/Profile/subscription';
-import Wallet from '../components/Profile/wallet';
+import Wallet from '../components/Profile/Wallet/wallet';
 
 // Settings
 import AccountManagement from '../components/Profile/Settings/AccountManagement';
@@ -49,6 +49,12 @@ import MenuScreen from '../components/HomeScreen/search/MenuScreen';
 import ChangeLocation from '../components/HomeScreen/ChangeLocation';
 import PaymentScreen from '../Payment/PaymentScreen';
 import PaymentSuccess from '../Payment/PaymentSuccess';
+import TrackOrder from '../components/MyOrders/TrackOrder';
+import chat from '../components/MyOrders/chat';
+import OrderDetail from '../components/MyOrders/OrderDetail';
+import CancelOrder from '../components/MyOrders/CancelOrder';
+import TopUp from '../components/Profile/Wallet/TopUp';
+import TransactionHistory from '../components/Profile/Wallet/TransactionHistory';
 
 const Stack = createStackNavigator();
 
@@ -81,6 +87,12 @@ const AppNavigator = () => (
       <Stack.Screen name="Wallet" component={Wallet} />
       <Stack.Screen name="DarkMode" component={DarkMode} />
       <Stack.Screen name="ChangeLocation" component={ChangeLocation} />
+      <Stack.Screen name="TrackOrder" component={TrackOrder} />
+      <Stack.Screen name="chat" component={chat} />
+      <Stack.Screen name="OrderDetail" component={OrderDetail} />
+      <Stack.Screen name="CancelOrder" component={CancelOrder} />
+      <Stack.Screen name="TopUp" component={TopUp} />
+      <Stack.Screen name="TransactionHistory" component={TransactionHistory} />
 
       {/* Settings Screens */}
       <Stack.Screen name="AccountManagement" component={AccountManagement} />
