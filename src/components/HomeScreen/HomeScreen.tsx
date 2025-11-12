@@ -13,9 +13,12 @@ import {
   Animated,
   FlatList,
 } from 'react-native';
-import { COLORS } from '../../theme/colors';
+import { COLORS, FONT_STYLES } from '../../theme/colors';
 import { useNavigation } from '@react-navigation/native';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width, height } = Dimensions.get('window');
@@ -27,7 +30,7 @@ const screenRatio = width / height;
 const isIOS = Platform.OS === 'ios';
 
 // iOS-specific font scaling
-const fontScale = (size) => {
+const fontScale = size => {
   if (isIOS) {
     return isTablet ? size * 0.85 : size * 0.95;
   }
@@ -35,7 +38,7 @@ const fontScale = (size) => {
 };
 
 // iOS-specific dimension scaling
-const scaleSize = (size) => {
+const scaleSize = size => {
   if (isIOS) {
     return isTablet ? size * 0.9 : size * 1.02;
   }
@@ -51,119 +54,119 @@ const categories = [
 
 // Separate veg and non-veg restaurants
 const vegRestaurants = [
-  { 
+  {
     id: 1,
-    name: 'Bistro Excellence', 
+    name: 'Bistro Excellence',
     img: require('../../assets/featuredrestaurant.png'),
     rating: 4.4,
     deliveryTime: '10-15 mins',
-    tags: ['Burger', 'Chicken', 'FastFood']
+    tags: ['Burger', 'Chicken', 'FastFood'],
   },
-  { 
+  {
     id: 2,
-    name: 'Elite-Ember', 
+    name: 'Elite-Ember',
     img: require('../../assets/featuredrestaurant.png'),
     rating: 4.4,
     deliveryTime: '10-15 mins',
-    tags: ['Burger', 'Chicken', 'FastFood']
+    tags: ['Burger', 'Chicken', 'FastFood'],
   },
 ];
 
 const nonVegRestaurants = [
-  { 
+  {
     id: 2,
-    name: 'Elite-Ember', 
+    name: 'Elite-Ember',
     img: require('../../assets/featuredrestaurant.png'),
     rating: 4.4,
     deliveryTime: '10-15 mins',
-    tags: ['Chicken', 'Mutton', 'Seafood']
+    tags: ['Chicken', 'Mutton', 'Seafood'],
   },
-  { 
+  {
     id: 1,
-    name: 'Bistro Excellence', 
+    name: 'Bistro Excellence',
     img: require('../../assets/featuredrestaurant.png'),
     rating: 4.4,
     deliveryTime: '10-15 mins',
-    tags: ['Chicken', 'Mutton', 'Seafood']
+    tags: ['Chicken', 'Mutton', 'Seafood'],
   },
 ];
 
 // Separate veg and non-veg products
 const vegProducts = [
-  { 
+  {
     id: 1,
-    name: 'Veg Cheese Burger', 
-    price: '$45.50', 
-    img: require('../../assets/b1.png'), 
+    name: 'Veg Cheese Burger',
+    price: '$45.50',
+    img: require('../../assets/b1.png'),
     oldPrice: '$50.50',
     rating: 4.4,
-    deliveryTime: '10-15 mins'
+    deliveryTime: '10-15 mins',
   },
-  { 
+  {
     id: 2,
-    name: 'Veg Delight Burger', 
-    price: '$45.50', 
-    img: require('../../assets/b2.png'), 
+    name: 'Veg Delight Burger',
+    price: '$45.50',
+    img: require('../../assets/b2.png'),
     oldPrice: '$50.50',
     rating: 4.4,
-    deliveryTime: '10-15 mins'
+    deliveryTime: '10-15 mins',
   },
-  { 
+  {
     id: 3,
-    name: 'Garden Fresh Burger', 
-    price: '$45.50', 
-    img: require('../../assets/b1.png'), 
+    name: 'Garden Fresh Burger',
+    price: '$45.50',
+    img: require('../../assets/b1.png'),
     oldPrice: '$50.50',
     rating: 4.4,
-    deliveryTime: '10-15 mins'
+    deliveryTime: '10-15 mins',
   },
-  { 
+  {
     id: 4,
-    name: 'Veggie Supreme', 
-    price: '$45.50', 
-    img: require('../../assets/b3.png'), 
+    name: 'Veggie Supreme',
+    price: '$45.50',
+    img: require('../../assets/b3.png'),
     oldPrice: '$50.50',
     rating: 4.4,
-    deliveryTime: '10-15 mins'
+    deliveryTime: '10-15 mins',
   },
 ];
 
 const nonVegProducts = [
-  { 
+  {
     id: 1,
-    name: 'Chicken Deluxe', 
-    price: '$55.50', 
-    img: require('../../assets/non1.png'), 
+    name: 'Chicken Deluxe',
+    price: '$55.50',
+    img: require('../../assets/non1.png'),
     oldPrice: '$60.50',
     rating: 4.4,
-    deliveryTime: '10-15 mins'
+    deliveryTime: '10-15 mins',
   },
-  { 
+  {
     id: 2,
-    name: 'Beef Special', 
-    price: '$65.50', 
-    img: require('../../assets/non2.png'), 
+    name: 'Beef Special',
+    price: '$65.50',
+    img: require('../../assets/non2.png'),
     oldPrice: '$70.50',
     rating: 4.4,
-    deliveryTime: '10-15 mins'
+    deliveryTime: '10-15 mins',
   },
-  { 
+  {
     id: 3,
-    name: 'Mutton Classic', 
-    price: '$75.50', 
-    img: require('../../assets/non3.png'), 
+    name: 'Mutton Classic',
+    price: '$75.50',
+    img: require('../../assets/non3.png'),
     oldPrice: '$80.50',
     rating: 4.4,
-    deliveryTime: '10-15 mins'
+    deliveryTime: '10-15 mins',
   },
-  { 
+  {
     id: 4,
-    name: 'Seafood Combo', 
-    price: '$85.50', 
-    img: require('../../assets/non1.png'), 
+    name: 'Seafood Combo',
+    price: '$85.50',
+    img: require('../../assets/non1.png'),
     oldPrice: '$90.50',
     rating: 4.4,
-    deliveryTime: '10-15 mins'
+    deliveryTime: '10-15 mins',
   },
 ];
 
@@ -188,7 +191,7 @@ const HomeScreen = () => {
   const switchHeight = isTablet ? hp('3.5%') : hp('4%');
   const circleSize = isTablet ? hp('2.8%') : hp('3.2%');
   const padding = wp('0.8%');
-  const maxTranslateX = switchWidth - circleSize - (padding * 2);
+  const maxTranslateX = switchWidth - circleSize - padding * 2;
 
   const translateX = toggleAnim.interpolate({
     inputRange: [0, 1],
@@ -213,7 +216,7 @@ const HomeScreen = () => {
     navigation.navigate('featuredRestrorents');
   };
 
-  const handleRestaurantPress = (restaurant) => {
+  const handleRestaurantPress = restaurant => {
     navigation.navigate('restaurentDetails', { restaurant });
   };
 
@@ -221,7 +224,7 @@ const HomeScreen = () => {
     navigation.navigate('bestBurger');
   };
 
-  const handleProductPress = (product) => {
+  const handleProductPress = product => {
     navigation.navigate('fooddetails', { product });
   };
 
@@ -253,16 +256,16 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar 
-        backgroundColor={COLORS.primary} 
-        barStyle="light-content" 
+      <StatusBar
+        backgroundColor={COLORS.primary}
+        barStyle="light-content"
         translucent={false}
       />
-      
+
       <View style={[styles.statusBarArea, { height: getStatusBarHeight() }]} />
 
-      <ScrollView 
-        showsVerticalScrollIndicator={false} 
+      <ScrollView
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
         bounces={isIOS}
         scrollEventThrottle={16}
@@ -272,18 +275,38 @@ const HomeScreen = () => {
           <View style={styles.rowJustify}>
             <View style={styles.locationContainer}>
               <View style={styles.locationRow}>
-                <Image source={require('../../assets/location.png')} style={styles.icon} />
+                <Image
+                  source={require('../../assets/location.png')}
+                  style={styles.icon}
+                />
                 <Text style={styles.locationText}>Location</Text>
-                <Image source={require('../../assets/dropdown.png')} style={styles.dropdownIcon} />
+                <Image
+                  source={require('../../assets/dropdown.png')}
+                  style={styles.dropdownIcon}
+                />
               </View>
               <Text style={styles.addressText}>4102 Pretty View Lane</Text>
             </View>
             <View style={styles.walletBagRow}>
-              <TouchableOpacity style={styles.walletBtn} activeOpacity={0.7} onPress={handleWalletPress}>
-                <Image source={require('../../assets/wallet.png')} style={styles.walletIcon} />
+              <TouchableOpacity
+                style={styles.walletBtn}
+                activeOpacity={0.7}
+                onPress={handleWalletPress}
+              >
+                <Image
+                  source={require('../../assets/wallet.png')}
+                  style={styles.walletIcon}
+                />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.bagBtn} activeOpacity={0.7} onPress={handleCartPress}>
-                <Image source={require('../../assets/bag.png')} style={styles.bagIcon} />
+              <TouchableOpacity
+                style={styles.bagBtn}
+                activeOpacity={0.7}
+                onPress={handleCartPress}
+              >
+                <Image
+                  source={require('../../assets/bag.png')}
+                  style={styles.bagIcon}
+                />
               </TouchableOpacity>
             </View>
           </View>
@@ -294,39 +317,52 @@ const HomeScreen = () => {
             </Text>
             <View style={styles.vegContainer}>
               <TouchableOpacity
-                style={[styles.switchOuter, { 
-                  width: switchWidth, 
-                  height: switchHeight 
-                }]}
+                style={[
+                  styles.switchOuter,
+                  {
+                    width: switchWidth,
+                    height: switchHeight,
+                  },
+                ]}
                 onPress={toggleSwitch}
                 activeOpacity={0.8}
               >
                 <View style={styles.switchBackground} />
-                
+
                 <Animated.View
                   style={[
                     styles.switchCircle,
-                    { 
+                    {
                       width: circleSize,
                       height: circleSize,
                       borderRadius: circleSize / 2,
-                      transform: [{ translateX }], 
-                      backgroundColor: toggleBgColor 
+                      transform: [{ translateX }],
+                      backgroundColor: toggleBgColor,
                     },
                   ]}
                 />
-                
+
                 <View style={styles.switchLabelsContainer}>
-                  <Text style={[styles.switchTextLeft, { 
-                    color: isVegMode ? '#fff' : '#000',
-                    fontWeight: isVegMode ? '700' : '500'
-                  }]}>
+                  <Text
+                    style={[
+                      styles.switchTextLeft,
+                      {
+                        color: isVegMode ? '#fff' : '#000',
+                        fontWeight: isVegMode ? '700' : '500',
+                      },
+                    ]}
+                  >
                     OFF
                   </Text>
-                  <Text style={[styles.switchTextRight, { 
-                    color: !isVegMode ? '#fff' : '#000',
-                    fontWeight: !isVegMode ? '700' : '500'
-                  }]}>
+                  <Text
+                    style={[
+                      styles.switchTextRight,
+                      {
+                        color: !isVegMode ? '#fff' : '#000',
+                        fontWeight: !isVegMode ? '700' : '500',
+                      },
+                    ]}
+                  >
                     OFF
                   </Text>
                 </View>
@@ -343,7 +379,10 @@ const HomeScreen = () => {
               onPress={() => navigation.navigate('Search')}
               activeOpacity={0.8}
             >
-              <Image source={require('../../assets/search.png')} style={styles.searchIcon} />
+              <Image
+                source={require('../../assets/search.png')}
+                style={styles.searchIcon}
+              />
               <Text style={styles.searchPlaceholder}>
                 Find for food or restaurant...
               </Text>
@@ -363,7 +402,10 @@ const HomeScreen = () => {
           {/* Today's Offers */}
           <View style={styles.sectionRowBetween}>
             <Text style={styles.sectionTitle}>Today's Offer's</Text>
-            <TouchableOpacity onPress={handleTodayOfferViewAll} activeOpacity={0.7}>
+            <TouchableOpacity
+              onPress={handleTodayOfferViewAll}
+              activeOpacity={0.7}
+            >
               <Text style={styles.sectionLink}>View All</Text>
             </TouchableOpacity>
           </View>
@@ -375,8 +417,8 @@ const HomeScreen = () => {
               <Text style={styles.offerSubTxt}>
                 Enjoy exclusive discount on tasty{'\n'}food today!
               </Text>
-              <TouchableOpacity 
-                style={styles.offerButton} 
+              <TouchableOpacity
+                style={styles.offerButton}
                 onPress={handleViewOffers}
                 activeOpacity={0.8}
               >
@@ -384,8 +426,8 @@ const HomeScreen = () => {
               </TouchableOpacity>
             </View>
             <View style={styles.offerImageWrap}>
-              <Image 
-                source={require('../../assets/todayoffer.png')} 
+              <Image
+                source={require('../../assets/todayoffer.png')}
                 style={styles.offerImage}
                 resizeMode="contain"
               />
@@ -393,13 +435,13 @@ const HomeScreen = () => {
           </View>
 
           {/* Categories */}
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false} 
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.categorySliderContent}
             bounces={false}
           >
-            {categories.map((cat) => (
+            {categories.map(cat => (
               <TouchableOpacity
                 key={cat.name}
                 style={[
@@ -409,8 +451,8 @@ const HomeScreen = () => {
                 onPress={() => setSelectedCategory(cat.name)}
                 activeOpacity={0.8}
               >
-                <Image 
-                  source={cat.img} 
+                <Image
+                  source={cat.img}
                   style={styles.categoryIcon}
                   resizeMode="contain"
                 />
@@ -429,25 +471,28 @@ const HomeScreen = () => {
           {/* Featured Restaurants */}
           <View style={styles.sectionRowBetween}>
             <View style={styles.sectionTitleRow}>
-              <Image 
-                source={require('../../assets/feature.png')} 
+              <Image
+                source={require('../../assets/feature.png')}
                 style={styles.sectionIcon}
                 resizeMode="contain"
               />
               <Text style={styles.sectionTitle}>Featured restaurants</Text>
             </View>
-            <TouchableOpacity onPress={handleFeaturedRestaurantViewAll} activeOpacity={0.7}>
+            <TouchableOpacity
+              onPress={handleFeaturedRestaurantViewAll}
+              activeOpacity={0.7}
+            >
               <Text style={styles.sectionLink}>View All</Text>
             </TouchableOpacity>
           </View>
 
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false} 
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.restaurantScrollContent}
             bounces={false}
           >
-            {getCurrentRestaurants().map((restaurant) => (
+            {getCurrentRestaurants().map(restaurant => (
               <TouchableOpacity
                 key={restaurant.id}
                 style={styles.restaurantCard}
@@ -455,50 +500,55 @@ const HomeScreen = () => {
                 activeOpacity={0.8}
               >
                 <View style={styles.imageContainer}>
-                  <Image 
-                    source={restaurant.img} 
+                  <Image
+                    source={restaurant.img}
                     style={styles.restaurantImg}
                     resizeMode="cover"
                   />
-                  
-                  <TouchableOpacity style={styles.iconWrapper} activeOpacity={0.7}>
-                    <Image 
-                      source={require('../../assets/heart.png')} 
+
+                  <TouchableOpacity
+                    style={styles.iconWrapper}
+                    activeOpacity={0.7}
+                  >
+                    <Image
+                      source={require('../../assets/heart.png')}
                       style={styles.heartIcon}
                       resizeMode="contain"
                     />
                   </TouchableOpacity>
 
                   <View style={styles.ratingBadge}>
-                    <Image 
-                      source={require('../../assets/star.png')} 
+                    <Image
+                      source={require('../../assets/star.png')}
                       style={styles.starIcon}
                       resizeMode="contain"
                     />
                     <Text style={styles.ratingText}>{restaurant.rating}</Text>
                   </View>
                 </View>
-                
+
                 <Text style={styles.restaurantTitle}>{restaurant.name}</Text>
-                
+
                 <View style={styles.restaurantInfoRow}>
-                  <Image 
-                    source={require('../../assets/bike.png')} 
+                  <Image
+                    source={require('../../assets/bike.png')}
                     style={styles.infoIcon}
                     resizeMode="contain"
                   />
                   <Text style={styles.infoTxt}>free delivery</Text>
-                  <Image 
-                    source={require('../../assets/clock.png')} 
+                  <Image
+                    source={require('../../assets/clock.png')}
                     style={styles.infoIcon}
                     resizeMode="contain"
                   />
                   <Text style={styles.infoTxt}>{restaurant.deliveryTime}</Text>
                 </View>
-                
+
                 <View style={styles.tagsContainer}>
                   {restaurant.tags.map((tag, index) => (
-                    <Text key={index} style={styles.restaurantTags}>{tag}</Text>
+                    <Text key={index} style={styles.restaurantTags}>
+                      {tag}
+                    </Text>
                   ))}
                 </View>
               </TouchableOpacity>
@@ -508,8 +558,8 @@ const HomeScreen = () => {
           {/* Best-Rated Burgers */}
           <View style={styles.sectionRowBetween}>
             <View style={styles.sectionTitleRow}>
-              <Image 
-                source={require('../../assets/popular.png')} 
+              <Image
+                source={require('../../assets/popular.png')}
                 style={styles.sectionIcon}
                 resizeMode="contain"
               />
@@ -517,14 +567,17 @@ const HomeScreen = () => {
                 {isVegMode ? 'Best-Rated Burgers' : 'Best-Rated Non-Veg'}
               </Text>
             </View>
-            <TouchableOpacity onPress={handleBestBurgerViewAll} activeOpacity={0.7}>
+            <TouchableOpacity
+              onPress={handleBestBurgerViewAll}
+              activeOpacity={0.7}
+            >
               <Text style={styles.sectionLink}>View All</Text>
             </TouchableOpacity>
           </View>
-          
+
           <FlatList
             data={getCurrentProducts()}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={item => item.id.toString()}
             numColumns={2}
             scrollEnabled={false}
             contentContainerStyle={styles.productGrid}
@@ -536,31 +589,36 @@ const HomeScreen = () => {
                 activeOpacity={0.8}
               >
                 <View style={styles.imageContainer}>
-                  <Image 
-                    source={item.img} 
+                  <Image
+                    source={item.img}
                     style={styles.productImg}
                     resizeMode="cover"
                   />
-                  
-                  <TouchableOpacity style={styles.productHeartWrapper} activeOpacity={0.7}>
-                    <Image 
-                      source={require('../../assets/heart.png')} 
+
+                  <TouchableOpacity
+                    style={styles.productHeartWrapper}
+                    activeOpacity={0.7}
+                  >
+                    <Image
+                      source={require('../../assets/heart.png')}
                       style={styles.heartIcon}
                       resizeMode="contain"
                     />
                   </TouchableOpacity>
 
                   <View style={styles.productRatingBadge}>
-                    <Image 
-                      source={require('../../assets/star.png')} 
+                    <Image
+                      source={require('../../assets/star.png')}
                       style={styles.starIcon}
                       resizeMode="contain"
                     />
                     <Text style={styles.ratingText}>{item.rating}</Text>
                   </View>
                 </View>
-                
-                <Text style={styles.productTitle} numberOfLines={2}>{item.name}</Text>
+
+                <Text style={styles.productTitle} numberOfLines={2}>
+                  {item.name}
+                </Text>
 
                 <View style={styles.priceRow}>
                   <View style={styles.priceContainer}>
@@ -569,8 +627,8 @@ const HomeScreen = () => {
                   </View>
 
                   <TouchableOpacity style={styles.plusBtn} activeOpacity={0.7}>
-                    <Image 
-                      source={require('../../assets/plus.png')} 
+                    <Image
+                      source={require('../../assets/plus.png')}
                       style={styles.plusIcon}
                       resizeMode="contain"
                     />
@@ -578,8 +636,8 @@ const HomeScreen = () => {
                 </View>
 
                 <View style={styles.deliveryTimeRow}>
-                  <Image 
-                    source={require('../../assets/clock.png')} 
+                  <Image
+                    source={require('../../assets/clock.png')}
                     style={styles.infoIcon}
                     resizeMode="contain"
                   />
@@ -591,20 +649,22 @@ const HomeScreen = () => {
 
           {/* Bottom info */}
           <View style={styles.bottomRow}>
-            <Image 
-              source={require('../../assets/walk.png')} 
+            <Image
+              source={require('../../assets/walk.png')}
               style={styles.bottomImage}
               resizeMode="contain"
             />
             <View style={styles.bottomTextContainer}>
               <Text style={styles.reachingTxt}>Reaching at your doorstep</Text>
               <View style={styles.deliveryTimeContainer}>
-                <Image 
-                  source={require('../../assets/clock.png')} 
+                <Image
+                  source={require('../../assets/clock.png')}
                   style={styles.deliveryClockIcon}
                   resizeMode="contain"
                 />
-                <Text style={styles.getDeliveredTxt}>Get delivered in 15 minutes</Text>
+                <Text style={styles.getDeliveredTxt}>
+                  Get delivered in 15 minutes
+                </Text>
               </View>
             </View>
           </View>
@@ -647,41 +707,44 @@ const styles = StyleSheet.create({
   locationRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: hp('0.5%'),
+    marginBottom: hp('0.3%'),
   },
-  icon: { 
-    width: isTablet ? scaleSize(wp('4%')) : scaleSize(wp('5%')), 
-    height: isTablet ? scaleSize(wp('4%')) : scaleSize(wp('5%')), 
-    marginRight: wp('1.2%') 
+  icon: {
+    width: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4.5%')),
+    height: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4.5%')),
+    marginRight: wp('1.5%'),
   },
   locationText: {
+    fontFamily: 'Figtree-Medium',
+    fontSize: isTablet ? fontScale(13) : fontScale(14),
+    fontWeight: '500',
     color: COLORS.secondary,
-    fontSize: fontScale(isTablet ? wp('2.8%') : wp('3.3%')),
-    fontWeight: isIOS ? '600' : '500',
     marginRight: wp('0.5%'),
     includeFontPadding: false,
     textAlignVertical: 'center',
   },
   dropdownIcon: {
-    width: isTablet ? scaleSize(wp('1.5%')) : scaleSize(wp('2%')),
-    height: isTablet ? scaleSize(wp('0.8%')) : scaleSize(wp('1%')),
+    width: isTablet ? scaleSize(wp('1.8%')) : scaleSize(wp('2.5%')),
+    height: isTablet ? scaleSize(wp('1%')) : scaleSize(wp('1.2%')),
     tintColor: COLORS.secondary,
-    marginLeft: wp('2%'),
+    marginLeft: wp('1.5%'),
   },
   addressText: {
+    fontFamily: 'Figtree-Regular',
+    fontSize: isTablet ? fontScale(12) : fontScale(13),
+    fontWeight: '400',
     color: COLORS.secondary,
-    fontSize: fontScale(isTablet ? wp('2.5%') : wp('3%')),
-    fontWeight: isIOS ? '500' : '400',
+    opacity: 0.9,
     includeFontPadding: false,
     textAlignVertical: 'center',
   },
-  walletBagRow: { 
-    flexDirection: 'row', 
-    gap: wp('2.5%') 
+  walletBagRow: {
+    flexDirection: 'row',
+    gap: wp('2.5%'),
   },
-  walletBtn: { 
-    backgroundColor: '#fff', 
-    padding: isTablet ? scaleSize(wp('2%')) : scaleSize(wp('2.5%')), 
+  walletBtn: {
+    backgroundColor: '#fff',
+    padding: isTablet ? scaleSize(wp('2%')) : scaleSize(wp('2.5%')),
     borderRadius: wp('50%'),
     alignItems: 'center',
     justifyContent: 'center',
@@ -697,9 +760,9 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  bagBtn: { 
-    backgroundColor: '#fff', 
-    padding: isTablet ? scaleSize(wp('1.8%')) : scaleSize(wp('2.2%')), 
+  bagBtn: {
+    backgroundColor: '#fff',
+    padding: isTablet ? scaleSize(wp('1.8%')) : scaleSize(wp('2.2%')),
     borderRadius: wp('50%'),
     alignItems: 'center',
     justifyContent: 'center',
@@ -715,15 +778,15 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  walletIcon: { 
-    width: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4.5%')), 
-    height: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4.5%')), 
-    tintColor: COLORS.primary
-  },
-  bagIcon: { 
-    width: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4.5%')), 
+  walletIcon: {
+    width: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4.5%')),
     height: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4.5%')),
-    tintColor: COLORS.primary
+    tintColor: COLORS.primary,
+  },
+  bagIcon: {
+    width: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4.5%')),
+    height: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4.5%')),
+    tintColor: COLORS.primary,
   },
   titleRow: {
     flexDirection: 'row',
@@ -732,10 +795,11 @@ const styles = StyleSheet.create({
     marginBottom: hp('2%'),
   },
   headerTitle: {
+    fontFamily: 'Figtree-Bold',
+    fontSize: isTablet ? fontScale(22) : fontScale(24),
+    fontWeight: '700',
     color: COLORS.secondary,
-    fontWeight: isIOS ? '800' : '700',
-    fontSize: fontScale(isTablet ? wp('4.5%') : wp('5.5%')),
-    lineHeight: isTablet ? hp('3%') : hp('3.4%'),
+    lineHeight: isTablet ? hp('3.2%') : hp('3.6%'),
     flex: 1,
     includeFontPadding: false,
     textAlignVertical: 'center',
@@ -803,20 +867,23 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   switchTextLeft: {
-    fontSize: fontScale(isTablet ? wp('2.2%') : wp('2.5%')),
+    fontFamily: 'Figtree-SemiBold',
+    fontSize: isTablet ? fontScale(9) : fontScale(10),
     includeFontPadding: false,
     textAlignVertical: 'center',
   },
   switchTextRight: {
-    fontSize: fontScale(isTablet ? wp('2.2%') : wp('2.5%')),
+    fontFamily: 'Figtree-SemiBold',
+    fontSize: isTablet ? fontScale(9) : fontScale(10),
     includeFontPadding: false,
     textAlignVertical: 'center',
   },
   vegModeTxt: {
-    marginTop: hp('0.8%'),
+    fontFamily: 'Figtree-Bold',
+    fontSize: isTablet ? fontScale(11) : fontScale(12),
+    fontWeight: '700',
+    marginTop: hp('0.6%'),
     color: COLORS.secondary,
-    fontSize: fontScale(isTablet ? wp('2.5%') : wp('3%')),
-    fontWeight: isIOS ? '700' : '600',
     includeFontPadding: false,
     textAlignVertical: 'center',
   },
@@ -855,8 +922,10 @@ const styles = StyleSheet.create({
     tintColor: '#999',
   },
   searchPlaceholder: {
+    fontFamily: 'Figtree-Regular',
+    fontSize: isTablet ? fontScale(13) : fontScale(14),
+    fontWeight: '400',
     flex: 1,
-    fontSize: fontScale(isTablet ? wp('3%') : wp('3.5%')),
     color: '#999',
     includeFontPadding: false,
     textAlignVertical: 'center',
@@ -905,20 +974,22 @@ const styles = StyleSheet.create({
     gap: wp('2%'),
   },
   sectionIcon: {
-    width: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
-    height: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
+    width: isTablet ? scaleSize(wp('4.5%')) : scaleSize(wp('5.5%')),
+    height: isTablet ? scaleSize(wp('4.5%')) : scaleSize(wp('5.5%')),
   },
   sectionTitle: {
-    fontSize: fontScale(isTablet ? wp('3.5%') : wp('4.2%')),
-    fontWeight: isIOS ? '800' : '700',
+    fontFamily: 'Figtree-Bold',
+    fontSize: isTablet ? fontScale(16) : fontScale(18),
+    fontWeight: '700',
     color: COLORS.textDark,
     includeFontPadding: false,
     textAlignVertical: 'center',
   },
   sectionLink: {
-    fontSize: fontScale(isTablet ? wp('3%') : wp('3.5%')),
+    fontFamily: 'Figtree-Medium',
+    fontSize: isTablet ? fontScale(13) : fontScale(14),
+    fontWeight: '500',
     color: COLORS.primary,
-    fontWeight: isIOS ? '600' : '500',
     includeFontPadding: false,
     textAlignVertical: 'center',
   },
@@ -946,18 +1017,21 @@ const styles = StyleSheet.create({
     marginRight: wp('2%'),
   },
   offerHeader: {
-    fontSize: fontScale(isTablet ? wp('3.8%') : wp('4.5%')),
-    fontWeight: isIOS ? '800' : 'bold',
+    fontFamily: 'Figtree-Bold',
+    fontSize: isTablet ? fontScale(18) : fontScale(20),
+    fontWeight: '700',
     color: COLORS.primary,
     marginBottom: hp('0.5%'),
     includeFontPadding: false,
     textAlignVertical: 'center',
   },
   offerSubTxt: {
+    fontFamily: 'Figtree-Regular',
+    fontSize: isTablet ? fontScale(12) : fontScale(13),
+    fontWeight: '400',
     color: COLORS.textLight,
-    fontSize: fontScale(isTablet ? wp('3%') : wp('3.5%')),
     marginBottom: hp('1.5%'),
-    lineHeight: hp('2.2%'),
+    lineHeight: hp('2%'),
     includeFontPadding: false,
   },
   offerButton: {
@@ -968,11 +1042,13 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   offerBtnText: {
+    fontFamily: 'Figtree-Bold',
+    fontSize: isTablet ? fontScale(12) : fontScale(13),
+    fontWeight: '700',
     color: COLORS.secondary,
-    fontWeight: isIOS ? '800' : '700',
-    fontSize: fontScale(isTablet ? wp('2.5%') : wp('3%')),
     includeFontPadding: false,
     textAlignVertical: 'center',
+    letterSpacing: 0.3,
   },
   offerImageWrap: {
     width: isTablet ? scaleSize(wp('25%')) : scaleSize(wp('30%')),
@@ -994,7 +1070,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: wp('3%'),
-    paddingVertical: isIOS ? hp('1.4%') : hp('1.2%'),
+    paddingVertical: isIOS ? hp('1.3%') : hp('1.1%'),
     paddingHorizontal: wp('4%'),
     flexDirection: 'row',
     minWidth: isTablet ? scaleSize(wp('18%')) : scaleSize(wp('22%')),
@@ -1014,18 +1090,21 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   categoryIcon: {
-    width: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
-    height: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
+    width: isTablet ? scaleSize(wp('4.5%')) : scaleSize(wp('5.5%')),
+    height: isTablet ? scaleSize(wp('4.5%')) : scaleSize(wp('5.5%')),
     marginRight: wp('2%'),
   },
   categoryTxt: {
+    fontFamily: 'Figtree-Medium',
+    fontSize: isTablet ? fontScale(13) : fontScale(14),
+    fontWeight: '500',
     color: COLORS.primary,
-    fontWeight: isIOS ? '700' : '600',
-    fontSize: fontScale(isTablet ? wp('3%') : wp('3.5%')),
     includeFontPadding: false,
     textAlignVertical: 'center',
   },
   categoryTxtActive: {
+    fontFamily: 'Figtree-SemiBold',
+    fontWeight: '600',
     color: COLORS.secondary,
   },
   restaurantScrollContent: {
@@ -1092,7 +1171,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: COLORS.primary,
     paddingHorizontal: wp('2.5%'),
-    paddingVertical: hp('0.6%'),
+    paddingVertical: hp('0.5%'),
     borderRadius: scaleSize(wp('2%')),
     ...Platform.select({
       ios: {
@@ -1113,15 +1192,17 @@ const styles = StyleSheet.create({
     tintColor: '#fff',
   },
   ratingText: {
+    fontFamily: 'Figtree-SemiBold',
+    fontSize: isTablet ? fontScale(10) : fontScale(11),
+    fontWeight: '600',
     color: '#fff',
-    fontSize: fontScale(isTablet ? wp('2.3%') : wp('2.8%')),
-    fontWeight: isIOS ? '700' : '600',
     includeFontPadding: false,
     textAlignVertical: 'center',
   },
   restaurantTitle: {
-    fontWeight: isIOS ? '700' : '600',
-    fontSize: fontScale(isTablet ? wp('3.2%') : wp('3.8%')),
+    fontFamily: 'Figtree-Bold',
+    fontSize: isTablet ? fontScale(14) : fontScale(15),
+    fontWeight: '700',
     color: COLORS.textDark,
     marginBottom: hp('0.5%'),
     includeFontPadding: false,
@@ -1135,13 +1216,14 @@ const styles = StyleSheet.create({
   },
   infoIcon: {
     width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
-    height: isTablet ? scaleSize(wp('3%')) : scaleSize(wp('3.5%')),
+    height: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
     tintColor: COLORS.primary,
   },
   infoTxt: {
+    fontFamily: 'Figtree-Regular',
+    fontSize: isTablet ? fontScale(11) : fontScale(12),
+    fontWeight: '400',
     color: COLORS.textLight,
-    fontSize: fontScale(isTablet ? wp('2.5%') : wp('3%')),
-    fontWeight: isIOS ? '600' : '500',
     marginRight: wp('2%'),
     includeFontPadding: false,
     textAlignVertical: 'center',
@@ -1152,12 +1234,13 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   restaurantTags: {
+    fontFamily: 'Figtree-Regular',
+    fontSize: isTablet ? fontScale(10) : fontScale(11),
+    fontWeight: '400',
     color: COLORS.primary,
-    fontSize: fontScale(isTablet ? wp('2.3%') : wp('2.8%')),
-    fontWeight: isIOS ? '500' : '400',
     backgroundColor: '#f3f1f1',
     paddingHorizontal: wp('2.5%'),
-    paddingVertical: isIOS ? hp('0.4%') : hp('0.3%'),
+    paddingVertical: isIOS ? hp('0.3%') : hp('0.25%'),
     borderRadius: scaleSize(wp('5%')),
     includeFontPadding: false,
     textAlignVertical: 'center',
@@ -1219,7 +1302,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: COLORS.primary,
     paddingHorizontal: wp('2.5%'),
-    paddingVertical: hp('0.6%'),
+    paddingVertical: hp('0.5%'),
     borderRadius: scaleSize(wp('2%')),
     ...Platform.select({
       ios: {
@@ -1234,8 +1317,9 @@ const styles = StyleSheet.create({
     }),
   },
   productTitle: {
-    fontWeight: isIOS ? '800' : '700',
-    fontSize: fontScale(isTablet ? wp('3.2%') : wp('3.6%')),
+    fontFamily: 'Figtree-Bold',
+    fontSize: isTablet ? fontScale(13) : fontScale(14),
+    fontWeight: '700',
     color: COLORS.textDark,
     marginBottom: hp('0.5%'),
     marginTop: hp('1%'),
@@ -1255,17 +1339,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   productPrice: {
+    fontFamily: 'Figtree-Bold',
+    fontSize: isTablet ? fontScale(14) : fontScale(15),
+    fontWeight: '700',
     color: '#111',
-    fontWeight: isIOS ? '800' : '700',
-    fontSize: fontScale(isTablet ? wp('3.2%') : wp('3.8%')),
     includeFontPadding: false,
     textAlignVertical: 'center',
   },
   oldPrice: {
-    color: 'red',
+    fontFamily: 'Figtree-Regular',
+    fontSize: isTablet ? fontScale(11) : fontScale(12),
+    fontWeight: '400',
+    color: '#666',
     textDecorationLine: 'line-through',
-    fontSize: fontScale(isTablet ? wp('2.5%') : wp('3%')),
-    fontWeight: isIOS ? '600' : '500',
     includeFontPadding: false,
     textAlignVertical: 'center',
   },
@@ -1305,10 +1391,11 @@ const styles = StyleSheet.create({
     marginLeft: wp('4%'),
   },
   reachingTxt: {
+    fontFamily: 'Figtree-SemiBold',
+    fontSize: isTablet ? fontScale(13) : fontScale(14),
+    fontWeight: '600',
     color: COLORS.primary,
-    fontWeight: isIOS ? '800' : '700',
-    fontSize: fontScale(isTablet ? wp('3.2%') : wp('3.8%')),
-    marginBottom: hp('0.5%'),
+    marginBottom: hp('0.4%'),
     includeFontPadding: false,
     textAlignVertical: 'center',
   },
@@ -1319,12 +1406,14 @@ const styles = StyleSheet.create({
   },
   deliveryClockIcon: {
     width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
-    height: isTablet ? scaleSize(wp('3%')) : scaleSize(wp('3.5%')),
+    height: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
     tintColor: COLORS.textLight,
   },
   getDeliveredTxt: {
+    fontFamily: 'Figtree-Regular',
+    fontSize: isTablet ? fontScale(12) : fontScale(13),
+    fontWeight: '400',
     color: COLORS.textLight,
-    fontSize: fontScale(isTablet ? wp('2.8%') : wp('3.2%')),
     includeFontPadding: false,
     textAlignVertical: 'center',
   },

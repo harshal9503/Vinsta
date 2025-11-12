@@ -2,7 +2,7 @@
 // Example placeholder component:
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { COLORS } from '../theme/colors';
+import { COLORS, FONT_STYLES } from '../theme/colors';
 
 interface ButtonProps {
   title: string;
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     marginVertical: 8,
-    shadowColor: COLORS.shadow,
+    shadowColor: COLORS.cardShadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
@@ -30,8 +30,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: COLORS.secondary,
-    fontWeight: 'bold',
-    fontSize: 16,
+    ...FONT_STYLES.bodyMedium,
   },
 });
 

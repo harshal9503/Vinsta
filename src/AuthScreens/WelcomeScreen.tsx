@@ -1,6 +1,6 @@
 // File: screens/WelcomeScreen.tsx
 
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -15,19 +15,19 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from 'react-native';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import CheckBox from '@react-native-community/checkbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import {COLORS} from '../theme/colors';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { COLORS } from '../theme/colors';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 const AVATAR_SIZE = width * 0.2;
 
 const WelcomeScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const {mobile: mobileFromOtp} = route.params || {};
+  const { mobile: mobileFromOtp } = route.params || {};
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -84,13 +84,13 @@ const WelcomeScreen = () => {
 
   const handleTakePhoto = async () => {
     closePicker();
-    const res = await launchCamera({mediaType: 'photo', quality: 0.7});
+    const res = await launchCamera({ mediaType: 'photo', quality: 0.7 });
     await onPickResult(res);
   };
 
   const handleChooseFromGallery = async () => {
     closePicker();
-    const res = await launchImageLibrary({mediaType: 'photo', quality: 0.7});
+    const res = await launchImageLibrary({ mediaType: 'photo', quality: 0.7 });
     await onPickResult(res);
   };
 
@@ -108,7 +108,8 @@ const WelcomeScreen = () => {
   const handleSubmit = async () => {
     if (!name.trim()) return showPopup('Please enter your name');
     if (!mobile.trim()) return showPopup('Please enter your mobile number');
-    if (email && !validateEmail(email)) return showPopup('Invalid email format');
+    if (email && !validateEmail(email))
+      return showPopup('Invalid email format');
     if (!accepted) return showPopup('Please accept the terms & conditions');
 
     setLoading(true);
@@ -126,7 +127,6 @@ const WelcomeScreen = () => {
     navigation.navigate('TermsConditions');
   };
 
-  // Platform-specific CheckBox color config and size adjustment
   const checkBoxProps =
     Platform.OS === 'ios'
       ? {
@@ -137,30 +137,31 @@ const WelcomeScreen = () => {
           boxType: 'square',
           lineWidth: 1.5,
           animationDuration: 0.1,
-          style: {width: 20, height: 20},
+          style: { width: 20, height: 20 },
         }
       : {
-          tintColors: {true: COLORS.primary, false: COLORS.primary},
-          style: {width: 20, height: 20},
+          tintColors: { true: COLORS.primary, false: COLORS.primary },
+          style: { width: 20, height: 20 },
         };
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}>
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+    >
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}>
-        
-        {/* Title */}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.titleSection}>
           <Text style={styles.title}>Welcome</Text>
-          <Text style={styles.subtitle}>Fill the details & complete your profile</Text>
+          <Text style={styles.subtitle}>
+            Fill the details & complete your profile
+          </Text>
         </View>
 
-        {/* Profile Photo - Moved to top */}
         <View style={styles.profileSection}>
           <Text style={styles.label}>
             Profile photo <Text style={styles.required}>*</Text>
@@ -169,9 +170,14 @@ const WelcomeScreen = () => {
             <TouchableOpacity
               style={styles.avatarWrapper}
               activeOpacity={0.8}
-              onPress={openPicker}>
+              onPress={openPicker}
+            >
               <Image
-                source={profileImage?.uri ? {uri: profileImage.uri} : defaultUserImage}
+                source={
+                  profileImage?.uri
+                    ? { uri: profileImage.uri }
+                    : defaultUserImage
+                }
                 style={styles.avatar}
               />
               <View style={styles.cameraBadge}>
@@ -179,15 +185,17 @@ const WelcomeScreen = () => {
               </View>
             </TouchableOpacity>
             <View style={styles.avatarTextContainer}>
-              <Text style={styles.avatarHelpTitle}>Add a face to your profile</Text>
+              <Text style={styles.avatarHelpTitle}>
+                Add a face to your profile
+              </Text>
               <Text style={styles.avatarHelpText}>
-                Tap to take a photo or upload from gallery. JPG \ PNG up to ~5 MB.
+                Tap to take a photo or upload from gallery. JPG / PNG up to ~5
+                MB.
               </Text>
             </View>
           </View>
         </View>
 
-        {/* Name */}
         <View style={styles.inputSection}>
           <Text style={styles.label}>
             Enter Your Name <Text style={styles.required}>*</Text>
@@ -195,14 +203,12 @@ const WelcomeScreen = () => {
           <TextInput
             style={styles.input}
             placeholder="Please enter your name here"
-            placeholderTextColor="#999"
+            placeholderTextColor="#A0A0A0"
             value={name}
             onChangeText={setName}
-            returnKeyType="next"
           />
         </View>
 
-        {/* Email */}
         <View style={styles.inputSection}>
           <Text style={styles.label}>
             Enter Your Email <Text style={styles.required}>*</Text>
@@ -210,16 +216,14 @@ const WelcomeScreen = () => {
           <TextInput
             style={styles.input}
             placeholder="Please enter your email here"
-            keyboardType="email-address"
-            placeholderTextColor="#999"
+            placeholderTextColor="#A0A0A0"
             value={email}
             onChangeText={setEmail}
+            keyboardType="email-address"
             autoCapitalize="none"
-            returnKeyType="next"
           />
         </View>
 
-        {/* Mobile */}
         <View style={styles.inputSection}>
           <Text style={styles.label}>
             Enter Your Mobile No. <Text style={styles.required}>*</Text>
@@ -227,33 +231,30 @@ const WelcomeScreen = () => {
           <TextInput
             style={styles.input}
             placeholder="Please enter your mobile number"
-            keyboardType="number-pad"
+            placeholderTextColor="#A0A0A0"
             value={mobile}
             editable={false}
           />
         </View>
 
-        {/* Reference Code */}
         <View style={styles.inputSection}>
           <Text style={styles.label}>Reference Code (Optional)</Text>
           <TextInput
             style={styles.input}
             placeholder="Enter Reference code"
-            placeholderTextColor="#999"
+            placeholderTextColor="#A0A0A0"
             value={refCode}
             onChangeText={setRefCode}
-            returnKeyType="done"
           />
         </View>
 
-        {/* Terms */}
         <View style={styles.termsRow}>
           <CheckBox
             value={accepted}
             onValueChange={setAccepted}
             {...checkBoxProps}
           />
-          <Text style={styles.termsTextWithSpace}>
+          <Text style={styles.termsText}>
             I accept{' '}
             <Text style={styles.link} onPress={handleTermsPress}>
               terms & conditions.
@@ -261,11 +262,11 @@ const WelcomeScreen = () => {
           </Text>
         </View>
 
-        {/* Submit Button */}
         <TouchableOpacity
-          style={[styles.button, {opacity: loading ? 0.7 : 1}]}
+          style={[styles.button, { opacity: loading ? 0.7 : 1 }]}
           onPress={handleSubmit}
-          disabled={loading}>
+          disabled={loading}
+        >
           {loading ? (
             <ActivityIndicator color={COLORS.secondary} size="small" />
           ) : (
@@ -273,18 +274,20 @@ const WelcomeScreen = () => {
           )}
         </TouchableOpacity>
 
-        {/* Spacer for keyboard */}
         <View style={styles.bottomSpacer} />
 
-        {/* Popup Modal */}
         <Modal
           transparent
           visible={popupVisible}
           animationType="fade"
-          onRequestClose={closePopup}>
+          onRequestClose={closePopup}
+        >
           <View style={styles.popupOverlay}>
             <View style={styles.popupBox}>
-              <TouchableOpacity style={styles.closeIconWrapper} onPress={closePopup}>
+              <TouchableOpacity
+                style={styles.closeIconWrapper}
+                onPress={closePopup}
+              >
                 <Image
                   source={closeIcon}
                   style={styles.closeIcon}
@@ -299,11 +302,13 @@ const WelcomeScreen = () => {
           </View>
         </Modal>
 
-        {/* Image Picker Modal */}
         <Modal visible={pickerVisible} transparent animationType="fade">
           <View style={styles.popupOverlay}>
             <View style={styles.popupBox}>
-              <TouchableOpacity style={styles.closeIconWrapper} onPress={closePicker}>
+              <TouchableOpacity
+                style={styles.closeIconWrapper}
+                onPress={closePicker}
+              >
                 <Image
                   source={closeIcon}
                   style={styles.closeIcon}
@@ -311,15 +316,24 @@ const WelcomeScreen = () => {
                 />
               </TouchableOpacity>
               <Text style={styles.popupTitle}>Change your Profile pic</Text>
-              <TouchableOpacity style={styles.pickerButton} onPress={handleTakePhoto}>
+              <TouchableOpacity
+                style={styles.pickerButton}
+                onPress={handleTakePhoto}
+              >
                 <Text style={styles.pickerButtonText}>Take photo</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.pickerButton} onPress={handleChooseFromGallery}>
+              <TouchableOpacity
+                style={styles.pickerButton}
+                onPress={handleChooseFromGallery}
+              >
                 <Text style={styles.pickerButtonText}>Choose from Gallery</Text>
               </TouchableOpacity>
               {profileImage && (
-                <TouchableOpacity style={styles.pickerButton} onPress={removeProfileImage}>
-                  <Text style={[styles.pickerButtonText, {color: '#FF3B30'}]}>
+                <TouchableOpacity
+                  style={styles.pickerButton}
+                  onPress={removeProfileImage}
+                >
+                  <Text style={[styles.pickerButtonText, { color: '#FF3B30' }]}>
                     Remove Profile Photo
                   </Text>
                 </TouchableOpacity>
@@ -332,8 +346,6 @@ const WelcomeScreen = () => {
   );
 };
 
-// ========================= STYLES =========================
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -341,56 +353,57 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingHorizontal: width * 0.05,
-    paddingTop: height * 0.08,
-    paddingBottom: height * 0.1,
+    paddingHorizontal: 20,
+    paddingTop: 60,
+    paddingBottom: 100,
   },
   titleSection: {
-    marginBottom: height * 0.03,
+    marginBottom: 25,
   },
   title: {
-    fontSize: width * 0.06,
+    fontFamily: 'Figtree-Bold',
+    fontSize: 26,
     fontWeight: '700',
     color: COLORS.primary,
-    marginBottom: height * 0.005,
-    textAlign: 'flext-start',
+    marginBottom: 4,
   },
   subtitle: {
-    fontSize: width * 0.035,
-    color: COLORS.text,
-   
-    textAlign: 'flext-start',
+    fontFamily: 'Figtree-Bold',
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#777',
   },
   profileSection: {
-    marginBottom: height * 0.03,
-  },
-  inputSection: {
-    marginBottom: height * 0.02,
+    marginBottom: 25,
   },
   label: {
-    fontSize: width * 0.035,
-    color: COLORS.text,
-    marginBottom: height * 0.008,
-    fontWeight: '500',
+    fontFamily: 'Figtree-Bold',
+    fontSize: 14,
+    fontWeight: '700',
+    color: COLORS.textDark,
+    marginBottom: 6,
   },
   required: {
     color: 'red',
   },
+  inputSection: {
+    marginBottom: 18,
+  },
   input: {
     borderWidth: 1,
     borderColor: COLORS.primary,
-    borderRadius: width * 0.025,
-    paddingHorizontal: width * 0.04,
-    paddingVertical: height * 0.015,
-    fontSize: width * 0.035,
-    color: COLORS.text,
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontFamily: 'Figtree-Regular',
+    fontSize: 14,
+    color: COLORS.textDark,
     backgroundColor: COLORS.secondary,
-    minHeight: height * 0.06,
   },
   avatarRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: width * 0.03,
+    gap: 12,
   },
   avatarWrapper: {
     width: AVATAR_SIZE,
@@ -399,149 +412,135 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: COLORS.primary,
     overflow: 'hidden',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#f5f5f5',
   },
   avatar: {
     width: '100%',
     height: '100%',
-    borderRadius: AVATAR_SIZE / 2,
-  },
-  avatarTextContainer: {
-    flex: 1,
   },
   cameraBadge: {
     position: 'absolute',
     right: -2,
     bottom: -2,
     backgroundColor: COLORS.primary,
-    borderRadius: width * 0.04,
-    paddingHorizontal: width * 0.015,
-    paddingVertical: height * 0.005,
-    borderWidth: 2,
-    borderColor: '#fff',
-    elevation: 4,
+    borderRadius: 12,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
   },
   cameraBadgeText: {
+    fontSize: 12,
     color: '#fff',
-    fontSize: width * 0.025,
+  },
+  avatarTextContainer: {
+    flex: 1,
   },
   avatarHelpTitle: {
-    fontSize: width * 0.033,
-    fontWeight: '600',
-    color: COLORS.text,
-    marginBottom: height * 0.005,
+    fontFamily: 'Figtree-Semibold',
+    fontSize: 13,
+    color: COLORS.textDark,
   },
   avatarHelpText: {
-    fontSize: width * 0.03,
-    color: '#555',
-    lineHeight: height * 0.02,
+    fontFamily: 'Figtree-Regular',
+    fontSize: 12,
+    color: '#777',
   },
   termsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: height * 0.03,
-    marginTop: height * 0.01,
+    marginVertical: 16,
   },
-  termsTextWithSpace: {
-    fontSize: width * 0.032,
-    color: COLORS.text,
-    marginLeft: width * 0.02,
+  termsText: {
+    fontFamily: 'Figtree-Regular',
+    fontSize: 13,
+    color: COLORS.textDark,
+    marginLeft: 8,
     flex: 1,
-    lineHeight: height * 0.02,
   },
   link: {
     color: COLORS.primary,
     textDecorationLine: 'underline',
+    fontFamily: 'Figtree-Semibold',
   },
   button: {
     backgroundColor: COLORS.primary,
-    width: '100%',
-    paddingVertical: height * 0.02,
-    borderRadius: width * 0.03,
+    paddingVertical: 16,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: COLORS.shadow,
-    shadowOffset: {width: 0, height: 4},
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 4,
-    marginTop: height * 0.01,
   },
   buttonText: {
-    color: COLORS.secondary,
-    fontSize: width * 0.04,
+    fontFamily: 'Figtree-Bold',
+    fontSize: 16,
     fontWeight: '700',
+    color: COLORS.secondary,
   },
   bottomSpacer: {
-    height: height * 0.05,
+    height: 60,
   },
-  /** POPUP **/
   popupOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.4)',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: width * 0.05,
+    paddingHorizontal: 20,
   },
   popupBox: {
-    width: width * 0.8,
+    width: '80%',
     backgroundColor: COLORS.secondary,
-    borderRadius: width * 0.03,
-    padding: width * 0.05,
+    borderRadius: 12,
+    padding: 20,
     alignItems: 'center',
-    position: 'relative',
-    shadowColor: COLORS.shadow,
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 6,
   },
   popupText: {
-    fontSize: width * 0.04,
-    color: COLORS.text,
+    fontFamily: 'Figtree-Regular',
+    fontSize: 14,
+    color: COLORS.textDark,
     textAlign: 'center',
-    marginBottom: height * 0.02,
-    lineHeight: height * 0.025,
+    marginBottom: 15,
   },
   popupButton: {
     backgroundColor: COLORS.primary,
-    borderRadius: width * 0.02,
-    paddingVertical: height * 0.012,
-    paddingHorizontal: width * 0.06,
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
   },
   popupButtonText: {
+    fontFamily: 'Figtree-Semibold',
+    fontSize: 14,
     color: COLORS.secondary,
-    fontWeight: '700',
-    fontSize: width * 0.035,
   },
   closeIconWrapper: {
     position: 'absolute',
-    top: width * 0.03,
-    right: width * 0.03,
-    padding: width * 0.01,
+    top: 10,
+    right: 10,
   },
   closeIcon: {
-    width: width * 0.045,
-    height: width * 0.045,
-    tintColor: COLORS.text,
+    width: 18,
+    height: 18,
+    tintColor: COLORS.textDark,
   },
   popupTitle: {
-    fontSize: width * 0.04,
-    fontWeight: '600',
-    color: COLORS.text,
-    marginBottom: height * 0.02,
-    textAlign: 'center',
+    fontFamily: 'Figtree-Semibold',
+    fontSize: 16,
+    color: COLORS.textDark,
+    marginBottom: 16,
   },
   pickerButton: {
-    paddingVertical: height * 0.015,
+    paddingVertical: 12,
     width: '100%',
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },
   pickerButtonText: {
-    fontSize: width * 0.035,
-    color: COLORS.text,
+    fontFamily: 'Figtree-Regular',
+    fontSize: 14,
+    color: COLORS.textDark,
   },
 });
 
