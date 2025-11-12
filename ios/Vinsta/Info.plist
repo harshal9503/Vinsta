@@ -53,8 +53,25 @@
 	<false/>
 	<key>UIAppFonts</key>
 	<array>
+<<<<<<< HEAD
 		<string>Figtree-VariableFont_wght.ttf</string>
 		<string>Figtree-Italic-VariableFont_wght.ttf</string>
+=======
+		<string>Figtree-Black.ttf</string>
+		<string>Figtree-BlackItalic.ttf</string>
+		<string>Figtree-Bold.ttf</string>
+		<string>Figtree-BoldItalic.ttf</string>
+		<string>Figtree-ExtraBold.ttf</string>
+		<string>Figtree-ExtraBoldItalic.ttf</string>
+		<string>Figtree-Italic.ttf</string>
+		<string>Figtree-Light.ttf</string>
+		<string>Figtree-LightItalic.ttf</string>
+		<string>Figtree-Medium.ttf</string>
+		<string>Figtree-MediumItalic.ttf</string>
+		<string>Figtree-Regular.ttf</string>
+		<string>Figtree-SemiBold.ttf</string>
+		<string>Figtree-SemiBoldItalic.ttf</string>
+>>>>>>> 197c02265881ddcf311a33357a759e39a0e71cd9
 	</array>
 </dict>
 </plist>

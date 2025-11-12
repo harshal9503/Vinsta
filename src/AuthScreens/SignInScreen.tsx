@@ -53,7 +53,7 @@ const SignInScreen = ({ navigation }: any) => {
 
           {/* Welcome Text */}
           <Text style={styles.welcomeText}>
-            “Welcome to <Text style={{ color: COLORS.primary }}>Vinsta</Text> freshly brewed food
+            “Welcome to <Text style={{ color: COLORS.primary, fontFamily: 'Figtree', fontWeight: '700' }}>Vinsta</Text> freshly brewed food
             delivered at anywhere anytime home instantly”
           </Text>
 
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   logo: {
     width: width * 0.25,
     height: width * 0.25,
-    marginTop: height * 0.16, // Added top margin for spacing from top
+    marginTop: height * 0.16,
     marginBottom: height * 0.045,
   },
   welcomeText: {
@@ -154,13 +154,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: height * 0.04,
+    fontFamily: 'Figtree',
+    fontWeight: '500', // Medium weight
   },
   label: {
     alignSelf: 'flex-start',
-    fontWeight: '600',
     fontSize: width * 0.04,
     color: COLORS.text,
     marginBottom: 8,
+    fontFamily: 'Figtree',
+    fontWeight: '600',
   },
   inputContainer: {
     flexDirection: 'row',
@@ -176,6 +179,7 @@ const styles = StyleSheet.create({
   countryCode: {
     fontSize: width * 0.045,
     color: COLORS.text,
+    fontFamily: 'Figtree',
     fontWeight: '600',
   },
   separator: {
@@ -189,6 +193,8 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     fontSize: width * 0.04,
     paddingVertical: 12,
+    fontFamily: 'Figtree',
+    fontWeight: '400',
   },
   button: {
     backgroundColor: COLORS.primary,
@@ -207,10 +213,9 @@ const styles = StyleSheet.create({
   buttonText: {
     color: COLORS.secondary,
     fontSize: width * 0.045,
-    fontWeight: '700',
+    fontFamily: 'Figtree',
+    fontWeight: '700', // Bold weight for Send OTP
   },
-
-  /** SOCIAL SECTION **/
   socialContainer: {
     marginTop: height * 0.06,
     width: '100%',
@@ -219,7 +224,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'center',
-    // marginVertical: height * 0.011,
   },
   socialIcon: {
     width: 75,
@@ -227,7 +231,7 @@ const styles = StyleSheet.create({
     borderRadius: 37.5,
     marginRight: 0,
   },
-    appleIcon: {
+  appleIcon: {
     width: 75,
     height: 75,
     borderRadius: 37.5,
@@ -236,18 +240,18 @@ const styles = StyleSheet.create({
   appleText: {
     fontSize: width * 0.045,
     color: COLORS.text,
-    fontWeight: '500',
+    fontFamily: 'Figtree',
+    fontWeight: '600',
     marginBottom: 20,
     marginRight: 10,
   },
   socialText: {
     fontSize: width * 0.045,
     color: COLORS.text,
-    fontWeight: '500',
+    fontFamily: 'Figtree',
+    fontWeight: '600',
     marginBottom: 20,
   },
-
-  /** POPUP **/
   popupOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.4)',
@@ -271,6 +275,8 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     textAlign: 'center',
     marginBottom: 16,
+    fontFamily: 'Figtree',
+    fontWeight: '400',
   },
   popupButton: {
     backgroundColor: COLORS.primary,
@@ -280,6 +286,7 @@ const styles = StyleSheet.create({
   },
   popupButtonText: {
     color: COLORS.secondary,
+    fontFamily: 'Figtree',
     fontWeight: '700',
     fontSize: width * 0.04,
   },
