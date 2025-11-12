@@ -102,7 +102,7 @@ const DarkMode = () => {
           <View style={[styles.settingItem, {backgroundColor: theme.cardBackground}]}>
             <View style={styles.settingInfo}>
               <Image
-                source={require('../../assets/b1.png')}
+                source={require('../../assets/light.png')}
                 style={[styles.settingIcon, {tintColor: theme.text}]}
               />
               <View style={styles.settingTextContainer}>

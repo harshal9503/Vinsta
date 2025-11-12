@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   StatusBar,
+  
   Platform,
   Modal,
   Dimensions,

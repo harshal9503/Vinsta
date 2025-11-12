@@ -55,6 +55,7 @@ import OrderDetail from '../components/MyOrders/OrderDetail';
 import CancelOrder from '../components/MyOrders/CancelOrder';
 import TopUp from '../components/Profile/Wallet/TopUp';
 import TransactionHistory from '../components/Profile/Wallet/TransactionHistory';
+import EReceipt from '../components/Profile/Wallet/EReceipt';
 
 const Stack = createStackNavigator();
 
@@ -93,6 +94,7 @@ const AppNavigator = () => (
       <Stack.Screen name="CancelOrder" component={CancelOrder} />
       <Stack.Screen name="TopUp" component={TopUp} />
       <Stack.Screen name="TransactionHistory" component={TransactionHistory} />
+      <Stack.Screen name="EReceipt" component={EReceipt} />
 
       {/* Settings Screens */}
       <Stack.Screen name="AccountManagement" component={AccountManagement} />

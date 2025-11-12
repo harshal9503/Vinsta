@@ -90,7 +90,7 @@ const Support = () => {
             <View style={styles.contactInfo}>
               <Image
                 source={require('../../assets/email.png')}
-                style={[styles.contactIcon, {tintColor: COLORS.primary}]}
+                style={[styles.contactIcon]}
               />
               <View style={styles.contactTextContainer}>
                 <Text style={[styles.contactTitle, {color: theme.text}]}>Email Support</Text>
@@ -101,7 +101,7 @@ const Support = () => {
             </View>
             <Image
               source={require('../../assets/right-arrow.png')}
-              style={[styles.chevronIcon, {tintColor:COLORS.primary}]}
+              style={[styles.chevronIcon]}
             />
           </TouchableOpacity>
 
@@ -112,7 +112,7 @@ const Support = () => {
             <View style={styles.contactInfo}>
               <Image
                 source={require('../../assets/phone.png')}
-                style={[styles.contactIcon, {tintColor: COLORS.primary}]}
+                style={[styles.contactIcon, ]}
               />
               <View style={styles.contactTextContainer}>
                 <Text style={[styles.contactTitle, {color: theme.text}]}>Phone Support</Text>
@@ -123,7 +123,7 @@ const Support = () => {
             </View>
             <Image
               source={require('../../assets/right-arrow.png')}
-              style={[styles.chevronIcon, {tintColor: COLORS.primary}]}
+              style={[styles.chevronIcon,]}
             />
           </TouchableOpacity>
 
@@ -134,7 +134,7 @@ const Support = () => {
             <View style={styles.contactInfo}>
               <Image
                 source={require('../../assets/website.png')}
-                style={[styles.contactIcon, {tintColor: COLORS.primary}]}
+                style={[styles.contactIcon, ]}
               />
               <View style={styles.contactTextContainer}>
                 <Text style={[styles.contactTitle, {color: theme.text}]}>Help Center</Text>
@@ -145,7 +145,7 @@ const Support = () => {
             </View>
             <Image
               source={require('../../assets/right-arrow.png')}
-              style={[styles.chevronIcon, {tintColor: COLORS.primary}]}
+              style={[styles.chevronIcon, ]}
             />
           </TouchableOpacity>
 
@@ -156,7 +156,7 @@ const Support = () => {
             <View style={styles.contactInfo}>
               <Image
                 source={require('../../assets/faq.png')}
-                style={[styles.contactIcon, {tintColor: COLORS.primary}]}
+                style={[styles.contactIcon,]}
               />
               <View style={styles.contactTextContainer}>
                 <Text style={[styles.contactTitle, {color: theme.text}]}>FAQ</Text>
@@ -167,7 +167,7 @@ const Support = () => {
             </View>
             <Image
               source={require('../../assets/right-arrow.png')}
-              style={[styles.chevronIcon, {tintColor: COLORS.primary}]}
+              style={[styles.chevronIcon, ]}
             />
           </TouchableOpacity>
         </View>

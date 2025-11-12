@@ -189,7 +189,7 @@ const Wallet = () => {
               <TouchableOpacity
                 style={styles.topUpBtn}
                 onPress={() => navigation.navigate('TopUp')}>
-                <Image source={require('../../../assets/bag.png')} style={styles.bagIcon} />
+                <Image source={require('../../../assets/topup.png')} style={styles.bagIcon} />
                 <Text style={styles.topUpText}>Top Up</Text>
               </TouchableOpacity>
             </View>

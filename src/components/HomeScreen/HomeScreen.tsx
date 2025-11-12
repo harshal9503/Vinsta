@@ -471,11 +471,11 @@ const HomeScreen = () => {
           {/* Featured Restaurants */}
           <View style={styles.sectionRowBetween}>
             <View style={styles.sectionTitleRow}>
-              <Image
+              {/* <Image
                 source={require('../../assets/feature.png')}
                 style={styles.sectionIcon}
                 resizeMode="contain"
-              />
+              /> */}
               <Text style={styles.sectionTitle}>Featured restaurants</Text>
             </View>
             <TouchableOpacity

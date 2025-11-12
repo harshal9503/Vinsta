@@ -25,7 +25,7 @@ const Profile = () => {
   const topOptions = [
     {
       id: 1,
-      icon: require('../../assets/address.png'),
+      icon: require('../../assets/address1.png'),
       label: 'Address',
       route: 'Address',
     },
@@ -50,13 +50,48 @@ const Profile = () => {
   ];
 
   const bottomOptions = [
-    { id: 1, icon: require('../../assets/profile.png'), label: 'Profile', route: 'ProfileEdit' },
-    { id: 2, icon: require('../../assets/favourite.png'), label: "Favourite's", route: 'Favourite' },
-    { id: 3, icon: require('../../assets/offers.png'), label: "My Offer's", route: 'todayOfferView' },
-    { id: 4, icon: require('../../assets/refer.png'), label: 'Refer To Earn', route: 'Refer' },
-    { id: 5, icon: require('../../assets/dark.png'), label: 'Dark Mode', route: 'DarkMode' },
-    { id: 6, icon: require('../../assets/support.png'), label: 'Support', route: 'Support' },
-    { id: 7, icon: require('../../assets/settings1.png'), label: "Setting's", route: 'Settings' },
+    {
+      id: 1,
+      icon: require('../../assets/profile.png'),
+      label: 'Profile',
+      route: 'ProfileEdit',
+    },
+    {
+      id: 2,
+      icon: require('../../assets/favourite.png'),
+      label: "Favourite's",
+      route: 'Favourite',
+    },
+    {
+      id: 3,
+      icon: require('../../assets/offers.png'),
+      label: "My Offer's",
+      route: 'todayOfferView',
+    },
+    {
+      id: 4,
+      icon: require('../../assets/refer.png'),
+      label: 'Refer To Earn',
+      route: 'Refer',
+    },
+    {
+      id: 5,
+      icon: require('../../assets/dark.png'),
+      label: 'Dark Mode',
+      route: 'DarkMode',
+    },
+    {
+      id: 6,
+      icon: require('../../assets/support.png'),
+      label: 'Support',
+      route: 'Support',
+    },
+    {
+      id: 7,
+      icon: require('../../assets/settings2.png'),
+      label: "Setting's",
+      route: 'Settings',
+    },
   ];
 
   const openPopup = (message: string, onConfirm: () => void) => {
@@ -85,10 +120,10 @@ const Profile = () => {
       <View style={styles.fixedHeader}>
         <View style={styles.backRow}>
           <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-            <Image
+            {/* <Image
               source={require('../../assets/back.png')}
               style={styles.backIcon}
-            />
+            /> */}
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Help')}>
             <Text style={styles.helpText}>Help</Text>
@@ -114,11 +149,15 @@ const Profile = () => {
               <Text style={styles.userEmail}>harshal@gmail.com</Text>
               <Text style={styles.userPhone}>+91 1234567890</Text>
             </View>
-            <TouchableOpacity 
+            {/* <TouchableOpacity
               style={styles.editButton}
-              onPress={() => navigation.navigate('ProfileEdit')}>
-              <Image source={require('../../assets/edit.png')} style={styles.editIcon} />
-            </TouchableOpacity>
+              onPress={() => navigation.navigate('ProfileEdit')}
+            >
+              <Image
+                source={require('../../assets/edit.png')}
+                style={styles.editIcon}
+              />
+            </TouchableOpacity> */}
           </View>
         </View>
 
@@ -138,11 +177,12 @@ const Profile = () => {
 
         {/* ===== Bottom Options ===== */}
         <View style={styles.bottomSection}>
-          {bottomOptions.map((item) => (
-            <TouchableOpacity 
-              key={item.id} 
+          {bottomOptions.map(item => (
+            <TouchableOpacity
+              key={item.id}
               style={styles.optionRow}
-              onPress={() => handleNavigation(item.route)}>
+              onPress={() => handleNavigation(item.route)}
+            >
               <View style={styles.optionLeft}>
                 <Image source={item.icon} style={styles.optionIcon} />
                 <Text style={styles.optionLabel}>{item.label}</Text>
@@ -209,15 +249,19 @@ const Profile = () => {
             <View style={styles.popupButtonsContainer}>
               <TouchableOpacity
                 style={[styles.popupButton, styles.popupCancelButton]}
-                onPress={() => setShowPopup(false)}>
-                <Text style={[styles.popupButtonText, { color: COLORS.text }]}>Cancel</Text>
+                onPress={() => setShowPopup(false)}
+              >
+                <Text style={[styles.popupButtonText, { color: COLORS.text }]}>
+                  Cancel
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.popupButton, styles.popupConfirmButton]}
                 onPress={() => {
                   setShowPopup(false);
                   popupAction && popupAction();
-                }}>
+                }}
+              >
                 <Text style={styles.popupButtonText}>OK</Text>
               </TouchableOpacity>
             </View>

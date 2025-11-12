@@ -1,6 +1,22 @@
-pluginManagement { includeBuild("../node_modules/@react-native/gradle-plugin") }
-plugins { id("com.facebook.react.settings") }
-extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
-rootProject.name = 'Vinsta'
-include ':app'
-includeBuild('../node_modules/@react-native/gradle-plugin')
+pluginManagement {
+    includeBuild("../node_modules/@react-native/gradle-plugin")
+}
+
+plugins {
+    id("com.facebook.react.settings")
+}
+
+rootProject.name = "Vinsta"
+
+include(":app")
+
+// Only run autolinking if possible
+try {
+    extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
+        ex.autolinkLibrariesFromCommand()
+    }
+} catch (Exception e) {
+    println("⚠️ React Native autolink failed: " + e.message)
+}
+
+includeBuild("../node_modules/@react-native/gradle-plugin")
