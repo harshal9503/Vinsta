@@ -352,7 +352,7 @@ const HomeScreen = () => {
                       },
                     ]}
                   >
-                    OFF
+                    ON
                   </Text>
                   <Text
                     style={[
