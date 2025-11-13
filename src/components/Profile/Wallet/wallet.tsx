@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
-
+import font from '../../../assets/fonts';
 const { width, height } = Dimensions.get('window');
 
 const transactions = [
@@ -121,13 +121,13 @@ const Wallet = () => {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
           <Image source={require('../../../assets/back.png')} style={styles.backIcon} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>My E-Wallet</Text>
         <View style={styles.headerIcons}>
           <TouchableOpacity onPress={() => setShowSearch(!showSearch)}>
-            <Image source={require('../../../assets/search.png')} style={styles.icon} />
+            <Image source={require('../../../assets/s1.png')} style={styles.icon} />
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => setShowOptions(!showOptions)}>
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   backIcon: { width: 22, height: 22, resizeMode: 'contain' },
-  headerTitle: { fontSize: width * 0.045, fontWeight: '700', color: '#000' },
+  headerTitle: { fontSize: width * 0.045, fontWeight: '700', color: '#000',fontFamily : 'Figtree-Bold' },
   headerIcons: { flexDirection: 'row', alignItems: 'center' },
   icon: { width: 20, height: 20, tintColor: '#000', resizeMode: 'contain' },
 
@@ -295,7 +295,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderColor: '#eee',
   },
-  optionText: { color: '#000', fontWeight: '500', fontSize: 14 },
+  optionText: { color: '#000', fontWeight: '500', fontSize: 14, fontFamily : "Figtree-Medium",
+   },
   optionIcon: { width: 14, height: 14, resizeMode: 'contain' },
 
   /** CARD **/
@@ -319,9 +320,12 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '-18deg' }],
   },
   cardContent: { position: 'absolute', top: 20, left: 25, right: 25 },
-  cardName: { color: '#fff', fontSize: width * 0.045, fontWeight: '700' },
-  cardNumber: { color: '#fff', opacity: 0.9, marginTop: 4 },
-  balanceLabel: { color: '#fff', opacity: 0.9, marginTop: 18 },
+  cardName: { color: '#fff', fontSize: width * 0.045, fontWeight: '700', fontFamily : "Figtree-Bold",
+    },
+  cardNumber: { color: '#fff', opacity: 0.9, marginTop: 4, fontFamily : "Figtree-Regular",
+    fontWeight : '400' },
+  balanceLabel: { color: '#fff', opacity: 0.9, marginTop: 18, fontFamily : "Figtree-Medium",
+    fontWeight : '500' },
   balanceRow: { 
     flexDirection: 'row', 
     alignItems: 'center', 
@@ -332,6 +336,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: width * 0.08,
     fontWeight: '700',
+     fontFamily : "Figtree-Bold",
   },
   topUpBtn: {
     flexDirection: 'row',
@@ -343,7 +348,7 @@ const styles = StyleSheet.create({
     marginRight: 0,
   },
   bagIcon: { width: 16, height: 16, resizeMode: 'contain', marginRight: 6 },
-  topUpText: { color: '#000', fontWeight: '600', fontSize: width * 0.035 },
+  topUpText: { color: '#000', fontWeight: '600', fontSize: width * 0.035, fontFamily : "Figtree-SemiBold",},
   cardLogos: { position: 'absolute', top: 18, right: 25, flexDirection: 'row', alignItems: 'center' },
   cardLogo: { width: 50, height: 50, resizeMode: 'contain' },
 
@@ -360,8 +365,9 @@ const styles = StyleSheet.create({
     borderLeftWidth: 4,
     borderLeftColor: COLORS.primary,
   },
-  filterText: { color: '#000', fontWeight: '600', fontSize: 14 },
-  clearFilterText: { color: COLORS.primary, fontWeight: '600', fontSize: 14 },
+  filterText: { color: '#000', fontWeight: '600', fontSize: 14, fontFamily : "Figtree-SemiBold",},
+  clearFilterText: { color: COLORS.primary, fontSize: 14, fontFamily : "Figtree-Medium",
+    fontWeight : '500' },
 
   /** TRANSACTION SECTION **/
   transactionSection: { marginTop: 25, paddingHorizontal: 20 },
@@ -371,8 +377,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 10,
   },
-  transactionTitle: { fontWeight: '700', fontSize: width * 0.042, color: '#000' },
-  seeAll: { color: COLORS.primary, fontSize: width * 0.037, fontWeight: '600' },
+  transactionTitle: { fontWeight: '700', fontSize: width * 0.042, color: '#000' , fontFamily : "Figtree-Bold",},
+  seeAll: { color: COLORS.primary, fontSize: width * 0.037, fontFamily : "Figtree-Medium",
+    fontWeight : '500' },
   transactionRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -381,10 +388,12 @@ const styles = StyleSheet.create({
     borderColor: '#eee',
   },
   foodImg: { width: 45, height: 45, borderRadius: 22.5, marginRight: 12 },
-  foodTitle: { fontWeight: '600', fontSize: width * 0.038, color: '#000' },
-  foodTime: { color: '#888', fontSize: width * 0.032, marginTop: 2 },
-  foodAmount: { fontWeight: '700', fontSize: width * 0.038, color: '#000' },
+  foodTitle: { fontWeight: '600', fontSize: width * 0.038, color: '#000', fontFamily : "Figtree-SemiBold"},
+  foodTime: { color: '#888', fontSize: width * 0.032, marginTop: 2 , fontFamily : "Figtree-Medium",
+    fontWeight : '500'},
+  foodAmount: { fontWeight: '700', fontSize: width * 0.038, color: '#000',fontFamily : 'Figtree-Bold' },
   typeRow: { flexDirection: 'row', alignItems: 'center', marginTop: 2 },
-  typeText: { color: '#888', fontSize: width * 0.032, marginRight: 4 },
+  typeText: { color: '#888', fontSize: width * 0.032, marginRight: 4 , fontFamily : "Figtree-Medium",
+    fontWeight : '500'},
   arrowIcon: { width: 12, height: 12, resizeMode: 'contain' },
 });

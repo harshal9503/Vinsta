@@ -20,6 +20,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import font from '../../assets/fonts'
 
 const { width, height } = Dimensions.get('window');
 
@@ -352,7 +353,7 @@ const HomeScreen = () => {
                       },
                     ]}
                   >
-                    ON
+                    OFF
                   </Text>
                   <Text
                     style={[
@@ -363,7 +364,7 @@ const HomeScreen = () => {
                       },
                     ]}
                   >
-                    OFF
+                    ON
                   </Text>
                 </View>
               </TouchableOpacity>

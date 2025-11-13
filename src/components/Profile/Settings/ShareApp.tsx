@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
+import font from '../../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 
@@ -251,6 +252,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.045,
     fontWeight: '700',
     color: '#000',
+    fontFamily : 'Figtree-Bold',
   },
   content: {
     padding: 20,
@@ -270,12 +272,15 @@ const styles = StyleSheet.create({
     color: '#000',
     marginBottom: 8,
     textAlign: 'center',
+    fontFamily : 'Figtree-Bold',
   },
   heroDescription: {
     fontSize: width * 0.035,
     color: '#666',
     textAlign: 'center',
     lineHeight: 20,
+    fontFamily : 'Figtree-Medium',
+    fontWeight  :'500'
   },
   referralSection: {
     backgroundColor: '#fff',
@@ -290,10 +295,11 @@ const styles = StyleSheet.create({
   },
   referralTitle: {
     fontSize: width * 0.038,
-    fontWeight: '600',
     color: '#000',
     marginBottom: 12,
     textAlign: 'center',
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600'
   },
   referralCodeBox: {
     flexDirection: 'row',
@@ -322,6 +328,8 @@ const styles = StyleSheet.create({
     fontSize: width * 0.032,
     color: '#666',
     textAlign: 'center',
+    fontFamily : 'Figtree-Medium',
+    fontWeight  :'500'
   },
   shareSection: {
     marginBottom: 25,
@@ -331,6 +339,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
     marginBottom: 16,
+    fontFamily : 'Figtree-Bold',
   },
   shareRow: {
     flexDirection: 'row',
@@ -359,6 +368,7 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: '500',
     textAlign: 'center',
+    fontFamily : 'Figtree-Medium',
   },
   benefitsSection: {
     marginBottom: 25,
@@ -368,6 +378,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
     marginBottom: 16,
+    fontFamily : 'Figtree-Bold',
   },
   benefitsList: {
     backgroundColor: '#fff',
@@ -396,13 +407,16 @@ const styles = StyleSheet.create({
   },
   benefitTitle: {
     fontSize: width * 0.035,
-    fontWeight: '600',
     color: '#000',
     marginBottom: 4,
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600'
   },
   benefitDescription: {
     fontSize: width * 0.032,
     color: '#666',
+    fontFamily : 'Figtree-Regular',
+    fontWeight  :'400'
   },
   statsSection: {
     flexDirection: 'row',
@@ -425,11 +439,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: COLORS.primary,
     marginBottom: 4,
+    fontFamily : 'Figtree-Bold',
   },
   statLabel: {
     fontSize: width * 0.028,
     color: '#666',
     textAlign: 'center',
+    fontFamily : 'Figtree-Medium',
+    fontWeight  :'500'
   },
 });
 

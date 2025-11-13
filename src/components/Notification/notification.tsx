@@ -14,6 +14,7 @@ import {
   StatusBar,
 } from 'react-native';
 import { COLORS } from '../../theme/colors';
+import font from '../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 
@@ -247,6 +248,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.045,
     fontWeight: '700',
     color: '#000',
+    fontFamily : 'Figtree-Bold'
   },
   tabsRow: {
     flexDirection: 'row',
@@ -263,10 +265,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#777',
     fontWeight: '500',
+    fontFamily : 'Figtree-Medium'
   },
   activeTabText: {
     color: COLORS.primary,
-    fontWeight: '700',
+    fontWeight: '600',
+    fontFamily : 'Figtree-SemiBold'
   },
   activeIndicator: {
     marginTop: 6,
@@ -289,9 +293,10 @@ const styles = StyleSheet.create({
   },
   sectionHeader: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: '600',
     color: COLORS.text,
     marginRight: 8,
+    fontFamily : 'Figtree-SemiBold'
   },
   countBadge: {
     borderWidth: 1.5,
@@ -306,12 +311,14 @@ const styles = StyleSheet.create({
   countText: {
     color: COLORS.secondary,
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: '600',
+    fontFamily : 'Figtree-SemiBold'
   },
   markRead: {
     fontSize: 13,
     color: COLORS.primary,
     fontWeight: '600',
+    fontFamily : 'Figtree-SemiBold'
   },
   notificationRow: {
     flexDirection: 'row',
@@ -354,14 +361,17 @@ const styles = StyleSheet.create({
   },
   notificationTitle: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: '600',
     color: COLORS.text,
     marginBottom: 4,
+    fontFamily : 'Figtree-SemiBold'
   },
   notificationMessage: {
     fontSize: 13,
     color: '#444',
     lineHeight: 18,
+    fontWeight: '400',
+    fontFamily : 'Figtree-Regular'
   },
 
   /** Popup styles **/
@@ -390,6 +400,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
     marginBottom: 12,
+    fontFamily : 'Figtree-Bold'
   },
   popupText: {
     fontSize: width * 0.038,
@@ -397,6 +408,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
     lineHeight: 20,
+    fontFamily : 'Figtree-Medium',
+    fontWeight : '500'
   },
   popupButton: {
     backgroundColor: COLORS.primary,
@@ -410,6 +423,8 @@ const styles = StyleSheet.create({
     color: COLORS.secondary,
     fontWeight: '700',
     fontSize: width * 0.038,
+    fontFamily : 'Figtree-Bold',
+   
   },
 });
 

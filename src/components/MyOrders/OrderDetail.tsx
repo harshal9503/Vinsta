@@ -18,6 +18,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { ThemeContext } from '../../theme/ThemeContext';
 import { COLORS } from '../../theme/colors';
+import font from '../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 
@@ -373,6 +374,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.045,
     fontWeight: '700',
     textAlign: 'center',
+    fontFamily : 'Figtree-Bold'
   },
 
   /** MAIN CARD **/
@@ -395,15 +397,16 @@ const styles = StyleSheet.create({
   },
   foodImage: { width: 70, height: 70, borderRadius: 12 },
   rowBetween: { flexDirection: 'row', justifyContent: 'space-between' },
-  orderId: { fontSize: width * 0.035, fontWeight: '700' },
-  deliveredText: { fontSize: width * 0.035, fontWeight: '600' },
-  foodName: { fontSize: width * 0.04, fontWeight: '700' },
-  orderInfo: { fontSize: width * 0.033, marginTop: 2 },
+  orderId: { fontSize: width * 0.035, fontWeight: '500',fontFamily : 'Figtree-Medium'
+   },
+  deliveredText: { fontSize: width * 0.035, fontWeight: '500',fontFamily : 'Figtree-Medium' },
+  foodName: { fontSize: width * 0.04, fontWeight: '600',fontFamily : 'Figtree-SemiBold' },
+  orderInfo: { fontSize: width * 0.033, marginTop: 2 ,fontWeight: '500',fontFamily : 'Figtree-Medium'},
 
   /** DETAILS **/
   section: { marginTop: 20 },
-  sectionTitle: { fontSize: width * 0.04, fontWeight: '700' },
-  addressText: { fontSize: width * 0.033, marginTop: 5, lineHeight: 18 },
+  sectionTitle: { fontSize: width * 0.04, fontWeight: '700',fontFamily : 'Figtree-Bold' },
+  addressText: { fontSize: width * 0.033, marginTop: 5, lineHeight: 18,fontFamily : 'Figtree-Medium',fontWeight : '500' },
 
   /** AGENT **/
   agentSection: {
@@ -412,8 +415,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   agentImg: { width: 55, height: 55, borderRadius: 27.5 },
-  agentId: { fontSize: width * 0.032 },
-  agentName: { fontSize: width * 0.038, fontWeight: '700' },
+  agentId: { fontSize: width * 0.032 ,fontFamily : 'Figtree-Regular',fontWeight : '400'},
+  agentName: { fontSize: width * 0.038, fontWeight: '600',fontFamily : 'Figtree-SemiBold' },
   callBtn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -423,13 +426,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   callIcon: { width: 16, height: 16, tintColor: '#fff', marginRight: 5 },
-  callText: { color: '#fff', fontWeight: '700', fontSize: width * 0.034 },
+  callText: { color: '#fff', fontWeight: '600',fontFamily : 'Figtree-SemiBold', fontSize: width * 0.034 },
 
   /** FOOD LIST **/
   ordersFoodTitle: {
     fontSize: width * 0.04,
     fontWeight: '700',
     marginTop: 25,
+    fontFamily : 'Figtree-Bold'
   },
 
   foodCard: {
@@ -448,9 +452,9 @@ const styles = StyleSheet.create({
     }),
   },
   foodThumb: { width: 60, height: 60, borderRadius: 10 },
-  foodTitle: { fontSize: width * 0.038, fontWeight: '700' },
-  cafeName: { fontSize: width * 0.032, marginBottom: 8 },
-  foodPrice: { fontSize: width * 0.038, fontWeight: '700' },
+  foodTitle: { fontSize: width * 0.038, fontWeight: '700',fontFamily : 'Figtree-Bold' },
+  cafeName: { fontSize: width * 0.032, marginBottom: 8 ,fontFamily : 'Figtree-SemiBold',fontWeight : '600'},
+  foodPrice: { fontSize: width * 0.038, fontWeight: '700',fontFamily : 'Figtree-Bold' },
 
   qtyBox: {
     flexDirection: 'row',
@@ -462,13 +466,13 @@ const styles = StyleSheet.create({
   },
   qtyBtn: { width: 20, height: 20, alignItems: 'center', justifyContent: 'center' },
   qtySign: { fontSize: 16, color: '#F97316', fontWeight: '700' },
-  qtyText: { fontSize: width * 0.034, fontWeight: '700', marginHorizontal: 5 },
+  qtyText: { fontSize: width * 0.034, fontWeight: '600', marginHorizontal: 5 ,fontFamily : 'Figtree-SemiBold'},
 
   /** TOTAL **/
   totalSection: { marginHorizontal: 20, marginTop: 25 },
-  totalLabel: { fontSize: width * 0.04, fontWeight: '700' },
-  totalItems: { fontSize: width * 0.032, color: '#777' },
-  totalAmount: { fontSize: width * 0.045, fontWeight: '700' },
+  totalLabel: { fontSize: width * 0.04, fontWeight: '600',fontFamily : 'Figtree-SemiBold' },
+  totalItems: { fontSize: width * 0.032, color: '#777',fontFamily : 'Figtree-Medium',fontWeight : '500' },
+  totalAmount: { fontSize: width * 0.045, fontWeight: '700' ,fontFamily : 'Figtree-Bold'},
 
   /** BUTTONS **/
   btnRow: {
@@ -486,7 +490,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 10,
   },
-  rateText: { color: '#F97316', fontWeight: '700', fontSize: width * 0.038 },
+  rateText: { color: '#F97316', fontWeight: '600',fontFamily : 'Figtree-SemiBold', fontSize: width * 0.038 },
   reorderBtn: {
     flex: 1,
     backgroundColor: '#F97316',
@@ -494,7 +498,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     alignItems: 'center',
   },
-  reorderText: { color: '#fff', fontWeight: '700', fontSize: width * 0.038 },
+  reorderText: { color: '#fff', fontWeight: '700', fontSize: width * 0.038,fontFamily : 'Figtree-Bold' },
 
   /** MODAL STYLES **/
   modalOverlay: {
@@ -526,6 +530,7 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     textAlign: 'center',
     flex: 1,
+    fontFamily : 'Figtree-Bold'
   },
 
   reviewCard: {
@@ -543,22 +548,27 @@ const styles = StyleSheet.create({
   },
   modalOrderId: {
     color: '#E63946',
-    fontWeight: '700',
+    fontWeight: '600',
     fontSize: 13,
+    fontFamily : 'Figtree-SemiBold'
   },
   modalOrderTitle: {
     fontSize: 15,
     fontWeight: '700',
+    fontFamily : 'Figtree-Bold',
     color: '#000',
   },
   modalOrderMeta: {
     fontSize: 12,
     color: '#666',
+    fontFamily : 'Figtree-Medium',
+    fontWeight : '500'
   },
   modalPrice: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: '700',
     color: '#000',
+    fontFamily : 'Figtree-Bold'
   },
 
   howText: {
@@ -567,12 +577,15 @@ const styles = StyleSheet.create({
     color: '#000',
     textAlign: 'center',
     marginTop: 20,
+    fontFamily : 'Figtree-Bold'
   },
   subHowText: {
     fontSize: 13,
     color: '#666',
     textAlign: 'center',
     marginTop: 4,
+    fontFamily : 'Figtree-Medium',
+    fontWeight : '500'
   },
 
   starRow: {
@@ -596,6 +609,8 @@ const styles = StyleSheet.create({
     marginTop: 16,
     height: 80,
     textAlignVertical: 'top',
+    fontFamily : 'Figtree-Medium',
+    fontWeight : '500'
   },
   modalBtnRow: {
     flexDirection: 'row',
@@ -638,9 +653,11 @@ const styles = StyleSheet.create({
   cancelText: {
     color: '#000',
     fontWeight: '600',
+    fontFamily : 'Figtree-SemiBold'
   },
   trackText: {
     color: '#fff',
-    fontWeight: '600',
+    fontWeight: '700',
+    fontFamily : 'Figtree-Bold'
   },
 });

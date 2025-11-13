@@ -78,7 +78,9 @@ const Favourite = () => {
             <Text style={[
               styles.tabText,
               activeTab === 'Food' && styles.activeTabText,
-            ]}>Food Items</Text>
+            ]}>
+              Food Items
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -92,7 +94,9 @@ const Favourite = () => {
             <Text style={[
               styles.tabText,
               activeTab === 'Restaurant' && styles.activeTabText
-            ]}>Restaurants</Text>
+            ]}>
+              Restaurants
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -193,6 +197,8 @@ export default Favourite;
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.secondary },
+
+  // Header
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -202,18 +208,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   backIcon: { width: 22, height: 22, tintColor: '#000' },
-  headerTitle: { fontSize: width * 0.045, fontWeight: '700', color: '#000' },
+  headerTitle: {
+    fontSize: width * 0.045,
+    color: '#000',
+    fontFamily: 'Figtree-Bold',
+  },
 
+  // Tabs
   tabRowOuter: {
     marginHorizontal: 20,
     marginBottom: 14,
-    backgroundColor: 'transparent',
-    borderRadius: 16,
-    elevation: 0,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.07,
-    shadowRadius: 4,
   },
   tabRow: {
     flexDirection: 'row',
@@ -222,34 +226,27 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 1.2,
     borderColor: '#f3f3f3',
-    elevation: 0,
   },
   tabBtn: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 16,
-    backgroundColor: 'transparent',
+  },
+  tabText: {
+    fontSize: 16,
+    color: '#222',
+    fontFamily: 'Figtree-SemiBold',
   },
   activeTab: {
     backgroundColor: COLORS.primary,
-    borderRadius: 16,
-    elevation: 2,
   },
   activeTabText: {
     color: '#fff',
-    fontWeight: 'bold',
-  },
-  tabText: { fontSize: 16, fontWeight: '600', color: '#222' },
-  activeTabShadow: {
-    elevation: 7,
-    shadowColor: COLORS.primary,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    borderRadius: 16,
+    fontFamily: 'Figtree-Bold',
   },
 
+  // Food Grid
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -267,14 +264,25 @@ const styles = StyleSheet.create({
   foodImg: { width: '100%', height: 140, resizeMode: 'cover' },
   foodHeartWrapper: { position: 'absolute', top: 10, right: 10 },
   foodInfo: { padding: 10 },
-  foodName: { fontSize: 15, fontWeight: '700', color: '#000', marginVertical: 4 },
+  foodName: {
+    fontSize: 15,
+    color: '#000',
+    fontFamily: 'Figtree-SemiBold',
+    marginVertical: 4,
+  },
   priceRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  price: { fontSize: 14, fontWeight: '600', color: '#000' },
-  oldPrice: { fontSize: 13, color: 'red', textDecorationLine: 'line-through' },
+  price: { fontSize: 14, color: '#000', fontFamily: 'Figtree-Regular' },
+  oldPrice: {
+    fontSize: 13,
+    color: 'red',
+    textDecorationLine: 'line-through',
+    fontFamily: 'Figtree-Regular',
+  },
   timeRow: { flexDirection: 'row', alignItems: 'center', marginTop: 4 },
   clockIcon: { width: 12, height: 12, marginRight: 6, resizeMode: 'contain' },
-  timeText: { fontSize: 12, color: '#555' },
+  timeText: { fontSize: 12, color: '#555', fontFamily: 'Figtree-Regular' },
 
+  // Restaurants
   card: {
     backgroundColor: '#fff',
     borderRadius: 16,
@@ -296,13 +304,13 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   starIcon: { width: 12, height: 12, tintColor: '#fff', marginRight: 6 },
-  ratingText: { color: '#fff', fontSize: 12, fontWeight: '600' },
-  title: { fontSize: 16, fontWeight: '700', color: '#000' },
+  ratingText: { color: '#fff', fontSize: 12, fontFamily: 'Figtree-Medium' },
+  title: { fontSize: 16, color: '#000', fontFamily: 'Figtree-Bold' },
   locationRow: { flexDirection: 'row', alignItems: 'center', marginTop: 6 },
   locIcon: { width: 12, height: 12, marginRight: 6, resizeMode: 'contain' },
-  location: { fontSize: 13, color: '#555', flex: 1 },
+  location: { fontSize: 13, color: '#555', flex: 1, fontFamily: 'Figtree-Regular' },
   heartBtn: {
-    backgroundColor: 'rgba(0,0,0,0.25)', 
+    backgroundColor: 'rgba(0,0,0,0.25)',
     width: 30,
     height: 30,
     borderRadius: 15,
@@ -312,14 +320,15 @@ const styles = StyleSheet.create({
   },
   heartIcon: { width: 14, height: 14, resizeMode: 'contain' },
   infoRow: { flexDirection: 'row', alignItems: 'center', marginTop: 10, gap: 6 },
-  subInfo: { color: '#777', fontSize: 13 },
+  subInfo: { color: '#777', fontSize: 13, fontFamily: 'Figtree-Medium' },
   metaIcon: { width: 13, height: 13, marginHorizontal: 4, resizeMode: 'contain' },
-  metaText: { color: '#555', fontSize: 12 },
+  metaText: { color: '#555', fontSize: 12, fontFamily: 'Figtree-Regular' },
 
   emptyText: {
     textAlign: 'center',
     color: '#777',
     fontSize: 15,
     marginTop: 60,
+    fontFamily: 'Figtree-Regular',
   },
 });

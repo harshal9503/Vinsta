@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
+import font from '../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 
@@ -352,7 +353,8 @@ const styles = StyleSheet.create({
   headerTitle: { 
     fontSize: width * 0.045, 
     fontWeight: '700', 
-    color: '#000' 
+    color: '#000',
+    fontFamily : 'Figtree-Bold'
   },
   searchContainer: {
     backgroundColor: '#fff',
@@ -378,6 +380,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#000',
     paddingVertical: 0,
+    fontFamily : 'Figtree-Medium',
+    fontWeight : '500'
   },
   clearButton: {
     padding: 4,
@@ -408,6 +412,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     fontWeight: '500',
+    fontFamily : 'Figtree-SemiBold'
   },
   activeFilterText: {
     color: '#fff',
@@ -426,7 +431,8 @@ const styles = StyleSheet.create({
   resultsText: {
     fontSize: 14,
     color: '#666',
-    fontWeight: '500',
+    fontWeight: '700',
+    fontFamily : 'Figtree-Bold'
   },
   clearFiltersBtn: {
     paddingHorizontal: 12,
@@ -526,6 +532,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 10,
     fontWeight: '600',
+    fontFamily : 'Figtree-SemiBold'
   },
   burgerInfo: {
     padding: 12,
@@ -539,6 +546,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     lineHeight: 18,
     minHeight: 18, // Ensure consistent height even for single line names
+    fontFamily : 'Figtree-Bold'
   },
   restaurantName: {
     fontSize: 12,
@@ -547,6 +555,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     lineHeight: 16,
     minHeight: 16, // Consistent height
+    fontFamily : 'Figtree-Medium'
   },
   description: {
     fontSize: 11,
@@ -554,6 +563,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     lineHeight: 14,
     minHeight: 28, // Ensure space for 2 lines (14 * 2)
+    fontFamily : 'Figtree-Regular'
   },
   priceRow: {
     flexDirection: 'row',
@@ -569,13 +579,15 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: '600',
     color: '#000',
+    fontFamily : 'Figtree-SemiBold'
   },
   oldPrice: {
     fontSize: 12,
     color: '#999',
     textDecorationLine: 'line-through',
+    fontFamily : 'Figtree-Regular'
   },
   addBtn: {
     backgroundColor: COLORS.primary,
@@ -596,8 +608,8 @@ const styles = StyleSheet.create({
     minHeight: 16, // Consistent height
   },
   clockIcon: {
-    width: 12,
-    height: 12,
+    width: 13,
+    height: 15,
     tintColor: '#999',
     marginRight: 4,
   },
@@ -605,6 +617,8 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#999',
     flex: 1, // Allow text to take remaining space
+    fontFamily : 'Figtree-Medium',
+    fontWeight : '500'
   },
   noResultsContainer: {
     alignItems: 'center',

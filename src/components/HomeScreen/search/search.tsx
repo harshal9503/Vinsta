@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
+import font from '../../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 
@@ -380,7 +381,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   backIcon: { width: 22, height: 22, tintColor: '#000' },
-  headerTitle: { fontSize: width * 0.045, fontWeight: '700', color: '#000' },
+  headerTitle: { fontSize: width * 0.045, fontWeight: '700', color: '#000',fontFamily : 'Figtree-Bold' },
 
   /** SEARCH **/
   searchWrapper: {
@@ -405,7 +406,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
     resizeMode: 'contain',
   },
-  input: { flex: 1, paddingVertical: 12, fontSize: 14, color: '#000' },
+  input: { flex: 1, paddingVertical: 12, fontSize: 14, color: '#000' , fontFamily : "Figtree-Medium", fontWeight : '500' },
   filterContainer: {
     width: 48,
     height: 48,
@@ -448,7 +449,7 @@ const styles = StyleSheet.create({
   activeTabSides: {
     borderRadius: 10,
   },
-  tabText: { fontSize: 14, fontWeight: '600', color: '#000' },
+  tabText: { fontSize: 14, fontWeight: '700', color: '#000', fontFamily : 'Figtree-Bold' },
 
   /** RESTAURANT CARD **/
   card: {
@@ -472,11 +473,11 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   starIcon: { width: 12, height: 12, tintColor: '#fff', marginRight: 6 },
-  ratingText: { color: '#fff', fontSize: 12, fontWeight: '600' },
-  title: { fontSize: 16, fontWeight: '700', color: '#000' },
+  ratingText: { color: '#fff', fontSize: 12, fontWeight: '700', fontFamily : 'Figtree-Bold' },
+  title: { fontSize: 16, fontWeight: '700', color: '#000',fontFamily : 'Figtree-Bold' },
   locationRow: { flexDirection: 'row', alignItems: 'center', marginTop: 6 },
   locIcon: { width: 12, height: 12, marginRight: 6, resizeMode: 'contain' },
-  location: { fontSize: 13, color: '#555', flex: 1 },
+  location: { fontSize: 13, color: '#555', flex: 1,fontFamily : 'Figtree-Medium', fontWeight : '500' },
   heartBtn: {
     backgroundColor: COLORS.primary,
     width: 30,
@@ -493,14 +494,14 @@ const styles = StyleSheet.create({
     marginTop: 10,
     gap: 6,
   },
-  subInfo: { color: '#777', fontSize: 13 },
+  subInfo: { color: '#777', fontSize: 13,fontFamily : 'Figtree-Medium' , fontWeight : '500' },
   metaIcon: {
     width: 13,
     height: 13,
     marginHorizontal: 4,
     resizeMode: 'contain',
   },
-  metaText: { color: '#555', fontSize: 12 },
+  metaText: { color: '#555', fontSize: 12,fontFamily : 'Figtree-Medium',fontWeight : '500' },
 
   /** FOOD GRID **/
   grid: {
@@ -529,17 +530,19 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
     marginVertical: 4,
+    fontFamily : 'Figtree-Bold'
   },
   priceRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  price: { fontSize: 14, fontWeight: '600', color: '#000' },
+  price: { fontSize: 14, fontWeight: '600', color: '#000',fontFamily : 'Figtree-SemiBold' },
   oldPrice: {
     fontSize: 13,
     color: 'red',
     textDecorationLine: 'line-through',
+    fontFamily : 'Figtree-Regular'
   },
   plusBtn: {
     backgroundColor: COLORS.primary,
@@ -552,5 +555,5 @@ const styles = StyleSheet.create({
   plusIcon: { width: 14, height: 14, tintColor: '#fff', resizeMode: 'contain' },
   timeRow: { flexDirection: 'row', alignItems: 'center', marginTop: 4 },
   clockIcon: { width: 12, height: 12, marginRight: 6, resizeMode: 'contain' },
-  timeText: { fontSize: 12, color: '#555' },
+  timeText: { fontSize: 12, color: '#555',fontFamily : 'Figtree-Regular' },
 });

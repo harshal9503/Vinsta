@@ -16,6 +16,7 @@ import RazorpayCheckout from 'react-native-razorpay';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS } from '../../../theme/colors';
+import font from '../../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 
@@ -231,7 +232,7 @@ const TopUp = () => {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.navigate('Wallet')}>
           <Image
             source={require('../../../assets/back.png')}
             style={styles.backIcon}
@@ -452,7 +453,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   backIcon: { width: 22, height: 22, resizeMode: 'contain' },
-  headerTitle: { fontSize: width * 0.045, fontWeight: '700', color: '#000' },
+  headerTitle: { fontSize: width * 0.045, fontWeight: '700', color: '#000',fontFamily : 'Figtree-Bold' },
 
   /** CARD **/
   cardWrapper: {
@@ -475,9 +476,11 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '-18deg' }],
   },
   cardContent: { position: 'absolute', top: 20, left: 25, right: 25 },
-  cardName: { color: '#fff', fontSize: width * 0.045, fontWeight: '700' },
-  cardNumber: { color: '#fff', opacity: 0.9, marginTop: 4 },
-  balanceLabel: { color: '#fff', opacity: 0.9, marginTop: 18 },
+  cardName: { color: '#fff', fontSize: width * 0.045, fontWeight: '700',fontFamily : 'Figtree-Bold' },
+  cardNumber: { color: '#fff', opacity: 0.9, marginTop: 4,fontFamily : 'Figtree-Medium',
+    fontWeight  :'500' },
+  balanceLabel: { color: '#fff', opacity: 0.9, marginTop: 18,fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600' },
   balanceRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -487,6 +490,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: width * 0.08,
     fontWeight: '700',
+    fontFamily : 'Figtree-Bold',
   },
   cardLogos: {
     position: 'absolute',
@@ -504,6 +508,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
     marginBottom: 15,
+    fontFamily : 'Figtree-Bold',
   },
 
   /** AMOUNT INPUT **/
@@ -529,6 +534,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
     paddingVertical: 12,
+    fontFamily : 'Figtree-Bold',
   },
 
   /** QUICK AMOUNTS **/
@@ -538,6 +544,7 @@ const styles = StyleSheet.create({
     color: '#666',
     marginTop: 25,
     marginBottom: 12,
+    fontFamily : 'Figtree-SemiBold',
   },
   quickAmountGrid: {
     flexDirection: 'row',
@@ -560,8 +567,9 @@ const styles = StyleSheet.create({
   },
   quickAmountText: {
     fontSize: width * 0.04,
-    fontWeight: '600',
     color: '#000',
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600'
   },
   quickAmountTextActive: {
     color: '#fff',
@@ -580,6 +588,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#666',
     lineHeight: 20,
+    fontFamily : 'Figtree-Regular',
+    fontWeight  :'400'
   },
 
   /** DETAILS BOX **/
@@ -594,9 +604,10 @@ const styles = StyleSheet.create({
   },
   detailsTitle: {
     fontSize: width * 0.042,
-    fontWeight: '700',
     color: '#000',
     marginBottom: 15,
+    fontFamily : 'Figtree-Bold',
+    fontWeight  :'700'
   },
   detailRow: {
     flexDirection: 'row',
@@ -606,11 +617,14 @@ const styles = StyleSheet.create({
   detailLabel: {
     fontSize: width * 0.037,
     color: '#666',
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600'
   },
   detailValue: {
     fontSize: width * 0.037,
     fontWeight: '600',
     color: '#000',
+    fontFamily : 'Figtree-SemiBold',
   },
   divider: {
     height: 1,
@@ -621,16 +635,19 @@ const styles = StyleSheet.create({
     fontSize: width * 0.04,
     fontWeight: '700',
     color: '#000',
+    fontFamily : 'Figtree-Bold',
   },
   totalValue: {
     fontSize: width * 0.045,
     fontWeight: '700',
     color: COLORS.primary,
+    fontFamily : 'Figtree-Bold',
   },
   newBalanceValue: {
     fontSize: width * 0.037,
     fontWeight: '700',
     color: COLORS.primary,
+    fontFamily : 'Figtree-Bold',
   },
 
   /** HISTORY SECTION **/
@@ -644,6 +661,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
     marginBottom: 15,
+    fontFamily : 'Figtree-Bold',
   },
   historyCard: {
     backgroundColor: '#fff',
@@ -686,23 +704,28 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#000',
     marginBottom: 4,
+    fontFamily : 'Figtree-SemiBold',
   },
   historyDate: {
     fontSize: width * 0.032,
     color: '#888',
+    fontFamily : 'Figtree-Regular',
+    fontWeight  :'400'
   },
   historyRight: {
     alignItems: 'flex-end',
   },
   historyAmount: {
     fontSize: width * 0.042,
-    fontWeight: '700',
     color: '#4CAF50',
     marginBottom: 4,
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600'
   },
   historyStatus: {
     fontSize: width * 0.03,
     fontWeight: '600',
+    fontFamily : 'Figtree-SemiBold',
   },
   historyFooter: {
     flexDirection: 'row',
@@ -716,6 +739,8 @@ const styles = StyleSheet.create({
     fontSize: width * 0.028,
     color: '#999',
     flex: 1,
+    fontFamily : 'Figtree-Regular',
+    fontWeight  :'400'
   },
   viewReceiptBtn: {
     backgroundColor: COLORS.primary,
@@ -727,6 +752,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: width * 0.032,
     fontWeight: '600',
+    fontFamily : 'Figtree-SemiBold',
   },
 
   /** BOTTOM BUTTON **/
@@ -763,6 +789,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: width * 0.04,
     fontWeight: '700',
+    fontFamily : 'Figtree-Bold',
   },
 
   /** SUCCESS POPUP **/
@@ -795,6 +822,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
     marginBottom: 10,
+    fontFamily : 'Figtree-Bold',
   },
   successMessage: {
     fontSize: width * 0.037,
@@ -802,6 +830,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: 25,
+    fontFamily : 'Figtree-Medium',
+    fontWeight  :'500'
   },
   receiptButton: {
     backgroundColor: COLORS.primary,
@@ -814,7 +844,8 @@ const styles = StyleSheet.create({
   receiptButtonText: {
     color: '#fff',
     fontSize: width * 0.04,
-    fontWeight: '600',
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600'
   },
   cancelButton: {
     backgroundColor: '#f0f0f0',
@@ -827,5 +858,6 @@ const styles = StyleSheet.create({
     color: '#666',
     fontSize: width * 0.04,
     fontWeight: '600',
+    fontFamily : 'Figtree-SemiBold',
   },
 });

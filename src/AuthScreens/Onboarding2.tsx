@@ -11,6 +11,8 @@ import {
   ScrollView,
 } from 'react-native';
 import { COLORS } from '../theme/colors';
+import  font from '../assets/fonts';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -82,6 +84,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.045,
     fontWeight: '600',
     color: COLORS.primary,
+    fontFamily : 'Figtree-SemiBold'
   },
   imageContainer: {
     width: width * 0.9,
@@ -105,12 +108,15 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     textAlign: 'center',
     marginBottom: 10,
+    fontFamily : 'Figtree-Bold'
   },
   description: {
     fontSize: width * 0.04,
     color: COLORS.text,
     textAlign: 'center',
     lineHeight: 22,
+    fontFamily : 'Figtree-Medium',
+    fontWeight : '500'
   },
   pagination: {
     flexDirection: 'row',
@@ -146,6 +152,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.048,
     fontWeight: '700',
     textAlign: 'center',
+    fontFamily : 'Figtree-Bold'
   },
 });
 

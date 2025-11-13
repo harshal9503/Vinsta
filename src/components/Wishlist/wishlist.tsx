@@ -193,6 +193,7 @@ export default Wishlist;
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.secondary },
+
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -201,23 +202,27 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingHorizontal: 20,
   },
-  backIcon: { width: 22, height: 22, tintColor: '#000' },
-  headerTitle: { fontSize: width * 0.045, fontWeight: '700', color: '#000' },
 
-  /** TABS OUTER for shadow/rounded effect **/
+  backIcon: { width: 22, height: 22, tintColor: '#000' },
+  headerTitle: {
+    fontSize: width * 0.045,
+    fontWeight: '700',
+    color: '#000',
+    fontFamily: 'Figtree-Bold',
+  },
+
+  /** TABS **/
   tabRowOuter: {
     marginHorizontal: 20,
     marginBottom: 14,
     backgroundColor: 'transparent',
     borderRadius: 16,
     elevation: 0,
-    // iOS shadow for outer container (for smooth look)
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.07,
     shadowRadius: 4,
   },
-  /** TABS INNER with curve and elevation **/
   tabRow: {
     flexDirection: 'row',
     backgroundColor: '#fff',
@@ -241,10 +246,15 @@ const styles = StyleSheet.create({
   },
   activeTabText: {
     color: '#fff',
-    fontWeight: 'bold',
+    fontWeight: '700',
+    fontFamily: 'Figtree-Bold',
   },
-  tabText: { fontSize: 16, fontWeight: '600', color: '#222' },
-  // Drop shadow for active
+  tabText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#222',
+    fontFamily: 'Figtree-SemiBold',
+  },
   activeTabShadow: {
     elevation: 7,
     shadowColor: COLORS.primary,
@@ -272,13 +282,33 @@ const styles = StyleSheet.create({
   foodImg: { width: '100%', height: 140, resizeMode: 'cover' },
   foodHeartWrapper: { position: 'absolute', top: 10, right: 10 },
   foodInfo: { padding: 10 },
-  foodName: { fontSize: 15, fontWeight: '700', color: '#000', marginVertical: 4 },
-  priceRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  price: { fontSize: 14, fontWeight: '600', color: '#000' },
-  oldPrice: { fontSize: 13, color: 'red', textDecorationLine: 'line-through' },
+  foodName: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#000',
+    marginVertical: 4,
+    fontFamily: 'Figtree-Bold',
+  },
+  priceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  price: {
+    fontSize: 14,
+    fontWeight: '400',
+    color: '#000',
+    fontFamily: 'Figtree-Regular',
+  },
+  oldPrice: {
+    fontSize: 13,
+    color: 'red',
+    textDecorationLine: 'line-through',
+    fontFamily: 'Figtree-Regular',
+  },
   timeRow: { flexDirection: 'row', alignItems: 'center', marginTop: 4 },
   clockIcon: { width: 12, height: 12, marginRight: 6, resizeMode: 'contain' },
-  timeText: { fontSize: 12, color: '#555' },
+  timeText: { fontSize: 12, color: '#555', fontFamily: 'Figtree-Regular' },
 
   /** RESTAURANT **/
   card: {
@@ -302,13 +332,23 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   starIcon: { width: 12, height: 12, tintColor: '#fff', marginRight: 6 },
-  ratingText: { color: '#fff', fontSize: 12, fontWeight: '600' },
-  title: { fontSize: 16, fontWeight: '700', color: '#000' },
+  ratingText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '600',
+    fontFamily: 'Figtree-SemiBold',
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#000',
+    fontFamily: 'Figtree-Bold',
+  },
   locationRow: { flexDirection: 'row', alignItems: 'center', marginTop: 6 },
   locIcon: { width: 12, height: 12, marginRight: 6, resizeMode: 'contain' },
-  location: { fontSize: 13, color: '#555', flex: 1 },
+  location: { fontSize: 13, color: '#555', flex: 1, fontFamily: 'Figtree-Regular' },
   heartBtn: {
-    backgroundColor: 'rgba(0,0,0,0.25)', 
+    backgroundColor: 'rgba(0,0,0,0.25)',
     width: 30,
     height: 30,
     borderRadius: 15,
@@ -318,14 +358,15 @@ const styles = StyleSheet.create({
   },
   heartIcon: { width: 14, height: 14, resizeMode: 'contain' },
   infoRow: { flexDirection: 'row', alignItems: 'center', marginTop: 10, gap: 6 },
-  subInfo: { color: '#777', fontSize: 13 },
+  subInfo: { color: '#777', fontSize: 13, fontFamily: 'Figtree-Medium' },
   metaIcon: { width: 13, height: 13, marginHorizontal: 4, resizeMode: 'contain' },
-  metaText: { color: '#555', fontSize: 12 },
+  metaText: { color: '#555', fontSize: 12, fontFamily: 'Figtree-Regular' },
 
   emptyText: {
     textAlign: 'center',
     color: '#777',
     fontSize: 15,
     marginTop: 60,
+    fontFamily: 'Figtree-Regular',
   },
 });

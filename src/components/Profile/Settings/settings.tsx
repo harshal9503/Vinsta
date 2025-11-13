@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
+import font from '../../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 
@@ -168,6 +169,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.045,
     fontWeight: '700',
     color: '#000',
+    fontFamily : 'Figtree-Bold',
   },
 
   /** OPTION LIST **/
@@ -198,6 +200,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.037,
     color: '#000',
     fontWeight: '600',
+    fontFamily : 'Figtree-SemiBold',
   },
   arrowIcon: {
     width: 14,
@@ -234,6 +237,8 @@ const styles = StyleSheet.create({
     color: '#000',
     textAlign: 'center',
     marginBottom: 20,
+    fontFamily : 'Figtree-Medium',
+    fontWeight  :'500'
   },
   popupButtonsRow: {
     flexDirection: 'row',
@@ -251,5 +256,6 @@ const styles = StyleSheet.create({
     color: COLORS.secondary,
     fontWeight: '700',
     fontSize: width * 0.04,
+    fontFamily : 'Figtree-Bold',
   },
 });

@@ -14,6 +14,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import font from '../../assets/fonts';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -474,6 +476,7 @@ const styles = StyleSheet.create({
     fontWeight: '700', 
     color: '#000',
     textAlign: 'center',
+    fontFamily : 'Figtree-Bold'
   },
   filterButton: {
     padding: wp('1%'),
@@ -517,6 +520,8 @@ const styles = StyleSheet.create({
     fontSize: wp('3.8%'),
     color: '#000',
     paddingVertical: 0,
+    fontFamily : 'Figtree-Medium',
+    fontWeight : '500'
   },
   clearButton: {
     padding: wp('1%'),
@@ -539,6 +544,7 @@ const styles = StyleSheet.create({
     fontSize: wp('3.5%'),
     color: '#666',
     fontWeight: '500',
+    fontFamily : 'Figtree-SemiBold'
   },
   clearFiltersBtn: {
     paddingHorizontal: wp('3%'),
@@ -588,6 +594,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: wp('3%'),
     fontWeight: '700',
+    fontFamily : 'Figtree-Bold'
   },
   heartBtn: {
     position: 'absolute',
@@ -625,6 +632,7 @@ const styles = StyleSheet.create({
     color: '#000',
     flex: 1,
     marginRight: wp('2%'),
+    fontFamily : 'Figtree-Bold'
   },
   ratingContainer: {
     flexDirection: 'row',
@@ -644,12 +652,15 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: wp('3%'),
     fontWeight: '600',
+    fontFamily : 'Figtree-Medium'
   },
   description: {
     fontSize: wp('3.5%'),
     color: '#666',
     marginBottom: hp('1.5%'),
     lineHeight: hp('2.2%'),
+    fontFamily : 'Figtree-Medium',
+    fontWeight : '500'
   },
   infoRow: {
     flexDirection: 'row',
@@ -670,6 +681,7 @@ const styles = StyleSheet.create({
     fontSize: wp('3%'),
     color: '#666',
     fontWeight: '500',
+    fontFamily : 'Figtree-Medium'
   },
   tagsContainer: {
     flexDirection: 'row',
@@ -686,6 +698,7 @@ const styles = StyleSheet.create({
     fontSize: wp('3%'),
     color: COLORS.primary,
     fontWeight: '500',
+     fontFamily : 'Figtree-Medium'
   },
   noResultsContainer: {
     alignItems: 'center',
@@ -705,12 +718,15 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: hp('1%'),
     textAlign: 'center',
+    fontFamily : 'Figtree-Bold'
   },
   noResultsSubtext: {
     fontSize: wp('3.8%'),
     color: '#666',
     textAlign: 'center',
     lineHeight: hp('2.5%'),
+    fontFamily : 'Figtree-Medium',
+    fontWeight  :'500'
   },
   // Modal Styles
   modalOverlay: {
@@ -719,6 +735,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalContainer: {
+    flex: 1,
     backgroundColor: '#fff',
     borderTopLeftRadius: wp('6%'),
     borderTopRightRadius: wp('6%'),
@@ -738,6 +755,7 @@ const styles = StyleSheet.create({
     fontSize: wp('4.8%'),
     fontWeight: '700',
     color: '#000',
+    fontFamily : 'Figtree-Bold'
   },
   closeIcon: {
     width: wp('5%'),
@@ -756,6 +774,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
     marginBottom: hp('1.5%'),
+    fontFamily : 'Figtree-Bold'
   },
   filterOptions: {
     flexDirection: 'row',
@@ -776,10 +795,12 @@ const styles = StyleSheet.create({
     fontSize: wp('3.5%'),
     color: '#666',
     fontWeight: '500',
+    fontFamily : 'Figtree-Medium'
   },
   activeFilterOptionText: {
     color: '#fff',
     fontWeight: '600',
+    fontFamily : 'Figtree-Medium'
   },
   modalActions: {
     flexDirection: 'row',
@@ -799,6 +820,7 @@ const styles = StyleSheet.create({
     fontSize: wp('4%'),
     fontWeight: '600',
     color: '#666',
+    fontFamily : 'Figtree-Bold'
   },
   applyBtn: {
     flex: 2,
@@ -811,5 +833,6 @@ const styles = StyleSheet.create({
     fontSize: wp('4%'),
     fontWeight: '700',
     color: '#fff',
+    fontFamily : 'Figtree-Bold'
   },
 });

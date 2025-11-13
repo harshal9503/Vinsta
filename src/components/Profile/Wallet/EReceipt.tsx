@@ -15,6 +15,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { COLORS } from '../../../theme/colors';
+import font from '../../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 
@@ -176,7 +177,8 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   backIcon: { width: 22, height: 22, resizeMode: 'contain' },
-  headerTitle: { fontSize: width * 0.045, fontWeight: '700', color: '#000' },
+  headerTitle: { fontSize: width * 0.045, fontWeight: '700', color: '#000',fontFamily : 'Figtree-Bold',
+    },
 
   /** BARCODE **/
   barcodeContainer: {
@@ -195,7 +197,8 @@ const styles = StyleSheet.create({
     width: width * 0.4,
     marginTop: 4,
   },
-  barcodeNum: { fontSize: 13, color: '#000', fontWeight: '600' },
+  barcodeNum: { fontSize: 13, color: '#000',fontFamily : 'Figtree-Medium',
+    fontWeight  :'500' },
 
   /** TRANSACTION HEADER **/
   transactionHeader: {
@@ -205,11 +208,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   walletImg: { width: 50, height: 50, borderRadius: 25, marginRight: 12 },
-  txTitle: { fontWeight: '700', fontSize: width * 0.04, color: '#000' },
-  txTime: { color: '#888', fontSize: width * 0.032, marginTop: 2 },
-  txAmount: { fontWeight: '700', fontSize: width * 0.04, color: '#000' },
+  txTitle: { fontWeight: '700', fontSize: width * 0.04, color: '#000',fontFamily : 'Figtree-Bold', },
+  txTime: { color: '#888', fontSize: width * 0.032, marginTop: 2,fontFamily : 'Figtree-Medium',
+    fontWeight  :'500' },
+  txAmount: {fontSize: width * 0.04, color: '#000',fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600' },
   typeRow: { flexDirection: 'row', alignItems: 'center', marginTop: 2 },
-  txType: { color: '#888', fontSize: width * 0.032, marginRight: 4 },
+  txType: { color: '#888', fontSize: width * 0.032, marginRight: 4,fontFamily : 'Figtree-Medium',
+    fontWeight  :'500' },
   arrowIcon: { width: 12, height: 12, resizeMode: 'contain' },
 
   /** CARD **/
@@ -232,8 +238,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 6,
   },
-  label: { color: '#555', fontSize: width * 0.037, fontWeight: '500' },
-  value: { color: '#000', fontSize: width * 0.037, fontWeight: '600' },
+  label: { color: '#555', fontSize: width * 0.037, fontWeight: '500' ,fontFamily : 'Figtree-Medium',
+   },
+  value: { color: '#000', fontSize: width * 0.037, fontWeight: '600',fontFamily : 'Figtree-SemiBold',
+   },
   divider: { height: 1, backgroundColor: '#eee', marginVertical: 8 },
 
   /** STATUS BADGE **/
@@ -243,7 +251,8 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 8,
   },
-  statusText: { color: '#fff', fontWeight: '700', fontSize: 12 },
+  statusText: { color: '#fff', fontWeight: '700', fontSize: 12,fontFamily : 'Figtree-Bold',
+    },
 
   /** MISC **/
   row: { flexDirection: 'row', alignItems: 'center' },

@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.045,
     fontWeight: '700',
     color: '#000',
+    fontFamily: 'Figtree-Bold',
   },
   content: {
     padding: 20,
@@ -77,10 +78,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: COLORS.primary,
     marginBottom: 5,
+    fontFamily: 'Figtree-Medium',
   },
   text: {
     fontSize: width * 0.037,
     color: '#333',
+    fontFamily: 'Figtree-Regular',
   },
   renewButton: {
     backgroundColor: COLORS.primary,
@@ -91,5 +94,6 @@ const styles = StyleSheet.create({
   renewButtonText: {
     color: COLORS.secondary,
     fontWeight: '700',
+    fontFamily: 'Figtree-SemiBold',
   },
 });

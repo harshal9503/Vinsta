@@ -211,6 +211,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: width * 0.045,
     fontWeight: '700',
+    fontFamily: 'Figtree-Bold',
   },
 
   /** SCROLL CONTENT **/
@@ -228,6 +229,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 15,
     marginLeft: 5,
+    fontFamily: 'Figtree-SemiBold',
   },
 
   /** CONTACT ITEMS **/
@@ -243,9 +245,9 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOpacity: 0.05,
         shadowRadius: 3,
-        shadowOffset: {width: 0, height: 1},
+        shadowOffset: { width: 0, height: 1 },
       },
-      android: {elevation: 2},
+      android: { elevation: 2 },
     }),
   },
   contactInfo: {
@@ -266,10 +268,12 @@ const styles = StyleSheet.create({
     fontSize: width * 0.038,
     fontWeight: '600',
     marginBottom: 4,
+    fontFamily: 'Figtree-Medium',
   },
   contactDescription: {
     fontSize: width * 0.032,
     fontWeight: '400',
+    fontFamily: 'Figtree-Regular',
   },
   chevronIcon: {
     width: 16,
@@ -288,10 +292,12 @@ const styles = StyleSheet.create({
   supportHours: {
     fontSize: width * 0.034,
     fontWeight: '500',
+    fontFamily: 'Figtree-Medium',
     marginBottom: 8,
   },
   responseTime: {
     fontSize: width * 0.034,
     fontWeight: '500',
+    fontFamily: 'Figtree-Medium',
   },
 });

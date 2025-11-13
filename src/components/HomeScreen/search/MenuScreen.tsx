@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
+import font from '../../../assets/fonts'
 
 const { width, height } = Dimensions.get('window');
 
@@ -211,6 +212,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.045,
     fontWeight: '700',
     color: '#000',
+    fontFamily: 'Figtree-SemiBold'
   },
 
   // TABS WITH CURVE (Same as SearchScreen)
@@ -241,8 +243,9 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontSize: width * 0.038,
-    fontWeight: '600',
+    fontWeight: '700',
     color: '#777',
+    fontFamily: 'Figtree-Bold',
   },
   tabTextActive: {
     color: '#fff',
@@ -273,6 +276,7 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: '600',
     flex: 1,
+    fontFamily: 'Figtree-SemiBold'
   },
   menuRight: {
     flexDirection: 'row',
@@ -283,6 +287,7 @@ const styles = StyleSheet.create({
     color: '#000',
     marginRight: width * 0.02,
     fontWeight: '600',
+    fontFamily: 'Figtree-SemiBold'
   },
   rightArrow: {
     width: width * 0.018,
@@ -317,6 +322,8 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
     lineHeight: width * 0.06,
-    fontWeight: '500',
+    fontWeight: '600',
+    fontFamily : 'Figtree-SemiBold'
+
   },
 });

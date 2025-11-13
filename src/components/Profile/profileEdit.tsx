@@ -274,6 +274,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.045,
     fontWeight: '700',
     color: COLORS.text,
+    fontFamily: 'Figtree-Bold', // ✅ Added
   },
 
   /** SCROLL CONTENT **/
@@ -315,13 +316,14 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOpacity: 0.2,
         shadowRadius: 4,
-        shadowOffset: {width: 0, height: 2},
+        shadowOffset: { width: 0, height: 2 },
       },
-      android: {elevation: 4},
+      android: { elevation: 4 },
     }),
   },
   cameraIcon: {
     fontSize: 16,
+    fontFamily: 'Figtree-Regular', // ✅ Added
   },
 
   /** FORM **/
@@ -335,6 +337,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 8,
     marginTop: 15,
+    fontFamily: 'Figtree-SemiBold', // ✅ Added
   },
   inputBox: {
     flexDirection: 'row',
@@ -344,16 +347,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e0e0e0',
     paddingHorizontal: 16,
-    paddingVertical: Platform.OS === 'ios' ? 16 : 12,
+    paddingVertical: Platform.OS === 'ios' ? 8 : 6,
     marginBottom: 5,
     ...Platform.select({
       ios: {
         shadowColor: '#000',
         shadowOpacity: 0.05,
         shadowRadius: 3,
-        shadowOffset: {width: 0, height: 1},
+        shadowOffset: { width: 0, height: 1 },
       },
-      android: {elevation: 2},
+      android: { elevation: 2 },
     }),
   },
   input: {
@@ -362,6 +365,7 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     padding: 0,
     margin: 0,
+    fontFamily: 'Figtree-Regular', // ✅ Added
   },
   closeIcon: {
     width: 18,
@@ -385,15 +389,16 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOpacity: 0.1,
         shadowRadius: 3,
-        shadowOffset: {width: 0, height: 2},
+        shadowOffset: { width: 0, height: 2 },
       },
-      android: {elevation: 3},
+      android: { elevation: 3 },
     }),
   },
   saveText: {
     color: COLORS.secondary,
     fontSize: width * 0.042,
     fontWeight: '700',
+    fontFamily: 'Figtree-Bold', // ✅ Added
   },
 
   /** POPUP **/
@@ -416,9 +421,9 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOpacity: 0.2,
         shadowRadius: 4,
-        shadowOffset: {width: 0, height: 2},
+        shadowOffset: { width: 0, height: 2 },
       },
-      android: {elevation: 6},
+      android: { elevation: 6 },
     }),
   },
   popupTitle: {
@@ -427,6 +432,7 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     marginBottom: 20,
     textAlign: 'center',
+    fontFamily: 'Figtree-SemiBold', // ✅ Added
   },
   pickerButton: {
     paddingVertical: 14,
@@ -439,6 +445,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.text,
     fontWeight: '500',
+    fontFamily: 'Figtree-Medium', // ✅ Added
   },
   closeIconWrapper: {
     position: 'absolute',

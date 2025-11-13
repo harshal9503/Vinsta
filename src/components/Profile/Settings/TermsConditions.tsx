@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
+import font from '../../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 
@@ -158,6 +159,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.045,
     fontWeight: '700',
     color: '#000',
+    fontFamily : 'Figtree-Bold',
   },
   content: {
     padding: 20,
@@ -167,7 +169,8 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
     marginBottom: 20,
-    fontStyle: 'italic',
+    fontFamily : 'Figtree-MediumItalic',
+    fontWeight  :'500'
   },
   sectionTitle: {
     fontSize: width * 0.038,
@@ -175,12 +178,15 @@ const styles = StyleSheet.create({
     color: '#000',
     marginTop: 20,
     marginBottom: 10,
+    fontFamily : 'Figtree-Bold',
   },
   paragraph: {
     fontSize: width * 0.035,
     color: '#333',
     lineHeight: 22,
     marginBottom: 10,
+    fontFamily : 'Figtree-Regular',
+    fontWeight  :'400'
   },
   listItem: {
     fontSize: width * 0.035,
@@ -188,12 +194,15 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     marginBottom: 5,
     marginLeft: 10,
+    fontFamily : 'Figtree-Regular',
+    fontWeight  :'400'
   },
   contactInfo: {
     fontSize: width * 0.035,
     color: COLORS.primary,
     fontWeight: '500',
     marginBottom: 5,
+    fontFamily : 'Figtree-Medium',
   },
   footer: {
     marginTop: 30,
@@ -205,7 +214,8 @@ const styles = StyleSheet.create({
     fontSize: width * 0.032,
     color: '#666',
     textAlign: 'center',
-    fontStyle: 'italic',
+    fontFamily : 'Figtree-MediumItalic',
+    fontWeight  :'500'
   },
 });
 

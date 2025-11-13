@@ -145,204 +145,208 @@ const WelcomeScreen = () => {
         };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-    >
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
+    <View style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.keyboardView}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
       >
-        <View style={styles.titleSection}>
-          <Text style={styles.title}>Welcome</Text>
-          <Text style={styles.subtitle}>
-            Fill the details & complete your profile
-          </Text>
-        </View>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          bounces={false}
+          overScrollMode="never"
+        >
+          <View style={styles.titleSection}>
+            <Text style={styles.title}>Welcome</Text>
+            <Text style={styles.subtitle}>
+              Fill the details & complete your profile
+            </Text>
+          </View>
 
-        <View style={styles.profileSection}>
-          <Text style={styles.label}>
-            Profile photo <Text style={styles.required}>*</Text>
-          </Text>
-          <View style={styles.avatarRow}>
+          <View style={styles.profileSection}>
+            <Text style={styles.label}>
+              Profile photo <Text style={styles.required}>*</Text>
+            </Text>
+            <View style={styles.avatarRow}>
+              <TouchableOpacity
+                style={styles.avatarWrapper}
+                activeOpacity={0.8}
+                onPress={openPicker}
+              >
+                <Image
+                  source={
+                    profileImage?.uri
+                      ? { uri: profileImage.uri }
+                      : defaultUserImage
+                  }
+                  style={styles.avatar}
+                />
+                <View style={styles.cameraBadge}>
+                  <Text style={styles.cameraBadgeText}>📷</Text>
+                </View>
+              </TouchableOpacity>
+              <View style={styles.avatarTextContainer}>
+                <Text style={styles.avatarHelpTitle}>
+                  Add a face to your profile
+                </Text>
+                <Text style={styles.avatarHelpText}>
+                  Tap to take a photo or upload from gallery. JPG / PNG up to ~5
+                  MB.
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.inputSection}>
+            <Text style={styles.label}>
+              Enter Your Name <Text style={styles.required}>*</Text>
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Please enter your name here"
+              placeholderTextColor="#A0A0A0"
+              value={name}
+              onChangeText={setName}
+            />
+          </View>
+
+          <View style={styles.inputSection}>
+            <Text style={styles.label}>
+              Enter Your Email <Text style={styles.required}>*</Text>
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Please enter your email here"
+              placeholderTextColor="#A0A0A0"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+          </View>
+
+          <View style={styles.inputSection}>
+            <Text style={styles.label}>
+              Enter Your Mobile No. <Text style={styles.required}>*</Text>
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Please enter your mobile number"
+              placeholderTextColor="#A0A0A0"
+              value={mobile}
+              editable={false}
+            />
+          </View>
+
+          <View style={styles.inputSection}>
+            <Text style={styles.label}>Reference Code (Optional)</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Reference code"
+              placeholderTextColor="#A0A0A0"
+              value={refCode}
+              onChangeText={setRefCode}
+            />
+          </View>
+
+          <View style={styles.termsRow}>
+            <CheckBox
+              value={accepted}
+              onValueChange={setAccepted}
+              {...checkBoxProps}
+            />
+            <Text style={styles.termsText}>
+              I accept{' '}
+              <Text style={styles.link} onPress={handleTermsPress}>
+                terms & conditions.
+              </Text>
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={[styles.button, { opacity: loading ? 0.7 : 1 }]}
+            onPress={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color={COLORS.secondary} size="small" />
+            ) : (
+              <Text style={styles.buttonText}>Submit</Text>
+            )}
+          </TouchableOpacity>
+
+          <View style={styles.bottomSpacer} />
+        </ScrollView>
+      </KeyboardAvoidingView>
+
+      <Modal
+        transparent
+        visible={popupVisible}
+        animationType="fade"
+        onRequestClose={closePopup}
+      >
+        <View style={styles.popupOverlay}>
+          <View style={styles.popupBox}>
             <TouchableOpacity
-              style={styles.avatarWrapper}
-              activeOpacity={0.8}
-              onPress={openPicker}
+              style={styles.closeIconWrapper}
+              onPress={closePopup}
             >
               <Image
-                source={
-                  profileImage?.uri
-                    ? { uri: profileImage.uri }
-                    : defaultUserImage
-                }
-                style={styles.avatar}
+                source={closeIcon}
+                style={styles.closeIcon}
+                resizeMode="contain"
               />
-              <View style={styles.cameraBadge}>
-                <Text style={styles.cameraBadgeText}>📷</Text>
-              </View>
             </TouchableOpacity>
-            <View style={styles.avatarTextContainer}>
-              <Text style={styles.avatarHelpTitle}>
-                Add a face to your profile
-              </Text>
-              <Text style={styles.avatarHelpText}>
-                Tap to take a photo or upload from gallery. JPG / PNG up to ~5
-                MB.
-              </Text>
-            </View>
+            <Text style={styles.popupText}>{popupMessage}</Text>
+            <TouchableOpacity style={styles.popupButton} onPress={closePopup}>
+              <Text style={styles.popupButtonText}>OK</Text>
+            </TouchableOpacity>
           </View>
         </View>
+      </Modal>
 
-        <View style={styles.inputSection}>
-          <Text style={styles.label}>
-            Enter Your Name <Text style={styles.required}>*</Text>
-          </Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Please enter your name here"
-            placeholderTextColor="#A0A0A0"
-            value={name}
-            onChangeText={setName}
-          />
-        </View>
-
-        <View style={styles.inputSection}>
-          <Text style={styles.label}>
-            Enter Your Email <Text style={styles.required}>*</Text>
-          </Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Please enter your email here"
-            placeholderTextColor="#A0A0A0"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-        </View>
-
-        <View style={styles.inputSection}>
-          <Text style={styles.label}>
-            Enter Your Mobile No. <Text style={styles.required}>*</Text>
-          </Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Please enter your mobile number"
-            placeholderTextColor="#A0A0A0"
-            value={mobile}
-            editable={false}
-          />
-        </View>
-
-        <View style={styles.inputSection}>
-          <Text style={styles.label}>Reference Code (Optional)</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Reference code"
-            placeholderTextColor="#A0A0A0"
-            value={refCode}
-            onChangeText={setRefCode}
-          />
-        </View>
-
-        <View style={styles.termsRow}>
-          <CheckBox
-            value={accepted}
-            onValueChange={setAccepted}
-            {...checkBoxProps}
-          />
-          <Text style={styles.termsText}>
-            I accept{' '}
-            <Text style={styles.link} onPress={handleTermsPress}>
-              terms & conditions.
-            </Text>
-          </Text>
-        </View>
-
-        <TouchableOpacity
-          style={[styles.button, { opacity: loading ? 0.7 : 1 }]}
-          onPress={handleSubmit}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color={COLORS.secondary} size="small" />
-          ) : (
-            <Text style={styles.buttonText}>Submit</Text>
-          )}
-        </TouchableOpacity>
-
-        <View style={styles.bottomSpacer} />
-
-        <Modal
-          transparent
-          visible={popupVisible}
-          animationType="fade"
-          onRequestClose={closePopup}
-        >
-          <View style={styles.popupOverlay}>
-            <View style={styles.popupBox}>
-              <TouchableOpacity
-                style={styles.closeIconWrapper}
-                onPress={closePopup}
-              >
-                <Image
-                  source={closeIcon}
-                  style={styles.closeIcon}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-              <Text style={styles.popupText}>{popupMessage}</Text>
-              <TouchableOpacity style={styles.popupButton} onPress={closePopup}>
-                <Text style={styles.popupButtonText}>OK</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-
-        <Modal visible={pickerVisible} transparent animationType="fade">
-          <View style={styles.popupOverlay}>
-            <View style={styles.popupBox}>
-              <TouchableOpacity
-                style={styles.closeIconWrapper}
-                onPress={closePicker}
-              >
-                <Image
-                  source={closeIcon}
-                  style={styles.closeIcon}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-              <Text style={styles.popupTitle}>Change your Profile pic</Text>
+      <Modal visible={pickerVisible} transparent animationType="fade">
+        <View style={styles.popupOverlay}>
+          <View style={styles.popupBox}>
+            <TouchableOpacity
+              style={styles.closeIconWrapper}
+              onPress={closePicker}
+            >
+              <Image
+                source={closeIcon}
+                style={styles.closeIcon}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+            <Text style={styles.popupTitle}>Change your Profile pic</Text>
+            <TouchableOpacity
+              style={styles.pickerButton}
+              onPress={handleTakePhoto}
+            >
+              <Text style={styles.pickerButtonText}>Take photo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.pickerButton}
+              onPress={handleChooseFromGallery}
+            >
+              <Text style={styles.pickerButtonText}>Choose from Gallery</Text>
+            </TouchableOpacity>
+            {profileImage && (
               <TouchableOpacity
                 style={styles.pickerButton}
-                onPress={handleTakePhoto}
+                onPress={removeProfileImage}
               >
-                <Text style={styles.pickerButtonText}>Take photo</Text>
+                <Text style={[styles.pickerButtonText, { color: '#FF3B30' }]}>
+                  Remove Profile Photo
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.pickerButton}
-                onPress={handleChooseFromGallery}
-              >
-                <Text style={styles.pickerButtonText}>Choose from Gallery</Text>
-              </TouchableOpacity>
-              {profileImage && (
-                <TouchableOpacity
-                  style={styles.pickerButton}
-                  onPress={removeProfileImage}
-                >
-                  <Text style={[styles.pickerButtonText, { color: '#FF3B30' }]}>
-                    Remove Profile Photo
-                  </Text>
-                </TouchableOpacity>
-              )}
-            </View>
+            )}
           </View>
-        </Modal>
-      </ScrollView>
-    </KeyboardAvoidingView>
+        </View>
+      </Modal>
+    </View>
   );
 };
 
@@ -351,11 +355,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.secondary,
   },
+  keyboardView: {
+    flex: 1,
+  },
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 20,
     paddingTop: 60,
-    paddingBottom: 100,
+    paddingBottom: 40,
   },
   titleSection: {
     marginBottom: 25,
@@ -480,7 +487,7 @@ const styles = StyleSheet.create({
     color: COLORS.secondary,
   },
   bottomSpacer: {
-    height: 60,
+    height: 40,
   },
   popupOverlay: {
     flex: 1,

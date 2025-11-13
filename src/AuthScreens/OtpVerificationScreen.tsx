@@ -17,6 +17,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { COLORS } from '../theme/colors';
+import font from '../assets/fonts'
 
 const { height: screenHeight, width } = Dimensions.get('window');
 

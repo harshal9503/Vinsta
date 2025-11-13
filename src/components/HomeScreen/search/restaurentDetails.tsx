@@ -20,6 +20,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import font from '../../../assets/fonts'
 
 const { width, height } = Dimensions.get('window');
 
@@ -978,6 +979,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.6,
     textShadowColor: '#000',
     textShadowRadius: 4,
+    fontFamily : 'Figtree-Bold'
   },
   backBtn: {
     zIndex: 2,
@@ -1052,6 +1054,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#222',
     marginTop: hp('0.5%'),
+    fontFamily : 'Figtree-Bold'
   },
   locationRow: {
     flexDirection: 'row',
@@ -1068,6 +1071,7 @@ const styles = StyleSheet.create({
     color: '#888',
     fontSize: hp('1.5%'),
     fontWeight: '500',
+    fontFamily : "Figtree-Medium"
   },
   statsRow: {
     flexDirection: 'row',
@@ -1084,8 +1088,9 @@ const styles = StyleSheet.create({
   statText: {
     fontSize: hp('1.4%'),
     color: '#222',
-    fontWeight: '400',
+    fontWeight: '500',
     marginRight: wp('2.5%'),
+    fontFamily : 'Figtree-Medium'
   },
 
   searchWrapper: {
@@ -1116,6 +1121,8 @@ const styles = StyleSheet.create({
     paddingVertical: hp('1%'),
     fontSize: hp('1.8%'),
     color: '#111',
+    fontFamily : 'Figtree-Regular',
+    fontWeight : '400'
   },
   searchFilterContainer: {
     backgroundColor: COLORS.primary,
@@ -1142,10 +1149,11 @@ const styles = StyleSheet.create({
     marginRight: wp('1.8%'),
   },
   availText: {
-    fontWeight: '600',
+    fontWeight: '700',
     color: '#000',
     fontSize: hp('1.8%'),
     flex: 1,
+    fontFamily : 'Figtree-Bold'
   },
   vegIcon: {
     width: wp('3.5%'),
@@ -1199,8 +1207,9 @@ const styles = StyleSheet.create({
   },
   categoryTxt: {
     color: COLORS.primary,
-    fontWeight: '600',
+    fontWeight: '700',
     fontSize: hp('1.7%'),
+    fontFamily : 'Figtree-Bold'
   },
   categoryTxtActive: {
     color: COLORS.secondary,
@@ -1247,8 +1256,9 @@ const styles = StyleSheet.create({
   },
   filterTagText: {
     color: '#000',
-    fontWeight: '600',
+    fontWeight: '500',
     fontSize: hp('1.5%'),
+    fontFamily : 'Figtree-Medium'
   },
   closeIcon: {
     width: wp('3%'),
@@ -1273,6 +1283,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#222',
     fontSize: hp('1.8%'),
+    fontFamily : 'Figtree-Bold'
   },
 
   grid: {
@@ -1353,6 +1364,7 @@ const styles = StyleSheet.create({
     color: '#222',
     fontSize: hp('1.6%'),
     marginBottom: hp('0.3%'),
+    fontFamily :'Figtree-Bold'
   },
   priceRow: {
     flexDirection: 'row',
@@ -1361,15 +1373,18 @@ const styles = StyleSheet.create({
     marginTop: hp('0.2%'),
   },
   price: {
-    fontWeight: '700',
+    fontWeight: '600',
     color: '#222',
     fontSize: hp('1.6%'),
+    fontFamily : "Figtree-SemiBold"
   },
   oldPrice: {
     fontSize: hp('1.3%'),
     color: '#FA463D',
     textDecorationLine: 'line-through',
     marginLeft: wp('1%'),
+        fontFamily : "Figtree-Regular"
+
   },
   plusBtn: {
     backgroundColor: COLORS.primary,
@@ -1400,6 +1415,7 @@ const styles = StyleSheet.create({
     fontSize: hp('1.3%'),
     color: '#666',
     fontWeight: '600',
+    fontFamily : 'Figtree-Regular'
   },
 
   bestBurgerHeaderRow: {

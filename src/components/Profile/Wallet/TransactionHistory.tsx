@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
+import font from '../../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 
@@ -249,7 +250,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   backIcon: { width: 22, height: 22, resizeMode: 'contain' },
-  headerTitle: { fontSize: width * 0.045, fontWeight: '700', color: '#000' },
+  headerTitle: { fontSize: width * 0.045, fontWeight: '700', color: '#000',fontFamily : 'Figtree-Bold' },
 
   /** LIST **/
   row: {
@@ -261,11 +262,16 @@ const styles = StyleSheet.create({
     borderColor: '#eee',
   },
   foodImg: { width: 45, height: 45, borderRadius: 22.5, marginRight: 12 },
-  foodTitle: { fontWeight: '600', fontSize: width * 0.038, color: '#000' },
-  foodTime: { color: '#888', fontSize: width * 0.032, marginTop: 2 },
-  foodAmount: { fontWeight: '700', fontSize: width * 0.038, color: '#000' },
+  foodTitle: { fontWeight: '600', fontSize: width * 0.038, color: '#000',fontFamily : '"Figtree-SemiBold' },
+  foodTime: { color: '#888', fontSize: width * 0.032, marginTop: 2,
+    fontFamily : "Figtree-Medium",
+    fontWeight : '500'
+   },
+  foodAmount: { fontWeight: '700', fontSize: width * 0.038, color: '#000', fontFamily : "Figtree-Bold",
+     },
   typeRow: { flexDirection: 'row', alignItems: 'center', marginTop: 2 },
-  typeText: { color: '#888', fontSize: width * 0.032, marginRight: 4 },
+  typeText: { color: '#888', fontSize: width * 0.032, marginRight: 4, fontFamily : "Figtree-Medium",
+    fontWeight : '500' },
   arrowIcon: { width: 12, height: 12, resizeMode: 'contain' },
 
   /** MODAL **/
@@ -284,8 +290,9 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   modalImg: { width: 70, height: 70, borderRadius: 35, marginBottom: 10 },
-  modalTitle: { fontSize: 18, fontWeight: '700', color: '#000' },
-  modalTime: { fontSize: 13, color: '#888', marginBottom: 10 },
+  modalTitle: { fontSize: 18, fontWeight: '700', color: '#000', fontFamily : "Figtree-Bold" },
+  modalTime: { fontSize: 13, color: '#888', marginBottom: 10, fontFamily : "Figtree-Regular",
+    fontWeight : '400' },
   modalDivider: {
     width: '100%',
     height: 1,
@@ -298,8 +305,9 @@ const styles = StyleSheet.create({
     width: '100%',
     marginVertical: 4,
   },
-  modalLabel: { fontWeight: '600', color: '#555' },
-  modalValue: { fontWeight: '700', color: '#000' },
+  modalLabel: { fontWeight: '600', color: '#555', fontFamily : "Figtree-SemiBold",
+     },
+  modalValue: { fontWeight: '700', color: '#000', fontFamily : "Figtree-Bold" },
   closeBtn: {
     marginTop: 20,
     backgroundColor: COLORS.primary || '#E87C23',
@@ -307,5 +315,5 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 5,
   },
-  closeBtnText: { color: '#fff', fontWeight: '700', fontSize: 14 },
+  closeBtnText: { color: '#fff', fontWeight: '700', fontSize: 14,fontFamily : 'Figtree-Bold' },
 });

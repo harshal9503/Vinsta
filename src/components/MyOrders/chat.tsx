@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
+import font from '../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 
@@ -186,11 +187,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: '#000',
+    fontFamily : 'Figtree-Bold'
   },
   agentStatus: {
     fontSize: 12,
     color: '#259E29',
     marginTop: 2,
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight : '600'
   },
   callButton: {
     padding: 8,
@@ -231,24 +235,36 @@ const styles = StyleSheet.create({
   messageText: {
     fontSize: 14,
     lineHeight: 20,
+    fontFamily : 'Figtree-Regular',
+    fontWeight : '400'
   },
   userText: {
     color: '#fff',
+    fontFamily : 'Figtree-Regular',
+    fontWeight : '400'
   },
   agentText: {
     color: '#000',
+    fontFamily : 'Figtree-Regular',
+    fontWeight : '400'
   },
   messageTime: {
     fontSize: 10,
     marginTop: 5,
     opacity: 0.7,
+      fontFamily : 'Figtree-Regular',
+    fontWeight : '400'
   },
   userTime: {
     color: '#fff',
     textAlign: 'right',
+      fontFamily : 'Figtree-Regular',
+    fontWeight : '400'
   },
   agentTime: {
     color: '#666',
+      fontFamily : 'Figtree-Regular',
+    fontWeight : '400'
   },
   inputContainer: {
     flexDirection: 'row',
@@ -271,6 +287,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     backgroundColor: '#f8f8f8',
     marginRight: 10,
+      fontFamily : 'Figtree-Regular',
+    fontWeight : '400'
   },
   sendButton: {
     width: 44,

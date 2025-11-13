@@ -195,7 +195,7 @@ const PaymentScreen = () => {
         </View>
 
         {/* Bottom Spacer */}
-        <View style={{ height: height * 0.12 }} />
+        <View style={{ height: height * 0.2 }} />
       </ScrollView>
 
       {/* TOTAL & PAY BUTTON */}
@@ -255,6 +255,7 @@ const styles = StyleSheet.create({
     paddingBottom: height * 0.02,
   },
 
+  /** HEADER **/
   header: {
     backgroundColor: COLORS.primary,
     flexDirection: 'row',
@@ -265,8 +266,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   backIcon: { width: 22, height: 22, tintColor: '#fff' },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: '#fff' },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#fff',
+    fontFamily: 'Figtree-Bold',
+  },
 
+  /** SHIPPING SECTION **/
   section: {
     backgroundColor: '#fff',
     padding: 20,
@@ -277,25 +284,41 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  shippingTitle: { fontSize: 16, fontWeight: '700', color: '#000' },
-  changeText: { color: COLORS.primary, fontWeight: '700' },
+  shippingTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#000',
+    fontFamily: 'Figtree-Bold',
+  },
+  changeText: {
+    color: COLORS.primary,
+    fontWeight: '700',
+    fontFamily: 'Figtree-SemiBold',
+  },
   shippingRow: { flexDirection: 'row', alignItems: 'center', marginTop: 12 },
   locationIcon: { width: 60, height: 60, marginRight: 10 },
-  homeTitle: { fontSize: 16, fontWeight: '700', color: '#000' },
+  homeTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#000',
+    fontFamily: 'Figtree-Bold',
+  },
   addressText: {
     fontSize: 13,
     color: '#666',
     lineHeight: 18,
     marginTop: 3,
+    fontFamily: 'Figtree-Regular',
   },
 
+  /** ORDER ITEMS **/
   sectionTitle: {
     fontSize: 16,
     fontWeight: '700',
     color: '#000',
     marginBottom: 15,
+    fontFamily: 'Figtree-Bold',
   },
-
   orderItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -322,23 +345,28 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#000',
     marginBottom: 4,
+    fontFamily: 'Figtree-SemiBold',
   },
   itemQty: {
     fontSize: 13,
     color: '#777',
+    fontFamily: 'Figtree-Regular',
   },
   itemPrice: {
     fontSize: 15,
     fontWeight: '700',
     color: '#000',
+    fontFamily: 'Figtree-Bold',
   },
 
+  /** DIVIDER **/
   divider: {
     height: 1,
     backgroundColor: '#eee',
     marginVertical: 12,
   },
 
+  /** PRICE DETAILS **/
   priceRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -347,11 +375,13 @@ const styles = StyleSheet.create({
   priceLabel: {
     fontSize: 14,
     color: '#666',
+    fontFamily: 'Figtree-Regular',
   },
   priceValue: {
     fontSize: 14,
     color: '#000',
     fontWeight: '500',
+    fontFamily: 'Figtree-Medium',
   },
 
   totalRow: {
@@ -363,13 +393,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: '#000',
+    fontFamily: 'Figtree-Bold',
   },
   totalValue: {
     fontSize: 18,
     fontWeight: '700',
     color: COLORS.primary,
+    fontFamily: 'Figtree-Bold',
   },
 
+  /** NOTE SECTION **/
   noteSection: {
     backgroundColor: '#FFF9E6',
     padding: 15,
@@ -383,8 +416,10 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#666',
     lineHeight: 20,
+    fontFamily: 'Figtree-Regular',
   },
 
+  /** BOTTOM SECTION **/
   bottomSection: {
     position: 'absolute',
     bottom: 0,
@@ -410,9 +445,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-end',
   },
-  totalLabelBottom: { fontSize: 16, fontWeight: '700', color: '#000' },
-  itemsText: { fontSize: 12, color: '#777' },
-  totalValueBottom: { fontSize: 18, fontWeight: '700', color: '#000' },
+  totalLabelBottom: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#000',
+    fontFamily: 'Figtree-Bold',
+  },
+  itemsText: {
+    fontSize: 12,
+    color: '#777',
+    fontFamily: 'Figtree-Regular',
+  },
+  totalValueBottom: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#000',
+    fontFamily: 'Figtree-Bold',
+  },
 
   payBtn: {
     backgroundColor: COLORS.primary,
@@ -425,6 +474,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '700',
+    fontFamily: 'Figtree-Bold',
   },
 
   /** POPUP **/
@@ -454,6 +504,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: height * 0.02,
     lineHeight: height * 0.025,
+    fontFamily: 'Figtree-Regular',
   },
   popupButton: {
     backgroundColor: COLORS.primary,
@@ -465,6 +516,7 @@ const styles = StyleSheet.create({
     color: COLORS.secondary,
     fontWeight: '700',
     fontSize: width * 0.035,
+    fontFamily: 'Figtree-Bold',
   },
   closeIconWrapper: {
     position: 'absolute',
