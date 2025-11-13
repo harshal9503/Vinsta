@@ -43,7 +43,7 @@ const TabBarIcon = ({ routeName, color, size }: TabBarIconProps) => {
     <Image
       source={iconSource}
       style={{
-        width: size * 0.85, // Slightly smaller icons
+        width: size * 0.85,
         height: size * 0.85,
         tintColor: color,
       }}
@@ -52,17 +52,16 @@ const TabBarIcon = ({ routeName, color, size }: TabBarIconProps) => {
   ) : null;
 };
 
-
 import type { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
 import type { RouteProp, ParamListBase } from '@react-navigation/native';
 
-const getScreenOptions = ({ route }: { route: RouteProp<ParamListBase, string> }): BottomTabNavigationOptions => ({
+const getScreenOptions = ({
+  route,
+}: {
+  route: RouteProp<ParamListBase, string>;
+}): BottomTabNavigationOptions => ({
   tabBarIcon: ({ color, size }: { color: string; size: number }) => (
-    <TabBarIcon
-      routeName={route.name}
-      color={color}
-      size={size}
-    />
+    <TabBarIcon routeName={route.name} color={color} size={size} />
   ),
   tabBarActiveTintColor: COLORS.primary,
   tabBarInactiveTintColor: '#616161',
