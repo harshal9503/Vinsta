@@ -15,6 +15,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { COLORS } from '../theme/colors';
+import font from '../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 
@@ -95,7 +96,7 @@ const SignInScreen = ({ navigation }: any) => {
               <Text style={styles.socialText}>Login with Google</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.socialButton}>
+            <TouchableOpacity style={[styles.socialButton,{marginTop : -10}]}>
               <Image
                 source={require('../assets/apple.png')}
                 style={styles.appleIcon}
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: height * 0.04,
-    fontFamily: 'Figtree',
+    fontFamily: 'Figtree-Medium',
     fontWeight: '500', // Medium weight
   },
   label: {
@@ -162,7 +163,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.04,
     color: COLORS.text,
     marginBottom: 8,
-    fontFamily: 'Figtree',
+    fontFamily: 'Figtree-SemiBold',
     fontWeight: '600',
   },
   inputContainer: {
@@ -193,8 +194,8 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     fontSize: width * 0.04,
     paddingVertical: 12,
-    fontFamily: 'Figtree',
-    fontWeight: '400',
+    fontFamily: 'Figtree-Medium',
+    fontWeight: '500',
   },
   button: {
     backgroundColor: COLORS.primary,
@@ -213,34 +214,27 @@ const styles = StyleSheet.create({
   buttonText: {
     color: COLORS.secondary,
     fontSize: width * 0.045,
-    fontFamily: 'Figtree',
+    fontFamily: 'Figtree-Bold',
     fontWeight: '700', // Bold weight for Send OTP
   },
-  socialContainer: {
-    marginTop: height * 0.06,
-    width: '100%',
-  },
+  // socialContainer: {
+  //   marginTop: height * 0.06,
+  //   width: '100%',
+  //   flex: 1,
+  //   alignItems: 'flex-start',
+  //   justifyContent: 'flex-start',
+  //   gap: 5,
+  // },
   socialButton: {
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'center',
-  },
-  socialIcon: {
-    width: 75,
-    height: 75,
-    borderRadius: 37.5,
-    marginRight: 0,
-  },
-  appleIcon: {
-    width: 75,
-    height: 75,
-    borderRadius: 37.5,
-    marginLeft: 0,
+    marginRight : 25
   },
   appleText: {
     fontSize: width * 0.045,
     color: COLORS.text,
-    fontFamily: 'Figtree',
+    fontFamily: 'Figtree-Medium',
     fontWeight: '600',
     marginBottom: 20,
     marginRight: 10,
@@ -248,10 +242,31 @@ const styles = StyleSheet.create({
   socialText: {
     fontSize: width * 0.045,
     color: COLORS.text,
-    fontFamily: 'Figtree',
+    fontFamily: 'Figtree-Medium',
     fontWeight: '600',
-    marginBottom: 20,
+    marginBottom: 10,
   },
+   socialContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 20,
+    paddingHorizontal: 16,
+    gap : 1
+  },
+ 
+  socialIcon: {
+     width: 75,
+    height: 75,
+    borderRadius: 37.5,
+
+  },
+  appleIcon: {
+    width: 75,
+    height: 75,
+    borderRadius: 37.5,
+  },
+  
   popupOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.4)',
@@ -275,7 +290,7 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     textAlign: 'center',
     marginBottom: 16,
-    fontFamily: 'Figtree',
+    fontFamily: 'Figtree-Medium',
     fontWeight: '400',
   },
   popupButton: {
@@ -286,7 +301,7 @@ const styles = StyleSheet.create({
   },
   popupButtonText: {
     color: COLORS.secondary,
-    fontFamily: 'Figtree',
+    fontFamily: 'Figtree-Bold',
     fontWeight: '700',
     fontSize: width * 0.04,
   },

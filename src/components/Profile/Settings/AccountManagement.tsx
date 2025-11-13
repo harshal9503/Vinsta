@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
+import font from '../../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 
@@ -174,6 +175,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.045,
     fontWeight: '700',
     color: '#000',
+    fontFamily : 'Figtree-Bold',
   },
   content: {
     padding: 20,
@@ -183,11 +185,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
     marginBottom: 8,
+    fontFamily : 'Figtree-Bold',
   },
   sectionDescription: {
     fontSize: width * 0.035,
     color: '#666',
     marginBottom: 25,
+    fontFamily : 'Figtree-Medium',
+    fontWeight  :'500'
   },
   managementCard: {
     flexDirection: 'row',
@@ -220,13 +225,16 @@ const styles = StyleSheet.create({
   },
   managementTitle: {
     fontSize: width * 0.038,
-    fontWeight: '600',
     color: '#000',
     marginBottom: 4,
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600'
   },
   managementDescription: {
     fontSize: width * 0.03,
     color: '#666',
+    fontFamily : 'Figtree-Medium',
+    fontWeight  :'500'
   },
   arrowIcon: {
     width: 16,
@@ -247,12 +255,16 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#d32f2f',
     marginBottom: 8,
+    fontFamily : 'Figtree-Bold',
+    
   },
   deleteDescription: {
     fontSize: width * 0.033,
     color: '#666',
     marginBottom: 16,
     lineHeight: 18,
+    fontFamily : 'Figtree-Medium',
+    fontWeight  :'500'
   },
   deleteButton: {
     flexDirection: 'row',
@@ -272,7 +284,8 @@ const styles = StyleSheet.create({
   deleteButtonText: {
     color: '#fff',
     fontSize: width * 0.036,
-    fontWeight: '600',
+    fontWeight: '700',
+    fontFamily : 'Figtree-Bold',
   },
   popupOverlay: {
     flex: 1,
@@ -301,6 +314,8 @@ const styles = StyleSheet.create({
     color: '#000',
     marginBottom: 12,
     textAlign: 'center',
+    fontFamily : 'Figtree-Bold',
+   
   },
   popupText: {
     fontSize: width * 0.035,
@@ -308,6 +323,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 24,
     lineHeight: 20,
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600'
   },
   popupButtonsRow: {
     flexDirection: 'row',
@@ -330,7 +347,8 @@ const styles = StyleSheet.create({
   cancelButtonText: {
     color: '#000',
     fontSize: width * 0.036,
-    fontWeight: '600',
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600'
   },
 });
 

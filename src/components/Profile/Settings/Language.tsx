@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
+import font from '../../../assets/fonts'
 
 const { width, height } = Dimensions.get('window');
 
@@ -110,6 +111,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.045,
     fontWeight: '700',
     color: '#000',
+    fontFamily : 'Figtree-Bold',
   },
   content: {
     padding: 20,
@@ -119,11 +121,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
     marginBottom: 8,
+    fontFamily : 'Figtree-Bold',
   },
   sectionDescription: {
     fontSize: width * 0.035,
     color: '#666',
     marginBottom: 25,
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600'
   },
   languageOption: {
     flexDirection: 'row',
@@ -158,6 +163,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#000',
     marginBottom: 4,
+    fontFamily : 'Figtree-SemiBold',
   },
   languageNative: {
     fontSize: width * 0.032,
@@ -197,11 +203,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
     marginBottom: 8,
+    fontFamily : 'Figtree-Bold',
   },
   noteText: {
     fontSize: width * 0.032,
     color: '#666',
     lineHeight: 18,
+    fontFamily : 'Figtree-Regular',
+    fontWeight  :'400'
   },
 });
 

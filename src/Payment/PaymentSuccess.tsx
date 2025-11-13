@@ -140,18 +140,19 @@ const styles = StyleSheet.create({
   title: {
     color: '#fff',
     fontSize: 22,
-    fontWeight: '700',
+    fontFamily: 'Figtree-Bold',
     marginTop: 30,
   },
   subtitle: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: 'Figtree-SemiBold',
     marginTop: 6,
   },
   desc: {
     color: '#fff',
     fontSize: 14,
+    fontFamily: 'Figtree-Regular',
     textAlign: 'center',
     marginTop: 10,
     lineHeight: 20,
@@ -173,7 +174,7 @@ const styles = StyleSheet.create({
   keepBrowsingText: {
     color: '#259E29',
     fontSize: 16,
-    fontWeight: '700',
+    fontFamily: 'Figtree-Bold',
     textAlign: 'center',
   },
 
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
   trackOrderText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '700',
+    fontFamily: 'Figtree-Bold',
     textAlign: 'center',
   },
 });

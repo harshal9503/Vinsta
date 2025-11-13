@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
+import font from '../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 
@@ -148,7 +149,8 @@ const styles = StyleSheet.create({
   headerTitle: { 
     fontSize: width * 0.045, 
     fontWeight: '700', 
-    color: '#000' 
+    color: '#000', 
+    fontFamily : 'Figtree-Bold'
   },
   offerCard: {
     backgroundColor: '#fff',
@@ -176,6 +178,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 12,
     fontWeight: '700',
+    fontFamily : 'Figtree-Bold'
   },
   offerContent: {
     flexDirection: 'row',
@@ -190,17 +193,22 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
     marginBottom: 4,
+    fontFamily : 'Figtree-Bold'
   },
   offerSubtitle: {
     fontSize: 14,
     color: '#666',
     marginBottom: 8,
+    fontFamily : 'Figtree-Medium',
+    fontWeight : '500'
   },
   offerDescription: {
     fontSize: 13,
     color: '#555',
     lineHeight: 18,
     marginBottom: 12,
+    fontFamily : 'Figtree-Medium',
+    fontWeight : '500'
   },
   validityRow: {
     flexDirection: 'row',
@@ -216,6 +224,7 @@ const styles = StyleSheet.create({
   validityText: {
     fontSize: 12,
     color: '#999',
+    fontFamily : 'Figtree-Regular'
   },
   claimBtn: {
     paddingVertical: 10,
@@ -227,6 +236,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
     fontWeight: '600',
+    fontFamily : 'Figtree-Medium'
   },
   offerImageContainer: {
     width: 100,
@@ -256,10 +266,12 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
     marginBottom: 12,
+    fontFamily : 'Figtree-Bold'
   },
   termsText: {
     fontSize: 13,
     color: '#666',
     lineHeight: 20,
+    fontFamily : 'Figtree-Medium'
   },
 });

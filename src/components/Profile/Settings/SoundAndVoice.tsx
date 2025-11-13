@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
+import font from '../../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 
@@ -128,6 +129,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.045,
     fontWeight: '700',
     color: '#000',
+    fontFamily : 'Figtree-Bold',
   },
   content: {
     padding: 20,
@@ -137,11 +139,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
     marginBottom: 8,
+    fontFamily : 'Figtree-Bold',
   },
   sectionDescription: {
     fontSize: width * 0.035,
     color: '#666',
     marginBottom: 25,
+    fontFamily : 'Figtree-Medium',
+    fontWeight  :'500'
   },
   settingRow: {
     flexDirection: 'row',
@@ -165,10 +170,13 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#000',
     marginBottom: 4,
+    fontFamily : 'Figtree-SemiBold',
   },
   settingDescription: {
     fontSize: width * 0.03,
     color: '#666',
+    fontFamily : 'Figtree-Regular',
+    fontWeight  :'400'
   },
   volumeSection: {
     backgroundColor: '#fff',
@@ -187,6 +195,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#000',
     marginBottom: 12,
+    fontFamily : 'Figtree-SemiBold',
   },
   volumeSlider: {
     height: 6,
@@ -203,6 +212,8 @@ const styles = StyleSheet.create({
     fontSize: width * 0.032,
     color: '#666',
     textAlign: 'right',
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600'
   },
   testButton: {
     backgroundColor: COLORS.primary,
@@ -214,7 +225,8 @@ const styles = StyleSheet.create({
   testButtonText: {
     color: COLORS.secondary,
     fontSize: width * 0.038,
-    fontWeight: '600',
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600'
   },
 });
 

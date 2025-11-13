@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
+import font from '../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 
@@ -449,6 +450,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     color: '#000',
+    fontFamily : 'Figtree-Bold'
   },
   content: {
     padding: 20,
@@ -459,6 +461,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
     marginBottom: 15,
+    fontFamily : 'Figtree-Bold'
   },
   emptyContainer: {
     alignItems: 'center',
@@ -470,11 +473,13 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#666',
     marginBottom: 8,
+    fontFamily : 'Figtree-SemiBold'
   },
   emptySubText: {
     fontSize: 14,
     color: '#999',
     textAlign: 'center',
+    fontFamily : 'Figtree-Medium'
   },
   card: {
     backgroundColor: '#fff',
@@ -510,30 +515,37 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: COLORS.primary,
+    fontFamily : 'Figtree-Bold'
   },
   nameText: {
     fontSize: 15,
     fontWeight: '600',
     color: '#000',
     marginBottom: 4,
+    fontFamily : 'Figtree-SemiBold'
   },
   text: {
     fontSize: 14,
     color: '#555',
     lineHeight: 20,
     marginBottom: 4,
+    fontFamily : 'Figtree-Medium',
+    fontWeight : '500'
   },
   landmarkText: {
     fontSize: 13,
     color: '#777',
-    fontStyle: 'italic',
+    // fontStyle: 'italic',
     marginBottom: 4,
+    fontFamily : 'Figtree-MediumItalic',
+    fontWeight : '500'
   },
   phoneText: {
     fontSize: 14,
     color: '#000',
     fontWeight: '600',
     marginTop: 4,
+    fontFamily : 'Figtree-Medium'
   },
   deleteButton: {
     backgroundColor: '#FFE5E5',
@@ -557,6 +569,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '700',
     fontSize: 16,
+    fontFamily : 'Figtree-Bold'
   },
 
   // Modal Styles
@@ -584,6 +597,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     color: '#000',
+    fontFamily : 'figtree-Bold'
   },
   closeBtn: {
     fontSize: 24,
@@ -601,6 +615,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#000',
     marginBottom: 8,
+    fontFamily : 'Figtree-Medium'
   },
   input: {
     borderWidth: 1,
@@ -612,6 +627,7 @@ const styles = StyleSheet.create({
     color: '#000',
     backgroundColor: '#F9F9F9',
     marginBottom: 0,
+    fontFamily : 'Figtree-Medium'
   },
   phoneInput: {
     flexDirection: 'row',
@@ -626,6 +642,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     backgroundColor: '#F0F0F0',
     borderRadius: 10,
+    fontFamily : 'Figtree-Medium'
   },
   typeContainer: {
     flexDirection: 'row',
@@ -655,6 +672,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: '#666',
+    fontFamily : 'Figtree-Medium'
   },
   typeTextActive: {
     color: COLORS.primary,
@@ -671,6 +689,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '700',
+    fontFamily : 'Figtree-Bold'
   },
 
   // Delete Popup Styles (Similar to WelcomeScreen)
@@ -713,6 +732,7 @@ const styles = StyleSheet.create({
     marginBottom: height * 0.015,
     marginTop: height * 0.01,
     textAlign: 'center',
+    fontFamily : 'Figtree-Bold'
   },
   popupText: {
     fontSize: width * 0.037,
@@ -721,6 +741,7 @@ const styles = StyleSheet.create({
     marginBottom: height * 0.025,
     lineHeight: height * 0.025,
     paddingHorizontal: width * 0.02,
+    fontFamily : 'Figtree-Medium'
   },
   popupButtonContainer: {
     flexDirection: 'row',
@@ -743,6 +764,7 @@ const styles = StyleSheet.create({
     color: '#666',
     fontWeight: '600',
     fontSize: width * 0.037,
+    fontFamily : 'Figtree-Medium'
   },
   deleteConfirmButton: {
     backgroundColor: '#FF3B30',
@@ -751,5 +773,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '700',
     fontSize: width * 0.037,
+    fontFamily : 'Figtree-Medium'
   },
 });

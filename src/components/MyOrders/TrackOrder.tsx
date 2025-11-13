@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
+import font from '../../assets/fonts';
+
 
 const { width, height } = Dimensions.get('window');
 const MAP_HEIGHT = height * 0.32;
@@ -318,7 +320,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   backIcon: { width: 22, height: 22, tintColor: '#000' },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: '#000' },
+  headerTitle: { fontSize: 18, fontWeight: '700', color: '#000' ,fontFamily :'Figtree-Bold'},
 
   // ZIG-ZAG LINE
   zigzagLine: {
@@ -395,38 +397,48 @@ const styles = StyleSheet.create({
   },
   orderId: {
     color: '#E63946',
-    fontWeight: '700',
+    fontWeight: '500',
     fontSize: 13,
+    fontFamily : 'Figtree-Medium'
   },
   price: {
     color: '#000',
     fontWeight: '700',
     fontSize: 15,
+    fontFamily : 'Figtree-Bold'
   },
   foodName: {
-    fontWeight: '700',
+    fontWeight: '600',
     fontSize: 16,
     color: '#000',
     marginTop: 2,
+    fontFamily : 'Figtree-SemiBold'
   },
   orderInfo: {
     fontSize: 12,
     color: '#777',
     marginBottom: 5,
+    fontFamily : 'Figtree-Medium',
+    fontWeight : '500'
   },
   estimateLabel: {
     fontSize: 12,
     color: '#777',
+    fontFamily : 'Figtree-Medium',
+    fontWeight : '500'
   },
   estimateTime: {
     color: '#259E29',
-    fontWeight: '700',
+   
     fontSize: 14,
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight : '600'
   },
   foodStatus: {
     fontSize: 13,
-    fontWeight: '700',
     color: '#000',
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight : '600'
   },
 
   rowBetween: {
@@ -485,9 +497,10 @@ const styles = StyleSheet.create({
   deliveryText: {
     textAlign: 'center',
     color: '#000',
-    fontWeight: '700',
+    fontWeight: '600',
     marginTop: 10,
     fontSize: 14,
+    fontFamily : 'Figtree-SemiBold'
   },
 
   statusSection: {
@@ -496,9 +509,10 @@ const styles = StyleSheet.create({
   },
   statusTitle: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: '600',
     color: '#000',
     marginBottom: 15,
+    fontFamily : 'Figtree-SemiBold'
   },
   statusRow: {
     flexDirection: 'row',
@@ -522,9 +536,9 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   statusContent: { flex: 1 },
-  statusText: { color: '#000', fontWeight: '600', fontSize: 14 },
-  statusTime: { color: '#777', fontSize: 12 },
-  statusDate: { color: '#777', fontSize: 12 },
+  statusText: { color: '#000', fontWeight: '600', fontSize: 14 ,fontFamily : 'Figtree-SemiBold' },
+  statusTime: { color: '#777', fontSize: 12,fontFamily : 'Figtree-Medium',fontWeight : '500' },
+  statusDate: { color: '#777', fontSize: 12,fontFamily : 'Figtree-Medium',fontWeight : '500' },
 
   agentSection: {
     flexDirection: 'row',
@@ -542,8 +556,8 @@ const styles = StyleSheet.create({
     height: 55,
     borderRadius: 27.5,
   },
-  agentId: { fontSize: 12, color: '#777' },
-  agentName: { fontSize: 15, fontWeight: '700', color: '#000' },
+  agentId: { fontSize: 12, color: '#777' ,fontFamily : 'Figtree-Regular',fontWeight : '400'},
+  agentName: { fontSize: 15, color: '#000',fontFamily : 'Figtree-SemiBold',fontWeight : '600' },
 
   actionBtns: {
     flexDirection: 'row',
@@ -566,8 +580,8 @@ const styles = StyleSheet.create({
   },
   callText: {
     color: '#fff',
-    fontWeight: '700',
     fontSize: 13,
+    fontFamily : 'Figtree-SemiBold',fontWeight : '600'
   },
   msgBtn: {
     backgroundColor: '#fff',

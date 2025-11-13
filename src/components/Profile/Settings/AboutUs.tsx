@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
+import font from '../../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 
@@ -192,6 +193,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.045,
     fontWeight: '700',
     color: '#000',
+    fontFamily : 'Figtree-Bold'
   },
   content: {
     padding: 20,
@@ -211,17 +213,22 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
     marginBottom: 4,
+    fontFamily : 'Figtree-Bold'
   },
   appVersion: {
     fontSize: width * 0.035,
     color: '#666',
     marginBottom: 8,
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600'
   },
   appDescription: {
     fontSize: width * 0.036,
     color: COLORS.primary,
     fontWeight: '500',
     textAlign: 'center',
+     fontFamily : 'Figtree-Medium',
+   
   },
   section: {
     marginBottom: 25,
@@ -231,11 +238,16 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
     marginBottom: 12,
+     fontFamily : 'Figtree-Bold',
+   
   },
   sectionText: {
     fontSize: width * 0.035,
     color: '#666',
     lineHeight: 20,
+    fontFamily : 'Figtree-Medium',
+    fontWeight  :'500'
+
   },
   featuresList: {
     backgroundColor: '#fff',
@@ -262,6 +274,8 @@ const styles = StyleSheet.create({
   featureText: {
     fontSize: width * 0.035,
     color: '#000',
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600'
   },
   contactItem: {
     flexDirection: 'row',
@@ -291,13 +305,17 @@ const styles = StyleSheet.create({
   },
   contactTitle: {
     fontSize: width * 0.035,
-    fontWeight: '600',
+    // fontWeight: '600',
     color: '#000',
     marginBottom: 2,
+    fontFamily : 'Figtree-Bold',
+    fontWeight  :'700'
   },
   contactValue: {
     fontSize: width * 0.032,
     color: '#666',
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600'
   },
   arrowIcon: {
     width: 14,
@@ -322,7 +340,8 @@ const styles = StyleSheet.create({
   legalText: {
     fontSize: width * 0.035,
     color: '#000',
-    fontWeight: '500',
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600'
   },
   copyrightSection: {
     marginTop: 20,
@@ -335,6 +354,8 @@ const styles = StyleSheet.create({
     fontSize: width * 0.03,
     color: '#999',
     textAlign: 'center',
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600'
   },
 });
 

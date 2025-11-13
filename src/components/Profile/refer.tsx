@@ -177,6 +177,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.045,
     fontWeight: '700',
     color: COLORS.text,
+    fontFamily: 'Figtree-Bold',
   },
 
   /** INVITE CARD **/
@@ -203,6 +204,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: COLORS.text,
     marginBottom: 8,
+    fontFamily: 'Figtree-Medium',
   },
   codeBox: {
     flexDirection: 'row',
@@ -221,6 +223,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     flex: 1,
     color: COLORS.text,
+    fontFamily: 'Figtree-SemiBold',
   },
   iconSmall: {
     width: 20,
@@ -259,6 +262,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.038,
     fontWeight: '700',
     textTransform: 'capitalize',
+    fontFamily: 'Figtree-SemiBold',
   },
 
   /** INFO **/
@@ -271,6 +275,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: width * 0.033,
     color: '#555',
+    fontFamily: 'Figtree-Regular',
   },
   infoIcon: {
     width: 18,
@@ -313,6 +318,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: COLORS.text,
     marginTop: 6,
+    fontFamily: 'Figtree-Medium',
   },
 
   /** POPUP **/
@@ -334,12 +340,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: COLORS.text,
     marginBottom: 10,
+    fontFamily: 'Figtree-Bold',
   },
   popupContent: {
     fontSize: width * 0.035,
     color: '#555',
     textAlign: 'center',
     marginBottom: 15,
+    fontFamily: 'Figtree-Regular',
   },
   popupButton: {
     backgroundColor: COLORS.primary,
@@ -351,5 +359,6 @@ const styles = StyleSheet.create({
     color: COLORS.secondary,
     fontWeight: '700',
     fontSize: width * 0.04,
+    fontFamily: 'Figtree-SemiBold',
   },
 });

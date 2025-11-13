@@ -61,8 +61,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: width * 0.045,
-    fontWeight: '700',
     color: '#000',
+    fontFamily: 'Figtree-Bold', // Title font
   },
   content: {
     padding: 20,
@@ -76,12 +76,13 @@ const styles = StyleSheet.create({
   },
   orderTitle: {
     fontSize: width * 0.04,
-    fontWeight: '600',
     color: COLORS.primary,
     marginBottom: 4,
+    fontFamily: 'Figtree-SemiBold', // Strong subheading
   },
   text: {
     fontSize: width * 0.037,
     color: '#333',
+    fontFamily: 'Figtree-Regular', // Regular content text
   },
 });

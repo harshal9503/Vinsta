@@ -12,6 +12,7 @@ import {
   Modal,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import font from '../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 const MAP_HEIGHT = height * 0.32;
@@ -298,7 +299,7 @@ const styles = StyleSheet.create({
   },
   backBtn: { padding: 8, borderRadius: 100 },
   backIcon: { width: 26, height: 26, tintColor: '#000' },
-  headerTitle: { fontSize: 20, fontWeight: '700', color: '#222', letterSpacing: 0.1 },
+  headerTitle: { fontSize: 20, fontWeight: '700', color: '#222', letterSpacing: 0.1, fontFamily : 'Figtree-Bold' },
   absFill: { ...StyleSheet.absoluteFillObject },
   markerIcon: { resizeMode: 'contain' },
   boyIcon: {
@@ -332,8 +333,9 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#222',
     marginTop: -2,
+    fontFamily : 'Figtree-Bold'
   },
-  timeSubtext: { color: '#aaa', fontWeight: '600', marginTop: 0 },
+  timeSubtext: { color: '#aaa', fontWeight: '600', marginTop: 0,fontFamily : 'Figtree-Medium' },
   horizontalLine: {
     borderBottomColor: '#e3e3e3',
     borderBottomWidth: 1,
@@ -355,7 +357,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   bikeImg: { resizeMode: 'contain', marginRight: 10 },
-  orderPrepText: { fontWeight: '700', color: '#333' },
+  orderPrepText: { fontWeight: '700', color: '#333',fontFamily : 'Figtree-Bold' },
   timingRow: {
     alignItems: 'center',
   },
@@ -378,18 +380,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   o1Img: { resizeMode: 'contain' },
-  timeText: { fontWeight: '700', color: '#333' },
-  timingLabel: { color: '#888', marginTop: 1 },
+  timeText: { fontWeight: '600', color: '#333',fontFamily : 'Figtree-SemiBold' },
+  timingLabel: { color: '#888', marginTop: 1,fontFamily : 'Figtree-Medium',fontWeight : '500' },
   cancelNote: {
     marginHorizontal: 25,
     marginVertical: 13,
     color: '#F44336',
     fontWeight: '500',
+    fontFamily : 'Figtree-Medium'
   },
   addressWrap: { marginHorizontal: 20, marginTop: 8 },
   addressIcon: { resizeMode: 'contain', marginRight: 5 },
-  addressLabel: { color: '#666', fontWeight: '600' },
-  addressValue: { color: '#222', fontWeight: '700' },
+  addressLabel: { color: '#666', fontWeight: '500',fontFamily : 'Figtree-Medium' },
+  addressValue: { color: '#222',  fontWeight: '500',fontFamily : 'Figtree-Medium'},
   row: { flexDirection: 'row', alignItems: 'center' },
   btnRow: {
     flexDirection: 'row',
@@ -406,7 +409,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: 9,
   },
-  cancelBtnText: { color: '#000', fontWeight: '700' },
+  cancelBtnText: { color: '#000', fontWeight: '600', fontFamily : 'Figtree-SemiBold'},
   keepBtn: {
     flex: 1,
     backgroundColor: PRIMARY_COLOR,
@@ -415,7 +418,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginLeft: 9,
   },
-  keepBtnText: { color: '#fff', fontWeight: '700' },
+  keepBtnText: { color: '#fff', fontWeight: '600', fontFamily : 'Figtree-SemiBold' },
   popupOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.22)',
@@ -430,7 +433,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 5,
   },
-  popupTitle: { fontWeight: '700', fontSize: 17, color: '#222', marginBottom: 15 },
+  popupTitle: { fontWeight: '700', fontSize: 17, color: '#222', marginBottom: 15,fontFamily : 'Figtree-Bold' },
   popupBtnRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -444,6 +447,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 9,
   },
-  popupBtnText: { color: '#fff', fontWeight: '700', fontSize: 16 },
+  popupBtnText: { color: '#fff', fontWeight: '700', fontSize: 16,fontFamily : 'Figtree-Bold' },
   tickIconLarge: { width: 40, height: 40, resizeMode: 'contain', marginBottom: 12 },
 });

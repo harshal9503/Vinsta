@@ -14,6 +14,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {ThemeContext} from '../../theme/ThemeContext';
 import {COLORS} from '../../theme/colors';
+import font from '../../assets/fonts';
 
 const {width, height} = Dimensions.get('window');
 
@@ -273,6 +274,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: width * 0.045,
     fontWeight: '700',
+     fontFamily : "Figtree-Bold",
   },
 
   /** SCROLL CONTENT **/
@@ -290,6 +292,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 15,
     marginLeft: 5,
+     fontFamily : "Figtree-SemiBold",
   },
 
   /** SETTING ITEMS **/
@@ -328,10 +331,12 @@ const styles = StyleSheet.create({
     fontSize: width * 0.038,
     fontWeight: '600',
     marginBottom: 4,
+    fontFamily : "Figtree-SemiBold",
   },
   settingDescription: {
     fontSize: width * 0.032,
-    fontWeight: '400',
+     fontFamily : "Figtree-Regular",
+    fontWeight : '400'
   },
 
   /** RESET BUTTON **/
@@ -354,7 +359,8 @@ const styles = StyleSheet.create({
   },
   resetText: {
     fontSize: width * 0.038,
-    fontWeight: '600',
+     fontFamily : "Figtree-Medium",
+    fontWeight : '500'
   },
 
   /** APP INFO **/
@@ -369,17 +375,20 @@ const styles = StyleSheet.create({
     fontSize: width * 0.038,
     fontWeight: '700',
     marginBottom: 4,
+     fontFamily : "Figtree-Bold",
   },
   appInfoVersion: {
     fontSize: width * 0.032,
     fontWeight: '400',
     marginBottom: 8,
+     fontFamily : "Figtree-Regular",
   },
   appInfoDescription: {
     fontSize: width * 0.032,
     fontWeight: '400',
     textAlign: 'center',
     lineHeight: 18,
+     fontFamily : "Figtree-Regular",
   },
 
   /** POPUP MODAL **/
@@ -405,6 +414,8 @@ const styles = StyleSheet.create({
     fontSize: width * 0.04,
     textAlign: 'center',
     marginBottom: 16,
+     fontFamily : "Figtree-Regular",
+    fontWeight : '400'
   },
   popupButton: {
     backgroundColor: COLORS.primary,
@@ -417,8 +428,9 @@ const styles = StyleSheet.create({
   },
   popupButtonText: {
     color: COLORS.secondary,
-    fontWeight: '700',
     fontSize: width * 0.04,
+     fontFamily : "Figtree-Bold",
+    fontWeight : '700'
   },
   closeIconWrapper: {
     position: 'absolute',
