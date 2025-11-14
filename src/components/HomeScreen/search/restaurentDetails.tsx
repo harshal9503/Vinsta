@@ -13,6 +13,7 @@ import {
   Modal,
   Pressable,
   Platform,
+  FlatList,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
@@ -61,6 +62,9 @@ const RestaurentDetails: React.FC = () => {
   );
   const [vegNonVegDropdownVisible, setVegNonVegDropdownVisible] =
     useState(false);
+
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Food Item Modal States
   const [selectedFood, setSelectedFood] = useState<FoodItem | null>(null);
@@ -178,6 +182,23 @@ const RestaurentDetails: React.FC = () => {
     });
   };
 
+  const [appliedFilters, setAppliedFilters] = useState({
+    sortBy: ['Price High to Low'],
+    TopPicks: ['Highly Recommended'],
+    DietaryPrefrence: ['Spicy']
+  });
+
+
+  const filterOptions = {
+    sortBy: ['Price Low to High', 'Price High to Low'],
+    TopPicks: ['Highly Recommended'],
+    DietaryPrefrence: ['Spicy']
+  };
+
+  const hasActiveFilters = () => {
+    return Object.values(appliedFilters).some(filter => filter !== 'All');
+  };
+
   const handleFoodItemPress = (food: FoodItem) => {
     setSelectedFood(food);
     setQuantity(1);
@@ -235,6 +256,19 @@ const RestaurentDetails: React.FC = () => {
     });
 
     return basePrice * quantity;
+  };
+
+  const resetFilters = () => {
+    setAppliedFilters({
+      category: 'All',
+      rating: 'All',
+      priceRange: [100, 650],
+      sortBy: 'Recent',
+    });
+  };
+
+  const applyFilters = () => {
+    setShowFilterModal(false);
   };
 
   const EmptyState = () => (
@@ -729,13 +763,16 @@ const RestaurentDetails: React.FC = () => {
 
             {/* ===== FILTER TAGS ===== */}
             <View style={styles.filtersWrapper}>
-              <View style={styles.filterTagFixed}>
-                <Image
-                  source={require('../../../assets/filter3.png')}
-                  style={styles.filterTagIcon}
-                />
-                <Text style={styles.filterTagText}>Filter (1)</Text>
-              </View>
+              <TouchableOpacity onPress={() => setShowFilterModal(true)}>
+                <View style={styles.filterTagFixed}>
+                  <Image
+                    source={require('../../../assets/filter3.png')}
+                    style={styles.filterTagIcon}
+                  />
+                  {hasActiveFilters() && <View style={styles.filterDot} />}
+                  <Text style={styles.filterTagText}>Filter (1)</Text>
+                </View>
+              </TouchableOpacity>
 
               <ScrollView
                 horizontal
@@ -930,6 +967,175 @@ const RestaurentDetails: React.FC = () => {
           <EmptyState />
         )}
       </ScrollView>
+
+      <Modal
+        visible={showFilterModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setShowFilterModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Filtering & Sorting</Text>
+              <View style={{ height: 3, width: '100%', backgroundColor: '#dadada' }}></View>
+
+              {/* Close icon outside header (overlapping) */}
+              <TouchableOpacity
+                onPress={() => setShowFilterModal(false)}
+                style={styles.closeButtonWrapper}
+              >
+                <Image
+                  source={require('../../../assets/close1.png')}
+                  style={styles.closeIcon1}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false} style={styles.modalScroll}>
+              {/* Delivery Time Filter */}
+              <View style={styles.filterSection}>
+                <Text style={styles.filterSectionTitle}>Sort By</Text>
+
+                <FlatList
+                  data={filterOptions.sortBy}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item) => item}
+                  contentContainerStyle={{ paddingVertical: 6 }}
+                  renderItem={({ item }) => {
+                    const isActive = appliedFilters.sortBy === item;
+                    return (
+                      <TouchableOpacity
+                        style={[
+                          styles.filterOption,
+                          isActive && styles.activeFilterOption,
+                          { marginRight: 10 }, // spacing between items
+                        ]}
+                        onPress={() => setAppliedFilters({ ...appliedFilters, sortBy: item })}
+                      >
+                        <Text
+                          style={[
+                            styles.filterOptionText,
+                            isActive && styles.activeFilterOptionText,
+                          ]}
+                        >
+                          {item}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  }}
+                />
+              </View>
+              <View style={{ width: wp('100%'), height: wp('3%') }} />
+
+
+              {/* Top Pick's Filter */}
+              <View style={styles.filterSection}>
+                <Text style={styles.filterSectionTitle}>Top Pick's</Text>
+                <View style={styles.filterOptions}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                    <Image
+                      source={require('../../../assets/leaf.png')}
+                      style={styles.statIcon}
+                    />
+                    <Text style={{ fontSize: 16, fontFamily: "Figtree-Medium", marginBottom: 10 }}>This restaurent is pure veg.</Text>
+                  </View>
+                  {filterOptions.TopPicks.map(option => {
+                    const isActive = appliedFilters.TopPicks === option;
+                    return (
+                      <TouchableOpacity
+                        key={option}
+                        style={[
+                          styles.filterOption,
+                          isActive && styles.activeFilterOption
+                        ]}
+                        onPress={() => setAppliedFilters({ ...appliedFilters, TopPicks: option })}
+                      >
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                          <Image
+                            source={require('../../../assets/clockk.png')}
+                            style={{
+                              width: 13,
+                              height: 12,
+                              resizeMode: 'contain',
+                              tintColor: isActive ? '#fff' : COLORS.primary, // ✅ White if active, primary color otherwise
+                            }}
+                          />
+                          <Text
+                            style={[
+                              styles.filterOptionText,
+                              isActive && styles.activeFilterOptionText
+                            ]}
+                          >
+                            {option}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </View>
+
+
+              {/* Dietary Prefrence Filter */}
+              <View style={styles.filterSection}>
+                <Text style={styles.filterSectionTitle}>Dietary Prefrence</Text>
+                <View style={styles.filterOptions}>
+                  {filterOptions.DietaryPrefrence.map(option => {
+                    const isActive = appliedFilters.DietaryPrefrence === option;
+                    return (
+                      <TouchableOpacity
+                        key={option}
+                        style={[
+                          styles.filterOption,
+                          isActive && styles.activeFilterOption
+                        ]}
+                        onPress={() => setAppliedFilters({ ...appliedFilters, DietaryPrefrence: option })}
+                      >
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                          <Image
+                            source={require('../../../assets/spicy.png')}
+                            style={{
+                              width: 13,
+                              height: 12,
+                              resizeMode: 'contain',
+                              tintColor: isActive ? '#fff' : COLORS.primary, // ✅ White if active, primary color otherwise
+                            }}
+                          />
+                          <Text
+                            style={[
+                              styles.filterOptionText,
+                              isActive && styles.activeFilterOptionText
+                            ]}
+                          >
+                            {option}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </View>
+
+            </ScrollView>
+
+            <View style={styles.modalActions}>
+              <View style={{borderColor : '#dadada',borderWidth : 1,width : '100%',flexDirection : 'row',padding : wp('1%'),borderRadius : wp('3%')}}>
+                <TouchableOpacity style={styles.resetBtn} onPress={resetFilters}>
+                <Text style={styles.resetBtnText}>Clear All</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.applyBtn} onPress={applyFilters}>
+                <Text style={styles.applyBtnText}>Apply</Text>
+              </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+
     </View>
   );
 };
@@ -979,7 +1185,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.6,
     textShadowColor: '#000',
     textShadowRadius: 4,
-    fontFamily : 'Figtree-Bold'
+    fontFamily: 'Figtree-Bold'
   },
   backBtn: {
     zIndex: 2,
@@ -1054,7 +1260,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#222',
     marginTop: hp('0.5%'),
-    fontFamily : 'Figtree-Bold'
+    fontFamily: 'Figtree-Bold'
   },
   locationRow: {
     flexDirection: 'row',
@@ -1071,7 +1277,7 @@ const styles = StyleSheet.create({
     color: '#888',
     fontSize: hp('1.5%'),
     fontWeight: '500',
-    fontFamily : "Figtree-Medium"
+    fontFamily: "Figtree-Medium"
   },
   statsRow: {
     flexDirection: 'row',
@@ -1090,7 +1296,7 @@ const styles = StyleSheet.create({
     color: '#222',
     fontWeight: '500',
     marginRight: wp('2.5%'),
-    fontFamily : 'Figtree-Medium'
+    fontFamily: 'Figtree-Medium'
   },
 
   searchWrapper: {
@@ -1121,8 +1327,8 @@ const styles = StyleSheet.create({
     paddingVertical: hp('1%'),
     fontSize: hp('1.8%'),
     color: '#111',
-    fontFamily : 'Figtree-Regular',
-    fontWeight : '400'
+    fontFamily: 'Figtree-Regular',
+    fontWeight: '400'
   },
   searchFilterContainer: {
     backgroundColor: COLORS.primary,
@@ -1153,7 +1359,7 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: hp('1.8%'),
     flex: 1,
-    fontFamily : 'Figtree-Bold'
+    fontFamily: 'Figtree-Bold'
   },
   vegIcon: {
     width: wp('3.5%'),
@@ -1209,7 +1415,7 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: '700',
     fontSize: hp('1.7%'),
-    fontFamily : 'Figtree-Bold'
+    fontFamily: 'Figtree-Bold'
   },
   categoryTxtActive: {
     color: COLORS.secondary,
@@ -1258,11 +1464,11 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: '500',
     fontSize: hp('1.5%'),
-    fontFamily : 'Figtree-Medium'
+    fontFamily: 'Figtree-Medium'
   },
   closeIcon: {
-    width: wp('3%'),
-    height: wp('3%'),
+    width: wp('5%'),
+    height: wp('5%'),
     marginLeft: wp('1.5%'),
     tintColor: '#000',
   },
@@ -1283,7 +1489,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#222',
     fontSize: hp('1.8%'),
-    fontFamily : 'Figtree-Bold'
+    fontFamily: 'Figtree-Bold'
   },
 
   grid: {
@@ -1364,7 +1570,7 @@ const styles = StyleSheet.create({
     color: '#222',
     fontSize: hp('1.6%'),
     marginBottom: hp('0.3%'),
-    fontFamily :'Figtree-Bold'
+    fontFamily: 'Figtree-Bold'
   },
   priceRow: {
     flexDirection: 'row',
@@ -1376,14 +1582,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#222',
     fontSize: hp('1.6%'),
-    fontFamily : "Figtree-SemiBold"
+    fontFamily: "Figtree-SemiBold"
   },
   oldPrice: {
     fontSize: hp('1.3%'),
     color: '#FA463D',
     textDecorationLine: 'line-through',
     marginLeft: wp('1%'),
-        fontFamily : "Figtree-Regular"
+    fontFamily: "Figtree-Regular"
 
   },
   plusBtn: {
@@ -1415,7 +1621,7 @@ const styles = StyleSheet.create({
     fontSize: hp('1.3%'),
     color: '#666',
     fontWeight: '600',
-    fontFamily : 'Figtree-Regular'
+    fontFamily: 'Figtree-Regular'
   },
 
   bestBurgerHeaderRow: {
@@ -1563,6 +1769,11 @@ const styles = StyleSheet.create({
     height: wp('15%'),
     tintColor: COLORS.primary,
     resizeMode: 'contain',
+  },
+  closeIcon1: {
+    width: 20,
+    height: 20,
+    tintColor: '#000',
   },
   modalRatingBadge: {
     position: 'absolute',
@@ -1793,5 +2004,140 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#fff',
     letterSpacing: 0.5,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: wp('6%'),
+    borderTopRightRadius: wp('6%'),
+    paddingTop: hp('3%'),
+    maxHeight: hp('77%'),
+  },
+  modalHeader: {
+    backgroundColor: '#fff',
+    paddingVertical: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    position: 'relative',
+  },
+
+  modalTitle: {
+    fontSize: 18,
+    fontFamily: 'Figtree-Bold',
+    color: '#000',
+    marginBottom: 10,
+    alignSelf: 'flex-start',
+    marginLeft: 20
+  },
+
+  closeButtonWrapper: {
+    position: 'absolute',
+    bottom: 70,           // moves it half outside header
+    right: 160,
+    backgroundColor: '#fff',
+    borderRadius: 100,
+    padding: 10,
+    elevation: 5,       // shadow on Android
+    shadowColor: '#000', // shadow on iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    alignItems: 'center',
+  },
+  modalScroll: {
+    flex: 1,
+  },
+  filterSection: {
+    padding: wp('5%'),
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  filterLabel: {
+    fontFamily: 'Figtree-Bold',
+    fontSize: 16,
+    color: '#000',
+    marginBottom: 10,
+  },
+  histogramContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    height: 80,
+    marginVertical: 5,
+  },
+  bar: {
+    width: 6,
+    backgroundColor: '#e0e0e0',
+    marginHorizontal: 2,
+    borderRadius: 3,
+  },
+  filterSectionTitle: {
+    fontSize: wp('4%'),
+    fontWeight: '700',
+    color: '#000',
+    marginBottom: hp('1.5%'),
+    fontFamily: 'Figtree-Bold'
+  },
+  filterOptions: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: wp('2%'),
+  },
+  filterOption: {
+    backgroundColor: '#f0f0f0',
+    paddingHorizontal: wp('4%'),
+    paddingVertical: hp('1%'),
+    borderRadius: wp('5%'),
+    marginBottom: hp('1%'),
+  },
+  activeFilterOption: {
+    backgroundColor: COLORS.primary,
+  },
+  filterOptionText: {
+    fontSize: wp('3.5%'),
+    color: '#666',
+    fontWeight: '500',
+    fontFamily: 'Figtree-Medium'
+  },
+  activeFilterOptionText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontFamily: 'Figtree-Medium'
+  },
+  modalActions: {
+    flexDirection: 'row',
+    padding: wp('7%'),
+  },
+  resetBtn: {
+    flex: 1,
+    paddingVertical: hp('1.8%'),
+    borderRadius: wp('3%'),
+    alignItems: 'center',
+  },
+  resetBtnText: {
+    fontSize: wp('4%'),
+    fontWeight: '600',
+    color: '#666',
+    fontFamily: 'Figtree-Bold'
+  },
+  applyBtn: {
+    flex: 1,
+    backgroundColor: COLORS.primary,
+    paddingVertical: hp('1.8%'),
+    borderRadius: wp('3%'),
+    alignItems: 'center',
+  },
+  applyBtnText: {
+    fontSize: wp('4%'),
+    fontWeight: '700',
+    color: '#fff',
+    fontFamily: 'Figtree-Bold'
   },
 });

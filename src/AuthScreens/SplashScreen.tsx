@@ -7,7 +7,7 @@ import { COLORS } from '../theme/colors';
 const SplashScreen = ({ navigation }: any) => {
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.replace('SignIn'); //Home SignIn
+      navigation.replace('Home'); //Home SignIn
     }, 2000);
     return () => clearTimeout(timer);
   }, [navigation]);

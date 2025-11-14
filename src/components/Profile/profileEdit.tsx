@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -12,12 +12,12 @@ import {
   Modal,
   Alert,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import {COLORS} from '../../theme/colors';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { COLORS } from '../../theme/colors';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const ProfileEdit = () => {
   const navigation = useNavigation<any>();
@@ -43,7 +43,10 @@ const ProfileEdit = () => {
   };
 
   const handleSave = () => {
-    Alert.alert('Profile Updated', 'Your details have been saved successfully!');
+    Alert.alert(
+      'Profile Updated',
+      'Your details have been saved successfully!',
+    );
     setEditableField(null);
   };
 
@@ -70,13 +73,13 @@ const ProfileEdit = () => {
 
   const handleTakePhoto = async () => {
     closePicker();
-    const res = await launchCamera({mediaType: 'photo', quality: 0.7});
+    const res = await launchCamera({ mediaType: 'photo', quality: 0.7 });
     await onPickResult(res);
   };
 
   const handleChooseFromGallery = async () => {
     closePicker();
-    const res = await launchImageLibrary({mediaType: 'photo', quality: 0.7});
+    const res = await launchImageLibrary({ mediaType: 'photo', quality: 0.7 });
     await onPickResult(res);
   };
 
@@ -91,19 +94,31 @@ const ProfileEdit = () => {
       {/* ===== Header ===== */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../assets/back.png')} style={styles.backIcon} />
+          <Image
+            source={require('../../assets/back.png')}
+            style={styles.backIcon}
+          />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>My Profile</Text>
-        <View style={{width: 22}} /> {/* Spacer to center text */}
+        <View style={{ width: 22 }} /> {/* Spacer to center text */}
       </View>
 
       {/* ===== Scrollable Content ===== */}
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
         {/* ===== Profile Avatar ===== */}
         <View style={styles.profileSection}>
-          <TouchableOpacity activeOpacity={0.8} onPress={openPicker} style={styles.profileWrapper}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={openPicker}
+            style={styles.profileWrapper}
+          >
             <Image
-              source={profileImage?.uri ? {uri: profileImage.uri} : defaultUserImage}
+              source={
+                profileImage?.uri ? { uri: profileImage.uri } : defaultUserImage
+              }
               style={styles.profileImage}
             />
             <View style={styles.cameraBadge}>
@@ -132,7 +147,10 @@ const ProfileEdit = () => {
               </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={() => setFieldEditable('name')}>
-                <Image source={closeIcon} style={[styles.closeIcon, {opacity: 0.3}]} />
+                <Image
+                  source={closeIcon}
+                  style={[styles.closeIcon, { opacity: 0.3 }]}
+                />
               </TouchableOpacity>
             )}
           </View>
@@ -156,7 +174,10 @@ const ProfileEdit = () => {
               </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={() => setFieldEditable('phone')}>
-                <Image source={closeIcon} style={[styles.closeIcon, {opacity: 0.3}]} />
+                <Image
+                  source={closeIcon}
+                  style={[styles.closeIcon, { opacity: 0.3 }]}
+                />
               </TouchableOpacity>
             )}
           </View>
@@ -180,7 +201,10 @@ const ProfileEdit = () => {
               </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={() => setFieldEditable('email')}>
-                <Image source={closeIcon} style={[styles.closeIcon, {opacity: 0.3}]} />
+                <Image
+                  source={closeIcon}
+                  style={[styles.closeIcon, { opacity: 0.3 }]}
+                />
               </TouchableOpacity>
             )}
           </View>
@@ -204,7 +228,10 @@ const ProfileEdit = () => {
               </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={() => setFieldEditable('address')}>
-                <Image source={closeIcon} style={[styles.closeIcon, {opacity: 0.3}]} />
+                <Image
+                  source={closeIcon}
+                  style={[styles.closeIcon, { opacity: 0.3 }]}
+                />
               </TouchableOpacity>
             )}
           </View>
@@ -220,19 +247,37 @@ const ProfileEdit = () => {
       <Modal visible={pickerVisible} transparent animationType="fade">
         <View style={styles.popupOverlay}>
           <View style={styles.popupBox}>
-            <TouchableOpacity style={styles.closeIconWrapper} onPress={closePicker}>
-              <Image source={closeIcon} style={styles.closeIcon} resizeMode="contain" />
+            <TouchableOpacity
+              style={styles.closeIconWrapper}
+              onPress={closePicker}
+            >
+              <Image
+                source={closeIcon}
+                style={styles.closeIcon}
+                resizeMode="contain"
+              />
             </TouchableOpacity>
             <Text style={styles.popupTitle}>Change your Profile pic</Text>
-            <TouchableOpacity style={styles.pickerButton} onPress={handleTakePhoto}>
+            <TouchableOpacity
+              style={styles.pickerButton}
+              onPress={handleTakePhoto}
+            >
               <Text style={styles.pickerButtonText}>Take photo</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.pickerButton} onPress={handleChooseFromGallery}>
+            <TouchableOpacity
+              style={styles.pickerButton}
+              onPress={handleChooseFromGallery}
+            >
               <Text style={styles.pickerButtonText}>Choose from Gallery</Text>
             </TouchableOpacity>
             {profileImage && (
-              <TouchableOpacity style={styles.pickerButton} onPress={removeProfileImage}>
-                <Text style={[styles.pickerButtonText, {color: '#FF3B30'}]}>Remove Profile Photo</Text>
+              <TouchableOpacity
+                style={styles.pickerButton}
+                onPress={removeProfileImage}
+              >
+                <Text style={[styles.pickerButtonText, { color: '#FF3B30' }]}>
+                  Remove Profile Photo
+                </Text>
               </TouchableOpacity>
             )}
           </View>
@@ -362,7 +407,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: width * 0.04,
-    color: COLORS.text,
+    color: '#999',
     padding: 0,
     margin: 0,
     fontFamily: 'Figtree-Regular', // ✅ Added

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Text,
@@ -13,11 +13,14 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import font from '../../../assets/fonts';
+import { ThemeContext } from '../../../theme/ThemeContext';
+
 
 const { width, height } = Dimensions.get('window');
-
 const AboutUs = () => {
   const navigation = useNavigation<any>();
+    const { theme } = useContext(ThemeContext);
+  
 
   const appInfo = {
     version: '1.0.0',
@@ -60,35 +63,35 @@ const AboutUs = () => {
   ];
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
-      <View style={styles.header}>
+      <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={styles.backIcon} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor:theme.text}]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>About Us</Text>
+        <Text style={[styles.headerTitle,{color:theme.text}]}>About Us</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
         {/* App Logo and Basic Info */}
-        <View style={styles.appHeader}>
+        <View style={[styles.appHeader]}>
           <Image 
             source={require('../../../assets/Splash.png')} 
             style={styles.appLogo} 
           />
-          <Text style={styles.appName}>Vinsta</Text>
-          <Text style={styles.appVersion}>Version {appInfo.version}</Text>
-          <Text style={styles.appDescription}>
+          <Text style={[styles.appName,{color : theme.text}]}>Vinsta</Text>
+          <Text style={[styles.appVersion,{color : theme.text}]}>Version {appInfo.version}</Text>
+          <Text style={[styles.appDescription,{color : theme.text}]}>
             Delivering excellence one order at a time
           </Text>
         </View>
 
         {/* App Description */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Our Story</Text>
-          <Text style={styles.sectionText}>
+          <Text style={[styles.sectionTitle,{color : theme.text}]}>Our Story</Text>
+          <Text style={[styles.sectionText,{color : theme.text}]}>
             Founded in 2024, our mission is to provide the best food delivery experience 
             to our customers. We connect you with your favorite restaurants and deliver 
             delicious meals right to your doorstep.
@@ -96,42 +99,42 @@ const AboutUs = () => {
         </View>
 
         {/* Features */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>What We Offer</Text>
-          <View style={styles.featuresList}>
+        <View style={[styles.section,{backgroundColor : theme.background}]}>
+          <Text style={[styles.sectionTitle,{color : theme.text}]}>What We Offer</Text>
+          <View style={[styles.featuresList,{backgroundColor : theme.background}]}>
             <View style={styles.featureItem}>
               <Image source={require('../../../assets/tick.png')} style={styles.featureIcon} />
-              <Text style={styles.featureText}>Fast Delivery</Text>
+              <Text style={[styles.featureText,{color : theme.text}]}>Fast Delivery</Text>
             </View>
             <View style={styles.featureItem}>
               <Image source={require('../../../assets/tick.png')} style={styles.featureIcon} />
-              <Text style={styles.featureText}>Wide Restaurant Selection</Text>
+              <Text style={[styles.featureText,{color : theme.text}]}>Wide Restaurant Selection</Text>
             </View>
             <View style={styles.featureItem}>
               <Image source={require('../../../assets/tick.png')} style={styles.featureIcon} />
-              <Text style={styles.featureText}>Secure Payments</Text>
+              <Text style={[styles.featureText,{color : theme.text}]}>Secure Payments</Text>
             </View>
             <View style={styles.featureItem}>
               <Image source={require('../../../assets/tick.png')} style={styles.featureIcon} />
-              <Text style={styles.featureText}>24/7 Customer Support</Text>
+              <Text style={[styles.featureText,{color : theme.text}]}>24/7 Customer Support</Text>
             </View>
           </View>
         </View>
 
         {/* Contact Information */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Contact Us</Text>
+          <Text style={[styles.sectionTitle,{color : theme.text}]}>Contact Us</Text>
           {contactInfo.map((item) => (
             <TouchableOpacity
               key={item.id}
-              style={styles.contactItem}
+              style={[styles.contactItem,{backgroundColor : theme.background}]}
               onPress={item.action}
             >
               <View style={styles.contactLeft}>
                 <Image source={item.icon} style={styles.contactIcon} />
                 <View>
-                  <Text style={styles.contactTitle}>{item.title}</Text>
-                  <Text style={styles.contactValue}>{item.value}</Text>
+                  <Text style={[styles.contactTitle,{color : theme.text}]}>{item.title}</Text>
+                  <Text style={[styles.contactValue,{color : theme.text}]}>{item.value}</Text>
                 </View>
               </View>
               <Image source={require('../../../assets/right-arrow.png')} style={styles.arrowIcon} />
@@ -140,27 +143,27 @@ const AboutUs = () => {
         </View>
 
         {/* Legal */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Legal</Text>
+        <View style={[styles.section]}>
+          <Text style={[styles.sectionTitle,{color : theme.text}]}>Legal</Text>
           <TouchableOpacity 
-            style={styles.legalItem}
+            style={[styles.legalItem,{backgroundColor : theme.background}]}
             onPress={() => navigation.navigate('PrivacyPolicy')}
           >
-            <Text style={styles.legalText}>Privacy Policy</Text>
+            <Text style={[styles.legalText,{color : theme.text}]}>Privacy Policy</Text>
             <Image source={require('../../../assets/right-arrow.png')} style={styles.arrowIcon} />
           </TouchableOpacity>
           <TouchableOpacity 
-            style={styles.legalItem}
+            style={[styles.legalItem,{backgroundColor : theme.background}]}
             onPress={() => navigation.navigate('TermsConditions')}
           >
-            <Text style={styles.legalText}>Terms & Conditions</Text>
+            <Text style={[styles.legalText,{color : theme.text}]}>Terms & Conditions</Text>
             <Image source={require('../../../assets/right-arrow.png')} style={styles.arrowIcon} />
           </TouchableOpacity>
         </View>
 
         {/* Copyright */}
         <View style={styles.copyrightSection}>
-          <Text style={styles.copyrightText}>
+          <Text style={[styles.copyrightText,{color : theme.text}]}>
             © 2024 Vinsta. All rights reserved.
           </Text>
         </View>
@@ -172,7 +175,6 @@ const AboutUs = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.secondary,
   },
   header: {
     flexDirection: 'row',

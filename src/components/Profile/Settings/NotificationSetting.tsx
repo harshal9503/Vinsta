@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import font from '../../../assets/fonts';
+import { ThemeContext } from '../../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
@@ -24,6 +25,7 @@ const NotificationSetting = () => {
   const [promotional, setPromotional] = useState(false);
   const [specialOffers, setSpecialOffers] = useState(true);
   const [newFeatures, setNewFeatures] = useState(true);
+  const {theme} = useContext(ThemeContext);
 
   const notificationOptions = [
     {
@@ -71,28 +73,28 @@ const NotificationSetting = () => {
   ];
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
-      <View style={styles.header}>
+      <View style={[styles.header,{backgroundColor  :theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={styles.backIcon} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Notification Settings</Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>Notification Settings</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <Text style={styles.sectionTitle}>Notification Preferences</Text>
-        <Text style={styles.sectionDescription}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>Notification Preferences</Text>
+        <Text style={[styles.sectionDescription,{color : theme.text}]}>
           Choose what type of notifications you want to receive
         </Text>
 
         {notificationOptions.map((item) => (
-          <View key={item.id} style={styles.notificationRow}>
+          <View key={item.id} style={[styles.notificationRow,{backgroundColor : theme.background}]}>
             <View style={styles.notificationLeft}>
-              <Text style={styles.notificationTitle}>{item.title}</Text>
-              <Text style={styles.notificationDescription}>{item.description}</Text>
+              <Text style={[styles.notificationTitle,{color : theme.text}]}>{item.title}</Text>
+              <Text style={[styles.notificationDescription,{color : theme.text}]}>{item.description}</Text>
             </View>
             <Switch
               value={item.value}

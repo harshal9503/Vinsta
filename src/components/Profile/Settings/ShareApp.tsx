@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Text,
@@ -14,11 +14,13 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import font from '../../../assets/fonts';
+import { ThemeContext } from '../../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
 const ShareApp = () => {
   const navigation = useNavigation<any>();
+  const {theme} = useContext(ThemeContext);
 
   const shareOptions = [
     {
@@ -95,14 +97,14 @@ const ShareApp = () => {
   const secondRowOptions = shareOptions.slice(3); // Twitter, Email
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
-      <View style={styles.header}>
+      <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={styles.backIcon} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Share App</Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>Share App</Text>
         <View style={{ width: 24 }} />
       </View>
 
@@ -113,15 +115,15 @@ const ShareApp = () => {
             source={require('../../../assets/Splash.png')} 
             style={styles.heroImage} 
           />
-          <Text style={styles.heroTitle}>Share the Love!</Text>
-          <Text style={styles.heroDescription}>
+          <Text style={[styles.heroTitle,{color : theme.text}]}>Share the Love!</Text>
+          <Text style={[styles.heroDescription,{color : theme.text}]}>
             Share this app with your friends and family and help them discover amazing food delivery service.
           </Text>
         </View>
 
         {/* Referral Code */}
-        <View style={styles.referralSection}>
-          <Text style={styles.referralTitle}>Your Referral Code</Text>
+        <View style={[styles.referralSection,{backgroundColor  :theme.background}]}>
+          <Text style={[styles.referralTitle,{color : theme.text}]}>Your Referral Code</Text>
           <TouchableOpacity 
             style={styles.referralCodeBox}
             onPress={() => copyToClipboard(referralCode)}
@@ -132,14 +134,14 @@ const ShareApp = () => {
               style={styles.copyIcon} 
             />
           </TouchableOpacity>
-          <Text style={styles.referralNote}>
+          <Text style={[styles.referralNote,{color : theme.text}]}>
             Share this code with your friends for special rewards!
           </Text>
         </View>
 
         {/* Share Options */}
         <View style={styles.shareSection}>
-          <Text style={styles.shareTitle}>Share Via</Text>
+          <Text style={[styles.shareTitle,{color : theme.text}]}>Share Via</Text>
           
           {/* First Row - 3 icons */}
           <View style={styles.shareRow}>
@@ -152,7 +154,7 @@ const ShareApp = () => {
                 <View style={styles.shareIconContainer}>
                   <Image source={item.icon} style={styles.shareIcon} />
                 </View>
-                <Text style={styles.shareOptionText}>{item.name}</Text>
+                <Text style={[styles.shareOptionText,{color : theme.text}]}>{item.name}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -168,21 +170,21 @@ const ShareApp = () => {
                 <View style={styles.shareIconContainer}>
                   <Image source={item.icon} style={styles.shareIcon} />
                 </View>
-                <Text style={styles.shareOptionText}>{item.name}</Text>
+                <Text style={[styles.shareOptionText,{color : theme.text}]}>{item.name}</Text>
               </TouchableOpacity>
             ))}
           </View>
         </View>
 
         {/* Benefits */}
-        <View style={styles.benefitsSection}>
-          <Text style={styles.benefitsTitle}>Referral Benefits</Text>
-          <View style={styles.benefitsList}>
+        <View style={[styles.benefitsSection,{backgroundColor  :theme.background}]}>
+          <Text style={[styles.benefitsTitle,{color : theme.text}]}>Referral Benefits</Text>
+          <View style={[styles.benefitsList,{backgroundColor  :theme.background}]}>
             <View style={styles.benefitItem}>
               <Image source={require('../../../assets/tick.png')} style={styles.benefitIcon} />
               <View style={styles.benefitText}>
-                <Text style={styles.benefitTitle}>Get $10 Credit</Text>
-                <Text style={styles.benefitDescription}>
+                <Text style={[styles.benefitTitle,{color : theme.text}]}>Get $10 Credit</Text>
+                <Text style={[styles.benefitDescription,{color : theme.text}]}>
                   Receive $10 credit when your friend signs up
                 </Text>
               </View>
@@ -190,8 +192,8 @@ const ShareApp = () => {
             <View style={styles.benefitItem}>
               <Image source={require('../../../assets/tick.png')} style={styles.benefitIcon} />
               <View style={styles.benefitText}>
-                <Text style={styles.benefitTitle}>Friend Gets 20% Off</Text>
-                <Text style={styles.benefitDescription}>
+                <Text style={[styles.benefitTitle,{color : theme.text}]}>Friend Gets 20% Off</Text>
+                <Text style={[styles.benefitDescription,{color : theme.text}]}>
                   Your friend gets 20% off on their first order
                 </Text>
               </View>
@@ -199,8 +201,8 @@ const ShareApp = () => {
             <View style={styles.benefitItem}>
               <Image source={require('../../../assets/tick.png')} style={styles.benefitIcon} />
               <View style={styles.benefitText}>
-                <Text style={styles.benefitTitle}>Exclusive Rewards</Text>
-                <Text style={styles.benefitDescription}>
+                <Text style={[styles.benefitTitle,{color : theme.text}]}>Exclusive Rewards</Text>
+                <Text style={[styles.benefitDescription,{color : theme.text}]}>
                   Unlock special rewards for multiple referrals
                 </Text>
               </View>
@@ -209,18 +211,18 @@ const ShareApp = () => {
         </View>
 
         {/* Stats */}
-        <View style={styles.statsSection}>
+        <View style={[styles.statsSection,{backgroundColor  :theme.background}]}>
           <View style={styles.statItem}>
             <Text style={styles.statNumber}>5</Text>
-            <Text style={styles.statLabel}>Friends Joined</Text>
+            <Text style={[styles.statLabel,{color : theme.text}]}>Friends Joined</Text>
           </View>
           <View style={styles.statItem}>
             <Text style={styles.statNumber}>$50</Text>
-            <Text style={styles.statLabel}>Total Credit Earned</Text>
+            <Text style={[styles.statLabel,{color : theme.text}]}>Total Credit Earned</Text>
           </View>
           <View style={styles.statItem}>
             <Text style={styles.statNumber}>3</Text>
-            <Text style={styles.statLabel}>Available Rewards</Text>
+            <Text style={[styles.statLabel,{color : theme.text}]}>Available Rewards</Text>
           </View>
         </View>
       </ScrollView>
