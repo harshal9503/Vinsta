@@ -5,7 +5,7 @@ export const COLORS = {
   textDark: '#1E1E1E',
   textLight: '#666666',
   // Backwards-compatible aliases used across the codebase
-  text: '#1E1E1E',
+  text: 'black',
   accent: '#FFE8D6',
   cardShadow: 'rgba(0,0,0,0.1)',
   shadow: 'rgba(0,0,0,0.1)',

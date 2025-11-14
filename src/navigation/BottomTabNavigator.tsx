@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Image } from 'react-native';
+import { Image, Text } from 'react-native';
 import HomeScreen from '../components/HomeScreen/HomeScreen';
 import MyOrders from '../components/MyOrders/myorders';
 import Wishlist from '../components/Wishlist/wishlist';
@@ -63,11 +63,25 @@ const getScreenOptions = ({
   tabBarIcon: ({ color, size }: { color: string; size: number }) => (
     <TabBarIcon routeName={route.name} color={color} size={size} />
   ),
+
+  tabBarLabel: ({ color }: { color: string }) => (
+    <Text
+      style={{
+        fontSize: 10,
+        marginBottom: 5, // ← UPDATED AS YOU REQUESTED
+        color,
+        fontWeight: '700',
+        fontFamily: 'Figtree-Bold',
+      }}
+    >
+      {route.name}
+    </Text>
+  ),
+
   tabBarActiveTintColor: COLORS.primary,
   tabBarInactiveTintColor: '#616161',
   tabBarStyle: { backgroundColor: COLORS.secondary },
   headerShown: false,
-  tabBarLabelStyle: { fontSize: 12, marginBottom: 3 },
 });
 
 const BottomTabNavigator = () => {
