@@ -48,10 +48,13 @@ const scaleSize = size => {
   return size;
 };
 
-// ✅ Font family helper with fallback for Android
+// ✅ UNIVERSAL Font family helper with proper iOS and Android support
 const getFontFamily = (weight = 'Regular') => {
-  if (Platform.OS === 'android') {
-    // Map weight to specific font file
+  if (Platform.OS === 'ios') {
+    // iOS uses base font family name + fontWeight property
+    return 'Figtree';
+  } else {
+    // Android needs specific font file names
     const fontMap = {
       '100': 'Figtree-Thin',
       '200': 'Figtree-ExtraLight',
@@ -62,19 +65,58 @@ const getFontFamily = (weight = 'Regular') => {
       '700': 'Figtree-Bold',
       '800': 'Figtree-ExtraBold',
       '900': 'Figtree-Black',
-      Thin: 'Figtree-Thin',
-      ExtraLight: 'Figtree-ExtraLight',
-      Light: 'Figtree-Light',
-      Regular: 'Figtree-Regular',
-      Medium: 'Figtree-Medium',
-      SemiBold: 'Figtree-SemiBold',
-      Bold: 'Figtree-Bold',
-      ExtraBold: 'Figtree-ExtraBold',
-      Black: 'Figtree-Black',
+      'Thin': 'Figtree-Thin',
+      'ExtraLight': 'Figtree-ExtraLight',
+      'Light': 'Figtree-Light',
+      'Regular': 'Figtree-Regular',
+      'Medium': 'Figtree-Medium',
+      'SemiBold': 'Figtree-SemiBold',
+      'Bold': 'Figtree-Bold',
+      'ExtraBold': 'Figtree-ExtraBold',
+      'Black': 'Figtree-Black',
     };
     return fontMap[weight] || 'Figtree-Regular';
   }
-  return 'Figtree'; // iOS handles weights automatically
+};
+
+// ✅ Get fontWeight for iOS (Android ignores this)
+const getFontWeight = (weight = 'Regular') => {
+  if (Platform.OS === 'android') {
+    return undefined; // Android doesn't use fontWeight with custom fonts
+  }
+  
+  // iOS fontWeight mapping
+  const weightMap = {
+    'Thin': '100',
+    'ExtraLight': '200',
+    'Light': '300',
+    'Regular': '400',
+    'Medium': '500',
+    'SemiBold': '600',
+    'Bold': '700',
+    'ExtraBold': '800',
+    'Black': '900',
+    '100': '100',
+    '200': '200',
+    '300': '300',
+    '400': '400',
+    '500': '500',
+    '600': '600',
+    '700': '700',
+    '800': '800',
+    '900': '900',
+  };
+  return weightMap[weight] || '400';
+};
+
+// ✅ Complete font style helper
+const getTextStyle = (weight = 'Regular') => {
+  return {
+    fontFamily: getFontFamily(weight),
+    ...(Platform.OS === 'ios' && { fontWeight: getFontWeight(weight) }),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  };
 };
 
 const categories = [
@@ -322,6 +364,7 @@ const HomeScreen = () => {
   const hasActiveFilters = () => {
     return Object.values(appliedFilters).some(filter => filter !== 'All');
   };
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -847,10 +890,7 @@ const HomeScreen = () => {
 
                 {/* ✅ Stick the prices right below the slider */}
                 <View
-                  style={[
-                    styles.priceRangeRow,
-                    { marginTop: 0, paddingTop: 0 },
-                  ]}
+                  style={[styles.priceRangeRow, { marginTop: 0, paddingTop: 0 }]}
                 >
                   <Text style={styles.priceRangeText}>
                     ${appliedFilters.priceRange[0]}
@@ -1007,13 +1047,10 @@ const styles = StyleSheet.create({
     marginRight: wp('1.5%'),
   },
   locationText: {
-    fontFamily: getFontFamily('Medium'),
+    ...getTextStyle('Medium'),
     fontSize: fontScale(14),
     color: COLORS.secondary,
     marginRight: wp('0.5%'),
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   dropdownIcon: {
     width: isTablet ? scaleSize(wp('1.8%')) : scaleSize(wp('2.5%')),
@@ -1022,13 +1059,10 @@ const styles = StyleSheet.create({
     marginLeft: wp('1.5%'),
   },
   addressText: {
-    fontFamily: getFontFamily('Regular'),
+    ...getTextStyle('Regular'),
     fontSize: fontScale(13),
     color: COLORS.secondary,
     opacity: 0.9,
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   walletBagRow: {
     flexDirection: 'row',
@@ -1087,14 +1121,11 @@ const styles = StyleSheet.create({
     marginBottom: hp('2%'),
   },
   headerTitle: {
-    fontFamily: getFontFamily('Bold'),
+    ...getTextStyle('Bold'),
     fontSize: fontScale(24),
     color: COLORS.secondary,
     lineHeight: isTablet ? hp('3.2%') : hp('3.6%'),
     flex: 1,
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   vegContainer: {
     alignItems: 'center',
@@ -1159,27 +1190,18 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   switchTextLeft: {
-    fontFamily: getFontFamily('SemiBold'),
+    ...getTextStyle('SemiBold'),
     fontSize: fontScale(10),
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   switchTextRight: {
-    fontFamily: getFontFamily('SemiBold'),
+    ...getTextStyle('SemiBold'),
     fontSize: fontScale(10),
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   vegModeTxt: {
-    fontFamily: getFontFamily('Bold'),
+    ...getTextStyle('Bold'),
     fontSize: fontScale(12),
     marginTop: hp('0.6%'),
     color: COLORS.secondary,
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   searchContainer: {
     flexDirection: 'row',
@@ -1216,13 +1238,10 @@ const styles = StyleSheet.create({
     tintColor: '#999',
   },
   searchPlaceholder: {
-    fontFamily: getFontFamily('Regular'),
+    ...getTextStyle('Regular'),
     fontSize: fontScale(14),
     flex: 1,
     color: '#999',
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   filterBtn: {
     backgroundColor: '#fff',
@@ -1281,20 +1300,14 @@ const styles = StyleSheet.create({
     height: isTablet ? scaleSize(wp('4.5%')) : scaleSize(wp('5.5%')),
   },
   sectionTitle: {
-    fontFamily: getFontFamily('Bold'),
+    ...getTextStyle('Bold'),
     fontSize: fontScale(18),
     color: COLORS.textDark,
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   sectionLink: {
-    fontFamily: getFontFamily('Medium'),
+    ...getTextStyle('Medium'),
     fontSize: fontScale(14),
     color: COLORS.primary,
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   offerCard: {
     borderRadius: scaleSize(wp('4%')),
@@ -1320,22 +1333,17 @@ const styles = StyleSheet.create({
     marginRight: wp('2%'),
   },
   offerHeader: {
-    fontFamily: getFontFamily('Bold'),
+    ...getTextStyle('Bold'),
     fontSize: fontScale(20),
     color: 'black',
     marginBottom: hp('0.5%'),
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   offerSubTxt: {
-    fontFamily: getFontFamily('Regular'),
+    ...getTextStyle('Regular'),
     fontSize: fontScale(13),
     color: COLORS.textLight,
     marginBottom: hp('1.5%'),
     lineHeight: hp('2%'),
-    includeFontPadding: false,
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   offerButton: {
     backgroundColor: COLORS.primary,
@@ -1345,13 +1353,10 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   offerBtnText: {
-    fontFamily: getFontFamily('Bold'),
+    ...getTextStyle('Bold'),
     fontSize: fontScale(13),
     color: COLORS.secondary,
-    includeFontPadding: false,
-    textAlignVertical: 'center',
     letterSpacing: 0.3,
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   offerImageWrap: {
     width: isTablet ? scaleSize(wp('25%')) : scaleSize(wp('30%')),
@@ -1398,17 +1403,13 @@ const styles = StyleSheet.create({
     marginRight: wp('2%'),
   },
   categoryTxt: {
-    fontFamily: getFontFamily('Medium'),
+    ...getTextStyle('Medium'),
     fontSize: fontScale(14),
     color: COLORS.primary,
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   categoryTxtActive: {
-    fontFamily: getFontFamily('SemiBold'),
+    ...getTextStyle('SemiBold'),
     color: COLORS.secondary,
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   restaurantScrollContent: {
     paddingHorizontal: wp('1%'),
@@ -1495,21 +1496,15 @@ const styles = StyleSheet.create({
     tintColor: '#fff',
   },
   ratingText: {
-    fontFamily: getFontFamily('SemiBold'),
+    ...getTextStyle('SemiBold'),
     fontSize: fontScale(11),
     color: '#fff',
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   restaurantTitle: {
-    fontFamily: getFontFamily('Bold'),
+    ...getTextStyle('Bold'),
     fontSize: fontScale(15),
     color: COLORS.textDark,
     marginBottom: hp('0.5%'),
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   restaurantInfoRow: {
     flexDirection: 'row',
@@ -1523,13 +1518,10 @@ const styles = StyleSheet.create({
     tintColor: COLORS.primary,
   },
   infoTxt: {
-    fontFamily: getFontFamily('Regular'),
+    ...getTextStyle('Regular'),
     fontSize: fontScale(12),
     color: COLORS.textLight,
     marginRight: wp('2%'),
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   tagsContainer: {
     flexDirection: 'row',
@@ -1537,16 +1529,13 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   restaurantTags: {
-    fontFamily: getFontFamily('Regular'),
+    ...getTextStyle('Regular'),
     fontSize: fontScale(11),
     color: COLORS.primary,
     backgroundColor: '#f3f1f1',
     paddingHorizontal: wp('2.5%'),
     paddingVertical: isIOS ? hp('0.3%') : hp('0.25%'),
     borderRadius: scaleSize(wp('5%')),
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   productGrid: {
     paddingHorizontal: wp('1%'),
@@ -1620,14 +1609,11 @@ const styles = StyleSheet.create({
     }),
   },
   productTitle: {
-    fontFamily: getFontFamily('Bold'),
+    ...getTextStyle('Bold'),
     fontSize: fontScale(14),
     color: COLORS.textDark,
     marginBottom: hp('0.5%'),
     marginTop: hp('1%'),
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   priceRow: {
     flexDirection: 'row',
@@ -1642,21 +1628,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   productPrice: {
-    fontFamily: getFontFamily('Bold'),
+    ...getTextStyle('Bold'),
     fontSize: fontScale(15),
     color: '#111',
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   oldPrice: {
-    fontFamily: getFontFamily('Regular'),
+    ...getTextStyle('Regular'),
     fontSize: fontScale(12),
     color: '#666',
     textDecorationLine: 'line-through',
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   plusBtn: {
     backgroundColor: COLORS.primary,
@@ -1694,13 +1674,10 @@ const styles = StyleSheet.create({
     marginLeft: wp('4%'),
   },
   reachingTxt: {
-    fontFamily: getFontFamily('SemiBold'),
+    ...getTextStyle('SemiBold'),
     fontSize: fontScale(14),
     color: COLORS.primary,
     marginBottom: hp('0.4%'),
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   deliveryTimeContainer: {
     flexDirection: 'row',
@@ -1713,12 +1690,9 @@ const styles = StyleSheet.create({
     tintColor: COLORS.textLight,
   },
   getDeliveredTxt: {
-    fontFamily: getFontFamily('Regular'),
+    ...getTextStyle('Regular'),
     fontSize: fontScale(13),
     color: COLORS.textLight,
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   modalOverlay: {
     flex: 1,
@@ -1743,11 +1717,10 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   modalTitle: {
+    ...getTextStyle('Bold'),
     fontSize: fontScale(18),
-    fontFamily: getFontFamily('Bold'),
     color: '#000',
     marginBottom: 10,
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   closeButtonWrapper: {
     position: 'absolute',
@@ -1780,11 +1753,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   filterLabel: {
-    fontFamily: getFontFamily('Bold'),
+    ...getTextStyle('Bold'),
     fontSize: fontScale(16),
     color: '#000',
     marginBottom: 10,
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   histogramContainer: {
     flexDirection: 'row',
@@ -1800,11 +1772,10 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   filterSectionTitle: {
+    ...getTextStyle('Bold'),
     fontSize: fontScale(16),
     color: '#000',
     marginBottom: hp('1.5%'),
-    fontFamily: getFontFamily('Bold'),
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   filterOptions: {
     flexDirection: 'row',
@@ -1822,15 +1793,13 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   filterOptionText: {
+    ...getTextStyle('Medium'),
     fontSize: fontScale(14),
     color: '#666',
-    fontFamily: getFontFamily('Medium'),
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   activeFilterOptionText: {
+    ...getTextStyle('Medium'),
     color: '#fff',
-    fontFamily: getFontFamily('Medium'),
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   priceRangeRow: {
     flexDirection: 'row',
@@ -1840,10 +1809,9 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   priceRangeText: {
-    fontFamily: getFontFamily('SemiBold'),
+    ...getTextStyle('SemiBold'),
     fontSize: fontScale(14),
     color: '#000',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   modalActions: {
     flexDirection: 'row',
@@ -1860,10 +1828,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   resetBtnText: {
+    ...getTextStyle('Bold'),
     fontSize: fontScale(16),
     color: '#666',
-    fontFamily: getFontFamily('Bold'),
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   applyBtn: {
     flex: 1,
@@ -1873,10 +1840,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   applyBtnText: {
+    ...getTextStyle('Bold'),
     fontSize: fontScale(16),
     color: '#fff',
-    fontFamily: getFontFamily('Bold'),
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
 });
 
