@@ -1134,8 +1134,6 @@ const RestaurentDetails: React.FC = () => {
           </View>
         </View>
       </Modal>
-
-
     </View>
   );
 };
@@ -1746,24 +1744,27 @@ const styles = StyleSheet.create({
   },
   // Close Button - Half Outside Modal
   modalCloseBtn: {
-    position: 'absolute',
-    bottom: Platform.OS === 'ios' ? hp('82%') - wp('6%') : hp('80%') - wp('6%'),
-    left: '50%',
-    marginLeft: -wp('6%'), // Half of button width to center it
-    zIndex: 999,
-    backgroundColor: '#fff',
-    borderRadius: wp('50%'),
-    padding: wp('2%'),
-    width: wp('12%'),
-    height: wp('12%'),
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 3 },
-  },
+  position: 'absolute',
+  top: Platform.OS === 'ios' ? hp('8%') : hp('10%'),
+  left: 0,
+  right: 0,
+  alignSelf: 'center',
+
+  zIndex: 999,
+  backgroundColor: '#fff',
+  borderRadius: wp('50%'),
+  padding: wp('2%'),
+  width: wp('12%'),
+  height: wp('12%'),
+  alignItems: 'center',
+  justifyContent: 'center',
+
+  elevation: 8,
+  shadowColor: '#000',
+  shadowOpacity: 0.3,
+  shadowRadius: 8,
+  shadowOffset: { width: 0, height: 3 },
+},
   modalCloseIcon: {
     width: wp('15%'),
     height: wp('15%'),

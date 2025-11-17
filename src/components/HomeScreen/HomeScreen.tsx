@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -21,9 +21,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import font from '../../assets/fonts'
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import { ThemeContext } from '../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
@@ -47,6 +45,77 @@ const scaleSize = size => {
     return isTablet ? size * 0.9 : size * 1.02;
   }
   return size;
+};
+
+// ✅ UNIVERSAL Font family helper with proper iOS and Android support
+const getFontFamily = (weight = 'Regular') => {
+  if (Platform.OS === 'ios') {
+    // iOS uses base font family name + fontWeight property
+    return 'Figtree';
+  } else {
+    // Android needs specific font file names
+    const fontMap = {
+      '100': 'Figtree-Thin',
+      '200': 'Figtree-ExtraLight',
+      '300': 'Figtree-Light',
+      '400': 'Figtree-Regular',
+      '500': 'Figtree-Medium',
+      '600': 'Figtree-SemiBold',
+      '700': 'Figtree-Bold',
+      '800': 'Figtree-ExtraBold',
+      '900': 'Figtree-Black',
+      'Thin': 'Figtree-Thin',
+      'ExtraLight': 'Figtree-ExtraLight',
+      'Light': 'Figtree-Light',
+      'Regular': 'Figtree-Regular',
+      'Medium': 'Figtree-Medium',
+      'SemiBold': 'Figtree-SemiBold',
+      'Bold': 'Figtree-Bold',
+      'ExtraBold': 'Figtree-ExtraBold',
+      'Black': 'Figtree-Black',
+    };
+    return fontMap[weight] || 'Figtree-Regular';
+  }
+};
+
+// ✅ Get fontWeight for iOS (Android ignores this)
+const getFontWeight = (weight = 'Regular') => {
+  if (Platform.OS === 'android') {
+    return undefined; // Android doesn't use fontWeight with custom fonts
+  }
+  
+  // iOS fontWeight mapping
+  const weightMap = {
+    'Thin': '100',
+    'ExtraLight': '200',
+    'Light': '300',
+    'Regular': '400',
+    'Medium': '500',
+    'SemiBold': '600',
+    'Bold': '700',
+    'ExtraBold': '800',
+    'Black': '900',
+    '100': '100',
+    '200': '200',
+    '300': '300',
+    '400': '400',
+    '500': '500',
+    '600': '600',
+    '700': '700',
+    '800': '800',
+    '900': '900',
+  };
+  return weightMap[weight] || '400';
+};
+
+// ✅ Complete font style helper
+const getTextStyle = (weight = 'Regular') => {
+  return {
+    fontFamily: getFontFamily(weight),
+    ...(Platform.OS === 'ios' && { fontWeight: getFontWeight(weight) }),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  };
 };
 
 const categories = [
@@ -173,6 +242,7 @@ const nonVegProducts = [
     deliveryTime: '10-15 mins',
   },
 ];
+
 const HomeScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState('Burger');
   const navigation = useNavigation<any>();
@@ -181,9 +251,6 @@ const HomeScreen = () => {
   const insets = useSafeAreaInsets();
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { theme } = useContext(ThemeContext);
-
-
 
   const toggleSwitch = () => {
     Animated.timing(toggleAnim, {
@@ -249,52 +316,6 @@ const HomeScreen = () => {
     }
   };
 
-  // const getFilteredRestaurants = () => {
-  //   let filtered = allRestaurants;
-
-  //   // Apply search filter
-  //   if (searchQuery.trim() !== '') {
-  //     filtered = filtered.filter(restaurant =>
-  //       restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //       restaurant.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //       restaurant.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-  //     );
-  //   }
-
-  //   // Apply category filter
-  //   if (appliedFilters.category !== 'All') {
-  //     filtered = filtered.filter(restaurant => restaurant.category === appliedFilters.category);
-  //   }
-
-  //   // Apply rating filter
-  //   if (appliedFilters.rating !== 'All') {
-  //     const minRating = parseFloat(appliedFilters.rating.replace('+', ''));
-  //     filtered = filtered.filter(restaurant => restaurant.rating >= minRating);
-  //   }
-
-  //   // Apply price range filter
-  //   if (appliedFilters.priceRange !== 'All') {
-  //     filtered = filtered.filter(restaurant => restaurant.priceRange === appliedFilters.priceRange);
-  //   }
-
-  //   // Apply delivery time filter
-  //   if (appliedFilters.deliveryTime !== 'All') {
-  //     if (appliedFilters.deliveryTime === 'Under 15 mins') {
-  //       filtered = filtered.filter(restaurant => {
-  //         const maxTime = parseInt(restaurant.deliveryTime.split('-')[1]);
-  //         return maxTime <= 15;
-  //       });
-  //     } else if (appliedFilters.deliveryTime === 'Under 20 mins') {
-  //       filtered = filtered.filter(restaurant => {
-  //         const maxTime = parseInt(restaurant.deliveryTime.split('-')[1]);
-  //         return maxTime <= 20;
-  //       });
-  //     }
-  //   }
-
-  //   return filtered;
-  // };
-
   const handleRestaurantPress = (restaurant: any) => {
     navigation.navigate('restaurentDetails', { restaurant });
   };
@@ -332,7 +353,6 @@ const HomeScreen = () => {
     sortBy: 'Recent',
   });
 
-
   const filterOptions = {
     category: ['All', 'Cold Drink', 'Fast Food', 'Paneer'],
     rating: ['All', '4.0', '4.5'],
@@ -343,8 +363,9 @@ const HomeScreen = () => {
   const hasActiveFilters = () => {
     return Object.values(appliedFilters).some(filter => filter !== 'All');
   };
+
   return (
-    <View style={[styles.container,{backgroundColor: theme.background}]}>
+    <View style={styles.container}>
       <StatusBar
         backgroundColor={COLORS.primary}
         barStyle="light-content"
@@ -366,19 +387,19 @@ const HomeScreen = () => {
               <View style={styles.locationRow}>
                 <Image
                   source={require('../../assets/location.png')}
-                  style={[styles.icon,{tintColor : theme.background}]}
+                  style={styles.icon}
                 />
-                <Text style={[styles.locationText,{color : theme.background}]}>Location</Text>
+                <Text style={styles.locationText}>Location</Text>
                 <Image
                   source={require('../../assets/dropdown.png')}
-                  style={[styles.dropdownIcon,{tintColor : theme.background}]}
+                  style={styles.dropdownIcon}
                 />
               </View>
-              <Text style={[styles.addressText,{color : theme.background}]}>4102 Pretty View Lane</Text>
+              <Text style={styles.addressText}>4102 Pretty View Lane</Text>
             </View>
             <View style={styles.walletBagRow}>
               <TouchableOpacity
-                style={[styles.walletBtn,{backgroundColor: theme.background}]}
+                style={styles.walletBtn}
                 activeOpacity={0.7}
                 onPress={handleWalletPress}
               >
@@ -388,7 +409,7 @@ const HomeScreen = () => {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.bagBtn,{backgroundColor: theme.background}]}
+                style={styles.bagBtn}
                 activeOpacity={0.7}
                 onPress={handleCartPress}
               >
@@ -401,7 +422,7 @@ const HomeScreen = () => {
           </View>
 
           <View style={styles.titleRow}>
-            <Text style={[styles.headerTitle,{color : theme.background}]}>
+            <Text style={styles.headerTitle}>
               What you{'\n'}Going eat for today ?
             </Text>
             <View style={styles.vegContainer}>
@@ -437,7 +458,6 @@ const HomeScreen = () => {
                       styles.switchTextLeft,
                       {
                         color: isVegMode ? '#fff' : '#000',
-                        fontWeight: isVegMode ? '700' : '500',
                       },
                     ]}
                   >
@@ -448,7 +468,6 @@ const HomeScreen = () => {
                       styles.switchTextRight,
                       {
                         color: !isVegMode ? '#fff' : '#000',
-                        fontWeight: !isVegMode ? '700' : '500',
                       },
                     ]}
                   >
@@ -456,7 +475,7 @@ const HomeScreen = () => {
                   </Text>
                 </View>
               </TouchableOpacity>
-              <Text style={[styles.vegModeTxt,{color : theme.background}]}>
+              <Text style={styles.vegModeTxt}>
                 {isVegMode ? 'Veg Mode' : 'Non-Veg Mode'}
               </Text>
             </View>
@@ -464,7 +483,7 @@ const HomeScreen = () => {
 
           <View style={styles.searchContainer}>
             <TouchableOpacity
-              style={[styles.searchBarContainer,{backgroundColor: theme.background}]}
+              style={styles.searchBarContainer}
               onPress={() => navigation.navigate('Search')}
               activeOpacity={0.8}
             >
@@ -472,12 +491,16 @@ const HomeScreen = () => {
                 source={require('../../assets/search.png')}
                 style={styles.searchIcon}
               />
-              <Text style={[styles.searchPlaceholder,{color : theme.text}]}>
+              <Text style={styles.searchPlaceholder}>
                 Find for food or restaurant...
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.filterBtn,{backgroundColor: theme.background}]} activeOpacity={0.8} onPress={() => setShowFilterModal(true)}>
+            <TouchableOpacity
+              style={styles.filterBtn}
+              activeOpacity={0.8}
+              onPress={() => setShowFilterModal(true)}
+            >
               <Image
                 source={require('../../assets/filter.png')}
                 style={styles.filterIcon}
@@ -488,10 +511,10 @@ const HomeScreen = () => {
         </View>
 
         {/* Main Content */}
-        <View style={[styles.mainContent,{backgroundColor: theme.background}]}>
+        <View style={styles.mainContent}>
           {/* Today's Offers */}
           <View style={styles.sectionRowBetween}>
-            <Text style={[styles.sectionTitle,{color : theme.text}]}>Today's Offer's</Text>
+            <Text style={styles.sectionTitle}>Today's Offer's</Text>
             <TouchableOpacity
               onPress={handleTodayOfferViewAll}
               activeOpacity={0.7}
@@ -561,12 +584,7 @@ const HomeScreen = () => {
           {/* Featured Restaurants */}
           <View style={styles.sectionRowBetween}>
             <View style={styles.sectionTitleRow}>
-              {/* <Image
-                source={require('../../assets/feature.png')}
-                style={styles.sectionIcon}
-                resizeMode="contain"
-              /> */}
-              <Text style={[styles.sectionTitle,{color : theme.text}]}>Featured restaurants</Text>
+              <Text style={styles.sectionTitle}>Featured restaurants</Text>
             </View>
             <TouchableOpacity
               onPress={handleFeaturedRestaurantViewAll}
@@ -653,7 +671,7 @@ const HomeScreen = () => {
                 style={styles.sectionIcon}
                 resizeMode="contain"
               />
-              <Text style={[styles.sectionTitle,{color : theme.text}]}>
+              <Text style={styles.sectionTitle}>
                 {isVegMode ? 'Best-Rated Burgers' : 'Best-Rated Non-Veg'}
               </Text>
             </View>
@@ -674,7 +692,7 @@ const HomeScreen = () => {
             columnWrapperStyle={styles.productRow}
             renderItem={({ item }) => (
               <TouchableOpacity
-                style={[styles.productCard,{backgroundColor : theme.cardBackground}]}
+                style={styles.productCard}
                 onPress={() => handleProductPress(item)}
                 activeOpacity={0.8}
               >
@@ -771,7 +789,9 @@ const HomeScreen = () => {
           <View style={styles.modalContainer}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Sort & Filter</Text>
-              <View style={{ height: 1, width: '85%', backgroundColor: '#dadada' }}></View>
+              <View
+                style={{ height: 1, width: '85%', backgroundColor: '#dadada' }}
+              ></View>
 
               {/* Close icon outside header (overlapping) */}
               <TouchableOpacity
@@ -786,7 +806,10 @@ const HomeScreen = () => {
               </TouchableOpacity>
             </View>
 
-            <ScrollView showsVerticalScrollIndicator={false} style={styles.modalScroll}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              style={styles.modalScroll}
+            >
               {/* Category Filter */}
               <View style={styles.filterSection}>
                 <Text style={styles.filterSectionTitle}>Category</Text>
@@ -795,7 +818,7 @@ const HomeScreen = () => {
                   data={filterOptions.category}
                   horizontal
                   showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item) => item}
+                  keyExtractor={item => item}
                   contentContainerStyle={{ paddingVertical: 6 }}
                   renderItem={({ item }) => {
                     const isActive = appliedFilters.category === item;
@@ -804,10 +827,13 @@ const HomeScreen = () => {
                         style={[
                           styles.filterOption,
                           isActive && styles.activeFilterOption,
-                          { marginRight: 10 }, // space between items
+                          { marginRight: 10 },
                         ]}
                         onPress={() =>
-                          setAppliedFilters({ ...appliedFilters, category: item })
+                          setAppliedFilters({
+                            ...appliedFilters,
+                            category: item,
+                          })
                         }
                       >
                         <Text
@@ -824,7 +850,6 @@ const HomeScreen = () => {
                 />
               </View>
 
-
               {/* Price Range Filter */}
               <View style={styles.filterSection}>
                 <Text style={styles.filterLabel}>Price Range</Text>
@@ -834,10 +859,7 @@ const HomeScreen = () => {
                   {[...Array(20)].map((_, i) => (
                     <View
                       key={i}
-                      style={[
-                        styles.bar,
-                        { height: Math.random() * 60 + 10 },
-                      ]}
+                      style={[styles.bar, { height: Math.random() * 60 + 10 }]}
                     />
                   ))}
                 </View>
@@ -845,8 +867,8 @@ const HomeScreen = () => {
                 {/* Price Range Slider */}
                 <MultiSlider
                   values={appliedFilters.priceRange}
-                  onValuesChange={(values) =>
-                    setAppliedFilters((prev) => ({
+                  onValuesChange={values =>
+                    setAppliedFilters(prev => ({
                       ...prev,
                       priceRange: values,
                     }))
@@ -866,9 +888,15 @@ const HomeScreen = () => {
                 />
 
                 {/* ✅ Stick the prices right below the slider */}
-                <View style={[styles.priceRow, { marginTop: 0, paddingTop: 0 }]}>
-                  <Text style={styles.priceText}>${appliedFilters.priceRange[0]}</Text>
-                  <Text style={styles.priceText}>${appliedFilters.priceRange[1]}</Text>
+                <View
+                  style={[styles.priceRangeRow, { marginTop: 0, paddingTop: 0 }]}
+                >
+                  <Text style={styles.priceRangeText}>
+                    ${appliedFilters.priceRange[0]}
+                  </Text>
+                  <Text style={styles.priceRangeText}>
+                    ${appliedFilters.priceRange[1]}
+                  </Text>
                 </View>
               </View>
 
@@ -880,7 +908,7 @@ const HomeScreen = () => {
                   data={filterOptions.sortBy}
                   horizontal
                   showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item) => item}
+                  keyExtractor={item => item}
                   contentContainerStyle={{ paddingVertical: 6 }}
                   renderItem={({ item }) => {
                     const isActive = appliedFilters.sortBy === item;
@@ -889,9 +917,11 @@ const HomeScreen = () => {
                         style={[
                           styles.filterOption,
                           isActive && styles.activeFilterOption,
-                          { marginRight: 10 }, // spacing between items
+                          { marginRight: 10 },
                         ]}
-                        onPress={() => setAppliedFilters({ ...appliedFilters, sortBy: item })}
+                        onPress={() =>
+                          setAppliedFilters({ ...appliedFilters, sortBy: item })
+                        }
                       >
                         <Text
                           style={[
@@ -907,7 +937,6 @@ const HomeScreen = () => {
                 />
               </View>
 
-
               {/* Rating Filter */}
               <View style={styles.filterSection}>
                 <Text style={styles.filterSectionTitle}>Rating</Text>
@@ -919,24 +948,36 @@ const HomeScreen = () => {
                         key={option}
                         style={[
                           styles.filterOption,
-                          isActive && styles.activeFilterOption
+                          isActive && styles.activeFilterOption,
                         ]}
-                        onPress={() => setAppliedFilters({ ...appliedFilters, rating: option })}
+                        onPress={() =>
+                          setAppliedFilters({
+                            ...appliedFilters,
+                            rating: option,
+                          })
+                        }
                       >
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 6,
+                          }}
+                        >
                           <Image
                             source={require('../../assets/star.png')}
                             style={{
                               width: 13,
                               height: 12,
                               resizeMode: 'contain',
-                              tintColor: isActive ? '#fff' : COLORS.primary, // ✅ White if active, primary color otherwise
+                              tintColor: isActive ? '#fff' : COLORS.primary,
                             }}
                           />
                           <Text
                             style={[
                               styles.filterOptionText,
-                              isActive && styles.activeFilterOptionText
+                              isActive && styles.activeFilterOptionText,
                             ]}
                           >
                             {option}
@@ -947,7 +988,6 @@ const HomeScreen = () => {
                   })}
                 </View>
               </View>
-
             </ScrollView>
 
             <View style={styles.modalActions}>
@@ -1006,13 +1046,10 @@ const styles = StyleSheet.create({
     marginRight: wp('1.5%'),
   },
   locationText: {
-    fontFamily: getFontFamily('Medium'),
+    ...getTextStyle('Medium'),
     fontSize: fontScale(14),
     color: COLORS.secondary,
     marginRight: wp('0.5%'),
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   dropdownIcon: {
     width: isTablet ? scaleSize(wp('1.8%')) : scaleSize(wp('2.5%')),
@@ -1021,13 +1058,10 @@ const styles = StyleSheet.create({
     marginLeft: wp('1.5%'),
   },
   addressText: {
-    fontFamily: getFontFamily('Regular'),
+    ...getTextStyle('Regular'),
     fontSize: fontScale(13),
     color: COLORS.secondary,
     opacity: 0.9,
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   walletBagRow: {
     flexDirection: 'row',
@@ -1086,14 +1120,11 @@ const styles = StyleSheet.create({
     marginBottom: hp('2%'),
   },
   headerTitle: {
-    fontFamily: getFontFamily('Bold'),
+    ...getTextStyle('Bold'),
     fontSize: fontScale(24),
     color: COLORS.secondary,
     lineHeight: isTablet ? hp('3.2%') : hp('3.6%'),
     flex: 1,
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   vegContainer: {
     alignItems: 'center',
@@ -1158,27 +1189,18 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   switchTextLeft: {
-    fontFamily: getFontFamily('SemiBold'),
+    ...getTextStyle('SemiBold'),
     fontSize: fontScale(10),
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   switchTextRight: {
-    fontFamily: getFontFamily('SemiBold'),
+    ...getTextStyle('SemiBold'),
     fontSize: fontScale(10),
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   vegModeTxt: {
-    fontFamily: getFontFamily('Bold'),
+    ...getTextStyle('Bold'),
     fontSize: fontScale(12),
     marginTop: hp('0.6%'),
     color: COLORS.secondary,
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   searchContainer: {
     flexDirection: 'row',
@@ -1215,13 +1237,10 @@ const styles = StyleSheet.create({
     tintColor: '#999',
   },
   searchPlaceholder: {
-    fontFamily: getFontFamily('Regular'),
+    ...getTextStyle('Regular'),
     fontSize: fontScale(14),
     flex: 1,
     color: '#999',
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   filterBtn: {
     backgroundColor: '#fff',
@@ -1280,20 +1299,14 @@ const styles = StyleSheet.create({
     height: isTablet ? scaleSize(wp('4.5%')) : scaleSize(wp('5.5%')),
   },
   sectionTitle: {
-    fontFamily: getFontFamily('Bold'),
+    ...getTextStyle('Bold'),
     fontSize: fontScale(18),
     color: COLORS.textDark,
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   sectionLink: {
-    fontFamily: getFontFamily('Medium'),
+    ...getTextStyle('Medium'),
     fontSize: fontScale(14),
     color: COLORS.primary,
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   offerCard: {
     borderRadius: scaleSize(wp('4%')),
@@ -1319,22 +1332,17 @@ const styles = StyleSheet.create({
     marginRight: wp('2%'),
   },
   offerHeader: {
-    fontFamily: getFontFamily('Bold'),
+    ...getTextStyle('Bold'),
     fontSize: fontScale(20),
     color: 'black',
     marginBottom: hp('0.5%'),
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   offerSubTxt: {
-    fontFamily: getFontFamily('Regular'),
+    ...getTextStyle('Regular'),
     fontSize: fontScale(13),
     color: COLORS.textLight,
     marginBottom: hp('1.5%'),
     lineHeight: hp('2%'),
-    includeFontPadding: false,
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   offerButton: {
     backgroundColor: COLORS.primary,
@@ -1344,13 +1352,10 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   offerBtnText: {
-    fontFamily: getFontFamily('Bold'),
+    ...getTextStyle('Bold'),
     fontSize: fontScale(13),
     color: COLORS.secondary,
-    includeFontPadding: false,
-    textAlignVertical: 'center',
     letterSpacing: 0.3,
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   offerImageWrap: {
     width: isTablet ? scaleSize(wp('25%')) : scaleSize(wp('30%')),
@@ -1397,17 +1402,13 @@ const styles = StyleSheet.create({
     marginRight: wp('2%'),
   },
   categoryTxt: {
-    fontFamily: getFontFamily('Medium'),
+    ...getTextStyle('Medium'),
     fontSize: fontScale(14),
     color: COLORS.primary,
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   categoryTxtActive: {
-    fontFamily: getFontFamily('SemiBold'),
+    ...getTextStyle('SemiBold'),
     color: COLORS.secondary,
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   restaurantScrollContent: {
     paddingHorizontal: wp('1%'),
@@ -1494,21 +1495,15 @@ const styles = StyleSheet.create({
     tintColor: '#fff',
   },
   ratingText: {
-    fontFamily: getFontFamily('SemiBold'),
+    ...getTextStyle('SemiBold'),
     fontSize: fontScale(11),
     color: '#fff',
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   restaurantTitle: {
-    fontFamily: getFontFamily('Bold'),
+    ...getTextStyle('Bold'),
     fontSize: fontScale(15),
     color: COLORS.textDark,
     marginBottom: hp('0.5%'),
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   restaurantInfoRow: {
     flexDirection: 'row',
@@ -1522,13 +1517,10 @@ const styles = StyleSheet.create({
     tintColor: COLORS.primary,
   },
   infoTxt: {
-    fontFamily: getFontFamily('Regular'),
+    ...getTextStyle('Regular'),
     fontSize: fontScale(12),
     color: COLORS.textLight,
     marginRight: wp('2%'),
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   tagsContainer: {
     flexDirection: 'row',
@@ -1536,16 +1528,13 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   restaurantTags: {
-    fontFamily: getFontFamily('Regular'),
+    ...getTextStyle('Regular'),
     fontSize: fontScale(11),
     color: COLORS.primary,
     backgroundColor: '#f3f1f1',
     paddingHorizontal: wp('2.5%'),
     paddingVertical: isIOS ? hp('0.3%') : hp('0.25%'),
     borderRadius: scaleSize(wp('5%')),
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   productGrid: {
     paddingHorizontal: wp('1%'),
@@ -1619,14 +1608,11 @@ const styles = StyleSheet.create({
     }),
   },
   productTitle: {
-    fontFamily: getFontFamily('Bold'),
+    ...getTextStyle('Bold'),
     fontSize: fontScale(14),
     color: COLORS.textDark,
     marginBottom: hp('0.5%'),
     marginTop: hp('1%'),
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   priceRow: {
     flexDirection: 'row',
@@ -1641,21 +1627,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   productPrice: {
-    fontFamily: getFontFamily('Bold'),
+    ...getTextStyle('Bold'),
     fontSize: fontScale(15),
     color: '#111',
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   oldPrice: {
-    fontFamily: getFontFamily('Regular'),
+    ...getTextStyle('Regular'),
     fontSize: fontScale(12),
     color: '#666',
     textDecorationLine: 'line-through',
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   plusBtn: {
     backgroundColor: COLORS.primary,
@@ -1693,13 +1673,10 @@ const styles = StyleSheet.create({
     marginLeft: wp('4%'),
   },
   reachingTxt: {
-    fontFamily: getFontFamily('SemiBold'),
+    ...getTextStyle('SemiBold'),
     fontSize: fontScale(14),
     color: COLORS.primary,
     marginBottom: hp('0.4%'),
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   deliveryTimeContainer: {
     flexDirection: 'row',
@@ -1712,12 +1689,9 @@ const styles = StyleSheet.create({
     tintColor: COLORS.textLight,
   },
   getDeliveredTxt: {
-    fontFamily: getFontFamily('Regular'),
+    ...getTextStyle('Regular'),
     fontSize: fontScale(13),
     color: COLORS.textLight,
-    includeFontPadding: false,
-    textAlignVertical: 'center',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   modalOverlay: {
     flex: 1,
@@ -1742,11 +1716,10 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   modalTitle: {
+    ...getTextStyle('Bold'),
     fontSize: fontScale(18),
-    fontFamily: getFontFamily('Bold'),
     color: '#000',
     marginBottom: 10,
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   closeButtonWrapper: {
     position: 'absolute',
@@ -1779,11 +1752,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   filterLabel: {
-    fontFamily: getFontFamily('Bold'),
+    ...getTextStyle('Bold'),
     fontSize: fontScale(16),
     color: '#000',
     marginBottom: 10,
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   histogramContainer: {
     flexDirection: 'row',
@@ -1799,11 +1771,10 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   filterSectionTitle: {
+    ...getTextStyle('Bold'),
     fontSize: fontScale(16),
     color: '#000',
     marginBottom: hp('1.5%'),
-    fontFamily: getFontFamily('Bold'),
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   filterOptions: {
     flexDirection: 'row',
@@ -1821,15 +1792,13 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   filterOptionText: {
+    ...getTextStyle('Medium'),
     fontSize: fontScale(14),
     color: '#666',
-    fontFamily: getFontFamily('Medium'),
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   activeFilterOptionText: {
+    ...getTextStyle('Medium'),
     color: '#fff',
-    fontFamily: getFontFamily('Medium'),
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   priceRangeRow: {
     flexDirection: 'row',
@@ -1839,10 +1808,9 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   priceRangeText: {
-    fontFamily: getFontFamily('SemiBold'),
+    ...getTextStyle('SemiBold'),
     fontSize: fontScale(14),
     color: '#000',
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   modalActions: {
     flexDirection: 'row',
@@ -1859,10 +1827,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   resetBtnText: {
+    ...getTextStyle('Bold'),
     fontSize: fontScale(16),
     color: '#666',
-    fontFamily: getFontFamily('Bold'),
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
   applyBtn: {
     flex: 1,
@@ -1872,12 +1839,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   applyBtnText: {
+    ...getTextStyle('Bold'),
     fontSize: fontScale(16),
     color: '#fff',
-    fontFamily: getFontFamily('Bold'),
-    ...(Platform.OS === 'android' && { fontWeight: 'normal' }),
   },
 });
-
 
 export default HomeScreen;
