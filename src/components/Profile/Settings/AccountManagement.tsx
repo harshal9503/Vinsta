@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -13,12 +13,14 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import font from '../../../assets/fonts';
+import { ThemeContext } from '../../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
 const AccountManagement = () => {
   const navigation = useNavigation<any>();
   const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const {theme} = useContext(ThemeContext);
 
   const managementOptions = [
     // {
@@ -58,34 +60,34 @@ const AccountManagement = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
-      <View style={styles.header}>
+      <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={styles.backIcon} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Account Management</Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>Account Management</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <Text style={styles.sectionTitle}>Manage Your Account</Text>
-        <Text style={styles.sectionDescription}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>Manage Your Account</Text>
+        <Text style={[styles.sectionDescription,{color : theme.text}]}>
           Control your data and account settings
         </Text>
 
         {managementOptions.map((item) => (
           <TouchableOpacity
             key={item.id}
-            style={styles.managementCard}
+            style={[styles.managementCard,{backgroundColor : theme.background}]}
             onPress={item.action}
           >
             <View style={styles.managementLeft}>
               <Image source={item.icon} style={styles.managementIcon} />
               <View style={styles.managementText}>
-                <Text style={styles.managementTitle}>{item.title}</Text>
-                <Text style={styles.managementDescription}>{item.description}</Text>
+                <Text style={[styles.managementTitle,{color : theme.text}]}>{item.title}</Text>
+                <Text style={[styles.managementDescription,{color : theme.text}]}>{item.description}</Text>
               </View>
             </View>
             <Image source={require('../../../assets/right-arrow.png')} style={styles.arrowIcon} />

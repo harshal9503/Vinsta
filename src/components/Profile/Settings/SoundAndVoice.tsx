@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import font from '../../../assets/fonts';
+import { ThemeContext } from '../../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
@@ -22,6 +23,7 @@ const SoundAndVoice = () => {
   const [voiceGuidance, setVoiceGuidance] = useState(false);
   const [notificationSound, setNotificationSound] = useState(true);
   const [hapticFeedback, setHapticFeedback] = useState(true);
+  const {theme} = useContext(ThemeContext);
 
   const soundOptions = [
     {
@@ -55,28 +57,28 @@ const SoundAndVoice = () => {
   ];
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
-      <View style={styles.header}>
+      <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={styles.backIcon} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Sound & Voice</Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>Sound & Voice</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <Text style={styles.sectionTitle}>Audio Settings</Text>
-        <Text style={styles.sectionDescription}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>Audio Settings</Text>
+        <Text style={[styles.sectionDescription,{color : theme.text}]}>
           Customize your app's sound and voice preferences
         </Text>
 
         {soundOptions.map((item) => (
-          <View key={item.id} style={styles.settingRow}>
+          <View key={item.id} style={[styles.settingRow,{backgroundColor :theme.background}]}>
             <View style={styles.settingLeft}>
-              <Text style={styles.settingTitle}>{item.title}</Text>
-              <Text style={styles.settingDescription}>{item.description}</Text>
+              <Text style={[styles.settingTitle,{color : theme.text}]}>{item.title}</Text>
+              <Text style={[styles.settingDescription,{color : theme.text}]}>{item.description}</Text>
             </View>
             <Switch
               value={item.value}

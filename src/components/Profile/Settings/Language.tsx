@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -12,12 +12,14 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import font from '../../../assets/fonts'
+import { ThemeContext } from '../../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
 const Language = () => {
   const navigation = useNavigation<any>();
   const [selectedLanguage, setSelectedLanguage] = useState('english');
+  const {theme} = useContext(ThemeContext);
 
   const languages = [
     { id: 1, code: 'english', name: 'English', nativeName: 'English' },
@@ -31,20 +33,20 @@ const Language = () => {
   ];
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
-      <View style={styles.header}>
+      <View style={[styles.header,{backgroundColor  :theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={styles.backIcon} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Language</Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>Language</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <Text style={styles.sectionTitle}>Select Language</Text>
-        <Text style={styles.sectionDescription}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>Select Language</Text>
+        <Text style={[styles.sectionDescription,{color : theme.text}]}>
           Choose your preferred language for the app
         </Text>
 
@@ -54,13 +56,14 @@ const Language = () => {
             style={[
               styles.languageOption,
               selectedLanguage === language.code && styles.selectedLanguage,
+              {backgroundColor  :theme.background}
             ]}
             onPress={() => setSelectedLanguage(language.code)}
           >
             <View style={styles.languageLeft}>
               <View style={styles.languageInfo}>
-                <Text style={styles.languageName}>{language.name}</Text>
-                <Text style={styles.languageNative}>{language.nativeName}</Text>
+                <Text style={[styles.languageName,{color : theme.text}]}>{language.name}</Text>
+                <Text style={[styles.languageNative,{color : theme.text}]}>{language.nativeName}</Text>
               </View>
             </View>
             <View style={styles.radioContainer}>

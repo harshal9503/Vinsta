@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Text,
@@ -12,11 +12,13 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import font from '../../../assets/fonts';
+import { ThemeContext } from '../../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
 const AccountSetting = () => {
   const navigation = useNavigation<any>();
+  const {theme} = useContext(ThemeContext);
 
   const accountOptions = [
     {
@@ -50,35 +52,35 @@ const AccountSetting = () => {
   ];
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={styles.backIcon} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Account Setting</Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>Account Setting</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <Text style={styles.sectionTitle}>Account Management</Text>
-        <Text style={styles.sectionDescription}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>Account Management</Text>
+        <Text style={[styles.sectionDescription,{color : theme.text}]}>
           Manage your account settings and preferences
         </Text>
 
         {accountOptions.map((item) => (
           <TouchableOpacity
             key={item.id}
-            style={styles.optionCard}
+            style={[styles.optionCard,{backgroundColor : theme.background}]}
             onPress={() => navigation.navigate(item.route)}
           >
             <View style={styles.optionLeft}>
-              <Image source={item.icon} style={styles.optionIcon} />
+              <Image source={item.icon} style={[styles.optionIcon,{tintColor : theme.text}]} />
               <View style={styles.optionText}>
-                <Text style={styles.optionTitle}>{item.title}</Text>
-                <Text style={styles.optionDescription}>{item.description}</Text>
+                <Text style={[styles.optionTitle,{color : theme.text}]}>{item.title}</Text>
+                <Text style={[styles.optionDescription,{color : theme.text}]}>{item.description}</Text>
               </View>
             </View>
             <Image source={require('../../../assets/right-arrow.png')} style={styles.arrowIcon} />
@@ -87,7 +89,7 @@ const AccountSetting = () => {
 
         {/* Delete Account Option */}
         <TouchableOpacity
-          style={[styles.optionCard, { borderLeftColor: '#E53935' }]}
+          style={[styles.optionCard, { borderLeftColor: '#E53935',backgroundColor : theme.background }]}
           onPress={() => navigation.navigate('AccountManagement')}
         >
           <View style={styles.optionLeft}>
@@ -99,7 +101,7 @@ const AccountSetting = () => {
               <Text style={[styles.optionTitle, { color: '#E53935' }]}>
                 Delete Account
               </Text>
-              <Text style={styles.optionDescription}>
+              <Text style={[styles.optionDescription,{color : theme.text}]}>
                 Permanently delete your account and all data
               </Text>
             </View>

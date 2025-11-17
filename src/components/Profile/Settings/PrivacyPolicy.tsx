@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,8 @@ import {
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import font from '../../../assets/fonts';
+import { ThemeContext } from '../../../theme/ThemeContext';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -23,99 +25,99 @@ type RootStackParamList = {
 
 const PrivacyPolicy = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
+ const { theme } = useContext(ThemeContext);
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
-      <View style={styles.header}>
+      <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={styles.backIcon} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Privacy Policy</Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>Privacy Policy</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <Text style={styles.lastUpdated}>Last updated: January 2024</Text>
+        <Text style={[styles.lastUpdated,{color : theme.text}]}>Last updated: January 2024</Text>
 
-        <Text style={styles.sectionTitle}>1. Information We Collect</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>1. Information We Collect</Text>
+        <Text style={[styles.paragraph,{color : theme.text}]}>
           We collect information that you provide directly to us, including:
         </Text>
-        <Text style={styles.listItem}>• Personal information (name, email, phone number)</Text>
-        <Text style={styles.listItem}>• Delivery addresses</Text>
-        <Text style={styles.listItem}>• Payment information</Text>
-        <Text style={styles.listItem}>• Order history and preferences</Text>
+        <Text style={[styles.listItem,{color : theme.text}]}>• Personal information (name, email, phone number)</Text>
+        <Text style={[styles.listItem,{color : theme.text}]}>• Delivery addresses</Text>
+        <Text style={[styles.listItem,{color : theme.text}]}>• Payment information</Text>
+        <Text style={[styles.listItem,{color : theme.text}]}>• Order history and preferences</Text>
 
-        <Text style={styles.sectionTitle}>2. How We Use Your Information</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>2. How We Use Your Information</Text>
+        <Text style={[styles.paragraph,{color : theme.text}]}>
           We use the information we collect to:
         </Text>
-        <Text style={styles.listItem}>• Process and deliver your orders</Text>
-        <Text style={styles.listItem}>• Provide customer support</Text>
-        <Text style={styles.listItem}>• Send you important updates and notifications</Text>
-        <Text style={styles.listItem}>• Improve our services and user experience</Text>
-        <Text style={styles.listItem}>• Prevent fraud and ensure security</Text>
+        <Text style={[styles.listItem,{color : theme.text}]}>• Process and deliver your orders</Text>
+        <Text style={[styles.listItem,{color : theme.text}]}>• Provide customer support</Text>
+        <Text style={[styles.listItem,{color : theme.text}]}>• Send you important updates and notifications</Text>
+        <Text style={[styles.listItem,{color : theme.text}]}>• Improve our services and user experience</Text>
+        <Text style={[styles.listItem,{color : theme.text}]}>• Prevent fraud and ensure security</Text>
 
-        <Text style={styles.sectionTitle}>3. Information Sharing</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>3. Information Sharing</Text>
+        <Text style={[styles.paragraph,{color : theme.text}]}>
           We do not sell your personal information. We may share your information with:
         </Text>
-        <Text style={styles.listItem}>• Restaurants to fulfill your orders</Text>
-        <Text style={styles.listItem}>• Delivery partners to deliver your orders</Text>
-        <Text style={styles.listItem}>• Payment processors to handle transactions</Text>
-        <Text style={styles.listItem}>• Legal authorities when required by law</Text>
+        <Text style={[styles.listItem,{color : theme.text}]}>• Restaurants to fulfill your orders</Text>
+        <Text style={[styles.listItem,{color : theme.text}]}>• Delivery partners to deliver your orders</Text>
+        <Text style={[styles.listItem,{color : theme.text}]}>• Payment processors to handle transactions</Text>
+        <Text style={[styles.listItem,{color : theme.text}]}>• Legal authorities when required by law</Text>
 
-        <Text style={styles.sectionTitle}>4. Data Security</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>4. Data Security</Text>
+        <Text style={[styles.paragraph,{color : theme.text}]}>
           We implement appropriate security measures to protect your personal information 
           against unauthorized access, alteration, disclosure, or destruction.
         </Text>
 
-        <Text style={styles.sectionTitle}>5. Your Rights</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>5. Your Rights</Text>
+        <Text style={[styles.paragraph,{color : theme.text}]}>
           You have the right to:
         </Text>
-        <Text style={styles.listItem}>• Access your personal information</Text>
-        <Text style={styles.listItem}>• Correct inaccurate data</Text>
-        <Text style={styles.listItem}>• Request deletion of your data</Text>
-        <Text style={styles.listItem}>• Opt-out of marketing communications</Text>
-        <Text style={styles.listItem}>• Object to processing of your data</Text>
+        <Text style={[styles.listItem,{color : theme.text}]}>• Access your personal information</Text>
+        <Text style={[styles.listItem,{color : theme.text}]}>• Correct inaccurate data</Text>
+        <Text style={[styles.listItem,{color : theme.text}]}>• Request deletion of your data</Text>
+        <Text style={[styles.listItem,{color : theme.text}]}>• Opt-out of marketing communications</Text>
+        <Text style={[styles.listItem,{color : theme.text}]}>• Object to processing of your data</Text>
 
-        <Text style={styles.sectionTitle}>6. Cookies and Tracking</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>6. Cookies and Tracking</Text>
+        <Text style={[styles.paragraph,{color : theme.text}]}>
           We use cookies and similar technologies to enhance your experience, 
           analyze usage patterns, and deliver personalized content.
         </Text>
 
-        <Text style={styles.sectionTitle}>7. Third-Party Services</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>7. Third-Party Services</Text>
+        <Text style={[styles.paragraph,{color : theme.text}]}>
           Our app may contain links to third-party websites or services. 
           We are not responsible for the privacy practices of these third parties.
         </Text>
 
-        <Text style={styles.sectionTitle}>8. Children's Privacy</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>8. Children's Privacy</Text>
+        <Text style={[styles.paragraph,{color : theme.text}]}>
           Our services are not intended for children under 13. We do not knowingly 
           collect personal information from children under 13.
         </Text>
 
-        <Text style={styles.sectionTitle}>9. Changes to This Policy</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>9. Changes to This Policy</Text>
+        <Text style={[styles.paragraph,{color : theme.text}]}>
           We may update this privacy policy from time to time. We will notify you 
           of any changes by posting the new policy on this page.
         </Text>
 
-        <Text style={styles.sectionTitle}>10. Contact Us</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>10. Contact Us</Text>
+        <Text style={[styles.paragraph,{color : theme.text}]}>
           If you have questions about this Privacy Policy, please contact us at:
         </Text>
-        <Text style={styles.contactInfo}>Email: privacy@vinsta.com</Text>
-        <Text style={styles.contactInfo}>Phone: +91 1234567890</Text>
+        <Text style={[styles.contactInfo,{color : theme.text}]}>Email: privacy@vinsta.com</Text>
+        <Text style={[styles.contactInfo,{color : theme.text}]}>Phone: +91 1234567890</Text>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>
+          <Text style={[styles.footerText,{color : theme.text}]}>
             By using our app, you agree to the terms of this Privacy Policy.
           </Text>
         </View>
