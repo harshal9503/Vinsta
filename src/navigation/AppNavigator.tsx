@@ -36,7 +36,7 @@ import AboutUs from '../components/Profile/Settings/AboutUs';
 
 // Home
 import Search from '../components/HomeScreen/search/search';
-import restaurentDetails from '../components/HomeScreen/search/restaurentDetails';
+import restaurentDetails from '../components/HomeScreen/search/RestorentDetails/restaurentDetails';
 import fooddetails from '../components/HomeScreen/search/fooddetails';
 import todayOfferView from '../components/HomeScreen/todayOfferView';
 import featuredRestrorents from '../components/HomeScreen/featuredRestrorents';

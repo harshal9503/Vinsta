@@ -16,12 +16,12 @@ import {
   FlatList,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { COLORS } from '../../../theme/colors';
+import { COLORS } from '../../../../theme/colors';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import font from '../../../assets/fonts'
+import font from '../../../../assets/fonts'
 
 const { width, height } = Dimensions.get('window');
 
@@ -74,9 +74,9 @@ const RestaurentDetails: React.FC = () => {
   const [cookingRequest, setCookingRequest] = useState<string>('');
 
   const categories = [
-    { name: 'Burger', img: require('../../../assets/burger.png') },
-    { name: 'Maxican', img: require('../../../assets/mexican1.png') },
-    { name: 'Asian', img: require('../../../assets/asian.png') },
+    { name: 'Burger', img: require('../../../../assets/burger.png') },
+    { name: 'Maxican', img: require('../../../../assets/mexican1.png') },
+    { name: 'Asian', img: require('../../../../assets/asian.png') },
   ];
 
   const vegFoodItems: FoodItem[] = [
@@ -86,7 +86,7 @@ const RestaurentDetails: React.FC = () => {
       price: 250.0,
       oldPrice: 280.0,
       time: '10-15 mins',
-      img: require('../../../assets/b1.png'),
+      img: require('../../../../assets/b1.png'),
       description:
         'A flavorful burger with a spiced paneer patty, fresh veggies, and creamy mint mayo in a toasted bun. Perfect for those craving a hearty.',
       restaurant: 'Foodicated Cafe',
@@ -98,7 +98,7 @@ const RestaurentDetails: React.FC = () => {
       price: 45.5,
       oldPrice: 50.0,
       time: '10-15 mins',
-      img: require('../../../assets/b2.png'),
+      img: require('../../../../assets/b2.png'),
       description:
         'A flavorful burger with a spiced paneer patty, fresh veggies, and creamy mint mayo in a toasted bun. Perfect for those craving a hearty.',
       restaurant: 'Foodicated Cafe',
@@ -110,7 +110,7 @@ const RestaurentDetails: React.FC = () => {
       price: 45.5,
       oldPrice: 50.0,
       time: '10-15 mins',
-      img: require('../../../assets/b3.png'),
+      img: require('../../../../assets/b3.png'),
       description:
         'A flavorful burger with a spiced paneer patty, fresh veggies, and creamy mint mayo in a toasted bun. Perfect for those craving a hearty.',
       restaurant: 'Foodicated Cafe',
@@ -122,7 +122,7 @@ const RestaurentDetails: React.FC = () => {
       price: 45.5,
       oldPrice: 50.0,
       time: '10-15 mins',
-      img: require('../../../assets/b1.png'),
+      img: require('../../../../assets/b1.png'),
       description:
         'A flavorful burger with a spiced paneer patty, fresh veggies, and creamy mint mayo in a toasted bun. Perfect for those craving a hearty.',
       restaurant: 'Foodicated Cafe',
@@ -274,7 +274,7 @@ const RestaurentDetails: React.FC = () => {
   const EmptyState = () => (
     <View style={styles.emptyContainer}>
       <Image
-        source={require('../../../assets/emptycart.png')}
+        source={require('../../../../assets/emptycart.png')}
         style={styles.emptyImage}
       />
       <Text style={styles.emptyText}>
@@ -287,8 +287,8 @@ const RestaurentDetails: React.FC = () => {
 
   const currentIcon =
     vegNonVegFilter === 'Veg'
-      ? require('../../../assets/leaf.png')
-      : require('../../../assets/nonveg.png');
+      ? require('../../../../assets/leaf.png')
+      : require('../../../../assets/nonveg.png');
 
   return (
     <View style={styles.container}>
@@ -356,7 +356,7 @@ const RestaurentDetails: React.FC = () => {
               }}
             >
               <Image
-                source={require('../../../assets/veg.png')}
+                source={require('../../../../assets/veg.png')}
                 style={styles.vegDropdownIcon}
               />
               <Text
@@ -380,7 +380,7 @@ const RestaurentDetails: React.FC = () => {
               }}
             >
               <Image
-                source={require('../../../assets/nonveg.png')}
+                source={require('../../../../assets/nonveg.png')}
                 style={styles.vegDropdownIcon}
               />
               <Text
@@ -419,7 +419,7 @@ const RestaurentDetails: React.FC = () => {
             activeOpacity={0.8}
           >
             <Image
-              source={require('../../../assets/close.png')}
+              source={require('../../../../assets/close.png')}
               style={styles.modalCloseIcon}
             />
           </TouchableOpacity>
@@ -437,7 +437,7 @@ const RestaurentDetails: React.FC = () => {
                   {/* Rating Badge */}
                   <View style={styles.modalRatingBadge}>
                     <Image
-                      source={require('../../../assets/star.png')}
+                      source={require('../../../../assets/star.png')}
                       style={styles.modalStarIcon}
                     />
                     <Text style={styles.modalRatingText}>4.4</Text>
@@ -456,14 +456,14 @@ const RestaurentDetails: React.FC = () => {
                     <Image
                       source={
                         selectedFood.isVeg
-                          ? require('../../../assets/veg.png')
-                          : require('../../../assets/nonveg.png')
+                          ? require('../../../../assets/veg.png')
+                          : require('../../../../assets/nonveg.png')
                       }
                       style={styles.modalVegBadge}
                     />
                     <View style={styles.modalSpicyTag}>
                       <Image
-                        source={require('../../../assets/spicy.png')}
+                        source={require('../../../../assets/spicy.png')}
                         style={styles.modalSpicyIcon}
                       />
                       <Text style={styles.modalSpicyText}>Spicy</Text>
@@ -497,7 +497,7 @@ const RestaurentDetails: React.FC = () => {
                   >
                     <View style={styles.modalOptionLeft}>
                       <Image
-                        source={require('../../../assets/veg.png')}
+                        source={require('../../../../assets/veg.png')}
                         style={styles.modalOptionVegIcon}
                       />
                       <Text style={styles.modalOptionText}>
@@ -508,7 +508,7 @@ const RestaurentDetails: React.FC = () => {
                       <Text style={styles.modalOptionPrice}>₹25.00</Text>
                       {selectedCheese.includes('Single Cheese Slice') ? (
                         <Image
-                          source={require('../../../assets/tick.png')}
+                          source={require('../../../../assets/tick.png')}
                           style={styles.modalTickIcon}
                         />
                       ) : (
@@ -524,7 +524,7 @@ const RestaurentDetails: React.FC = () => {
                   >
                     <View style={styles.modalOptionLeft}>
                       <Image
-                        source={require('../../../assets/veg.png')}
+                        source={require('../../../../assets/veg.png')}
                         style={styles.modalOptionVegIcon}
                       />
                       <Text style={styles.modalOptionText}>
@@ -535,7 +535,7 @@ const RestaurentDetails: React.FC = () => {
                       <Text style={styles.modalOptionPrice}>₹39.00</Text>
                       {selectedCheese.includes('Double Cheese Slice') ? (
                         <Image
-                          source={require('../../../assets/tick.png')}
+                          source={require('../../../../assets/tick.png')}
                           style={styles.modalTickIcon}
                         />
                       ) : (
@@ -585,7 +585,7 @@ const RestaurentDetails: React.FC = () => {
                     activeOpacity={0.8}
                   >
                     <Image
-                      source={require('../../../assets/bag.png')}
+                      source={require('../../../../assets/bag.png')}
                       style={styles.bagIcon}
                     />
                     <Text style={styles.addToCartText}>ADD TO CART</Text>
@@ -604,7 +604,7 @@ const RestaurentDetails: React.FC = () => {
         {/* ===== HEADER IMAGE & ICONS ===== */}
         <View style={styles.headerImgBox}>
           <Image
-            source={require('../../../assets/r1.png')}
+            source={require('../../../../assets/r1.png')}
             style={styles.headerImage}
           />
           <View style={styles.headerOverlay}>
@@ -613,7 +613,7 @@ const RestaurentDetails: React.FC = () => {
               onPress={() => navigation.navigate('Search')}
             >
               <Image
-                source={require('../../../assets/back.png')}
+                source={require('../../../../assets/back.png')}
                 style={styles.backIcon}
               />
             </TouchableOpacity>
@@ -621,7 +621,7 @@ const RestaurentDetails: React.FC = () => {
             <Text style={styles.headerTitle}>Bistro Excellence</Text>
             <TouchableOpacity style={styles.headerHeartBtn}>
               <Image
-                source={require('../../../assets/heart.png')}
+                source={require('../../../../assets/heart.png')}
                 style={styles.heartIcon}
               />
             </TouchableOpacity>
@@ -633,21 +633,21 @@ const RestaurentDetails: React.FC = () => {
           <View style={styles.logoWrapper}>
             <View style={styles.logoCircle}>
               <Image
-                source={require('../../../assets/be.png')}
+                source={require('../../../../assets/be.png')}
                 style={styles.logo}
               />
             </View>
           </View>
           <TouchableOpacity style={styles.mapWrapper}>
             <Image
-              source={require('../../../assets/map.png')}
+              source={require('../../../../assets/map.png')}
               style={styles.mapIcon}
             />
           </TouchableOpacity>
           <Text style={styles.resName}>Bistro Excellence</Text>
           <View style={styles.locationRow}>
             <Image
-              source={require('../../../assets/location1.png')}
+              source={require('../../../../assets/location1.png')}
               style={styles.locIcon}
             />
             <Text style={styles.locationText}>
@@ -656,17 +656,17 @@ const RestaurentDetails: React.FC = () => {
           </View>
           <View style={styles.statsRow}>
             <Image
-              source={require('../../../assets/leaf.png')}
+              source={require('../../../../assets/leaf.png')}
               style={styles.statIcon}
             />
             <Text style={styles.statText}>590.0 m</Text>
             <Image
-              source={require('../../../assets/clockk.png')}
+              source={require('../../../../assets/clockk.png')}
               style={styles.statIcon}
             />
             <Text style={styles.statText}>25 min</Text>
             <Image
-              source={require('../../../assets/order.png')}
+              source={require('../../../../assets/order.png')}
               style={styles.statIcon}
             />
             <Text style={styles.statText}>5000+ Order</Text>
@@ -677,7 +677,7 @@ const RestaurentDetails: React.FC = () => {
         <View style={styles.searchWrapper}>
           <View style={styles.searchRow}>
             <Image
-              source={require('../../../assets/search.png')}
+              source={require('../../../../assets/search.png')}
               style={styles.searchIcon}
             />
             <TextInput
@@ -691,7 +691,7 @@ const RestaurentDetails: React.FC = () => {
             onPress={() => navigation.navigate('MenuScreen')}
           >
             <Image
-              source={require('../../../assets/menu.png')}
+              source={require('../../../../assets/menu.png')}
               style={styles.searchFilterIcon}
             />
           </TouchableOpacity>
@@ -706,14 +706,14 @@ const RestaurentDetails: React.FC = () => {
           <Image
             source={
               vegNonVegFilter === 'Veg'
-                ? require('../../../assets/veg.png')
-                : require('../../../assets/nonveg.png')
+                ? require('../../../../assets/veg.png')
+                : require('../../../../assets/nonveg.png')
             }
             style={styles.vegIcon}
           />
           <TouchableOpacity onPress={() => setVegNonVegDropdownVisible(true)}>
             <Image
-              source={require('../../../assets/dropdown.png')}
+              source={require('../../../../assets/dropdown.png')}
               style={styles.dropIcon}
             />
           </TouchableOpacity>
@@ -766,7 +766,7 @@ const RestaurentDetails: React.FC = () => {
               <TouchableOpacity onPress={() => setShowFilterModal(true)}>
                 <View style={styles.filterTagFixed}>
                   <Image
-                    source={require('../../../assets/filter3.png')}
+                    source={require('../../../../assets/filter3.png')}
                     style={styles.filterTagIcon}
                   />
                   {hasActiveFilters() && <View style={styles.filterDot} />}
@@ -786,13 +786,13 @@ const RestaurentDetails: React.FC = () => {
                   activeOpacity={0.7}
                 >
                   <Image
-                    source={require('../../../assets/spicy.png')}
+                    source={require('../../../../assets/spicy.png')}
                     style={styles.filterTagIcon}
                   />
                   <Text style={styles.filterTagText}>Spicy</Text>
                   {filters.includes('Spicy') && (
                     <Image
-                      source={require('../../../assets/close.png')}
+                      source={require('../../../../assets/close.png')}
                       style={[styles.closeIcon]}
                     />
                   )}
@@ -800,7 +800,7 @@ const RestaurentDetails: React.FC = () => {
 
                 <View style={styles.filterTag}>
                   <Image
-                    source={require('../../../assets/popular.png')}
+                    source={require('../../../../assets/popular.png')}
                     style={styles.filterTagIcon}
                   />
                   <Text style={styles.filterTagText}>Offer's</Text>
@@ -808,7 +808,7 @@ const RestaurentDetails: React.FC = () => {
 
                 <View style={styles.filterTag}>
                   <Image
-                    source={require('../../../assets/vegan.png')}
+                    source={require('../../../../assets/vegan.png')}
                     style={styles.filterTagIcon}
                   />
                   <Text style={styles.filterTagText}>Vegan</Text>
@@ -835,8 +835,8 @@ const RestaurentDetails: React.FC = () => {
                     <Animated.Image
                       source={
                         likedItems.includes(f.id)
-                          ? require('../../../assets/heartfill.png')
-                          : require('../../../assets/heart.png')
+                          ? require('../../../../assets/heartfill.png')
+                          : require('../../../../assets/heart.png')
                       }
                       style={[
                         styles.heartIconSmall,
@@ -851,7 +851,7 @@ const RestaurentDetails: React.FC = () => {
                     <Image source={f.img} style={styles.foodImg} />
                     <View style={styles.foodRatingBadge}>
                       <Image
-                        source={require('../../../assets/star.png')}
+                        source={require('../../../../assets/star.png')}
                         style={styles.starIcon}
                       />
                       <Text style={styles.ratingText}>4.4</Text>
@@ -869,7 +869,7 @@ const RestaurentDetails: React.FC = () => {
                         style={styles.plusBtn}
                       >
                         <Animated.Image
-                          source={require('../../../assets/plus.png')}
+                          source={require('../../../../assets/plus.png')}
                           style={[
                             styles.plusIcon,
                             { transform: [{ scale: plusScales[f.id] || 1 }] },
@@ -879,7 +879,7 @@ const RestaurentDetails: React.FC = () => {
                     </View>
                     <View style={styles.timeRow}>
                       <Image
-                        source={require('../../../assets/clock.png')}
+                        source={require('../../../../assets/clock.png')}
                         style={styles.clockIcon}
                       />
                       <Text style={styles.timeText}>{f.time}</Text>
@@ -892,7 +892,7 @@ const RestaurentDetails: React.FC = () => {
             {/* ===== BEST IN CATEGORY ===== */}
             <View style={styles.bestBurgerHeaderRow}>
               <Image
-                source={require('../../../assets/popular.png')}
+                source={require('../../../../assets/popular.png')}
                 style={styles.bestBurgerHeaderIcon}
               />
               <Text style={styles.bestBurgerHeaderText}>
@@ -909,8 +909,8 @@ const RestaurentDetails: React.FC = () => {
                     <Animated.Image
                       source={
                         likedItems.includes(f.id)
-                          ? require('../../../assets/heartfill.png')
-                          : require('../../../assets/heart.png')
+                          ? require('../../../../assets/heartfill.png')
+                          : require('../../../../assets/heart.png')
                       }
                       style={[
                         styles.heartIconSmall,
@@ -925,7 +925,7 @@ const RestaurentDetails: React.FC = () => {
                     <Image source={f.img} style={styles.foodImg} />
                     <View style={styles.foodRatingBadge}>
                       <Image
-                        source={require('../../../assets/star.png')}
+                        source={require('../../../../assets/star.png')}
                         style={styles.starIcon}
                       />
                       <Text style={styles.ratingText}>4.4</Text>
@@ -943,7 +943,7 @@ const RestaurentDetails: React.FC = () => {
                         style={styles.plusBtn}
                       >
                         <Animated.Image
-                          source={require('../../../assets/plus.png')}
+                          source={require('../../../../assets/plus.png')}
                           style={[
                             styles.plusIcon,
                             { transform: [{ scale: plusScales[f.id] || 1 }] },
@@ -953,7 +953,7 @@ const RestaurentDetails: React.FC = () => {
                     </View>
                     <View style={styles.timeRow}>
                       <Image
-                        source={require('../../../assets/clockk.png')}
+                        source={require('../../../../assets/clockk.png')}
                         style={styles.clockIcon}
                       />
                       <Text style={styles.timeText}>{f.time}</Text>
@@ -986,7 +986,7 @@ const RestaurentDetails: React.FC = () => {
                 style={styles.closeButtonWrapper}
               >
                 <Image
-                  source={require('../../../assets/close1.png')}
+                  source={require('../../../../assets/close1.png')}
                   style={styles.closeIcon1}
                   resizeMode="contain"
                 />
@@ -1037,7 +1037,7 @@ const RestaurentDetails: React.FC = () => {
                 <View style={styles.filterOptions}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                     <Image
-                      source={require('../../../assets/leaf.png')}
+                      source={require('../../../../assets/leaf.png')}
                       style={styles.statIcon}
                     />
                     <Text style={{ fontSize: 16, fontFamily: "Figtree-Medium", marginBottom: 10 }}>This restaurent is pure veg.</Text>
@@ -1055,7 +1055,7 @@ const RestaurentDetails: React.FC = () => {
                       >
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                           <Image
-                            source={require('../../../assets/clockk.png')}
+                            source={require('../../../../assets/clockk.png')}
                             style={{
                               width: 13,
                               height: 12,
@@ -1096,7 +1096,7 @@ const RestaurentDetails: React.FC = () => {
                       >
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                           <Image
-                            source={require('../../../assets/spicy.png')}
+                            source={require('../../../../assets/spicy.png')}
                             style={{
                               width: 13,
                               height: 12,
@@ -1134,6 +1134,8 @@ const RestaurentDetails: React.FC = () => {
           </View>
         </View>
       </Modal>
+
+
     </View>
   );
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Image } from 'react-native';
-import HomeScreen from '../components/HomeScreen/HomeScreen';
+import { Image, Text } from 'react-native';
+import HomeScreen from '../components/HomeScreen/HomeScreens/HomeScreen';
 import MyOrders from '../components/MyOrders/myorders';
 import Wishlist from '../components/Wishlist/wishlist';
 import Notification from '../components/Notification/notification';
@@ -43,7 +43,7 @@ const TabBarIcon = ({ routeName, color, size }: TabBarIconProps) => {
     <Image
       source={iconSource}
       style={{
-        width: size * 0.85, // Slightly smaller icons
+        width: size * 0.85,
         height: size * 0.85,
         tintColor: color,
       }}
@@ -52,23 +52,36 @@ const TabBarIcon = ({ routeName, color, size }: TabBarIconProps) => {
   ) : null;
 };
 
-
 import type { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
 import type { RouteProp, ParamListBase } from '@react-navigation/native';
 
-const getScreenOptions = ({ route }: { route: RouteProp<ParamListBase, string> }): BottomTabNavigationOptions => ({
+const getScreenOptions = ({
+  route,
+}: {
+  route: RouteProp<ParamListBase, string>;
+}): BottomTabNavigationOptions => ({
   tabBarIcon: ({ color, size }: { color: string; size: number }) => (
-    <TabBarIcon
-      routeName={route.name}
-      color={color}
-      size={size}
-    />
+    <TabBarIcon routeName={route.name} color={color} size={size} />
   ),
+
+  tabBarLabel: ({ color }: { color: string }) => (
+    <Text
+      style={{
+        fontSize: 10,
+        marginBottom: 5, // ← UPDATED AS YOU REQUESTED
+        color,
+        fontWeight: '700',
+        fontFamily: 'Figtree-Bold',
+      }}
+    >
+      {route.name}
+    </Text>
+  ),
+
   tabBarActiveTintColor: COLORS.primary,
   tabBarInactiveTintColor: '#616161',
   tabBarStyle: { backgroundColor: COLORS.secondary },
   headerShown: false,
-  tabBarLabelStyle: { fontSize: 12, marginBottom: 3 },
 });
 
 const BottomTabNavigator = () => {
