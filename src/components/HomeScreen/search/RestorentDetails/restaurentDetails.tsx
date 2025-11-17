@@ -13,14 +13,15 @@ import {
   Modal,
   Pressable,
   Platform,
+  FlatList,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { COLORS } from '../../../theme/colors';
+import { COLORS } from '../../../../theme/colors';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import font from '../../../assets/fonts'
+import font from '../../../../assets/fonts'
 
 const { width, height } = Dimensions.get('window');
 
@@ -62,6 +63,9 @@ const RestaurentDetails: React.FC = () => {
   const [vegNonVegDropdownVisible, setVegNonVegDropdownVisible] =
     useState(false);
 
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
   // Food Item Modal States
   const [selectedFood, setSelectedFood] = useState<FoodItem | null>(null);
   const [foodModalVisible, setFoodModalVisible] = useState(false);
@@ -70,9 +74,9 @@ const RestaurentDetails: React.FC = () => {
   const [cookingRequest, setCookingRequest] = useState<string>('');
 
   const categories = [
-    { name: 'Burger', img: require('../../../assets/burger.png') },
-    { name: 'Maxican', img: require('../../../assets/mexican1.png') },
-    { name: 'Asian', img: require('../../../assets/asian.png') },
+    { name: 'Burger', img: require('../../../../assets/burger.png') },
+    { name: 'Maxican', img: require('../../../../assets/mexican1.png') },
+    { name: 'Asian', img: require('../../../../assets/asian.png') },
   ];
 
   const vegFoodItems: FoodItem[] = [
@@ -82,7 +86,7 @@ const RestaurentDetails: React.FC = () => {
       price: 250.0,
       oldPrice: 280.0,
       time: '10-15 mins',
-      img: require('../../../assets/b1.png'),
+      img: require('../../../../assets/b1.png'),
       description:
         'A flavorful burger with a spiced paneer patty, fresh veggies, and creamy mint mayo in a toasted bun. Perfect for those craving a hearty.',
       restaurant: 'Foodicated Cafe',
@@ -94,7 +98,7 @@ const RestaurentDetails: React.FC = () => {
       price: 45.5,
       oldPrice: 50.0,
       time: '10-15 mins',
-      img: require('../../../assets/b2.png'),
+      img: require('../../../../assets/b2.png'),
       description:
         'A flavorful burger with a spiced paneer patty, fresh veggies, and creamy mint mayo in a toasted bun. Perfect for those craving a hearty.',
       restaurant: 'Foodicated Cafe',
@@ -106,7 +110,7 @@ const RestaurentDetails: React.FC = () => {
       price: 45.5,
       oldPrice: 50.0,
       time: '10-15 mins',
-      img: require('../../../assets/b3.png'),
+      img: require('../../../../assets/b3.png'),
       description:
         'A flavorful burger with a spiced paneer patty, fresh veggies, and creamy mint mayo in a toasted bun. Perfect for those craving a hearty.',
       restaurant: 'Foodicated Cafe',
@@ -118,7 +122,7 @@ const RestaurentDetails: React.FC = () => {
       price: 45.5,
       oldPrice: 50.0,
       time: '10-15 mins',
-      img: require('../../../assets/b1.png'),
+      img: require('../../../../assets/b1.png'),
       description:
         'A flavorful burger with a spiced paneer patty, fresh veggies, and creamy mint mayo in a toasted bun. Perfect for those craving a hearty.',
       restaurant: 'Foodicated Cafe',
@@ -176,6 +180,23 @@ const RestaurentDetails: React.FC = () => {
         return [...prev, filterName];
       }
     });
+  };
+
+  const [appliedFilters, setAppliedFilters] = useState({
+    sortBy: ['Price High to Low'],
+    TopPicks: ['Highly Recommended'],
+    DietaryPrefrence: ['Spicy']
+  });
+
+
+  const filterOptions = {
+    sortBy: ['Price Low to High', 'Price High to Low'],
+    TopPicks: ['Highly Recommended'],
+    DietaryPrefrence: ['Spicy']
+  };
+
+  const hasActiveFilters = () => {
+    return Object.values(appliedFilters).some(filter => filter !== 'All');
   };
 
   const handleFoodItemPress = (food: FoodItem) => {
@@ -237,10 +258,23 @@ const RestaurentDetails: React.FC = () => {
     return basePrice * quantity;
   };
 
+  const resetFilters = () => {
+    setAppliedFilters({
+      category: 'All',
+      rating: 'All',
+      priceRange: [100, 650],
+      sortBy: 'Recent',
+    });
+  };
+
+  const applyFilters = () => {
+    setShowFilterModal(false);
+  };
+
   const EmptyState = () => (
     <View style={styles.emptyContainer}>
       <Image
-        source={require('../../../assets/emptycart.png')}
+        source={require('../../../../assets/emptycart.png')}
         style={styles.emptyImage}
       />
       <Text style={styles.emptyText}>
@@ -253,8 +287,8 @@ const RestaurentDetails: React.FC = () => {
 
   const currentIcon =
     vegNonVegFilter === 'Veg'
-      ? require('../../../assets/leaf.png')
-      : require('../../../assets/nonveg.png');
+      ? require('../../../../assets/leaf.png')
+      : require('../../../../assets/nonveg.png');
 
   return (
     <View style={styles.container}>
@@ -322,7 +356,7 @@ const RestaurentDetails: React.FC = () => {
               }}
             >
               <Image
-                source={require('../../../assets/veg.png')}
+                source={require('../../../../assets/veg.png')}
                 style={styles.vegDropdownIcon}
               />
               <Text
@@ -346,7 +380,7 @@ const RestaurentDetails: React.FC = () => {
               }}
             >
               <Image
-                source={require('../../../assets/nonveg.png')}
+                source={require('../../../../assets/nonveg.png')}
                 style={styles.vegDropdownIcon}
               />
               <Text
@@ -385,7 +419,7 @@ const RestaurentDetails: React.FC = () => {
             activeOpacity={0.8}
           >
             <Image
-              source={require('../../../assets/close.png')}
+              source={require('../../../../assets/close.png')}
               style={styles.modalCloseIcon}
             />
           </TouchableOpacity>
@@ -403,7 +437,7 @@ const RestaurentDetails: React.FC = () => {
                   {/* Rating Badge */}
                   <View style={styles.modalRatingBadge}>
                     <Image
-                      source={require('../../../assets/star.png')}
+                      source={require('../../../../assets/star.png')}
                       style={styles.modalStarIcon}
                     />
                     <Text style={styles.modalRatingText}>4.4</Text>
@@ -422,14 +456,14 @@ const RestaurentDetails: React.FC = () => {
                     <Image
                       source={
                         selectedFood.isVeg
-                          ? require('../../../assets/veg.png')
-                          : require('../../../assets/nonveg.png')
+                          ? require('../../../../assets/veg.png')
+                          : require('../../../../assets/nonveg.png')
                       }
                       style={styles.modalVegBadge}
                     />
                     <View style={styles.modalSpicyTag}>
                       <Image
-                        source={require('../../../assets/spicy.png')}
+                        source={require('../../../../assets/spicy.png')}
                         style={styles.modalSpicyIcon}
                       />
                       <Text style={styles.modalSpicyText}>Spicy</Text>
@@ -463,7 +497,7 @@ const RestaurentDetails: React.FC = () => {
                   >
                     <View style={styles.modalOptionLeft}>
                       <Image
-                        source={require('../../../assets/veg.png')}
+                        source={require('../../../../assets/veg.png')}
                         style={styles.modalOptionVegIcon}
                       />
                       <Text style={styles.modalOptionText}>
@@ -474,7 +508,7 @@ const RestaurentDetails: React.FC = () => {
                       <Text style={styles.modalOptionPrice}>₹25.00</Text>
                       {selectedCheese.includes('Single Cheese Slice') ? (
                         <Image
-                          source={require('../../../assets/tick.png')}
+                          source={require('../../../../assets/tick.png')}
                           style={styles.modalTickIcon}
                         />
                       ) : (
@@ -490,7 +524,7 @@ const RestaurentDetails: React.FC = () => {
                   >
                     <View style={styles.modalOptionLeft}>
                       <Image
-                        source={require('../../../assets/veg.png')}
+                        source={require('../../../../assets/veg.png')}
                         style={styles.modalOptionVegIcon}
                       />
                       <Text style={styles.modalOptionText}>
@@ -501,7 +535,7 @@ const RestaurentDetails: React.FC = () => {
                       <Text style={styles.modalOptionPrice}>₹39.00</Text>
                       {selectedCheese.includes('Double Cheese Slice') ? (
                         <Image
-                          source={require('../../../assets/tick.png')}
+                          source={require('../../../../assets/tick.png')}
                           style={styles.modalTickIcon}
                         />
                       ) : (
@@ -551,7 +585,7 @@ const RestaurentDetails: React.FC = () => {
                     activeOpacity={0.8}
                   >
                     <Image
-                      source={require('../../../assets/bag.png')}
+                      source={require('../../../../assets/bag.png')}
                       style={styles.bagIcon}
                     />
                     <Text style={styles.addToCartText}>ADD TO CART</Text>
@@ -570,7 +604,7 @@ const RestaurentDetails: React.FC = () => {
         {/* ===== HEADER IMAGE & ICONS ===== */}
         <View style={styles.headerImgBox}>
           <Image
-            source={require('../../../assets/r1.png')}
+            source={require('../../../../assets/r1.png')}
             style={styles.headerImage}
           />
           <View style={styles.headerOverlay}>
@@ -579,7 +613,7 @@ const RestaurentDetails: React.FC = () => {
               onPress={() => navigation.navigate('Search')}
             >
               <Image
-                source={require('../../../assets/back.png')}
+                source={require('../../../../assets/back.png')}
                 style={styles.backIcon}
               />
             </TouchableOpacity>
@@ -587,7 +621,7 @@ const RestaurentDetails: React.FC = () => {
             <Text style={styles.headerTitle}>Bistro Excellence</Text>
             <TouchableOpacity style={styles.headerHeartBtn}>
               <Image
-                source={require('../../../assets/heart.png')}
+                source={require('../../../../assets/heart.png')}
                 style={styles.heartIcon}
               />
             </TouchableOpacity>
@@ -599,21 +633,21 @@ const RestaurentDetails: React.FC = () => {
           <View style={styles.logoWrapper}>
             <View style={styles.logoCircle}>
               <Image
-                source={require('../../../assets/be.png')}
+                source={require('../../../../assets/be.png')}
                 style={styles.logo}
               />
             </View>
           </View>
           <TouchableOpacity style={styles.mapWrapper}>
             <Image
-              source={require('../../../assets/map.png')}
+              source={require('../../../../assets/map.png')}
               style={styles.mapIcon}
             />
           </TouchableOpacity>
           <Text style={styles.resName}>Bistro Excellence</Text>
           <View style={styles.locationRow}>
             <Image
-              source={require('../../../assets/location1.png')}
+              source={require('../../../../assets/location1.png')}
               style={styles.locIcon}
             />
             <Text style={styles.locationText}>
@@ -622,17 +656,17 @@ const RestaurentDetails: React.FC = () => {
           </View>
           <View style={styles.statsRow}>
             <Image
-              source={require('../../../assets/leaf.png')}
+              source={require('../../../../assets/leaf.png')}
               style={styles.statIcon}
             />
             <Text style={styles.statText}>590.0 m</Text>
             <Image
-              source={require('../../../assets/clockk.png')}
+              source={require('../../../../assets/clockk.png')}
               style={styles.statIcon}
             />
             <Text style={styles.statText}>25 min</Text>
             <Image
-              source={require('../../../assets/order.png')}
+              source={require('../../../../assets/order.png')}
               style={styles.statIcon}
             />
             <Text style={styles.statText}>5000+ Order</Text>
@@ -643,7 +677,7 @@ const RestaurentDetails: React.FC = () => {
         <View style={styles.searchWrapper}>
           <View style={styles.searchRow}>
             <Image
-              source={require('../../../assets/search.png')}
+              source={require('../../../../assets/search.png')}
               style={styles.searchIcon}
             />
             <TextInput
@@ -657,7 +691,7 @@ const RestaurentDetails: React.FC = () => {
             onPress={() => navigation.navigate('MenuScreen')}
           >
             <Image
-              source={require('../../../assets/menu.png')}
+              source={require('../../../../assets/menu.png')}
               style={styles.searchFilterIcon}
             />
           </TouchableOpacity>
@@ -672,14 +706,14 @@ const RestaurentDetails: React.FC = () => {
           <Image
             source={
               vegNonVegFilter === 'Veg'
-                ? require('../../../assets/veg.png')
-                : require('../../../assets/nonveg.png')
+                ? require('../../../../assets/veg.png')
+                : require('../../../../assets/nonveg.png')
             }
             style={styles.vegIcon}
           />
           <TouchableOpacity onPress={() => setVegNonVegDropdownVisible(true)}>
             <Image
-              source={require('../../../assets/dropdown.png')}
+              source={require('../../../../assets/dropdown.png')}
               style={styles.dropIcon}
             />
           </TouchableOpacity>
@@ -729,13 +763,16 @@ const RestaurentDetails: React.FC = () => {
 
             {/* ===== FILTER TAGS ===== */}
             <View style={styles.filtersWrapper}>
-              <View style={styles.filterTagFixed}>
-                <Image
-                  source={require('../../../assets/filter3.png')}
-                  style={styles.filterTagIcon}
-                />
-                <Text style={styles.filterTagText}>Filter (1)</Text>
-              </View>
+              <TouchableOpacity onPress={() => setShowFilterModal(true)}>
+                <View style={styles.filterTagFixed}>
+                  <Image
+                    source={require('../../../../assets/filter3.png')}
+                    style={styles.filterTagIcon}
+                  />
+                  {hasActiveFilters() && <View style={styles.filterDot} />}
+                  <Text style={styles.filterTagText}>Filter (1)</Text>
+                </View>
+              </TouchableOpacity>
 
               <ScrollView
                 horizontal
@@ -749,13 +786,13 @@ const RestaurentDetails: React.FC = () => {
                   activeOpacity={0.7}
                 >
                   <Image
-                    source={require('../../../assets/spicy.png')}
+                    source={require('../../../../assets/spicy.png')}
                     style={styles.filterTagIcon}
                   />
                   <Text style={styles.filterTagText}>Spicy</Text>
                   {filters.includes('Spicy') && (
                     <Image
-                      source={require('../../../assets/close.png')}
+                      source={require('../../../../assets/close.png')}
                       style={[styles.closeIcon]}
                     />
                   )}
@@ -763,7 +800,7 @@ const RestaurentDetails: React.FC = () => {
 
                 <View style={styles.filterTag}>
                   <Image
-                    source={require('../../../assets/popular.png')}
+                    source={require('../../../../assets/popular.png')}
                     style={styles.filterTagIcon}
                   />
                   <Text style={styles.filterTagText}>Offer's</Text>
@@ -771,7 +808,7 @@ const RestaurentDetails: React.FC = () => {
 
                 <View style={styles.filterTag}>
                   <Image
-                    source={require('../../../assets/vegan.png')}
+                    source={require('../../../../assets/vegan.png')}
                     style={styles.filterTagIcon}
                   />
                   <Text style={styles.filterTagText}>Vegan</Text>
@@ -798,8 +835,8 @@ const RestaurentDetails: React.FC = () => {
                     <Animated.Image
                       source={
                         likedItems.includes(f.id)
-                          ? require('../../../assets/heartfill.png')
-                          : require('../../../assets/heart.png')
+                          ? require('../../../../assets/heartfill.png')
+                          : require('../../../../assets/heart.png')
                       }
                       style={[
                         styles.heartIconSmall,
@@ -814,7 +851,7 @@ const RestaurentDetails: React.FC = () => {
                     <Image source={f.img} style={styles.foodImg} />
                     <View style={styles.foodRatingBadge}>
                       <Image
-                        source={require('../../../assets/star.png')}
+                        source={require('../../../../assets/star.png')}
                         style={styles.starIcon}
                       />
                       <Text style={styles.ratingText}>4.4</Text>
@@ -832,7 +869,7 @@ const RestaurentDetails: React.FC = () => {
                         style={styles.plusBtn}
                       >
                         <Animated.Image
-                          source={require('../../../assets/plus.png')}
+                          source={require('../../../../assets/plus.png')}
                           style={[
                             styles.plusIcon,
                             { transform: [{ scale: plusScales[f.id] || 1 }] },
@@ -842,7 +879,7 @@ const RestaurentDetails: React.FC = () => {
                     </View>
                     <View style={styles.timeRow}>
                       <Image
-                        source={require('../../../assets/clock.png')}
+                        source={require('../../../../assets/clock.png')}
                         style={styles.clockIcon}
                       />
                       <Text style={styles.timeText}>{f.time}</Text>
@@ -855,7 +892,7 @@ const RestaurentDetails: React.FC = () => {
             {/* ===== BEST IN CATEGORY ===== */}
             <View style={styles.bestBurgerHeaderRow}>
               <Image
-                source={require('../../../assets/popular.png')}
+                source={require('../../../../assets/popular.png')}
                 style={styles.bestBurgerHeaderIcon}
               />
               <Text style={styles.bestBurgerHeaderText}>
@@ -872,8 +909,8 @@ const RestaurentDetails: React.FC = () => {
                     <Animated.Image
                       source={
                         likedItems.includes(f.id)
-                          ? require('../../../assets/heartfill.png')
-                          : require('../../../assets/heart.png')
+                          ? require('../../../../assets/heartfill.png')
+                          : require('../../../../assets/heart.png')
                       }
                       style={[
                         styles.heartIconSmall,
@@ -888,7 +925,7 @@ const RestaurentDetails: React.FC = () => {
                     <Image source={f.img} style={styles.foodImg} />
                     <View style={styles.foodRatingBadge}>
                       <Image
-                        source={require('../../../assets/star.png')}
+                        source={require('../../../../assets/star.png')}
                         style={styles.starIcon}
                       />
                       <Text style={styles.ratingText}>4.4</Text>
@@ -906,7 +943,7 @@ const RestaurentDetails: React.FC = () => {
                         style={styles.plusBtn}
                       >
                         <Animated.Image
-                          source={require('../../../assets/plus.png')}
+                          source={require('../../../../assets/plus.png')}
                           style={[
                             styles.plusIcon,
                             { transform: [{ scale: plusScales[f.id] || 1 }] },
@@ -916,7 +953,7 @@ const RestaurentDetails: React.FC = () => {
                     </View>
                     <View style={styles.timeRow}>
                       <Image
-                        source={require('../../../assets/clockk.png')}
+                        source={require('../../../../assets/clockk.png')}
                         style={styles.clockIcon}
                       />
                       <Text style={styles.timeText}>{f.time}</Text>
@@ -930,6 +967,175 @@ const RestaurentDetails: React.FC = () => {
           <EmptyState />
         )}
       </ScrollView>
+
+      <Modal
+        visible={showFilterModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setShowFilterModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Filtering & Sorting</Text>
+              <View style={{ height: 3, width: '100%', backgroundColor: '#dadada' }}></View>
+
+              {/* Close icon outside header (overlapping) */}
+              <TouchableOpacity
+                onPress={() => setShowFilterModal(false)}
+                style={styles.closeButtonWrapper}
+              >
+                <Image
+                  source={require('../../../../assets/close1.png')}
+                  style={styles.closeIcon1}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false} style={styles.modalScroll}>
+              {/* Delivery Time Filter */}
+              <View style={styles.filterSection}>
+                <Text style={styles.filterSectionTitle}>Sort By</Text>
+
+                <FlatList
+                  data={filterOptions.sortBy}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item) => item}
+                  contentContainerStyle={{ paddingVertical: 6 }}
+                  renderItem={({ item }) => {
+                    const isActive = appliedFilters.sortBy === item;
+                    return (
+                      <TouchableOpacity
+                        style={[
+                          styles.filterOption,
+                          isActive && styles.activeFilterOption,
+                          { marginRight: 10 }, // spacing between items
+                        ]}
+                        onPress={() => setAppliedFilters({ ...appliedFilters, sortBy: item })}
+                      >
+                        <Text
+                          style={[
+                            styles.filterOptionText,
+                            isActive && styles.activeFilterOptionText,
+                          ]}
+                        >
+                          {item}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  }}
+                />
+              </View>
+              <View style={{ width: wp('100%'), height: wp('3%') }} />
+
+
+              {/* Top Pick's Filter */}
+              <View style={styles.filterSection}>
+                <Text style={styles.filterSectionTitle}>Top Pick's</Text>
+                <View style={styles.filterOptions}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                    <Image
+                      source={require('../../../../assets/leaf.png')}
+                      style={styles.statIcon}
+                    />
+                    <Text style={{ fontSize: 16, fontFamily: "Figtree-Medium", marginBottom: 10 }}>This restaurent is pure veg.</Text>
+                  </View>
+                  {filterOptions.TopPicks.map(option => {
+                    const isActive = appliedFilters.TopPicks === option;
+                    return (
+                      <TouchableOpacity
+                        key={option}
+                        style={[
+                          styles.filterOption,
+                          isActive && styles.activeFilterOption
+                        ]}
+                        onPress={() => setAppliedFilters({ ...appliedFilters, TopPicks: option })}
+                      >
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                          <Image
+                            source={require('../../../../assets/clockk.png')}
+                            style={{
+                              width: 13,
+                              height: 12,
+                              resizeMode: 'contain',
+                              tintColor: isActive ? '#fff' : COLORS.primary, // ✅ White if active, primary color otherwise
+                            }}
+                          />
+                          <Text
+                            style={[
+                              styles.filterOptionText,
+                              isActive && styles.activeFilterOptionText
+                            ]}
+                          >
+                            {option}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </View>
+
+
+              {/* Dietary Prefrence Filter */}
+              <View style={styles.filterSection}>
+                <Text style={styles.filterSectionTitle}>Dietary Prefrence</Text>
+                <View style={styles.filterOptions}>
+                  {filterOptions.DietaryPrefrence.map(option => {
+                    const isActive = appliedFilters.DietaryPrefrence === option;
+                    return (
+                      <TouchableOpacity
+                        key={option}
+                        style={[
+                          styles.filterOption,
+                          isActive && styles.activeFilterOption
+                        ]}
+                        onPress={() => setAppliedFilters({ ...appliedFilters, DietaryPrefrence: option })}
+                      >
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                          <Image
+                            source={require('../../../../assets/spicy.png')}
+                            style={{
+                              width: 13,
+                              height: 12,
+                              resizeMode: 'contain',
+                              tintColor: isActive ? '#fff' : COLORS.primary, // ✅ White if active, primary color otherwise
+                            }}
+                          />
+                          <Text
+                            style={[
+                              styles.filterOptionText,
+                              isActive && styles.activeFilterOptionText
+                            ]}
+                          >
+                            {option}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </View>
+
+            </ScrollView>
+
+            <View style={styles.modalActions}>
+              <View style={{borderColor : '#dadada',borderWidth : 1,width : '100%',flexDirection : 'row',padding : wp('1%'),borderRadius : wp('3%')}}>
+                <TouchableOpacity style={styles.resetBtn} onPress={resetFilters}>
+                <Text style={styles.resetBtnText}>Clear All</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.applyBtn} onPress={applyFilters}>
+                <Text style={styles.applyBtnText}>Apply</Text>
+              </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+
     </View>
   );
 };
@@ -979,7 +1185,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.6,
     textShadowColor: '#000',
     textShadowRadius: 4,
-    fontFamily : 'Figtree-Bold'
+    fontFamily: 'Figtree-Bold'
   },
   backBtn: {
     zIndex: 2,
@@ -1054,7 +1260,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#222',
     marginTop: hp('0.5%'),
-    fontFamily : 'Figtree-Bold'
+    fontFamily: 'Figtree-Bold'
   },
   locationRow: {
     flexDirection: 'row',
@@ -1071,7 +1277,7 @@ const styles = StyleSheet.create({
     color: '#888',
     fontSize: hp('1.5%'),
     fontWeight: '500',
-    fontFamily : "Figtree-Medium"
+    fontFamily: "Figtree-Medium"
   },
   statsRow: {
     flexDirection: 'row',
@@ -1090,7 +1296,7 @@ const styles = StyleSheet.create({
     color: '#222',
     fontWeight: '500',
     marginRight: wp('2.5%'),
-    fontFamily : 'Figtree-Medium'
+    fontFamily: 'Figtree-Medium'
   },
 
   searchWrapper: {
@@ -1121,8 +1327,8 @@ const styles = StyleSheet.create({
     paddingVertical: hp('1%'),
     fontSize: hp('1.8%'),
     color: '#111',
-    fontFamily : 'Figtree-Regular',
-    fontWeight : '400'
+    fontFamily: 'Figtree-Regular',
+    fontWeight: '400'
   },
   searchFilterContainer: {
     backgroundColor: COLORS.primary,
@@ -1153,7 +1359,7 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: hp('1.8%'),
     flex: 1,
-    fontFamily : 'Figtree-Bold'
+    fontFamily: 'Figtree-Bold'
   },
   vegIcon: {
     width: wp('3.5%'),
@@ -1209,7 +1415,7 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: '700',
     fontSize: hp('1.7%'),
-    fontFamily : 'Figtree-Bold'
+    fontFamily: 'Figtree-Bold'
   },
   categoryTxtActive: {
     color: COLORS.secondary,
@@ -1258,11 +1464,11 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: '500',
     fontSize: hp('1.5%'),
-    fontFamily : 'Figtree-Medium'
+    fontFamily: 'Figtree-Medium'
   },
   closeIcon: {
-    width: wp('3%'),
-    height: wp('3%'),
+    width: wp('5%'),
+    height: wp('5%'),
     marginLeft: wp('1.5%'),
     tintColor: '#000',
   },
@@ -1283,7 +1489,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#222',
     fontSize: hp('1.8%'),
-    fontFamily : 'Figtree-Bold'
+    fontFamily: 'Figtree-Bold'
   },
 
   grid: {
@@ -1364,7 +1570,7 @@ const styles = StyleSheet.create({
     color: '#222',
     fontSize: hp('1.6%'),
     marginBottom: hp('0.3%'),
-    fontFamily :'Figtree-Bold'
+    fontFamily: 'Figtree-Bold'
   },
   priceRow: {
     flexDirection: 'row',
@@ -1376,14 +1582,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#222',
     fontSize: hp('1.6%'),
-    fontFamily : "Figtree-SemiBold"
+    fontFamily: "Figtree-SemiBold"
   },
   oldPrice: {
     fontSize: hp('1.3%'),
     color: '#FA463D',
     textDecorationLine: 'line-through',
     marginLeft: wp('1%'),
-        fontFamily : "Figtree-Regular"
+    fontFamily: "Figtree-Regular"
 
   },
   plusBtn: {
@@ -1415,7 +1621,7 @@ const styles = StyleSheet.create({
     fontSize: hp('1.3%'),
     color: '#666',
     fontWeight: '600',
-    fontFamily : 'Figtree-Regular'
+    fontFamily: 'Figtree-Regular'
   },
 
   bestBurgerHeaderRow: {
@@ -1563,6 +1769,11 @@ const styles = StyleSheet.create({
     height: wp('15%'),
     tintColor: COLORS.primary,
     resizeMode: 'contain',
+  },
+  closeIcon1: {
+    width: 20,
+    height: 20,
+    tintColor: '#000',
   },
   modalRatingBadge: {
     position: 'absolute',
@@ -1793,5 +2004,140 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#fff',
     letterSpacing: 0.5,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: wp('6%'),
+    borderTopRightRadius: wp('6%'),
+    paddingTop: hp('3%'),
+    maxHeight: hp('77%'),
+  },
+  modalHeader: {
+    backgroundColor: '#fff',
+    paddingVertical: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    position: 'relative',
+  },
+
+  modalTitle: {
+    fontSize: 18,
+    fontFamily: 'Figtree-Bold',
+    color: '#000',
+    marginBottom: 10,
+    alignSelf: 'flex-start',
+    marginLeft: 20
+  },
+
+  closeButtonWrapper: {
+    position: 'absolute',
+    bottom: 70,           // moves it half outside header
+    right: 160,
+    backgroundColor: '#fff',
+    borderRadius: 100,
+    padding: 10,
+    elevation: 5,       // shadow on Android
+    shadowColor: '#000', // shadow on iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    alignItems: 'center',
+  },
+  modalScroll: {
+    flex: 1,
+  },
+  filterSection: {
+    padding: wp('5%'),
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  filterLabel: {
+    fontFamily: 'Figtree-Bold',
+    fontSize: 16,
+    color: '#000',
+    marginBottom: 10,
+  },
+  histogramContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    height: 80,
+    marginVertical: 5,
+  },
+  bar: {
+    width: 6,
+    backgroundColor: '#e0e0e0',
+    marginHorizontal: 2,
+    borderRadius: 3,
+  },
+  filterSectionTitle: {
+    fontSize: wp('4%'),
+    fontWeight: '700',
+    color: '#000',
+    marginBottom: hp('1.5%'),
+    fontFamily: 'Figtree-Bold'
+  },
+  filterOptions: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: wp('2%'),
+  },
+  filterOption: {
+    backgroundColor: '#f0f0f0',
+    paddingHorizontal: wp('4%'),
+    paddingVertical: hp('1%'),
+    borderRadius: wp('5%'),
+    marginBottom: hp('1%'),
+  },
+  activeFilterOption: {
+    backgroundColor: COLORS.primary,
+  },
+  filterOptionText: {
+    fontSize: wp('3.5%'),
+    color: '#666',
+    fontWeight: '500',
+    fontFamily: 'Figtree-Medium'
+  },
+  activeFilterOptionText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontFamily: 'Figtree-Medium'
+  },
+  modalActions: {
+    flexDirection: 'row',
+    padding: wp('7%'),
+  },
+  resetBtn: {
+    flex: 1,
+    paddingVertical: hp('1.8%'),
+    borderRadius: wp('3%'),
+    alignItems: 'center',
+  },
+  resetBtnText: {
+    fontSize: wp('4%'),
+    fontWeight: '600',
+    color: '#666',
+    fontFamily: 'Figtree-Bold'
+  },
+  applyBtn: {
+    flex: 1,
+    backgroundColor: COLORS.primary,
+    paddingVertical: hp('1.8%'),
+    borderRadius: wp('3%'),
+    alignItems: 'center',
+  },
+  applyBtnText: {
+    fontSize: wp('4%'),
+    fontWeight: '700',
+    color: '#fff',
+    fontFamily: 'Figtree-Bold'
   },
 });

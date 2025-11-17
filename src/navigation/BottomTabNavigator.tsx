@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Image, Text } from 'react-native';
-import HomeScreen from '../components/HomeScreen/HomeScreen';
+import HomeScreen from '../components/HomeScreen/HomeScreens/HomeScreen';
 import MyOrders from '../components/MyOrders/myorders';
 import Wishlist from '../components/Wishlist/wishlist';
 import Notification from '../components/Notification/notification';

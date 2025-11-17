@@ -14,14 +14,13 @@ import {
   FlatList,
   Modal,
 } from 'react-native';
-import { COLORS, FONT_STYLES } from '../../theme/colors';
+import { COLORS, FONT_STYLES } from '../../../theme/colors';
 import { useNavigation } from '@react-navigation/native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import font from '../../assets/fonts';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
 const { width, height } = Dimensions.get('window');
@@ -120,10 +119,10 @@ const getTextStyle = (weight = 'Regular') => {
 };
 
 const categories = [
-  { name: 'Burger', img: require('../../assets/burger.png') },
-  { name: 'Mexican', img: require('../../assets/burger.png') },
-  { name: 'Asian', img: require('../../assets/burger.png') },
-  { name: 'Donut', img: require('../../assets/donut.png') },
+  { name: 'Burger', img: require('../../../assets/burger.png') },
+  { name: 'Mexican', img: require('../../../assets/burger.png') },
+  { name: 'Asian', img: require('../../../assets/burger.png') },
+  { name: 'Donut', img: require('../../../assets/donut.png') },
 ];
 
 // Separate veg and non-veg restaurants
@@ -131,7 +130,7 @@ const vegRestaurants = [
   {
     id: 1,
     name: 'Bistro Excellence',
-    img: require('../../assets/featuredrestaurant.png'),
+    img: require('../../../assets/featuredrestaurant.png'),
     rating: 4.4,
     deliveryTime: '10-15 mins',
     tags: ['Burger', 'Chicken', 'FastFood'],
@@ -139,7 +138,7 @@ const vegRestaurants = [
   {
     id: 2,
     name: 'Elite-Ember',
-    img: require('../../assets/featuredrestaurant.png'),
+    img: require('../../../assets/featuredrestaurant.png'),
     rating: 4.4,
     deliveryTime: '10-15 mins',
     tags: ['Burger', 'Chicken', 'FastFood'],
@@ -150,7 +149,7 @@ const nonVegRestaurants = [
   {
     id: 2,
     name: 'Elite-Ember',
-    img: require('../../assets/featuredrestaurant.png'),
+    img: require('../../../assets/featuredrestaurant.png'),
     rating: 4.4,
     deliveryTime: '10-15 mins',
     tags: ['Chicken', 'Mutton', 'Seafood'],
@@ -158,7 +157,7 @@ const nonVegRestaurants = [
   {
     id: 1,
     name: 'Bistro Excellence',
-    img: require('../../assets/featuredrestaurant.png'),
+    img: require('../../../assets/featuredrestaurant.png'),
     rating: 4.4,
     deliveryTime: '10-15 mins',
     tags: ['Chicken', 'Mutton', 'Seafood'],
@@ -171,7 +170,7 @@ const vegProducts = [
     id: 1,
     name: 'Veg Cheese Burger',
     price: '$45.50',
-    img: require('../../assets/b1.png'),
+    img: require('../../../assets/b1.png'),
     oldPrice: '$50.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
@@ -180,7 +179,7 @@ const vegProducts = [
     id: 2,
     name: 'Veg Delight Burger',
     price: '$45.50',
-    img: require('../../assets/b2.png'),
+    img: require('../../../assets/b2.png'),
     oldPrice: '$50.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
@@ -189,7 +188,7 @@ const vegProducts = [
     id: 3,
     name: 'Garden Fresh Burger',
     price: '$45.50',
-    img: require('../../assets/b1.png'),
+    img: require('../../../assets/b1.png'),
     oldPrice: '$50.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
@@ -198,7 +197,7 @@ const vegProducts = [
     id: 4,
     name: 'Veggie Supreme',
     price: '$45.50',
-    img: require('../../assets/b3.png'),
+    img: require('../../../assets/b3.png'),
     oldPrice: '$50.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
@@ -210,7 +209,7 @@ const nonVegProducts = [
     id: 1,
     name: 'Chicken Deluxe',
     price: '$55.50',
-    img: require('../../assets/non1.png'),
+    img: require('../../../assets/non1.png'),
     oldPrice: '$60.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
@@ -219,7 +218,7 @@ const nonVegProducts = [
     id: 2,
     name: 'Beef Special',
     price: '$65.50',
-    img: require('../../assets/non2.png'),
+    img: require('../../../assets/non2.png'),
     oldPrice: '$70.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
@@ -228,7 +227,7 @@ const nonVegProducts = [
     id: 3,
     name: 'Mutton Classic',
     price: '$75.50',
-    img: require('../../assets/non3.png'),
+    img: require('../../../assets/non3.png'),
     oldPrice: '$80.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
@@ -237,7 +236,7 @@ const nonVegProducts = [
     id: 4,
     name: 'Seafood Combo',
     price: '$85.50',
-    img: require('../../assets/non1.png'),
+    img: require('../../../assets/non1.png'),
     oldPrice: '$90.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
@@ -387,12 +386,12 @@ const HomeScreen = () => {
             <View style={styles.locationContainer}>
               <View style={styles.locationRow}>
                 <Image
-                  source={require('../../assets/location.png')}
+                  source={require('../../../assets/location.png')}
                   style={styles.icon}
                 />
                 <Text style={styles.locationText}>Location</Text>
                 <Image
-                  source={require('../../assets/dropdown.png')}
+                  source={require('../../../assets/dropdown.png')}
                   style={styles.dropdownIcon}
                 />
               </View>
@@ -405,7 +404,7 @@ const HomeScreen = () => {
                 onPress={handleWalletPress}
               >
                 <Image
-                  source={require('../../assets/wallet.png')}
+                  source={require('../../../assets/wallet.png')}
                   style={styles.walletIcon}
                 />
               </TouchableOpacity>
@@ -415,7 +414,7 @@ const HomeScreen = () => {
                 onPress={handleCartPress}
               >
                 <Image
-                  source={require('../../assets/bag.png')}
+                  source={require('../../../assets/bag.png')}
                   style={styles.bagIcon}
                 />
               </TouchableOpacity>
@@ -489,7 +488,7 @@ const HomeScreen = () => {
               activeOpacity={0.8}
             >
               <Image
-                source={require('../../assets/search.png')}
+                source={require('../../../assets/search.png')}
                 style={styles.searchIcon}
               />
               <Text style={styles.searchPlaceholder}>
@@ -503,7 +502,7 @@ const HomeScreen = () => {
               onPress={() => setShowFilterModal(true)}
             >
               <Image
-                source={require('../../assets/filter.png')}
+                source={require('../../../assets/filter.png')}
                 style={styles.filterIcon}
               />
               {hasActiveFilters() && <View style={styles.filterDot} />}
@@ -541,7 +540,7 @@ const HomeScreen = () => {
             </View>
             <View style={styles.offerImageWrap}>
               <Image
-                source={require('../../assets/todayoffer.png')}
+                source={require('../../../assets/todayoffer.png')}
                 style={styles.offerImage}
                 resizeMode="contain"
               />
@@ -620,7 +619,7 @@ const HomeScreen = () => {
                     activeOpacity={0.7}
                   >
                     <Image
-                      source={require('../../assets/heart.png')}
+                      source={require('../../../assets/heart.png')}
                       style={styles.heartIcon}
                       resizeMode="contain"
                     />
@@ -628,7 +627,7 @@ const HomeScreen = () => {
 
                   <View style={styles.ratingBadge}>
                     <Image
-                      source={require('../../assets/star.png')}
+                      source={require('../../../assets/star.png')}
                       style={styles.starIcon}
                       resizeMode="contain"
                     />
@@ -640,13 +639,13 @@ const HomeScreen = () => {
 
                 <View style={styles.restaurantInfoRow}>
                   <Image
-                    source={require('../../assets/bike.png')}
+                    source={require('../../../assets/bike.png')}
                     style={styles.infoIcon}
                     resizeMode="contain"
                   />
                   <Text style={styles.infoTxt}>free delivery</Text>
                   <Image
-                    source={require('../../assets/clock.png')}
+                    source={require('../../../assets/clock.png')}
                     style={styles.infoIcon}
                     resizeMode="contain"
                   />
@@ -668,7 +667,7 @@ const HomeScreen = () => {
           <View style={styles.sectionRowBetween}>
             <View style={styles.sectionTitleRow}>
               <Image
-                source={require('../../assets/popular.png')}
+                source={require('../../../assets/popular.png')}
                 style={styles.sectionIcon}
                 resizeMode="contain"
               />
@@ -709,7 +708,7 @@ const HomeScreen = () => {
                     activeOpacity={0.7}
                   >
                     <Image
-                      source={require('../../assets/heart.png')}
+                      source={require('../../../assets/heart.png')}
                       style={styles.heartIcon}
                       resizeMode="contain"
                     />
@@ -717,7 +716,7 @@ const HomeScreen = () => {
 
                   <View style={styles.productRatingBadge}>
                     <Image
-                      source={require('../../assets/star.png')}
+                      source={require('../../../assets/star.png')}
                       style={styles.starIcon}
                       resizeMode="contain"
                     />
@@ -737,7 +736,7 @@ const HomeScreen = () => {
 
                   <TouchableOpacity style={styles.plusBtn} activeOpacity={0.7}>
                     <Image
-                      source={require('../../assets/plus.png')}
+                      source={require('../../../assets/plus.png')}
                       style={styles.plusIcon}
                       resizeMode="contain"
                     />
@@ -746,7 +745,7 @@ const HomeScreen = () => {
 
                 <View style={styles.deliveryTimeRow}>
                   <Image
-                    source={require('../../assets/clock.png')}
+                    source={require('../../../assets/clock.png')}
                     style={styles.infoIcon}
                     resizeMode="contain"
                   />
@@ -759,7 +758,7 @@ const HomeScreen = () => {
           {/* Bottom info */}
           <View style={styles.bottomRow}>
             <Image
-              source={require('../../assets/walk.png')}
+              source={require('../../../assets/walk.png')}
               style={styles.bottomImage}
               resizeMode="contain"
             />
@@ -767,7 +766,7 @@ const HomeScreen = () => {
               <Text style={styles.reachingTxt}>Reaching at your doorstep</Text>
               <View style={styles.deliveryTimeContainer}>
                 <Image
-                  source={require('../../assets/clock.png')}
+                  source={require('../../../assets/clock.png')}
                   style={styles.deliveryClockIcon}
                   resizeMode="contain"
                 />
@@ -800,7 +799,7 @@ const HomeScreen = () => {
                 style={styles.closeButtonWrapper}
               >
                 <Image
-                  source={require('../../assets/close1.png')}
+                  source={require('../../../assets/close1.png')}
                   style={styles.closeIcon}
                   resizeMode="contain"
                 />
@@ -967,7 +966,7 @@ const HomeScreen = () => {
                           }}
                         >
                           <Image
-                            source={require('../../assets/star.png')}
+                            source={require('../../../assets/star.png')}
                             style={{
                               width: 13,
                               height: 12,
