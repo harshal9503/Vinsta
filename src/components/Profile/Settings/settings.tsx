@@ -50,9 +50,9 @@ const Settings = () => {
       {/* ===== HEADER ===== */}
       <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : COLORS.text}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color : theme.text}]}>Settings</Text>
+        <Text style={[styles.headerTitle,{color : '#616161'}]}>Settings</Text>
         <View style={{ width: 24 }} />
       </View>
 
@@ -67,10 +67,10 @@ const Settings = () => {
               onPress={() => navigation.navigate(item.route)}
             >
               <View style={styles.optionLeft}>
-                <Image source={item.icon} style={[styles.optionIcon,{tintColor : theme.text}]} />
-                <Text style={[styles.optionLabel,{color : theme.text}]}>{item.label}</Text>
+                <Image source={item.icon} style={[styles.optionIcon,{tintColor : COLORS.text}]} />
+                <Text style={[styles.optionLabel,{color : '#616161'}]}>{item.label}</Text>
               </View>
-              <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor : theme.text}]} />
+              <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor : COLORS.text}]} />
             </TouchableOpacity>
           ))}
 
@@ -83,7 +83,7 @@ const Settings = () => {
             }
           >
             <View style={styles.optionLeft}>
-              <Image source={require('../../../assets/logout.png')} style={[styles.optionIcon,{tintColor : theme.text}]} />
+              <Image source={require('../../../assets/logout.png')} style={[styles.optionIcon,{tintColor : COLORS.text}]} />
               <Text style={[styles.optionLabel, { color: '#E53935' }]}>Log out</Text>
             </View>
           </TouchableOpacity>
@@ -165,12 +165,12 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     resizeMode: 'contain',
-    tintColor: '#000',
+    tintColor: COLORS.text,
   },
   headerTitle: {
     fontSize: width * 0.045,
     fontWeight: '700',
-    color: '#000',
+    color: '#616161',
     fontFamily : 'Figtree-Bold',
   },
 
@@ -196,11 +196,11 @@ const styles = StyleSheet.create({
     height: 22,
     resizeMode: 'contain',
     marginRight: 15,
-    tintColor: '#000',
+    tintColor: COLORS.text,
   },
   optionLabel: {
     fontSize: width * 0.037,
-    color: '#000',
+    color: '#616161',
     fontWeight: '600',
     fontFamily : 'Figtree-SemiBold',
   },
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     width: 14,
     height: 14,
     resizeMode: 'contain',
-    tintColor: '#000',
+    tintColor: COLORS.text,
   },
 
   /** POPUP **/
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   },
   popupText: {
     fontSize: width * 0.04,
-    color: '#000',
+    color: '#616161',
     textAlign: 'center',
     marginBottom: 20,
     fontFamily : 'Figtree-Medium',

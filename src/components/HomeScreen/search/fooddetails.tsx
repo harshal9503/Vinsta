@@ -521,7 +521,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   foodName: {
-    fontSize: hp('2.6%'),
+    fontSize: hp('2.9%'),
     fontWeight: '700',
     color: '#000',
     marginBottom: hp('0.6%'),

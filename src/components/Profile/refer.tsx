@@ -49,10 +49,10 @@ const Refer = () => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
             source={require('../../assets/back.png')}
-            style={styles.backIcon}
+            style={[styles.backIcon, {tintColor: '#000000'}]}
           />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Refer to earn</Text>
+        <Text style={[styles.headerTitle, {color: '#616161'}]}>Refer to earn</Text>
         <View style={{ width: 22 }} /> {/* Spacer for centering */}
       </View>
 
@@ -63,21 +63,21 @@ const Refer = () => {
       >
         {/* ===== Invite Section ===== */}
         <View style={styles.cardContainer}>
-          <Text style={styles.label}>Invitation Code</Text>
+          <Text style={[styles.label, {color: '#616161'}]}>Invitation Code</Text>
 
           {/* Code Box */}
           <View style={styles.codeBox}>
-            <Text style={styles.codeText}>{invitationCode}</Text>
+            <Text style={[styles.codeText, {color: '#616161'}]}>{invitationCode}</Text>
             <TouchableOpacity onPress={handleCopy}>
               <Image
                 source={require('../../assets/copy.png')}
-                style={styles.iconSmall}
+                style={[styles.iconSmall, {tintColor: COLORS.text}]}
               />
             </TouchableOpacity>
             <TouchableOpacity onPress={handleShare}>
               <Image
                 source={require('../../assets/share.png')}
-                style={[styles.iconSmall, { marginLeft: 10 }]}
+                style={[styles.iconSmall, { marginLeft: 10, tintColor: COLORS.text }]}
               />
             </TouchableOpacity>
           </View>
@@ -93,13 +93,13 @@ const Refer = () => {
 
           {/* Info Row */}
           <View style={styles.infoRow}>
-            <Text style={styles.infoText}>
-              How to invite friend’s and win award
+            <Text style={[styles.infoText, {color: '#616161'}]}>
+              How to invite friend's and win award
             </Text>
             <TouchableOpacity onPress={() => setShowPopup(true)}>
               <Image
                 source={require('../../assets/questionmark.png')}
-                style={styles.infoIcon}
+                style={[styles.infoIcon, {tintColor: COLORS.primary}]}
               />
             </TouchableOpacity>
           </View>
@@ -112,7 +112,7 @@ const Refer = () => {
               source={require('../../assets/earned.png')}
               style={styles.rewardIcon}
             />
-            <Text style={styles.rewardText}>Earned Reward’s</Text>
+            <Text style={[styles.rewardText, {color: '#616161'}]}>Earned Reward's</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.rewardCard}>
@@ -120,7 +120,7 @@ const Refer = () => {
               source={require('../../assets/earned.png')}
               style={styles.rewardIcon}
             />
-            <Text style={styles.rewardText}>Track Referral’s</Text>
+            <Text style={[styles.rewardText, {color: '#616161'}]}>Track Referral's</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -129,8 +129,8 @@ const Refer = () => {
       <Modal transparent visible={showPopup} animationType="fade">
         <View style={styles.popupOverlay}>
           <View style={styles.popupBox}>
-            <Text style={styles.popupTitle}>How Referrals Work</Text>
-            <Text style={styles.popupContent}>
+            <Text style={[styles.popupTitle, {color: '#616161'}]}>How Referrals Work</Text>
+            <Text style={[styles.popupContent, {color: '#616161'}]}>
               {'1. Share your code with friends.\n'}
               {'2. They install the app using your code.\n'}
               {'3. You earn exciting rewards after their first purchase!\n\n'}
@@ -169,14 +169,12 @@ const styles = StyleSheet.create({
   backIcon: {
     width: 22,
     height: 22,
-    tintColor: COLORS.text,
     resizeMode: 'contain',
   },
   headerTitle: {
     textAlign: 'center',
     fontSize: width * 0.045,
     fontWeight: '700',
-    color: COLORS.text,
     fontFamily: 'Figtree-Bold',
   },
 
@@ -202,7 +200,6 @@ const styles = StyleSheet.create({
   label: {
     fontSize: width * 0.037,
     fontWeight: '600',
-    color: COLORS.text,
     marginBottom: 8,
     fontFamily: 'Figtree-Medium',
   },
@@ -222,14 +219,12 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: 1,
     flex: 1,
-    color: COLORS.text,
     fontFamily: 'Figtree-SemiBold',
   },
   iconSmall: {
     width: 20,
     height: 20,
     resizeMode: 'contain',
-    tintColor: COLORS.text,
   },
 
   /** INVITE BUTTON **/
@@ -274,7 +269,6 @@ const styles = StyleSheet.create({
   infoText: {
     flex: 1,
     fontSize: width * 0.033,
-    color: '#555',
     fontFamily: 'Figtree-Regular',
   },
   infoIcon: {
@@ -316,7 +310,6 @@ const styles = StyleSheet.create({
   rewardText: {
     fontSize: width * 0.036,
     fontWeight: '600',
-    color: COLORS.text,
     marginTop: 6,
     fontFamily: 'Figtree-Medium',
   },
@@ -338,13 +331,11 @@ const styles = StyleSheet.create({
   popupTitle: {
     fontSize: width * 0.045,
     fontWeight: '700',
-    color: COLORS.text,
     marginBottom: 10,
     fontFamily: 'Figtree-Bold',
   },
   popupContent: {
     fontSize: width * 0.035,
-    color: '#555',
     textAlign: 'center',
     marginBottom: 15,
     fontFamily: 'Figtree-Regular',

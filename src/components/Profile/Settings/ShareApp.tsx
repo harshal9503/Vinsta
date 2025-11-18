@@ -59,42 +59,23 @@ const ShareApp = () => {
 
   const handleShare = async (platform: string) => {
     try {
-      if (platform === 'More') {
-        const result = await Share.share({
-          message: shareMessage,
-          title: 'Share App',
-        });
-        
-        if (result.action === Share.sharedAction) {
-          if (result.activityType) {
-            console.log('Shared with', result.activityType);
-          } else {
-            console.log('Shared successfully');
-          }
-        } else if (result.action === Share.dismissedAction) {
-          console.log('Share dismissed');
-        }
-      } else {
-        await Share.share({
-          message: shareMessage,
-          title: `Share on ${platform}`,
-        });
-      }
+      await Share.share({
+        message: shareMessage,
+        title: `Share on ${platform}`,
+      });
     } catch (error) {
       Alert.alert('Error', 'Failed to share the app');
     }
   };
 
   const referralCode = 'APP2024FRIEND';
-  const referralLink = 'https://yourapp.com/invite/APP2024FRIEND';
 
   const copyToClipboard = (text: string) => {
     Alert.alert('Copied!', 'Referral code copied to clipboard');
   };
 
-  // Split share options into two rows
-  const firstRowOptions = shareOptions.slice(0, 3); // WhatsApp, Facebook, Instagram
-  const secondRowOptions = shareOptions.slice(3); // Twitter, Email
+  const firstRowOptions = shareOptions.slice(0, 3);
+  const secondRowOptions = shareOptions.slice(3);
 
   return (
     <View style={[styles.container,{backgroundColor : theme.background}]}>
@@ -102,9 +83,9 @@ const ShareApp = () => {
 
       <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : '#000000'}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color : theme.text}]}>Share App</Text>
+        <Text style={[styles.headerTitle,{color : '#616161'}]}>Share App</Text>
         <View style={{ width: 24 }} />
       </View>
 
@@ -115,15 +96,15 @@ const ShareApp = () => {
             source={require('../../../assets/Splash.png')} 
             style={styles.heroImage} 
           />
-          <Text style={[styles.heroTitle,{color : theme.text}]}>Share the Love!</Text>
-          <Text style={[styles.heroDescription,{color : theme.text}]}>
+          <Text style={[styles.heroTitle,{color : '#616161'}]}>Share the Love!</Text>
+          <Text style={[styles.heroDescription,{color : '#616161'}]}>
             Share this app with your friends and family and help them discover amazing food delivery service.
           </Text>
         </View>
 
         {/* Referral Code */}
         <View style={[styles.referralSection,{backgroundColor  :theme.background}]}>
-          <Text style={[styles.referralTitle,{color : theme.text}]}>Your Referral Code</Text>
+          <Text style={[styles.referralTitle,{color : '#616161'}]}>Your Referral Code</Text>
           <TouchableOpacity 
             style={styles.referralCodeBox}
             onPress={() => copyToClipboard(referralCode)}
@@ -131,17 +112,17 @@ const ShareApp = () => {
             <Text style={styles.referralCode}>{referralCode}</Text>
             <Image 
               source={require('../../../assets/copy.png')} 
-              style={styles.copyIcon} 
+              style={[styles.copyIcon,{tintColor:COLORS.text}]} 
             />
           </TouchableOpacity>
-          <Text style={[styles.referralNote,{color : theme.text}]}>
+          <Text style={[styles.referralNote,{color : '#616161'}]}>
             Share this code with your friends for special rewards!
           </Text>
         </View>
 
         {/* Share Options */}
         <View style={styles.shareSection}>
-          <Text style={[styles.shareTitle,{color : theme.text}]}>Share Via</Text>
+          <Text style={[styles.shareTitle,{color : '#616161'}]}>Share Via</Text>
           
           {/* First Row - 3 icons */}
           <View style={styles.shareRow}>
@@ -154,7 +135,7 @@ const ShareApp = () => {
                 <View style={styles.shareIconContainer}>
                   <Image source={item.icon} style={styles.shareIcon} />
                 </View>
-                <Text style={[styles.shareOptionText,{color : theme.text}]}>{item.name}</Text>
+                <Text style={[styles.shareOptionText,{color : '#616161'}]}>{item.name}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -170,7 +151,7 @@ const ShareApp = () => {
                 <View style={styles.shareIconContainer}>
                   <Image source={item.icon} style={styles.shareIcon} />
                 </View>
-                <Text style={[styles.shareOptionText,{color : theme.text}]}>{item.name}</Text>
+                <Text style={[styles.shareOptionText,{color : '#616161'}]}>{item.name}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -178,31 +159,31 @@ const ShareApp = () => {
 
         {/* Benefits */}
         <View style={[styles.benefitsSection,{backgroundColor  :theme.background}]}>
-          <Text style={[styles.benefitsTitle,{color : theme.text}]}>Referral Benefits</Text>
+          <Text style={[styles.benefitsTitle,{color : '#616161'}]}>Referral Benefits</Text>
           <View style={[styles.benefitsList,{backgroundColor  :theme.background}]}>
             <View style={styles.benefitItem}>
-              <Image source={require('../../../assets/tick.png')} style={styles.benefitIcon} />
+              <Image source={require('../../../assets/tick.png')} style={[styles.benefitIcon,{tintColor:COLORS.text}]} />
               <View style={styles.benefitText}>
-                <Text style={[styles.benefitTitle,{color : theme.text}]}>Get $10 Credit</Text>
-                <Text style={[styles.benefitDescription,{color : theme.text}]}>
+                <Text style={[styles.benefitTitle,{color : '#616161'}]}>Get $10 Credit</Text>
+                <Text style={[styles.benefitDescription,{color : '#616161'}]}>
                   Receive $10 credit when your friend signs up
                 </Text>
               </View>
             </View>
             <View style={styles.benefitItem}>
-              <Image source={require('../../../assets/tick.png')} style={styles.benefitIcon} />
+              <Image source={require('../../../assets/tick.png')} style={[styles.benefitIcon,{tintColor:COLORS.text}]} />
               <View style={styles.benefitText}>
-                <Text style={[styles.benefitTitle,{color : theme.text}]}>Friend Gets 20% Off</Text>
-                <Text style={[styles.benefitDescription,{color : theme.text}]}>
+                <Text style={[styles.benefitTitle,{color : '#616161'}]}>Friend Gets 20% Off</Text>
+                <Text style={[styles.benefitDescription,{color : '#616161'}]}>
                   Your friend gets 20% off on their first order
                 </Text>
               </View>
             </View>
             <View style={styles.benefitItem}>
-              <Image source={require('../../../assets/tick.png')} style={styles.benefitIcon} />
+              <Image source={require('../../../assets/tick.png')} style={[styles.benefitIcon,{tintColor:COLORS.text}]} />
               <View style={styles.benefitText}>
-                <Text style={[styles.benefitTitle,{color : theme.text}]}>Exclusive Rewards</Text>
-                <Text style={[styles.benefitDescription,{color : theme.text}]}>
+                <Text style={[styles.benefitTitle,{color : '#616161'}]}>Exclusive Rewards</Text>
+                <Text style={[styles.benefitDescription,{color : '#616161'}]}>
                   Unlock special rewards for multiple referrals
                 </Text>
               </View>
@@ -214,15 +195,15 @@ const ShareApp = () => {
         <View style={[styles.statsSection,{backgroundColor  :theme.background}]}>
           <View style={styles.statItem}>
             <Text style={styles.statNumber}>5</Text>
-            <Text style={[styles.statLabel,{color : theme.text}]}>Friends Joined</Text>
+            <Text style={[styles.statLabel,{color : '#616161'}]}>Friends Joined</Text>
           </View>
           <View style={styles.statItem}>
             <Text style={styles.statNumber}>$50</Text>
-            <Text style={[styles.statLabel,{color : theme.text}]}>Total Credit Earned</Text>
+            <Text style={[styles.statLabel,{color : '#616161'}]}>Total Credit Earned</Text>
           </View>
           <View style={styles.statItem}>
             <Text style={styles.statNumber}>3</Text>
-            <Text style={[styles.statLabel,{color : theme.text}]}>Available Rewards</Text>
+            <Text style={[styles.statLabel,{color : '#616161'}]}>Available Rewards</Text>
           </View>
         </View>
       </ScrollView>
@@ -248,12 +229,12 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     resizeMode: 'contain',
-    tintColor: '#000',
+    tintColor: '#000000',
   },
   headerTitle: {
     fontSize: width * 0.045,
     fontWeight: '700',
-    color: '#000',
+    color: '#616161',
     fontFamily : 'Figtree-Bold',
   },
   content: {
@@ -271,14 +252,14 @@ const styles = StyleSheet.create({
   heroTitle: {
     fontSize: width * 0.05,
     fontWeight: '700',
-    color: '#000',
+    color: '#616161',
     marginBottom: 8,
     textAlign: 'center',
     fontFamily : 'Figtree-Bold',
   },
   heroDescription: {
     fontSize: width * 0.035,
-    color: '#666',
+    color: '#616161',
     textAlign: 'center',
     lineHeight: 20,
     fontFamily : 'Figtree-Medium',
@@ -297,7 +278,7 @@ const styles = StyleSheet.create({
   },
   referralTitle: {
     fontSize: width * 0.038,
-    color: '#000',
+    color: '#616161',
     marginBottom: 12,
     textAlign: 'center',
     fontFamily : 'Figtree-SemiBold',
@@ -324,11 +305,11 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     resizeMode: 'contain',
-    tintColor: COLORS.primary,
+    tintColor: COLORS.text,
   },
   referralNote: {
     fontSize: width * 0.032,
-    color: '#666',
+    color: '#616161',
     textAlign: 'center',
     fontFamily : 'Figtree-Medium',
     fontWeight  :'500'
@@ -339,7 +320,7 @@ const styles = StyleSheet.create({
   shareTitle: {
     fontSize: width * 0.04,
     fontWeight: '700',
-    color: '#000',
+    color: '#616161',
     marginBottom: 16,
     fontFamily : 'Figtree-Bold',
   },
@@ -367,7 +348,7 @@ const styles = StyleSheet.create({
   },
   shareOptionText: {
     fontSize: width * 0.032,
-    color: '#000',
+    color: '#616161',
     fontWeight: '500',
     textAlign: 'center',
     fontFamily : 'Figtree-Medium',
@@ -378,7 +359,7 @@ const styles = StyleSheet.create({
   benefitsTitle: {
     fontSize: width * 0.04,
     fontWeight: '700',
-    color: '#000',
+    color: '#616161',
     marginBottom: 16,
     fontFamily : 'Figtree-Bold',
   },
@@ -402,21 +383,21 @@ const styles = StyleSheet.create({
     height: 24,
     resizeMode: 'contain',
     marginRight: 12,
-    tintColor: COLORS.primary,
+    tintColor: COLORS.text,
   },
   benefitText: {
     flex: 1,
   },
   benefitTitle: {
     fontSize: width * 0.035,
-    color: '#000',
+    color: '#616161',
     marginBottom: 4,
     fontFamily : 'Figtree-SemiBold',
     fontWeight  :'600'
   },
   benefitDescription: {
     fontSize: width * 0.032,
-    color: '#666',
+    color: '#616161',
     fontFamily : 'Figtree-Regular',
     fontWeight  :'400'
   },
@@ -445,7 +426,7 @@ const styles = StyleSheet.create({
   },
   statLabel: {
     fontSize: width * 0.028,
-    color: '#666',
+    color: '#616161',
     textAlign: 'center',
     fontFamily : 'Figtree-Medium',
     fontWeight  :'500'

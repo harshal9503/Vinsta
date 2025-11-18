@@ -1,5 +1,3 @@
-// File: screens/SignInScreen.tsx
-
 import React, { useState } from 'react';
 import {
   View,
@@ -15,7 +13,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { COLORS } from '../theme/colors';
-import font from '../assets/fonts';
+import { getFontFamily, getFontWeight } from '../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -45,23 +43,28 @@ const SignInScreen = ({ navigation }: any) => {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.container}>
-          {/* Logo */}
           <Image
             source={require('../assets/Splash.png')}
             style={styles.logo}
             resizeMode="contain"
           />
 
-          {/* Welcome Text */}
           <Text style={styles.welcomeText}>
-            “Welcome to <Text style={{ color: COLORS.primary, fontFamily: 'Figtree', fontWeight: '700' }}>Vinsta</Text> freshly brewed food
-            delivered at anywhere anytime home instantly”
+            “Welcome to{' '}
+            <Text
+              style={{
+                color: COLORS.primary,
+                fontFamily: getFontFamily('Bold'),
+                fontWeight: getFontWeight('Bold'),
+              }}
+            >
+              Vinsta
+            </Text>{' '}
+            freshly brewed food delivered at anywhere anytime home instantly”
           </Text>
 
-          {/* Label */}
           <Text style={styles.label}>Please Enter Your Mobile Number</Text>
 
-          {/* Input Field */}
           <View style={styles.inputContainer}>
             <Text style={styles.countryCode}>+91</Text>
             <View style={styles.separator} />
@@ -76,7 +79,6 @@ const SignInScreen = ({ navigation }: any) => {
             />
           </View>
 
-          {/* Send OTP Button */}
           <TouchableOpacity
             style={[styles.button, { opacity: mobile.length === 10 ? 1 : 0.6 }]}
             onPress={handleSendOtp}
@@ -85,7 +87,6 @@ const SignInScreen = ({ navigation }: any) => {
             <Text style={styles.buttonText}>Send OTP</Text>
           </TouchableOpacity>
 
-          {/* Social Login Buttons */}
           <View style={styles.socialContainer}>
             <TouchableOpacity style={styles.socialButton}>
               <Image
@@ -96,7 +97,7 @@ const SignInScreen = ({ navigation }: any) => {
               <Text style={styles.socialText}>Login with Google</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.socialButton,{marginTop : -10}]}>
+            <TouchableOpacity style={[styles.socialButton, { marginTop: -10 }]}>
               <Image
                 source={require('../assets/apple.png')}
                 style={styles.appleIcon}
@@ -106,7 +107,6 @@ const SignInScreen = ({ navigation }: any) => {
             </TouchableOpacity>
           </View>
 
-          {/* Popup Modal */}
           <Modal
             transparent
             visible={showPopup}
@@ -155,16 +155,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: height * 0.04,
-    fontFamily: 'Figtree-Medium',
-    fontWeight: '500', // Medium weight
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   label: {
     alignSelf: 'flex-start',
     fontSize: width * 0.04,
     color: COLORS.text,
     marginBottom: 8,
-    fontFamily: 'Figtree-SemiBold',
-    fontWeight: '600',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   inputContainer: {
     flexDirection: 'row',
@@ -180,8 +180,8 @@ const styles = StyleSheet.create({
   countryCode: {
     fontSize: width * 0.045,
     color: COLORS.text,
-    fontFamily: 'Figtree',
-    fontWeight: '600',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
   separator: {
     width: 1,
@@ -194,8 +194,8 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     fontSize: width * 0.04,
     paddingVertical: 12,
-    fontFamily: 'Figtree-Medium',
-    fontWeight: '500',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   button: {
     backgroundColor: COLORS.primary,
@@ -214,59 +214,48 @@ const styles = StyleSheet.create({
   buttonText: {
     color: COLORS.secondary,
     fontSize: width * 0.045,
-    fontFamily: 'Figtree-Bold',
-    fontWeight: '700', // Bold weight for Send OTP
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
-  // socialContainer: {
-  //   marginTop: height * 0.06,
-  //   width: '100%',
-  //   flex: 1,
-  //   alignItems: 'flex-start',
-  //   justifyContent: 'flex-start',
-  //   gap: 5,
-  // },
+  socialContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 20,
+    paddingHorizontal: 16,
+    gap: 1,
+  },
   socialButton: {
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'center',
-    marginRight : 25
+    marginRight: 25,
   },
   appleText: {
     fontSize: width * 0.045,
     color: COLORS.text,
-    fontFamily: 'Figtree-Medium',
-    fontWeight: '600',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
     marginBottom: 20,
     marginRight: 10,
   },
   socialText: {
     fontSize: width * 0.045,
     color: COLORS.text,
-    fontFamily: 'Figtree-Medium',
-    fontWeight: '600',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
     marginBottom: 10,
   },
-   socialContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 20,
-    paddingHorizontal: 16,
-    gap : 1
-  },
- 
   socialIcon: {
-     width: 75,
+    width: 75,
     height: 75,
     borderRadius: 37.5,
-
   },
   appleIcon: {
     width: 75,
     height: 75,
     borderRadius: 37.5,
   },
-  
   popupOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.4)',
@@ -290,8 +279,8 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     textAlign: 'center',
     marginBottom: 16,
-    fontFamily: 'Figtree-Medium',
-    fontWeight: '400',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Regular'),
   },
   popupButton: {
     backgroundColor: COLORS.primary,
@@ -301,8 +290,8 @@ const styles = StyleSheet.create({
   },
   popupButtonText: {
     color: COLORS.secondary,
-    fontFamily: 'Figtree-Bold',
-    fontWeight: '700',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     fontSize: width * 0.04,
   },
 });

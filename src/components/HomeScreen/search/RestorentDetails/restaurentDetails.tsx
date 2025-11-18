@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,10 +10,8 @@ import {
   Dimensions,
   StatusBar,
   Animated,
-  Modal,
-  Pressable,
   Platform,
-  FlatList,
+  Vibration,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS } from '../../../../theme/colors';
@@ -21,7 +19,14 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import font from '../../../../assets/fonts'
+import { getFontFamily, getFontWeight } from '../../../../utils/fontHelper';
+import RecommendedFood from './RecommendedFood';
+import BestInBurger from './BestInBurger';
+import FilterModal from './FilterModal';
+import FoodDetailModal from './FoodDetailModal';
+import VegNonVegModal from './VegNonVegModal';
+import RestuarantBadge from './RestuarantBadge';
+import FilterTags from './FilterTags';
 
 const { width, height } = Dimensions.get('window');
 
@@ -65,6 +70,10 @@ const RestaurentDetails: React.FC = () => {
 
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Heart Icon in header state for liked toggle
+  const [headerLiked, setHeaderLiked] = useState(false);
+  const [headerHeartScale] = useState(new Animated.Value(1));
 
   // Food Item Modal States
   const [selectedFood, setSelectedFood] = useState<FoodItem | null>(null);
@@ -183,16 +192,15 @@ const RestaurentDetails: React.FC = () => {
   };
 
   const [appliedFilters, setAppliedFilters] = useState({
-    sortBy: ['Price High to Low'],
-    TopPicks: ['Highly Recommended'],
-    DietaryPrefrence: ['Spicy']
+    sortBy: 'Price High to Low',
+    TopPicks: 'Highly Recommended',
+    DietaryPrefrence: 'Spicy',
   });
-
 
   const filterOptions = {
     sortBy: ['Price Low to High', 'Price High to Low'],
     TopPicks: ['Highly Recommended'],
-    DietaryPrefrence: ['Spicy']
+    DietaryPrefrence: ['Spicy'],
   };
 
   const hasActiveFilters = () => {
@@ -260,10 +268,9 @@ const RestaurentDetails: React.FC = () => {
 
   const resetFilters = () => {
     setAppliedFilters({
-      category: 'All',
-      rating: 'All',
-      priceRange: [100, 650],
-      sortBy: 'Recent',
+      sortBy: 'Price High to Low',
+      TopPicks: 'Highly Recommended',
+      DietaryPrefrence: 'Spicy',
     });
   };
 
@@ -290,6 +297,24 @@ const RestaurentDetails: React.FC = () => {
       ? require('../../../../assets/leaf.png')
       : require('../../../../assets/nonveg.png');
 
+  // Heart press handler for header back button heart with scale animation, color switch, and vibration
+  const onHeaderHeartPress = () => {
+    Vibration.vibrate(50);
+    Animated.sequence([
+      Animated.timing(headerHeartScale, {
+        toValue: 1.3,
+        duration: 120,
+        useNativeDriver: true,
+      }),
+      Animated.timing(headerHeartScale, {
+        toValue: 1,
+        duration: 120,
+        useNativeDriver: true,
+      }),
+    ]).start();
+    setHeaderLiked(prev => !prev);
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -298,304 +323,28 @@ const RestaurentDetails: React.FC = () => {
         barStyle="dark-content"
       />
 
-      {/* CATEGORY DROPDOWN MODAL */}
-      <Modal
-        visible={dropdownVisible}
-        animationType="fade"
-        transparent
-        onRequestClose={() => setDropdownVisible(false)}
-      >
-        <Pressable
-          style={styles.modalOverlay}
-          onPress={() => setDropdownVisible(false)}
-        >
-          <View style={styles.dropdownMenu}>
-            {categories.map(c => (
-              <TouchableOpacity
-                key={c.name}
-                style={styles.dropdownItem}
-                onPress={() => {
-                  setActiveCategory(c.name);
-                  setDropdownVisible(false);
-                }}
-              >
-                <Image source={c.img} style={styles.dropdownIcon} />
-                <Text
-                  style={[
-                    styles.dropdownText,
-                    activeCategory === c.name
-                      ? { color: COLORS.primary, fontWeight: '700' }
-                      : undefined,
-                  ]}
-                >
-                  {c.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </Pressable>
-      </Modal>
-
       {/* VEG/NON-VEG DROPDOWN MODAL */}
-      <Modal
+      <VegNonVegModal
         visible={vegNonVegDropdownVisible}
-        animationType="fade"
-        transparent
-        onRequestClose={() => setVegNonVegDropdownVisible(false)}
-      >
-        <Pressable
-          style={styles.modalOverlay}
-          onPress={() => setVegNonVegDropdownVisible(false)}
-        >
-          <View style={styles.vegDropdownMenu}>
-            <TouchableOpacity
-              style={styles.vegDropdownItem}
-              onPress={() => {
-                setVegNonVegFilter('Veg');
-                setVegNonVegDropdownVisible(false);
-              }}
-            >
-              <Image
-                source={require('../../../../assets/veg.png')}
-                style={styles.vegDropdownIcon}
-              />
-              <Text
-                style={[
-                  styles.vegDropdownText,
-                  vegNonVegFilter === 'Veg' && {
-                    color: '#259E29',
-                    fontWeight: '700',
-                  },
-                ]}
-              >
-                Veg
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.vegDropdownItem}
-              onPress={() => {
-                setVegNonVegFilter('NonVeg');
-                setVegNonVegDropdownVisible(false);
-              }}
-            >
-              <Image
-                source={require('../../../../assets/nonveg.png')}
-                style={styles.vegDropdownIcon}
-              />
-              <Text
-                style={[
-                  styles.vegDropdownText,
-                  vegNonVegFilter === 'NonVeg' && {
-                    color: '#FE0505',
-                    fontWeight: '700',
-                  },
-                ]}
-              >
-                Non-Veg
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </Pressable>
-      </Modal>
+        onClose={() => setVegNonVegDropdownVisible(false)}
+        vegNonVegFilter={vegNonVegFilter}
+        setVegNonVegFilter={setVegNonVegFilter}
+      />
 
       {/* FOOD ITEM DETAIL MODAL */}
-      <Modal
-        visible={foodModalVisible}
-        animationType="slide"
-        transparent
-        onRequestClose={() => setFoodModalVisible(false)}
-      >
-        <View style={styles.foodModalOverlay}>
-          <Pressable
-            style={styles.foodModalBackdrop}
-            onPress={() => setFoodModalVisible(false)}
-          />
-
-          {/* Close Button - Half Outside/Half Inside Modal */}
-          <TouchableOpacity
-            style={styles.modalCloseBtn}
-            onPress={() => setFoodModalVisible(false)}
-            activeOpacity={0.8}
-          >
-            <Image
-              source={require('../../../../assets/close.png')}
-              style={styles.modalCloseIcon}
-            />
-          </TouchableOpacity>
-
-          <View style={styles.foodModalContent}>
-            {selectedFood && (
-              <>
-                {/* Header with Image */}
-                <View style={styles.modalHeader}>
-                  <Image
-                    source={selectedFood.img}
-                    style={styles.modalFoodImage}
-                  />
-
-                  {/* Rating Badge */}
-                  <View style={styles.modalRatingBadge}>
-                    <Image
-                      source={require('../../../../assets/star.png')}
-                      style={styles.modalStarIcon}
-                    />
-                    <Text style={styles.modalRatingText}>4.4</Text>
-                  </View>
-                </View>
-
-                {/* Scrollable Content */}
-                <ScrollView
-                  style={styles.modalScrollContent}
-                  contentContainerStyle={styles.modalScrollContentContainer}
-                  showsVerticalScrollIndicator={false}
-                  bounces={true}
-                >
-                  {/* Veg/Non-Veg Badge and Spicy Tag */}
-                  <View style={styles.modalBadgeRow}>
-                    <Image
-                      source={
-                        selectedFood.isVeg
-                          ? require('../../../../assets/veg.png')
-                          : require('../../../../assets/nonveg.png')
-                      }
-                      style={styles.modalVegBadge}
-                    />
-                    <View style={styles.modalSpicyTag}>
-                      <Image
-                        source={require('../../../../assets/spicy.png')}
-                        style={styles.modalSpicyIcon}
-                      />
-                      <Text style={styles.modalSpicyText}>Spicy</Text>
-                    </View>
-                  </View>
-
-                  {/* Food Name */}
-                  <Text style={styles.modalFoodName}>{selectedFood.name}</Text>
-
-                  {/* Restaurant Name */}
-                  <Text style={styles.modalRestaurantName}>
-                    {selectedFood.restaurant}
-                  </Text>
-
-                  {/* Description */}
-                  <Text style={styles.modalDescription}>
-                    {selectedFood.description}
-                  </Text>
-
-                  {/* Extra Cheese Section */}
-                  <Text style={styles.modalSectionTitle}>Extra Cheese</Text>
-                  <Text style={styles.modalSectionSubtitle}>
-                    Select up to 2 option
-                  </Text>
-
-                  {/* Cheese Options */}
-                  <TouchableOpacity
-                    style={styles.modalOptionRow}
-                    onPress={() => toggleCheeseSelection('Single Cheese Slice')}
-                    activeOpacity={0.7}
-                  >
-                    <View style={styles.modalOptionLeft}>
-                      <Image
-                        source={require('../../../../assets/veg.png')}
-                        style={styles.modalOptionVegIcon}
-                      />
-                      <Text style={styles.modalOptionText}>
-                        Single Cheese Slice
-                      </Text>
-                    </View>
-                    <View style={styles.modalOptionRight}>
-                      <Text style={styles.modalOptionPrice}>₹25.00</Text>
-                      {selectedCheese.includes('Single Cheese Slice') ? (
-                        <Image
-                          source={require('../../../../assets/tick.png')}
-                          style={styles.modalTickIcon}
-                        />
-                      ) : (
-                        <View style={styles.modalUncheckedCircle} />
-                      )}
-                    </View>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={styles.modalOptionRow}
-                    onPress={() => toggleCheeseSelection('Double Cheese Slice')}
-                    activeOpacity={0.7}
-                  >
-                    <View style={styles.modalOptionLeft}>
-                      <Image
-                        source={require('../../../../assets/veg.png')}
-                        style={styles.modalOptionVegIcon}
-                      />
-                      <Text style={styles.modalOptionText}>
-                        Double Cheese Slice
-                      </Text>
-                    </View>
-                    <View style={styles.modalOptionRight}>
-                      <Text style={styles.modalOptionPrice}>₹39.00</Text>
-                      {selectedCheese.includes('Double Cheese Slice') ? (
-                        <Image
-                          source={require('../../../../assets/tick.png')}
-                          style={styles.modalTickIcon}
-                        />
-                      ) : (
-                        <View style={styles.modalUncheckedCircle} />
-                      )}
-                    </View>
-                  </TouchableOpacity>
-
-                  {/* Cooking Request */}
-                  <Text style={styles.modalCookingRequestTitle}>
-                    Add a cooking request (optional)
-                  </Text>
-                  <TextInput
-                    style={styles.modalCookingInput}
-                    placeholder="e.g. don't make it too spicy"
-                    placeholderTextColor="#999"
-                    value={cookingRequest}
-                    onChangeText={setCookingRequest}
-                    multiline
-                    numberOfLines={4}
-                  />
-                </ScrollView>
-
-                {/* Bottom Action Bar */}
-                <View style={styles.modalBottomBar}>
-                  {/* Quantity Control */}
-                  <View style={styles.quantityControl}>
-                    <TouchableOpacity
-                      style={styles.quantityBtn}
-                      onPress={decrementQuantity}
-                    >
-                      <Text style={styles.quantityBtnText}>-</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.quantityText}>{quantity}</Text>
-                    <TouchableOpacity
-                      style={styles.quantityBtn}
-                      onPress={incrementQuantity}
-                    >
-                      <Text style={styles.quantityBtnText}>+</Text>
-                    </TouchableOpacity>
-                  </View>
-
-                  {/* Add to Cart Button */}
-                  <TouchableOpacity
-                    style={styles.addToCartBtn}
-                    onPress={handleAddToCart}
-                    activeOpacity={0.8}
-                  >
-                    <Image
-                      source={require('../../../../assets/bag.png')}
-                      style={styles.bagIcon}
-                    />
-                    <Text style={styles.addToCartText}>ADD TO CART</Text>
-                  </TouchableOpacity>
-                </View>
-              </>
-            )}
-          </View>
-        </View>
-      </Modal>
+      <FoodDetailModal
+        foodModalVisible={foodModalVisible}
+        setFoodModalVisible={setFoodModalVisible}
+        selectedFood={selectedFood}
+        selectedCheese={selectedCheese}
+        toggleCheeseSelection={toggleCheeseSelection}
+        quantity={quantity}
+        incrementQuantity={incrementQuantity}
+        decrementQuantity={decrementQuantity}
+        cookingRequest={cookingRequest}
+        setCookingRequest={setCookingRequest}
+        handleAddToCart={handleAddToCart}
+      />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -610,7 +359,7 @@ const RestaurentDetails: React.FC = () => {
           <View style={styles.headerOverlay}>
             <TouchableOpacity
               style={styles.backBtn}
-              onPress={() => navigation.navigate('Search')}
+              onPress={() => navigation.goBack()}
             >
               <Image
                 source={require('../../../../assets/back.png')}
@@ -619,59 +368,33 @@ const RestaurentDetails: React.FC = () => {
             </TouchableOpacity>
 
             <Text style={styles.headerTitle}>Bistro Excellence</Text>
-            <TouchableOpacity style={styles.headerHeartBtn}>
-              <Image
-                source={require('../../../../assets/heart.png')}
-                style={styles.heartIcon}
+
+            <TouchableOpacity
+              style={[
+                styles.headerHeartBtn,
+                headerLiked && styles.headerHeartBtnLiked,
+              ]}
+              onPress={onHeaderHeartPress}
+              activeOpacity={0.8}
+            >
+              <Animated.Image
+                source={
+                  headerLiked
+                    ? require('../../../../assets/heartfill.png')
+                    : require('../../../../assets/heart.png')
+                }
+                style={[
+                  styles.heartIcon,
+                  { transform: [{ scale: headerHeartScale }] },
+                ]}
+                resizeMode="contain"
               />
             </TouchableOpacity>
           </View>
         </View>
 
         {/* ===== RESTAURANT BADGE ===== */}
-        <View style={styles.curvedSection}>
-          <View style={styles.logoWrapper}>
-            <View style={styles.logoCircle}>
-              <Image
-                source={require('../../../../assets/be.png')}
-                style={styles.logo}
-              />
-            </View>
-          </View>
-          <TouchableOpacity style={styles.mapWrapper}>
-            <Image
-              source={require('../../../../assets/map.png')}
-              style={styles.mapIcon}
-            />
-          </TouchableOpacity>
-          <Text style={styles.resName}>Bistro Excellence</Text>
-          <View style={styles.locationRow}>
-            <Image
-              source={require('../../../../assets/location1.png')}
-              style={styles.locIcon}
-            />
-            <Text style={styles.locationText}>
-              Near MC College, Barpeta Town
-            </Text>
-          </View>
-          <View style={styles.statsRow}>
-            <Image
-              source={require('../../../../assets/leaf.png')}
-              style={styles.statIcon}
-            />
-            <Text style={styles.statText}>590.0 m</Text>
-            <Image
-              source={require('../../../../assets/clockk.png')}
-              style={styles.statIcon}
-            />
-            <Text style={styles.statText}>25 min</Text>
-            <Image
-              source={require('../../../../assets/order.png')}
-              style={styles.statIcon}
-            />
-            <Text style={styles.statText}>5000+ Order</Text>
-          </View>
-        </View>
+        <RestuarantBadge />
 
         {/* ===== SEARCH BAR ===== */}
         <View style={styles.searchWrapper}>
@@ -684,6 +407,8 @@ const RestaurentDetails: React.FC = () => {
               placeholder="search"
               placeholderTextColor="#999"
               style={styles.input}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
             />
           </View>
           <TouchableOpacity
@@ -700,9 +425,7 @@ const RestaurentDetails: React.FC = () => {
         {/* ===== CATEGORY BAR ===== */}
         <View style={styles.categoryHeader}>
           <Image source={currentIcon} style={styles.leafIcon} />
-          <Text style={styles.availText}>
-            Available options for {selectedItem}
-          </Text>
+          <Text style={styles.availText}>Available options for {selectedItem}</Text>
           <Image
             source={
               vegNonVegFilter === 'Veg'
@@ -762,132 +485,29 @@ const RestaurentDetails: React.FC = () => {
             </ScrollView>
 
             {/* ===== FILTER TAGS ===== */}
-            <View style={styles.filtersWrapper}>
-              <TouchableOpacity onPress={() => setShowFilterModal(true)}>
-                <View style={styles.filterTagFixed}>
-                  <Image
-                    source={require('../../../../assets/filter3.png')}
-                    style={styles.filterTagIcon}
-                  />
-                  {hasActiveFilters() && <View style={styles.filterDot} />}
-                  <Text style={styles.filterTagText}>Filter (1)</Text>
-                </View>
-              </TouchableOpacity>
-
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                style={styles.filterScrollView}
-                contentContainerStyle={styles.filterScrollContent}
-              >
-                <TouchableOpacity
-                  style={styles.filterTag}
-                  onPress={() => toggleFilter('Spicy')}
-                  activeOpacity={0.7}
-                >
-                  <Image
-                    source={require('../../../../assets/spicy.png')}
-                    style={styles.filterTagIcon}
-                  />
-                  <Text style={styles.filterTagText}>Spicy</Text>
-                  {filters.includes('Spicy') && (
-                    <Image
-                      source={require('../../../../assets/close.png')}
-                      style={[styles.closeIcon]}
-                    />
-                  )}
-                </TouchableOpacity>
-
-                <View style={styles.filterTag}>
-                  <Image
-                    source={require('../../../../assets/popular.png')}
-                    style={styles.filterTagIcon}
-                  />
-                  <Text style={styles.filterTagText}>Offer's</Text>
-                </View>
-
-                <View style={styles.filterTag}>
-                  <Image
-                    source={require('../../../../assets/vegan.png')}
-                    style={styles.filterTagIcon}
-                  />
-                  <Text style={styles.filterTagText}>Vegan</Text>
-                </View>
-              </ScrollView>
-            </View>
+            <FilterTags
+              setShowFilterModal={setShowFilterModal}
+              hasActiveFilters={hasActiveFilters}
+              toggleFilter={toggleFilter}
+              filters={filters}
+            />
 
             {/* ===== RECOMMENDATION HEADER ===== */}
             <View style={styles.recommendHeaderRow}>
               <Image source={currentIcon} style={styles.recommendHeaderIcon} />
-              <Text style={styles.recommendHeaderText}>
-                Recommendation for you.
-              </Text>
+              <Text style={styles.recommendHeaderText}>Recommendation for you.</Text>
             </View>
 
             {/* FOOD GRID (Recommendation) */}
-            <View style={styles.grid}>
-              {foodItems.map(f => (
-                <View key={f.id} style={styles.foodCard}>
-                  <TouchableOpacity
-                    style={[styles.heartWrapper, styles.heartWrapperBack]}
-                    onPress={() => handleHeartPress(f.id)}
-                  >
-                    <Animated.Image
-                      source={
-                        likedItems.includes(f.id)
-                          ? require('../../../../assets/heartfill.png')
-                          : require('../../../../assets/heart.png')
-                      }
-                      style={[
-                        styles.heartIconSmall,
-                        { transform: [{ scale: heartScales[f.id] || 1 }] },
-                      ]}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    activeOpacity={0.9}
-                    onPress={() => handleFoodItemPress(f)}
-                  >
-                    <Image source={f.img} style={styles.foodImg} />
-                    <View style={styles.foodRatingBadge}>
-                      <Image
-                        source={require('../../../../assets/star.png')}
-                        style={styles.starIcon}
-                      />
-                      <Text style={styles.ratingText}>4.4</Text>
-                    </View>
-                  </TouchableOpacity>
-                  <View style={styles.foodInfo}>
-                    <Text style={styles.foodName}>{f.name}</Text>
-                    <View style={styles.priceRow}>
-                      <Text style={styles.price}>₹ {f.price.toFixed(2)}</Text>
-                      <Text style={styles.oldPrice}>
-                        ₹ {f.oldPrice.toFixed(2)}
-                      </Text>
-                      <TouchableOpacity
-                        onPress={() => handlePlusPress(f.id)}
-                        style={styles.plusBtn}
-                      >
-                        <Animated.Image
-                          source={require('../../../../assets/plus.png')}
-                          style={[
-                            styles.plusIcon,
-                            { transform: [{ scale: plusScales[f.id] || 1 }] },
-                          ]}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                    <View style={styles.timeRow}>
-                      <Image
-                        source={require('../../../../assets/clock.png')}
-                        style={styles.clockIcon}
-                      />
-                      <Text style={styles.timeText}>{f.time}</Text>
-                    </View>
-                  </View>
-                </View>
-              ))}
-            </View>
+            <RecommendedFood
+              foodItems={foodItems}
+              likedItems={likedItems}
+              heartScales={heartScales}
+              plusScales={plusScales}
+              handleHeartPress={handleHeartPress}
+              handlePlusPress={handlePlusPress}
+              handleFoodItemPress={handleFoodItemPress}
+            />
 
             {/* ===== BEST IN CATEGORY ===== */}
             <View style={styles.bestBurgerHeaderRow}>
@@ -895,247 +515,32 @@ const RestaurentDetails: React.FC = () => {
                 source={require('../../../../assets/popular.png')}
                 style={styles.bestBurgerHeaderIcon}
               />
-              <Text style={styles.bestBurgerHeaderText}>
-                Best In {activeCategory}.
-              </Text>
+              <Text style={styles.bestBurgerHeaderText}>Best In {activeCategory}.</Text>
             </View>
-            <View style={styles.grid}>
-              {foodItems.map(f => (
-                <View key={`best-${f.id}`} style={styles.foodCard}>
-                  <TouchableOpacity
-                    style={styles.heartWrapper}
-                    onPress={() => handleHeartPress(f.id)}
-                  >
-                    <Animated.Image
-                      source={
-                        likedItems.includes(f.id)
-                          ? require('../../../../assets/heartfill.png')
-                          : require('../../../../assets/heart.png')
-                      }
-                      style={[
-                        styles.heartIconSmall,
-                        { transform: [{ scale: heartScales[f.id] || 1 }] },
-                      ]}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    activeOpacity={0.9}
-                    onPress={() => handleFoodItemPress(f)}
-                  >
-                    <Image source={f.img} style={styles.foodImg} />
-                    <View style={styles.foodRatingBadge}>
-                      <Image
-                        source={require('../../../../assets/star.png')}
-                        style={styles.starIcon}
-                      />
-                      <Text style={styles.ratingText}>4.4</Text>
-                    </View>
-                  </TouchableOpacity>
-                  <View style={styles.foodInfo}>
-                    <Text style={styles.foodName}>{f.name}</Text>
-                    <View style={styles.priceRow}>
-                      <Text style={styles.price}>₹ {f.price.toFixed(2)}</Text>
-                      <Text style={styles.oldPrice}>
-                        ₹ {f.oldPrice.toFixed(2)}
-                      </Text>
-                      <TouchableOpacity
-                        onPress={() => handlePlusPress(f.id)}
-                        style={styles.plusBtn}
-                      >
-                        <Animated.Image
-                          source={require('../../../../assets/plus.png')}
-                          style={[
-                            styles.plusIcon,
-                            { transform: [{ scale: plusScales[f.id] || 1 }] },
-                          ]}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                    <View style={styles.timeRow}>
-                      <Image
-                        source={require('../../../../assets/clockk.png')}
-                        style={styles.clockIcon}
-                      />
-                      <Text style={styles.timeText}>{f.time}</Text>
-                    </View>
-                  </View>
-                </View>
-              ))}
-            </View>
+            <BestInBurger
+              foodItems={foodItems}
+              likedItems={likedItems}
+              heartScales={heartScales}
+              plusScales={plusScales}
+              handleHeartPress={handleHeartPress}
+              handlePlusPress={handlePlusPress}
+              handleFoodItemPress={handleFoodItemPress}
+            />
           </>
         ) : (
           <EmptyState />
         )}
       </ScrollView>
 
-      <Modal
-        visible={showFilterModal}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setShowFilterModal(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Filtering & Sorting</Text>
-              <View style={{ height: 3, width: '100%', backgroundColor: '#dadada' }}></View>
-
-              {/* Close icon outside header (overlapping) */}
-              <TouchableOpacity
-                onPress={() => setShowFilterModal(false)}
-                style={styles.closeButtonWrapper}
-              >
-                <Image
-                  source={require('../../../../assets/close1.png')}
-                  style={styles.closeIcon1}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            </View>
-
-            <ScrollView showsVerticalScrollIndicator={false} style={styles.modalScroll}>
-              {/* Delivery Time Filter */}
-              <View style={styles.filterSection}>
-                <Text style={styles.filterSectionTitle}>Sort By</Text>
-
-                <FlatList
-                  data={filterOptions.sortBy}
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item) => item}
-                  contentContainerStyle={{ paddingVertical: 6 }}
-                  renderItem={({ item }) => {
-                    const isActive = appliedFilters.sortBy === item;
-                    return (
-                      <TouchableOpacity
-                        style={[
-                          styles.filterOption,
-                          isActive && styles.activeFilterOption,
-                          { marginRight: 10 }, // spacing between items
-                        ]}
-                        onPress={() => setAppliedFilters({ ...appliedFilters, sortBy: item })}
-                      >
-                        <Text
-                          style={[
-                            styles.filterOptionText,
-                            isActive && styles.activeFilterOptionText,
-                          ]}
-                        >
-                          {item}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  }}
-                />
-              </View>
-              <View style={{ width: wp('100%'), height: wp('3%') }} />
-
-
-              {/* Top Pick's Filter */}
-              <View style={styles.filterSection}>
-                <Text style={styles.filterSectionTitle}>Top Pick's</Text>
-                <View style={styles.filterOptions}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                    <Image
-                      source={require('../../../../assets/leaf.png')}
-                      style={styles.statIcon}
-                    />
-                    <Text style={{ fontSize: 16, fontFamily: "Figtree-Medium", marginBottom: 10 }}>This restaurent is pure veg.</Text>
-                  </View>
-                  {filterOptions.TopPicks.map(option => {
-                    const isActive = appliedFilters.TopPicks === option;
-                    return (
-                      <TouchableOpacity
-                        key={option}
-                        style={[
-                          styles.filterOption,
-                          isActive && styles.activeFilterOption
-                        ]}
-                        onPress={() => setAppliedFilters({ ...appliedFilters, TopPicks: option })}
-                      >
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-                          <Image
-                            source={require('../../../../assets/clockk.png')}
-                            style={{
-                              width: 13,
-                              height: 12,
-                              resizeMode: 'contain',
-                              tintColor: isActive ? '#fff' : COLORS.primary, // ✅ White if active, primary color otherwise
-                            }}
-                          />
-                          <Text
-                            style={[
-                              styles.filterOptionText,
-                              isActive && styles.activeFilterOptionText
-                            ]}
-                          >
-                            {option}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-              </View>
-
-
-              {/* Dietary Prefrence Filter */}
-              <View style={styles.filterSection}>
-                <Text style={styles.filterSectionTitle}>Dietary Prefrence</Text>
-                <View style={styles.filterOptions}>
-                  {filterOptions.DietaryPrefrence.map(option => {
-                    const isActive = appliedFilters.DietaryPrefrence === option;
-                    return (
-                      <TouchableOpacity
-                        key={option}
-                        style={[
-                          styles.filterOption,
-                          isActive && styles.activeFilterOption
-                        ]}
-                        onPress={() => setAppliedFilters({ ...appliedFilters, DietaryPrefrence: option })}
-                      >
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-                          <Image
-                            source={require('../../../../assets/spicy.png')}
-                            style={{
-                              width: 13,
-                              height: 12,
-                              resizeMode: 'contain',
-                              tintColor: isActive ? '#fff' : COLORS.primary, // ✅ White if active, primary color otherwise
-                            }}
-                          />
-                          <Text
-                            style={[
-                              styles.filterOptionText,
-                              isActive && styles.activeFilterOptionText
-                            ]}
-                          >
-                            {option}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-              </View>
-
-            </ScrollView>
-
-            <View style={styles.modalActions}>
-              <View style={{borderColor : '#dadada',borderWidth : 1,width : '100%',flexDirection : 'row',padding : wp('1%'),borderRadius : wp('3%')}}>
-                <TouchableOpacity style={styles.resetBtn} onPress={resetFilters}>
-                <Text style={styles.resetBtnText}>Clear All</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.applyBtn} onPress={applyFilters}>
-                <Text style={styles.applyBtnText}>Apply</Text>
-              </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </View>
-      </Modal>
-
-
+      <FilterModal
+        showFilterModal={showFilterModal}
+        setShowFilterModal={setShowFilterModal}
+        filterOptions={filterOptions}
+        appliedFilters={appliedFilters}
+        setAppliedFilters={setAppliedFilters}
+        resetFilters={resetFilters}
+        applyFilters={applyFilters}
+      />
     </View>
   );
 };
@@ -1181,11 +586,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#fff',
     fontSize: hp('2.2%'),
-    fontWeight: '700',
     letterSpacing: 0.6,
     textShadowColor: '#000',
     textShadowRadius: 4,
-    fontFamily: 'Figtree-Bold'
+    fontFamily: Platform.OS === 'android' ? 'Figtree-Bold' : 'Figtree',
+    fontWeight: Platform.OS === 'android' ? undefined : '700',
   },
   backBtn: {
     zIndex: 2,
@@ -1207,98 +612,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.09,
     shadowRadius: 8,
   },
-  heartIcon: {
-    width: wp('4.5%'),
-    height: wp('4.5%'),
-    tintColor: '#fff',
-  },
-
-  curvedSection: {
+  headerHeartBtnLiked: {
     backgroundColor: '#fff',
-    borderTopLeftRadius: wp('8%'),
-    borderTopRightRadius: wp('8%'),
-    marginTop: hp('-2.2%'),
-    alignItems: 'center',
-    paddingVertical: hp('2%'),
-    paddingBottom: hp('1.2%'),
-    shadowColor: '#000',
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 4,
   },
-
-  logoWrapper: {
-    marginTop: hp('-3.8%'),
-    marginBottom: hp('1%'),
-    alignSelf: 'center',
+  heartIcon: {
+    width: wp('4.3%'),
+    height: wp('4.3%'),
   },
-  logoCircle: {
-    backgroundColor: '#FFDB56',
-    borderRadius: wp('7%'),
-    padding: wp('3.5%'),
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 3,
-  },
-  logo: {
-    width: wp('11%'),
-    height: wp('11%'),
-    resizeMode: 'contain',
-  },
-  mapWrapper: {
-    position: 'absolute',
-    top: hp('1.3%'),
-    right: wp('4%'),
-    zIndex: 2,
-  },
-  mapIcon: {
-    width: wp('6%'),
-    height: wp('6%'),
-  },
-  resName: {
-    fontSize: hp('2%'),
-    fontWeight: '700',
-    color: '#222',
-    marginTop: hp('0.5%'),
-    fontFamily: 'Figtree-Bold'
-  },
-  locationRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: hp('0.6%'),
-    marginBottom: hp('0.3%'),
-  },
-  locIcon: {
-    width: wp('3.5%'),
-    height: wp('3.5%'),
-    marginRight: wp('1.5%'),
-  },
-  locationText: {
-    color: '#888',
-    fontSize: hp('1.5%'),
-    fontWeight: '500',
-    fontFamily: "Figtree-Medium"
-  },
-  statsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: hp('0.6%'),
-    justifyContent: 'center',
-    gap: wp('3%'),
-  },
-  statIcon: {
-    width: wp('3.2%'),
-    height: wp('3.2%'),
-    marginRight: wp('0.8%'),
-  },
-  statText: {
-    fontSize: hp('1.4%'),
-    color: '#222',
-    fontWeight: '500',
-    marginRight: wp('2.5%'),
-    fontFamily: 'Figtree-Medium'
-  },
-
   searchWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1327,8 +647,8 @@ const styles = StyleSheet.create({
     paddingVertical: hp('1%'),
     fontSize: hp('1.8%'),
     color: '#111',
-    fontFamily: 'Figtree-Regular',
-    fontWeight: '400'
+    fontFamily: Platform.OS === 'android' ? 'Figtree-Regular' : 'Figtree',
+    fontWeight: Platform.OS === 'android' ? undefined : '400',
   },
   searchFilterContainer: {
     backgroundColor: COLORS.primary,
@@ -1342,7 +662,6 @@ const styles = StyleSheet.create({
     height: wp('5.5%'),
     tintColor: '#fff',
   },
-
   categoryHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1355,11 +674,11 @@ const styles = StyleSheet.create({
     marginRight: wp('1.8%'),
   },
   availText: {
-    fontWeight: '700',
     color: '#000',
     fontSize: hp('1.8%'),
     flex: 1,
-    fontFamily: 'Figtree-Bold'
+    fontFamily: Platform.OS === 'android' ? 'Figtree-Bold' : 'Figtree',
+    fontWeight: Platform.OS === 'android' ? undefined : '700',
   },
   vegIcon: {
     width: wp('3.5%'),
@@ -1373,7 +692,6 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     tintColor: '#999',
   },
-
   categorySlider: {
     paddingVertical: hp('1.2%'),
     marginVertical: hp('0.3%'),
@@ -1413,66 +731,13 @@ const styles = StyleSheet.create({
   },
   categoryTxt: {
     color: COLORS.primary,
-    fontWeight: '700',
     fontSize: hp('1.7%'),
-    fontFamily: 'Figtree-Bold'
+    fontFamily: Platform.OS === 'android' ? 'Figtree-Bold' : 'Figtree',
+    fontWeight: Platform.OS === 'android' ? undefined : '700',
   },
   categoryTxtActive: {
     color: COLORS.secondary,
   },
-
-  filtersWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: hp('0.3%'),
-    marginHorizontal: wp('5.5%'),
-  },
-  filterTagFixed: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: FILTER_TAG_COLORS.background,
-    borderColor: FILTER_TAG_COLORS.border,
-    borderWidth: 1.1,
-    borderRadius: wp('2%'),
-    paddingHorizontal: wp('3.5%'),
-    paddingVertical: hp('0.8%'),
-    marginRight: wp('2.5%'),
-  },
-  filterScrollView: {
-    flex: 1,
-  },
-  filterScrollContent: {
-    alignItems: 'center',
-    gap: wp('2.5%'),
-  },
-  filterTag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: FILTER_TAG_COLORS.background,
-    borderColor: FILTER_TAG_COLORS.border,
-    borderWidth: 1.1,
-    borderRadius: wp('2%'),
-    paddingHorizontal: wp('3.5%'),
-    paddingVertical: hp('0.8%'),
-  },
-  filterTagIcon: {
-    width: wp('3.5%'),
-    height: wp('3.5%'),
-    marginRight: wp('1%'),
-  },
-  filterTagText: {
-    color: '#000',
-    fontWeight: '500',
-    fontSize: hp('1.5%'),
-    fontFamily: 'Figtree-Medium'
-  },
-  closeIcon: {
-    width: wp('5%'),
-    height: wp('5%'),
-    marginLeft: wp('1.5%'),
-    tintColor: '#000',
-  },
-
   recommendHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1486,144 +751,11 @@ const styles = StyleSheet.create({
     marginRight: wp('1.5%'),
   },
   recommendHeaderText: {
-    fontWeight: '700',
     color: '#222',
     fontSize: hp('1.8%'),
-    fontFamily: 'Figtree-Bold'
+    fontFamily: Platform.OS === 'android' ? 'Figtree-Bold' : 'Figtree',
+    fontWeight: Platform.OS === 'android' ? undefined : '700',
   },
-
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginHorizontal: wp('5.5%'),
-    marginTop: hp('0.7%'),
-  },
-  foodCard: {
-    width: wp('44%'),
-    backgroundColor: '#fff',
-    borderRadius: wp('4.5%'),
-    marginBottom: hp('2%'),
-    shadowColor: '#000',
-    shadowOpacity: 0.03,
-    shadowRadius: 10,
-    elevation: 1,
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  heartWrapper: {
-    position: 'absolute',
-    right: wp('3%'),
-    top: hp('1.2%'),
-    backgroundColor: COLORS.primary,
-    borderRadius: wp('5%'),
-    padding: wp('1.8%'),
-    zIndex: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.09,
-    shadowRadius: 5,
-    elevation: 2,
-  },
-  heartWrapperBack: {
-    backgroundColor: 'rgba(0,0,0,0.25)',
-  },
-  heartIconSmall: {
-    width: wp('3.8%'),
-    height: wp('3.8%'),
-    tintColor: '#fff',
-  },
-  foodImg: {
-    width: '100%',
-    height: hp('13%'),
-    borderTopLeftRadius: wp('4.5%'),
-    borderTopRightRadius: wp('4.5%'),
-  },
-  foodRatingBadge: {
-    position: 'absolute',
-    bottom: hp('1%'),
-    right: wp('3%'),
-    backgroundColor: COLORS.primary,
-    borderRadius: wp('2.5%'),
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: wp('1.5%'),
-    paddingVertical: hp('0.4%'),
-  },
-  starIcon: {
-    width: wp('3%'),
-    height: wp('3%'),
-    tintColor: '#fff',
-    marginRight: wp('1%'),
-  },
-  ratingText: {
-    color: '#fff',
-    fontSize: hp('1.3%'),
-    fontWeight: '600',
-  },
-
-  foodInfo: {
-    padding: wp('2.5%'),
-    paddingTop: hp('0.8%'),
-  },
-  foodName: {
-    fontWeight: '700',
-    color: '#222',
-    fontSize: hp('1.6%'),
-    marginBottom: hp('0.3%'),
-    fontFamily: 'Figtree-Bold'
-  },
-  priceRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: hp('0.2%'),
-  },
-  price: {
-    fontWeight: '600',
-    color: '#222',
-    fontSize: hp('1.6%'),
-    fontFamily: "Figtree-SemiBold"
-  },
-  oldPrice: {
-    fontSize: hp('1.3%'),
-    color: '#FA463D',
-    textDecorationLine: 'line-through',
-    marginLeft: wp('1%'),
-    fontFamily: "Figtree-Regular"
-
-  },
-  plusBtn: {
-    backgroundColor: COLORS.primary,
-    width: wp('7%'),
-    height: wp('7%'),
-    borderRadius: wp('2%'),
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: wp('2%'),
-  },
-  plusIcon: {
-    width: wp('3.5%'),
-    height: wp('3.5%'),
-    tintColor: '#fff',
-  },
-  timeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: hp('0.6%'),
-    gap: wp('1.8%'),
-  },
-  clockIcon: {
-    width: wp('3.2%'),
-    height: wp('3.2%'),
-    tintColor: COLORS.primary,
-  },
-  timeText: {
-    fontSize: hp('1.3%'),
-    color: '#666',
-    fontWeight: '600',
-    fontFamily: 'Figtree-Regular'
-  },
-
   bestBurgerHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1637,65 +769,11 @@ const styles = StyleSheet.create({
     marginRight: wp('1.8%'),
   },
   bestBurgerHeaderText: {
-    fontWeight: '700',
     color: '#222',
     fontSize: hp('1.7%'),
+    fontFamily: Platform.OS === 'android' ? 'Figtree-Bold' : 'Figtree',
+    fontWeight: Platform.OS === 'android' ? undefined : '700',
   },
-
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.08)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  dropdownMenu: {
-    backgroundColor: '#fff',
-    borderRadius: wp('3%'),
-    paddingVertical: hp('1%'),
-    paddingHorizontal: wp('6%'),
-    elevation: 5,
-    minWidth: wp('40%'),
-  },
-  dropdownItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: hp('1%'),
-  },
-  dropdownIcon: {
-    width: wp('4.8%'),
-    height: wp('4.8%'),
-    marginRight: wp('3.5%'),
-  },
-  dropdownText: {
-    fontSize: hp('1.8%'),
-    fontWeight: '600',
-    color: '#232323',
-  },
-
-  vegDropdownMenu: {
-    backgroundColor: '#fff',
-    borderRadius: wp('3%'),
-    paddingVertical: hp('1%'),
-    paddingHorizontal: wp('6%'),
-    elevation: 5,
-    minWidth: wp('40%'),
-  },
-  vegDropdownItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: hp('1.2%'),
-  },
-  vegDropdownIcon: {
-    width: wp('4.5%'),
-    height: wp('4.5%'),
-    marginRight: wp('3%'),
-  },
-  vegDropdownText: {
-    fontSize: hp('1.8%'),
-    fontWeight: '600',
-    color: '#232323',
-  },
-
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -1715,432 +793,7 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
     lineHeight: hp('3%'),
-    fontWeight: '500',
-  },
-
-  // FOOD MODAL STYLES
-  foodModalOverlay: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  foodModalBackdrop: {
-    flex: 1,
-  },
-  foodModalContent: {
-    backgroundColor: '#fff',
-    borderTopLeftRadius: wp('6%'),
-    borderTopRightRadius: wp('6%'),
-    height: Platform.OS === 'ios' ? hp('82%') : hp('80%'),
-    paddingBottom: Platform.OS === 'ios' ? hp('2%') : 0,
-  },
-  modalHeader: {
-    position: 'relative',
-  },
-  modalFoodImage: {
-    width: '100%',
-    height: Platform.OS === 'ios' ? hp('22%') : hp('20%'),
-    borderTopLeftRadius: wp('6%'),
-    borderTopRightRadius: wp('6%'),
-    resizeMode: 'cover',
-  },
-  // Close Button - Half Outside Modal
-  modalCloseBtn: {
-  position: 'absolute',
-  top: Platform.OS === 'ios' ? hp('8%') : hp('10%'),
-  left: 0,
-  right: 0,
-  alignSelf: 'center',
-
-  zIndex: 999,
-  backgroundColor: '#fff',
-  borderRadius: wp('50%'),
-  padding: wp('2%'),
-  width: wp('12%'),
-  height: wp('12%'),
-  alignItems: 'center',
-  justifyContent: 'center',
-
-  elevation: 8,
-  shadowColor: '#000',
-  shadowOpacity: 0.3,
-  shadowRadius: 8,
-  shadowOffset: { width: 0, height: 3 },
-},
-  modalCloseIcon: {
-    width: wp('15%'),
-    height: wp('15%'),
-    tintColor: COLORS.primary,
-    resizeMode: 'contain',
-  },
-  closeIcon1: {
-    width: 20,
-    height: 20,
-    tintColor: '#000',
-  },
-  modalRatingBadge: {
-    position: 'absolute',
-    bottom: hp('1.5%'),
-    right: wp('5%'),
-    backgroundColor: COLORS.primary,
-    borderRadius: wp('2.5%'),
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: wp('2.5%'),
-    paddingVertical: hp('0.6%'),
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-  },
-  modalStarIcon: {
-    width: wp('3.2%'),
-    height: wp('3.2%'),
-    tintColor: '#fff',
-    marginRight: wp('1%'),
-    resizeMode: 'contain',
-  },
-  modalRatingText: {
-    color: '#fff',
-    fontSize: hp('1.5%'),
-    fontWeight: '700',
-  },
-  modalScrollContent: {
-    flex: 1,
-    marginTop: wp('2%'),
-  },
-  modalScrollContentContainer: {
-    paddingHorizontal: wp('5%'),
-    paddingTop: hp('1%'),
-    paddingBottom: hp('3%'),
-  },
-  modalBadgeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: hp('1%'),
-  },
-  modalVegBadge: {
-    width: wp('4.5%'),
-    height: wp('4.5%'),
-    marginRight: wp('2%'),
-    resizeMode: 'contain',
-  },
-  modalSpicyTag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: FILTER_TAG_COLORS.background,
-    borderColor: FILTER_TAG_COLORS.border,
-    borderWidth: 1,
-    borderRadius: wp('2%'),
-    paddingHorizontal: wp('2.5%'),
-    paddingVertical: hp('0.5%'),
-  },
-  modalSpicyIcon: {
-    width: wp('3%'),
-    height: wp('3%'),
-    marginRight: wp('1%'),
-    resizeMode: 'contain',
-  },
-  modalSpicyText: {
-    color: FILTER_TAG_COLORS.text,
-    fontSize: hp('1.4%'),
-    fontWeight: '600',
-  },
-  modalFoodName: {
-    fontSize: hp('2.4%'),
-    fontWeight: '700',
-    color: '#000',
-    marginBottom: hp('0.5%'),
-    lineHeight: hp('2.8%'),
-  },
-  modalRestaurantName: {
-    fontSize: hp('1.6%'),
-    fontWeight: '500',
-    color: '#666',
-    marginBottom: hp('1.2%'),
-  },
-  modalDescription: {
-    fontSize: hp('1.6%'),
-    fontWeight: '400',
-    color: '#555',
-    lineHeight: hp('2.3%'),
-    marginBottom: hp('2%'),
-  },
-  modalSectionTitle: {
-    fontSize: hp('1.9%'),
-    fontWeight: '700',
-    color: '#000',
-    marginBottom: hp('0.4%'),
-    marginTop: hp('0.5%'),
-  },
-  modalSectionSubtitle: {
-    fontSize: hp('1.5%'),
-    fontWeight: '400',
-    color: '#888',
-    marginBottom: hp('1.2%'),
-  },
-  modalOptionRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: hp('1.6%'),
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-  },
-  modalOptionLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  modalOptionVegIcon: {
-    width: wp('4%'),
-    height: wp('4%'),
-    marginRight: wp('2.5%'),
-    resizeMode: 'contain',
-  },
-  modalOptionText: {
-    fontSize: hp('1.65%'),
-    fontWeight: '600',
-    color: '#000',
-  },
-  modalOptionRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  modalOptionPrice: {
-    fontSize: hp('1.65%'),
-    fontWeight: '700',
-    color: '#000',
-    marginRight: wp('3%'),
-  },
-  modalTickIcon: {
-    width: wp('5%'),
-    height: wp('5%'),
-    resizeMode: 'contain',
-  },
-  modalUncheckedCircle: {
-    width: wp('5%'),
-    height: wp('5%'),
-    borderRadius: wp('2.5%'),
-    borderWidth: 2,
-    borderColor: '#CCC',
-  },
-  modalCookingRequestTitle: {
-    fontSize: hp('1.7%'),
-    fontWeight: '600',
-    color: '#000',
-    marginTop: hp('2%'),
-    marginBottom: hp('1%'),
-  },
-  modalCookingInput: {
-    backgroundColor: '#F8F8F8',
-    borderRadius: wp('3%'),
-    borderWidth: 1,
-    borderColor: '#E8E8E8',
-    paddingHorizontal: wp('4%'),
-    paddingVertical: Platform.OS === 'ios' ? hp('1.5%') : hp('1.2%'),
-    fontSize: hp('1.55%'),
-    color: '#000',
-    height: Platform.OS === 'ios' ? hp('10%') : hp('11%'),
-    textAlignVertical: 'top',
-  },
-  modalBottomBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: wp('5%'),
-    paddingVertical: Platform.OS === 'ios' ? hp('1.8%') : hp('2%'),
-    borderTopWidth: 1,
-    borderTopColor: '#F0F0F0',
-    backgroundColor: '#fff',
-  },
-  quantityControl: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFF9F3',
-    borderColor: '#FFE0C8',
-    borderWidth: 1.5,
-    borderRadius: wp('3%'),
-    paddingHorizontal: wp('2%'),
-    paddingVertical: hp('1%'),
-  },
-  quantityBtn: {
-    paddingHorizontal: wp('3%'),
-    paddingVertical: hp('0.2%'),
-  },
-  quantityBtnText: {
-    fontSize: hp('2.8%'),
-    fontWeight: '700',
-    color: COLORS.primary,
-  },
-  quantityText: {
-    fontSize: hp('2.1%'),
-    fontWeight: '700',
-    color: '#000',
-    marginHorizontal: wp('4%'),
-    minWidth: wp('7%'),
-    textAlign: 'center',
-  },
-  addToCartBtn: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: COLORS.primary,
-    borderRadius: wp('3%'),
-    paddingVertical: Platform.OS === 'ios' ? hp('1.8%') : hp('1.9%'),
-    marginLeft: wp('4%'),
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  bagIcon: {
-    width: wp('5%'),
-    height: wp('5%'),
-    tintColor: '#fff',
-    marginRight: wp('2%'),
-    resizeMode: 'contain',
-  },
-  addToCartText: {
-    fontSize: hp('1.85%'),
-    fontWeight: '700',
-    color: '#fff',
-    letterSpacing: 0.5,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
-  },
-  modalContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: wp('6%'),
-    borderTopRightRadius: wp('6%'),
-    paddingTop: hp('3%'),
-    maxHeight: hp('77%'),
-  },
-  modalHeader: {
-    backgroundColor: '#fff',
-    paddingVertical: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    position: 'relative',
-  },
-
-  modalTitle: {
-    fontSize: 18,
-    fontFamily: 'Figtree-Bold',
-    color: '#000',
-    marginBottom: 10,
-    alignSelf: 'flex-start',
-    marginLeft: 20
-  },
-
-  closeButtonWrapper: {
-    position: 'absolute',
-    bottom: 70,           // moves it half outside header
-    right: 160,
-    backgroundColor: '#fff',
-    borderRadius: 100,
-    padding: 10,
-    elevation: 5,       // shadow on Android
-    shadowColor: '#000', // shadow on iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    alignItems: 'center',
-  },
-  modalScroll: {
-    flex: 1,
-  },
-  filterSection: {
-    padding: wp('5%'),
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
-  },
-  filterLabel: {
-    fontFamily: 'Figtree-Bold',
-    fontSize: 16,
-    color: '#000',
-    marginBottom: 10,
-  },
-  histogramContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    height: 80,
-    marginVertical: 5,
-  },
-  bar: {
-    width: 6,
-    backgroundColor: '#e0e0e0',
-    marginHorizontal: 2,
-    borderRadius: 3,
-  },
-  filterSectionTitle: {
-    fontSize: wp('4%'),
-    fontWeight: '700',
-    color: '#000',
-    marginBottom: hp('1.5%'),
-    fontFamily: 'Figtree-Bold'
-  },
-  filterOptions: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: wp('2%'),
-  },
-  filterOption: {
-    backgroundColor: '#f0f0f0',
-    paddingHorizontal: wp('4%'),
-    paddingVertical: hp('1%'),
-    borderRadius: wp('5%'),
-    marginBottom: hp('1%'),
-  },
-  activeFilterOption: {
-    backgroundColor: COLORS.primary,
-  },
-  filterOptionText: {
-    fontSize: wp('3.5%'),
-    color: '#666',
-    fontWeight: '500',
-    fontFamily: 'Figtree-Medium'
-  },
-  activeFilterOptionText: {
-    color: '#fff',
-    fontWeight: '600',
-    fontFamily: 'Figtree-Medium'
-  },
-  modalActions: {
-    flexDirection: 'row',
-    padding: wp('7%'),
-  },
-  resetBtn: {
-    flex: 1,
-    paddingVertical: hp('1.8%'),
-    borderRadius: wp('3%'),
-    alignItems: 'center',
-  },
-  resetBtnText: {
-    fontSize: wp('4%'),
-    fontWeight: '600',
-    color: '#666',
-    fontFamily: 'Figtree-Bold'
-  },
-  applyBtn: {
-    flex: 1,
-    backgroundColor: COLORS.primary,
-    paddingVertical: hp('1.8%'),
-    borderRadius: wp('3%'),
-    alignItems: 'center',
-  },
-  applyBtnText: {
-    fontSize: wp('4%'),
-    fontWeight: '700',
-    color: '#fff',
-    fontFamily: 'Figtree-Bold'
+    fontFamily: Platform.OS === 'android' ? 'Figtree-Medium' : 'Figtree',
+    fontWeight: Platform.OS === 'android' ? undefined : '500',
   },
 });

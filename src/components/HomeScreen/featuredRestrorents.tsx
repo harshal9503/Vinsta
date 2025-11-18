@@ -10,18 +10,58 @@ import {
   StatusBar,
   TextInput,
   Modal,
+  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import font from '../../assets/fonts';
-
 
 const { width, height } = Dimensions.get('window');
 
+// Map font weight to actual font family names on Android
+const fontMap: Record<string, string> = {
+  Thin: 'Figtree-Thin',
+  ExtraLight: 'Figtree-ExtraLight',
+  Light: 'Figtree-Light',
+  Regular: 'Figtree-Regular',
+  Medium: 'Figtree-Medium',
+  SemiBold: 'Figtree-SemiBold',
+  Bold: 'Figtree-Bold',
+  ExtraBold: 'Figtree-ExtraBold',
+  Black: 'Figtree-Black',
+};
+
+// On iOS, fontWeight works with base font family
+function getFontFamily(weight: keyof typeof fontMap = 'Regular') {
+  if (Platform.OS === 'android') {
+    return fontMap[weight] || fontMap.Regular;
+  }
+  // For iOS, use base family and fontWeight style instead
+  return 'Figtree';
+}
+
+function getFontWeight(weight: keyof typeof fontMap = 'Regular') {
+  if (Platform.OS === 'android') {
+    return undefined; // Android ignores fontWeight with custom fonts
+  }
+  // Map weight names to numeric fontWeight strings for iOS
+  const weightMap: Record<string, string> = {
+    Thin: '100',
+    ExtraLight: '200',
+    Light: '300',
+    Regular: '400',
+    Medium: '500',
+    SemiBold: '600',
+    Bold: '700',
+    ExtraBold: '800',
+    Black: '900',
+  };
+  return weightMap[weight] || '400';
+}
+
 const FeaturedRestaurants = () => {
   const navigation = useNavigation<any>();
-  
+
   const allRestaurants = [
     {
       id: 1,
@@ -123,7 +163,6 @@ const FeaturedRestaurants = () => {
   const getFilteredRestaurants = () => {
     let filtered = allRestaurants;
 
-    // Apply search filter
     if (searchQuery.trim() !== '') {
       filtered = filtered.filter(restaurant =>
         restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -132,23 +171,19 @@ const FeaturedRestaurants = () => {
       );
     }
 
-    // Apply category filter
     if (appliedFilters.category !== 'All') {
       filtered = filtered.filter(restaurant => restaurant.category === appliedFilters.category);
     }
 
-    // Apply rating filter
     if (appliedFilters.rating !== 'All') {
       const minRating = parseFloat(appliedFilters.rating.replace('+', ''));
       filtered = filtered.filter(restaurant => restaurant.rating >= minRating);
     }
 
-    // Apply price range filter
     if (appliedFilters.priceRange !== 'All') {
       filtered = filtered.filter(restaurant => restaurant.priceRange === appliedFilters.priceRange);
     }
 
-    // Apply delivery time filter
     if (appliedFilters.deliveryTime !== 'All') {
       if (appliedFilters.deliveryTime === 'Under 15 mins') {
         filtered = filtered.filter(restaurant => {
@@ -244,26 +279,23 @@ const FeaturedRestaurants = () => {
         )}
       </View>
 
-      <ScrollView 
-        showsVerticalScrollIndicator={false} 
-        contentContainerStyle={styles.scrollContent}
-      >
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {filteredRestaurants.length > 0 ? (
           filteredRestaurants.map(restaurant => (
-            <TouchableOpacity 
-              key={restaurant.id} 
-              style={styles.restaurantCard} 
+            <TouchableOpacity
+              key={restaurant.id}
+              style={styles.restaurantCard}
               activeOpacity={0.9}
               onPress={() => handleRestaurantPress(restaurant)}
             >
               <View style={styles.imageContainer}>
                 <Image source={restaurant.image} style={styles.restaurantImage} resizeMode="cover" />
-                
+
                 {/* Discount Badge */}
                 <View style={styles.discountBadge}>
                   <Text style={styles.discountText}>{restaurant.discount}</Text>
                 </View>
-                
+
                 {/* Heart Icon */}
                 <TouchableOpacity style={styles.heartBtn} activeOpacity={0.7}>
                   <Image source={require('../../assets/heart.png')} style={styles.heartIcon} resizeMode="contain" />
@@ -286,12 +318,12 @@ const FeaturedRestaurants = () => {
                     <Image source={require('../../assets/clock.png')} style={styles.infoIcon} resizeMode="contain" />
                     <Text style={styles.infoText}>{restaurant.deliveryTime}</Text>
                   </View>
-                  
+
                   <View style={styles.infoItem}>
                     <Image source={require('../../assets/location1.png')} style={styles.infoIcon} resizeMode="contain" />
                     <Text style={styles.infoText}>{restaurant.distance}</Text>
                   </View>
-                  
+
                   <View style={styles.infoItem}>
                     <Image source={require('../../assets/bike.png')} style={styles.infoIcon} resizeMode="contain" />
                     <Text style={styles.infoText}>Free delivery</Text>
@@ -318,12 +350,7 @@ const FeaturedRestaurants = () => {
       </ScrollView>
 
       {/* Filter Modal */}
-      <Modal
-        visible={showFilterModal}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setShowFilterModal(false)}
-      >
+      <Modal visible={showFilterModal} animationType="slide" transparent={true} onRequestClose={() => setShowFilterModal(false)}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
             <View style={styles.modalHeader}>
@@ -341,16 +368,10 @@ const FeaturedRestaurants = () => {
                   {filterOptions.category.map(option => (
                     <TouchableOpacity
                       key={option}
-                      style={[
-                        styles.filterOption,
-                        appliedFilters.category === option && styles.activeFilterOption
-                      ]}
-                      onPress={() => setAppliedFilters({...appliedFilters, category: option})}
+                      style={[styles.filterOption, appliedFilters.category === option && styles.activeFilterOption]}
+                      onPress={() => setAppliedFilters({ ...appliedFilters, category: option })}
                     >
-                      <Text style={[
-                        styles.filterOptionText,
-                        appliedFilters.category === option && styles.activeFilterOptionText
-                      ]}>
+                      <Text style={[styles.filterOptionText, appliedFilters.category === option && styles.activeFilterOptionText]}>
                         {option}
                       </Text>
                     </TouchableOpacity>
@@ -365,16 +386,10 @@ const FeaturedRestaurants = () => {
                   {filterOptions.rating.map(option => (
                     <TouchableOpacity
                       key={option}
-                      style={[
-                        styles.filterOption,
-                        appliedFilters.rating === option && styles.activeFilterOption
-                      ]}
-                      onPress={() => setAppliedFilters({...appliedFilters, rating: option})}
+                      style={[styles.filterOption, appliedFilters.rating === option && styles.activeFilterOption]}
+                      onPress={() => setAppliedFilters({ ...appliedFilters, rating: option })}
                     >
-                      <Text style={[
-                        styles.filterOptionText,
-                        appliedFilters.rating === option && styles.activeFilterOptionText
-                      ]}>
+                      <Text style={[styles.filterOptionText, appliedFilters.rating === option && styles.activeFilterOptionText]}>
                         {option}
                       </Text>
                     </TouchableOpacity>
@@ -389,16 +404,10 @@ const FeaturedRestaurants = () => {
                   {filterOptions.priceRange.map(option => (
                     <TouchableOpacity
                       key={option}
-                      style={[
-                        styles.filterOption,
-                        appliedFilters.priceRange === option && styles.activeFilterOption
-                      ]}
-                      onPress={() => setAppliedFilters({...appliedFilters, priceRange: option})}
+                      style={[styles.filterOption, appliedFilters.priceRange === option && styles.activeFilterOption]}
+                      onPress={() => setAppliedFilters({ ...appliedFilters, priceRange: option })}
                     >
-                      <Text style={[
-                        styles.filterOptionText,
-                        appliedFilters.priceRange === option && styles.activeFilterOptionText
-                      ]}>
+                      <Text style={[styles.filterOptionText, appliedFilters.priceRange === option && styles.activeFilterOptionText]}>
                         {option}
                       </Text>
                     </TouchableOpacity>
@@ -413,16 +422,10 @@ const FeaturedRestaurants = () => {
                   {filterOptions.deliveryTime.map(option => (
                     <TouchableOpacity
                       key={option}
-                      style={[
-                        styles.filterOption,
-                        appliedFilters.deliveryTime === option && styles.activeFilterOption
-                      ]}
-                      onPress={() => setAppliedFilters({...appliedFilters, deliveryTime: option})}
+                      style={[styles.filterOption, appliedFilters.deliveryTime === option && styles.activeFilterOption]}
+                      onPress={() => setAppliedFilters({ ...appliedFilters, deliveryTime: option })}
                     >
-                      <Text style={[
-                        styles.filterOptionText,
-                        appliedFilters.deliveryTime === option && styles.activeFilterOptionText
-                      ]}>
+                      <Text style={[styles.filterOptionText, appliedFilters.deliveryTime === option && styles.activeFilterOptionText]}>
                         {option}
                       </Text>
                     </TouchableOpacity>
@@ -449,9 +452,9 @@ const FeaturedRestaurants = () => {
 export default FeaturedRestaurants;
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: '#f8f9fa' 
+  container: {
+    flex: 1,
+    backgroundColor: '#f8f9fa',
   },
   header: {
     flexDirection: 'row',
@@ -467,16 +470,16 @@ const styles = StyleSheet.create({
   backButton: {
     padding: wp('1%'),
   },
-  backIcon: { 
-    width: wp('6%'), 
+  backIcon: {
+    width: wp('6%'),
     height: wp('6%'),
   },
-  headerTitle: { 
-    fontSize: wp('4.8%'), 
-    fontWeight: '700', 
+  headerTitle: {
+    fontSize: wp('4.8%'),
+    fontWeight: getFontWeight('Bold'),
     color: '#000',
     textAlign: 'center',
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('Bold'),
   },
   filterButton: {
     padding: wp('1%'),
@@ -520,8 +523,8 @@ const styles = StyleSheet.create({
     fontSize: wp('3.8%'),
     color: '#000',
     paddingVertical: 0,
-    fontFamily : 'Figtree-Medium',
-    fontWeight : '500'
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   clearButton: {
     padding: wp('1%'),
@@ -543,8 +546,8 @@ const styles = StyleSheet.create({
   resultsText: {
     fontSize: wp('3.5%'),
     color: '#666',
-    fontWeight: '500',
-    fontFamily : 'Figtree-SemiBold'
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   clearFiltersBtn: {
     paddingHorizontal: wp('3%'),
@@ -555,7 +558,7 @@ const styles = StyleSheet.create({
   clearFiltersText: {
     color: '#fff',
     fontSize: wp('3%'),
-    fontWeight: '600',
+    fontWeight: getFontWeight('600'),
   },
   scrollContent: {
     paddingBottom: hp('10%'),
@@ -593,8 +596,8 @@ const styles = StyleSheet.create({
   discountText: {
     color: '#fff',
     fontSize: wp('3%'),
-    fontWeight: '700',
-    fontFamily : 'Figtree-Bold'
+    fontWeight: getFontWeight('Bold'),
+    fontFamily: getFontFamily('Bold'),
   },
   heartBtn: {
     position: 'absolute',
@@ -627,12 +630,12 @@ const styles = StyleSheet.create({
     marginBottom: hp('0.8%'),
   },
   restaurantName: {
-    fontSize: wp('4.2%'),
-    fontWeight: '700',
+    fontSize: wp('5.2%'),
+    fontWeight: getFontWeight('Bold'),
     color: '#000',
     flex: 1,
     marginRight: wp('2%'),
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('Bold'),
   },
   ratingContainer: {
     flexDirection: 'row',
@@ -651,16 +654,16 @@ const styles = StyleSheet.create({
   ratingText: {
     color: '#fff',
     fontSize: wp('3%'),
-    fontWeight: '600',
-    fontFamily : 'Figtree-Medium'
+    fontWeight: getFontWeight('600'),
+    fontFamily: getFontFamily('Medium'),
   },
   description: {
     fontSize: wp('3.5%'),
     color: '#666',
     marginBottom: hp('1.5%'),
     lineHeight: hp('2.2%'),
-    fontFamily : 'Figtree-Medium',
-    fontWeight : '500'
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   infoRow: {
     flexDirection: 'row',
@@ -680,8 +683,8 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: wp('3%'),
     color: '#666',
-    fontWeight: '500',
-    fontFamily : 'Figtree-Medium'
+    fontWeight: getFontWeight('Medium'),
+    fontFamily: getFontFamily('Medium'),
   },
   tagsContainer: {
     flexDirection: 'row',
@@ -697,8 +700,8 @@ const styles = StyleSheet.create({
   tagText: {
     fontSize: wp('3%'),
     color: COLORS.primary,
-    fontWeight: '500',
-     fontFamily : 'Figtree-Medium'
+    fontWeight: getFontWeight('Medium'),
+    fontFamily: getFontFamily('Medium'),
   },
   noResultsContainer: {
     alignItems: 'center',
@@ -714,21 +717,20 @@ const styles = StyleSheet.create({
   },
   noResultsText: {
     fontSize: wp('4.5%'),
-    fontWeight: '700',
+    fontWeight: getFontWeight('Bold'),
     color: '#333',
     marginBottom: hp('1%'),
     textAlign: 'center',
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('Bold'),
   },
   noResultsSubtext: {
     fontSize: wp('3.8%'),
     color: '#666',
     textAlign: 'center',
     lineHeight: hp('2.5%'),
-    fontFamily : 'Figtree-Medium',
-    fontWeight  :'500'
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
-  // Modal Styles
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -753,9 +755,9 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: wp('4.8%'),
-    fontWeight: '700',
+    fontWeight: getFontWeight('Bold'),
     color: '#000',
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('Bold'),
   },
   closeIcon: {
     width: wp('5%'),
@@ -771,10 +773,10 @@ const styles = StyleSheet.create({
   },
   filterSectionTitle: {
     fontSize: wp('4%'),
-    fontWeight: '700',
+    fontWeight: getFontWeight('Bold'),
     color: '#000',
     marginBottom: hp('1.5%'),
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('Bold'),
   },
   filterOptions: {
     flexDirection: 'row',
@@ -794,13 +796,13 @@ const styles = StyleSheet.create({
   filterOptionText: {
     fontSize: wp('3.5%'),
     color: '#666',
-    fontWeight: '500',
-    fontFamily : 'Figtree-Medium'
+    fontWeight: getFontWeight('Medium'),
+    fontFamily: getFontFamily('Medium'),
   },
   activeFilterOptionText: {
     color: '#fff',
-    fontWeight: '600',
-    fontFamily : 'Figtree-Medium'
+    fontWeight: getFontWeight('600'),
+    fontFamily: getFontFamily('Medium'),
   },
   modalActions: {
     flexDirection: 'row',
@@ -818,9 +820,9 @@ const styles = StyleSheet.create({
   },
   resetBtnText: {
     fontSize: wp('4%'),
-    fontWeight: '600',
+    fontWeight: getFontWeight('600'),
     color: '#666',
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('Bold'),
   },
   applyBtn: {
     flex: 2,
@@ -831,8 +833,9 @@ const styles = StyleSheet.create({
   },
   applyBtnText: {
     fontSize: wp('4%'),
-    fontWeight: '700',
+    fontWeight: getFontWeight('Bold'),
     color: '#fff',
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('Bold'),
   },
 });
+

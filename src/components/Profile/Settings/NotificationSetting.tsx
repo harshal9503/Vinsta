@@ -78,23 +78,23 @@ const NotificationSetting = () => {
 
       <View style={[styles.header,{backgroundColor  :theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : '#000000'}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color : theme.text}]}>Notification Settings</Text>
+        <Text style={[styles.headerTitle,{color : '#616161'}]}>Notification Settings</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <Text style={[styles.sectionTitle,{color : theme.text}]}>Notification Preferences</Text>
-        <Text style={[styles.sectionDescription,{color : theme.text}]}>
+        <Text style={[styles.sectionTitle,{color : '#616161'}]}>Notification Preferences</Text>
+        <Text style={[styles.sectionDescription,{color : '#616161'}]}>
           Choose what type of notifications you want to receive
         </Text>
 
         {notificationOptions.map((item) => (
           <View key={item.id} style={[styles.notificationRow,{backgroundColor : theme.background}]}>
             <View style={styles.notificationLeft}>
-              <Text style={[styles.notificationTitle,{color : theme.text}]}>{item.title}</Text>
-              <Text style={[styles.notificationDescription,{color : theme.text}]}>{item.description}</Text>
+              <Text style={[styles.notificationTitle,{color : '#616161'}]}>{item.title}</Text>
+              <Text style={[styles.notificationDescription,{color : '#616161'}]}>{item.description}</Text>
             </View>
             <Switch
               value={item.value}
@@ -105,19 +105,8 @@ const NotificationSetting = () => {
           </View>
         ))}
 
-        {/* <View style={styles.scheduleSection}>
-          <Text style={styles.scheduleTitle}>Quiet Hours</Text>
-          <Text style={styles.scheduleDescription}>
-            Mute notifications during specific hours
-          </Text>
-          <TouchableOpacity style={styles.scheduleButton}>
-            <Text style={styles.scheduleButtonText}>Configure Quiet Hours</Text>
-            <Image source={require('../../../assets/right-arrow.png')} style={styles.arrowIcon} />
-          </TouchableOpacity>
-        </View> */}
-
         <View style={styles.noteContainer}>
-          <Text style={styles.noteText}>
+          <Text style={[styles.noteText,{color : '#616161'}]}>
             Some notifications are essential for app functionality and cannot be disabled.
           </Text>
         </View>
@@ -144,12 +133,12 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     resizeMode: 'contain',
-    tintColor: '#000',
+    tintColor: '#000000',
   },
   headerTitle: {
     fontSize: width * 0.045,
     fontWeight: '700',
-    color: '#000',
+    color: '#616161',
     fontFamily : 'Figtree-Bold',
   },
   content: {
@@ -158,13 +147,13 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: width * 0.05,
     fontWeight: '700',
-    color: '#000',
+    color: '#616161',
     marginBottom: 8,
     fontFamily : 'Figtree-Bold',
   },
   sectionDescription: {
     fontSize: width * 0.035,
-    color: '#666',
+    color: '#616161',
     marginBottom: 25,
     fontFamily : 'Figtree-Medium',
     fontWeight  :'500'
@@ -188,58 +177,16 @@ const styles = StyleSheet.create({
   },
   notificationTitle: {
     fontSize: width * 0.038,
-    color: '#000',
+    color: '#616161',
     marginBottom: 4,
     fontFamily : 'Figtree-SemiBold',
     fontWeight  :'600'
   },
   notificationDescription: {
     fontSize: width * 0.03,
-    color: '#666',
+    color: '#616161',
     fontFamily : 'Figtree-Regular',
     fontWeight  :'400'
-  },
-  scheduleSection: {
-    backgroundColor: '#fff',
-    padding: 16,
-    borderRadius: 12,
-    marginTop: 20,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  scheduleTitle: {
-    fontSize: width * 0.038,
-    fontWeight: '600',
-    color: '#000',
-    marginBottom: 4,
-  },
-  scheduleDescription: {
-    fontSize: width * 0.03,
-    color: '#666',
-    marginBottom: 12,
-  },
-  scheduleButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#f5f5f5',
-    padding: 12,
-    borderRadius: 8,
-  },
-  scheduleButtonText: {
-    fontSize: width * 0.035,
-    color: '#000',
-    fontWeight: '500',
-  },
-  arrowIcon: {
-    width: 14,
-    height: 14,
-    resizeMode: 'contain',
-    tintColor: '#999',
   },
   noteContainer: {
     backgroundColor: '#e3f2fd',
@@ -250,7 +197,7 @@ const styles = StyleSheet.create({
   },
   noteText: {
     fontSize: width * 0.03,
-    color: '#666',
+    color: '#616161',
     textAlign: 'center',
     fontFamily : 'Figtree-Medium',
     fontWeight  :'400'
