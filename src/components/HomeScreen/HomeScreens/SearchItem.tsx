@@ -1,7 +1,8 @@
 import { Dimensions, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { widthPercentageToDP as wp,heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { useNavigation } from '@react-navigation/native'
+import { ThemeContext } from '../../../theme/ThemeContext';
 const { width, height } = Dimensions.get('window');
 
 const isTablet = width >= 768;
@@ -95,26 +96,26 @@ const getTextStyle = (weight = 'Regular') => {
 };
 const SearchItem = ({ onOpenFilter, hasActiveFilters }) => {
   const navigation = useNavigation();
-
+  const {theme} = useContext(ThemeContext);
   return (
-    <View style={styles.searchContainer}>
+    <View style={[styles.searchContainer]}>
 
       <TouchableOpacity
-        style={styles.searchBarContainer}
+        style={[styles.searchBarContainer,{backgroundColor : theme.cardBackground}]}
         onPress={() => navigation.navigate('Search')}
         activeOpacity={0.8}
       >
         <Image
           source={require('../../../assets/search.png')}
-          style={styles.searchIcon}
+          style={[styles.searchIcon,{tintColor : theme.text}]}
         />
-        <Text style={styles.searchPlaceholder}>
+        <Text style={[styles.searchPlaceholder,{color : theme.text}]}>
           Find for food or restaurant...
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.filterBtn}
+        style={[styles.filterBtn,{backgroundColor  :theme.cardBackground}]}
         activeOpacity={0.8}
         onPress={onOpenFilter}
       >
@@ -142,7 +143,7 @@ const styles = StyleSheet.create({
       searchBarContainer: {
         backgroundColor: '#fff',
         borderRadius: scaleSize(wp('3%')),
-        paddingVertical: isIOS ? hp('1.8%') : hp('1.5%'),
+        paddingVertical: isIOS ? hp('1.8%') : hp('2%'),
         paddingHorizontal: wp('3%'),
         flexDirection: 'row',
         alignItems: 'center',

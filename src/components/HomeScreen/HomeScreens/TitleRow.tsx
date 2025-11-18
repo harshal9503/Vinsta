@@ -1,8 +1,9 @@
 import { Animated, Dimensions, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { COLORS } from '../../../theme/colors'
 import { useNavigation } from '@react-navigation/native';
+import { ThemeContext } from '../../../theme/ThemeContext';
 const { width, height } = Dimensions.get('window');
 
 const isTablet = width >= 768;
@@ -121,16 +122,16 @@ const TitleRow = ({ isVegMode, toggleVegMode }) => {
 
         toggleVegMode();
     };
-
+    const {theme} = useContext(ThemeContext);
     return (
         <View style={styles.titleRow}>
-            <Text style={styles.headerTitle}>
+            <Text style={[styles.headerTitle,{color : theme.background}]}>
                 What you{'\n'}Going eat for today ?
             </Text>
             <View style={styles.vegContainer}>
                 <TouchableOpacity
                     style={[
-                        styles.switchOuter,
+                        styles.switchOuter,{backgroundColor : theme.background},
                         {
                             width: switchWidth,
                             height: switchHeight,
@@ -159,7 +160,7 @@ const TitleRow = ({ isVegMode, toggleVegMode }) => {
                             style={[
                                 styles.switchTextLeft,
                                 {
-                                    color: isVegMode ? '#fff' : '#000',
+                                    color: isVegMode ? '#fff' : theme.text,
                                 },
                             ]}
                         >
@@ -169,7 +170,7 @@ const TitleRow = ({ isVegMode, toggleVegMode }) => {
                             style={[
                                 styles.switchTextRight,
                                 {
-                                    color: !isVegMode ? '#fff' : '#000',
+                                    color: !isVegMode ? '#fff' : theme.text,
                                 },
                             ]}
                         >
@@ -177,7 +178,7 @@ const TitleRow = ({ isVegMode, toggleVegMode }) => {
                         </Text>
                     </View>
                 </TouchableOpacity>
-                <Text style={styles.vegModeTxt}>
+                <Text style={[styles.vegModeTxt,{color : theme.background}]}>
                     {isVegMode ? 'Veg Mode' : 'Non-Veg Mode'}
                 </Text>
             </View>

@@ -1,8 +1,9 @@
 import { Dimensions, Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 const { width, height } = Dimensions.get('window');
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { COLORS } from '../../../theme/colors';
+import { ThemeContext } from '../../../theme/ThemeContext';
 
 const isTablet = width >= 768;
 const isSmallScreen = width < 380;
@@ -95,6 +96,7 @@ const getTextStyle = (weight = 'Regular') => {
 };
 // Separate veg and non-veg restaurants
 const FeaturedRestaurant = ({ getCurrentRestaurants, handleRestaurantPress }) => {
+  const {theme} = useContext(ThemeContext);
   return (
     <ScrollView
       horizontal
@@ -105,7 +107,7 @@ const FeaturedRestaurant = ({ getCurrentRestaurants, handleRestaurantPress }) =>
       {getCurrentRestaurants().map(restaurant => (
         <TouchableOpacity
           key={restaurant.id}
-          style={styles.restaurantCard}
+          style={[styles.restaurantCard,{backgroundColor : theme.cardBackground}]}
           onPress={() => handleRestaurantPress(restaurant)}
           activeOpacity={0.8}
         >
@@ -134,7 +136,7 @@ const FeaturedRestaurant = ({ getCurrentRestaurants, handleRestaurantPress }) =>
             </View>
           </View>
 
-          <Text style={styles.restaurantTitle}>{restaurant.name}</Text>
+          <Text style={[styles.restaurantTitle,{color: theme.text}]}>{restaurant.name}</Text>
 
           <View style={styles.restaurantInfoRow}>
             <Image
@@ -142,14 +144,14 @@ const FeaturedRestaurant = ({ getCurrentRestaurants, handleRestaurantPress }) =>
               style={styles.infoIcon}
               resizeMode="contain"
             />
-            <Text style={styles.infoTxt}>free delivery</Text>
+            <Text style={[styles.infoTxt,{color: theme.text}]}>free delivery</Text>
 
             <Image
               source={require('../../../assets/clock.png')}
               style={styles.infoIcon}
               resizeMode="contain"
             />
-            <Text style={styles.infoTxt}>{restaurant.deliveryTime}</Text>
+            <Text style={[styles.infoTxt,{color: theme.text}]}>{restaurant.deliveryTime}</Text>
           </View>
 
           <View style={styles.tagsContainer}>
