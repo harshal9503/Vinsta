@@ -1,23 +1,24 @@
+// ==============================================
+// FILE: navigation/BottomTabNavigator.tsx
+// ==============================================
+
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Image, Text } from 'react-native';
+import { Image, Platform } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context'; // 🔥 UPDATED — ensures correct bottom spacing
+
 import HomeScreen from '../components/HomeScreen/HomeScreens/HomeScreen';
 import MyOrders from '../components/MyOrders/myorders';
 import Wishlist from '../components/Wishlist/wishlist';
 import Notification from '../components/Notification/notification';
 import Profile from '../components/Profile/profile';
+
 import { COLORS } from '../theme/colors';
 
 const Tab = createBottomTabNavigator();
 
-type TabBarIconProps = {
-  routeName: string;
-  color: string;
-  size: number;
-};
-
-const TabBarIcon = ({ routeName, color, size }: TabBarIconProps) => {
-  let iconSource: any;
+const TabBarIcon = ({ routeName, color, size }) => {
+  let iconSource;
 
   switch (routeName) {
     case 'Home':
@@ -27,7 +28,7 @@ const TabBarIcon = ({ routeName, color, size }: TabBarIconProps) => {
       iconSource = require('../assets/myorders.png');
       break;
     case 'Wishlist':
-      iconSource = require('../assets/wishlist.png');
+      iconSource = require('../assets/wishlist1.png');
       break;
     case 'Notification':
       iconSource = require('../assets/notification.png');
@@ -35,56 +36,52 @@ const TabBarIcon = ({ routeName, color, size }: TabBarIconProps) => {
     case 'Profile':
       iconSource = require('../assets/profile.png');
       break;
-    default:
-      iconSource = null;
   }
 
-  return iconSource ? (
+  return (
     <Image
       source={iconSource}
       style={{
-        width: size * 0.85,
-        height: size * 0.85,
+        width: size * 1.1,   // 🔥 UPDATED — larger icons
+        height: size * 1.1,  // 🔥 UPDATED — larger icons
         tintColor: color,
       }}
       resizeMode="contain"
     />
-  ) : null;
+  );
 };
 
-import type { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
-import type { RouteProp, ParamListBase } from '@react-navigation/native';
-
-const getScreenOptions = ({
-  route,
-}: {
-  route: RouteProp<ParamListBase, string>;
-}): BottomTabNavigationOptions => ({
-  tabBarIcon: ({ color, size }: { color: string; size: number }) => (
-    <TabBarIcon routeName={route.name} color={color} size={size} />
-  ),
-
-  tabBarLabel: ({ color }: { color: string }) => (
-    <Text
-      style={{
-        fontSize: 10,
-        marginBottom: 5, // ← UPDATED AS YOU REQUESTED
-        color,
-        fontWeight: '700',
-        fontFamily: 'Figtree-Bold',
-      }}
-    >
-      {route.name}
-    </Text>
-  ),
-
-  tabBarActiveTintColor: COLORS.primary,
-  tabBarInactiveTintColor: '#616161',
-  tabBarStyle: { backgroundColor: COLORS.secondary },
-  headerShown: false,
-});
-
 const BottomTabNavigator = () => {
+  const insets = useSafeAreaInsets(); // 🔥 UPDATED — fix for Android nav keys
+
+  const getScreenOptions = ({ route }) => ({
+    tabBarIcon: ({ color, size }) => (
+      <TabBarIcon routeName={route.name} color={color} size={size} />
+    ),
+
+    tabBarLabelStyle: {
+      fontSize: 12,                // 🔥 UPDATED — increased text size
+      marginBottom: 6,                // 🔥 UPDATED — better spacing
+      fontFamily: 'Figtree-Bold',
+      includeFontPadding: false,
+      letterSpacing: 0.2,
+      fontWeight: Platform.OS === 'ios' ? '600' : undefined,
+    },
+
+    tabBarActiveTintColor: COLORS.primary,
+    tabBarInactiveTintColor: '#000000d3',
+
+    tabBarStyle: {
+      backgroundColor: COLORS.secondary,
+
+      height: 80 + insets.bottom * 0.3,   // 🔥 UPDATED — taller bar + safe-area support
+      paddingBottom: insets.bottom > 0 ? insets.bottom : 12, // 🔥 UPDATED — floats above nav keys
+      paddingTop: 10,                      // 🔥 UPDATED — better spacing
+    },
+
+    headerShown: false,
+  });
+
   return (
     <Tab.Navigator screenOptions={getScreenOptions}>
       <Tab.Screen name="Home" component={HomeScreen} />

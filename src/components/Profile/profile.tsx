@@ -25,8 +25,8 @@ const Profile = () => {
   const topOptions = [
     { id: 1, icon: require('../../assets/address1.png'), label: 'Address', route: 'Address' },
     { id: 2, icon: require('../../assets/myorders.png'), label: 'My Order', route: 'MyOrder' },
-    { id: 3, icon: require('../../assets/subscription.png'), label: 'My Subscription', route: 'Subscription' },
-    { id: 4, icon: require('../../assets/wallet1.png'), label: 'Wallet', route: 'Wallet' },
+    { id: 3, icon: require('../../assets/subscription.png'), label: 'Subscriptions', route: 'Subscription' },
+    { id: 4, icon: require('../../assets/wallet.png'), label: 'Wallet', route: 'Wallet' },
   ];
 
   const bottomOptions = [
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   userRow: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20 },
   userImage: { width: 85, height: 85, borderRadius: 42, borderWidth: 2, borderColor: '#fff' },
   userInfo: { flex: 1, marginLeft: 15 },
-  userName: { fontSize: width * 0.048, color: COLORS.text, fontFamily: 'Figtree-Bold' },
+  userName: { fontSize: width * 0.048, color: '#616161', fontFamily: 'Figtree-Bold' },
   userEmail: { fontSize: width * 0.032, color: '#666', marginTop: 3, fontFamily: 'Figtree-Regular' },
   userPhone: { fontSize: width * 0.032, color: '#666', marginTop: 2, fontFamily: 'Figtree-Regular' },
 
@@ -191,15 +191,15 @@ const styles = StyleSheet.create({
       android: { elevation: 4 },
     }),
   },
-  topIcon: { width: 26, height: 26, resizeMode: 'contain', marginBottom: 5, tintColor: '#616161' },
-  topLabel: { fontSize: width * 0.024, color: COLORS.text, textAlign: 'center', fontFamily: 'Figtree-Medium' },
+  topIcon: { width: 26, height: 26, resizeMode: 'contain', marginBottom: 5, tintColor: COLORS.text },
+  topLabel: { fontSize: width * 0.030, color: '#616161', textAlign: 'center', fontFamily: 'Figtree-Medium' },
 
   bottomSection: { marginTop: 30, paddingHorizontal: 20 },
   optionRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 15, borderBottomWidth: 0.5, borderBottomColor: '#eee' },
   optionLeft: { flexDirection: 'row', alignItems: 'center' },
   optionIcon: { width: 22, height: 22, resizeMode: 'contain', marginRight: 15, tintColor: '#616161' },
-  optionLabel: { fontSize: width * 0.037, color: COLORS.text, fontFamily: 'Figtree-SemiBold' },
-  arrowIcon: { width: 14, height: 14, resizeMode: 'contain', tintColor: '#616161' },
+  optionLabel: { fontSize: width * 0.037, color: '#616161', fontFamily: 'Figtree-SemiBold' },
+  arrowIcon: { width: 14, height: 14, resizeMode: 'contain', tintColor: COLORS.text },
 
   popupOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', alignItems: 'center', justifyContent: 'center' },
   popupBox: {
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
       android: { elevation: 6 },
     }),
   },
-  popupText: { fontSize: width * 0.04, color: COLORS.text, textAlign: 'center', marginBottom: 20, fontFamily: 'Figtree-Medium' },
+  popupText: { fontSize: width * 0.04, color: '#616161', textAlign: 'center', marginBottom: 20, fontFamily: 'Figtree-Medium' },
   popupButtonsContainer: { flexDirection: 'row', justifyContent: 'space-between', width: '100%' },
   popupButton: { borderRadius: 8, paddingVertical: 10, paddingHorizontal: 20, minWidth: 80, alignItems: 'center' },
   popupCancelButton: { backgroundColor: '#f0f0f0', marginRight: 10 },

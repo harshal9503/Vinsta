@@ -12,8 +12,7 @@ import {
   TextInput,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import font from '../../assets/fonts';
-
+import { getFontFamily, getFontWeight } from '../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 const COLORS = {
@@ -511,10 +510,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   backIcon: { width: 22, height: 22, tintColor: '#000' },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: '#000', fontFamily : 'Figtree-Bold' },
+  headerTitle: { 
+    fontSize: 18, 
+    color: '#000', 
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
   mainTab: { flex: 1 },
   mainTabs: { flexDirection: 'row', justifyContent: 'space-around', marginTop: 20 },
-  mainTabText: { fontSize: 16, color: '#aaa', fontWeight: '700', textAlign: 'center',fontFamily : 'Figtree-Bold' },
+  mainTabText: { 
+    fontSize: 16, 
+    color: '#aaa', 
+    textAlign: 'center',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
   mainTabTextActive: { color: COLORS.primary },
 
   slider: {
@@ -560,7 +570,12 @@ const styles = StyleSheet.create({
   activeTabSides: {
     borderRadius: 10,
   },
-  tabText: { fontSize: 14, fontWeight: '600', color: '#000', fontFamily : 'Figtree-Medium'  },
+  tabText: { 
+    fontSize: 14, 
+    color: '#000', 
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
 
   orderCard: {
     backgroundColor: '#fff',
@@ -572,20 +587,62 @@ const styles = StyleSheet.create({
   },
   foodImg: { width: 50, height: 50, borderRadius: 8 },
   orderTopRow: { flexDirection: 'row', alignItems: 'center' },
-  orderId: { color: COLORS.primary, fontWeight: '600', fontSize: 13, fontFamily : 'Figtree-SemiBold' },
-  orderTitle: { fontSize: 15, fontWeight: '700', color: '#000',fontFamily : 'Figtree-Bold' },
-  orderMeta: { color: '#666', fontSize: 12,fontFamily : 'Figtree-Medium',fontWeight : '500' },
-  price: { fontSize: 15, fontWeight: '700', color: '#000', fontFamily : 'Figtree-Bold' },
+  orderId: { 
+    color: COLORS.primary, 
+    fontSize: 13, 
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
+  },
+  orderTitle: { 
+    fontSize: 15, 
+    color: '#000', 
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
+  orderMeta: { 
+    color: '#666', 
+    fontSize: 12,
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
+  price: { 
+    fontSize: 15, 
+    color: '#000', 
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
 
   orderBottomRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 10,
   },
-  estimateText: { fontSize: 12, color: '#666',fontFamily : 'Figtree-Medium', fontWeight : '500' },
-  nowText: { fontSize: 12, color: '#666', textAlign: 'right',fontFamily : 'Figtree-Medium', fontWeight : '500' },
-  time: { fontSize: 14, color: '#000',fontFamily : 'Figtree-Medium', fontWeight : '500' },
-  statusText: { color: '#000', fontSize: 13, textAlign: 'right',fontFamily : 'Figtree-Medium', fontWeight : '500' },
+  estimateText: { 
+    fontSize: 12, 
+    color: '#666',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
+  nowText: { 
+    fontSize: 12, 
+    color: '#666', 
+    textAlign: 'right',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
+  time: { 
+    fontSize: 14, 
+    color: '#000',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
+  statusText: { 
+    color: '#000', 
+    fontSize: 13, 
+    textAlign: 'right',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
 
   buttonRow: {
     flexDirection: 'row',
@@ -610,8 +667,16 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignItems: 'center',
   },
-  cancelText: { color: '#000', fontFamily : 'Figtree-Medium', fontWeight : '500' },
-  trackText: { color: '#fff',fontFamily : 'Figtree-Medium', fontWeight : '500' },
+  cancelText: { 
+    color: '#000', 
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
+  trackText: { 
+    color: '#fff',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
 
   activeHeader: {
     flexDirection: 'row',
@@ -621,7 +686,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   plusIcon: { width: 20, height: 20 },
-  activeTitle: { marginLeft: 8, fontSize: 16, fontWeight: '700', color: '#000',fontFamily : 'Figtree-Bold' },
+  activeTitle: { 
+    marginLeft: 8, 
+    fontSize: 16, 
+    color: '#000', 
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
 
   subCard: {
     backgroundColor: '#fff',
@@ -633,11 +704,36 @@ const styles = StyleSheet.create({
   },
   subTopRow: { flexDirection: 'row', alignItems: 'center' },
   subImg: { width: 70, height: 70, borderRadius: 10 },
-  daysLeft: { color: COLORS.primary, fontWeight: '700', fontSize: 13,fontFamily : 'Figtree-Bold' },
-  subTitle: { fontSize: 15, color: '#000', fontFamily : 'Figtree-Medium', fontWeight : '500' },
-  subMeta: { color: '#666', fontSize: 12,fontFamily : 'Figtree-Medium', fontWeight : '500' },
-  subPrice: { color: '#000', fontSize: 13,fontFamily : 'Figtree-Medium', fontWeight : '500' },
-  subDuration: { fontSize: 12, color: '#888',fontFamily : 'Figtree-Medium', fontWeight : '500' },
+  daysLeft: { 
+    color: COLORS.primary, 
+    fontSize: 13, 
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
+  subTitle: { 
+    fontSize: 15, 
+    color: '#000', 
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
+  subMeta: { 
+    color: '#666', 
+    fontSize: 12,
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
+  subPrice: { 
+    color: '#000', 
+    fontSize: 13,
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
+  subDuration: { 
+    fontSize: 12, 
+    color: '#888',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
 
   mealRow: {
     flexDirection: 'row',
@@ -646,7 +742,12 @@ const styles = StyleSheet.create({
   },
   mealGroup: { flexDirection: 'row', alignItems: 'center' },
   tick: { width: 16, height: 16, marginRight: 4 },
-  mealText: { fontSize: 13, color: '#E87C23', fontWeight: '600' },
+  mealText: { 
+    fontSize: 13, 
+    color: '#E87C23', 
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
+  },
   arrowIcon: { width: 5, height: 8, marginLeft: 6 },
 
   bottomNoteRow: {
@@ -655,8 +756,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 10,
   },
-  cancelNote: { color: '#EA001B', fontSize: 13,fontFamily : 'Figtree-Medium', fontWeight : '500' },
-  addText: { color: '#259E29', fontWeight: '700', fontSize: 13,fontFamily : 'Figtree-Bold' },
+  cancelNote: { 
+    color: '#EA001B', 
+    fontSize: 13,
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
+  addText: { 
+    color: '#259E29', 
+    fontSize: 13, 
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.4)',
@@ -672,12 +783,12 @@ const styles = StyleSheet.create({
   modalBackIcon: { width: 20, height: 20, tintColor: '#000' },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '700',
     color: '#000',
     marginLeft: 12,
     textAlign: 'center',
     flex: 1,
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
 
   reviewCard: {
@@ -690,19 +801,19 @@ const styles = StyleSheet.create({
   },
   howText: {
     fontSize: 16,
-    fontWeight: '600',
     color: '#000',
     textAlign: 'center',
     marginTop: 20,
-    fontFamily : 'Figtree-SemiBold'
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   subHowText: {
     fontSize: 13,
     color: '#666',
     textAlign: 'center',
     marginTop: 4,
-    fontFamily : 'Figtree-Medium',
-    fontWeight : '500'
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   starRow: {
     flexDirection: 'row',
@@ -724,6 +835,8 @@ const styles = StyleSheet.create({
     marginTop: 16,
     height: 80,
     textAlignVertical: 'top',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   modalBtnRow: {
     flexDirection: 'row',
@@ -770,11 +883,27 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   starIconSmall: { width: 12, height: 12, tintColor: '#fff', marginRight: 6 },
-  ratingText: { color: '#fff', fontSize: 12, fontWeight: '600',fontFamily : 'Figtree-SemiBold' },
-  title: { fontSize: 16, fontWeight: '700', color: '#000',fontFamily : 'Figtree-Bold' },
+  ratingText: { 
+    color: '#fff', 
+    fontSize: 12, 
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
+  },
+  title: { 
+    fontSize: 16, 
+    color: '#000', 
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
   locationRow: { flexDirection: 'row', alignItems: 'center', marginTop: 6 },
   locIcon: { width: 12, height: 12, marginRight: 6, resizeMode: 'contain' },
-  location: { fontSize: 13, color: '#555', flex: 1, fontFamily : 'Figtree-Medium' },
+  location: { 
+    fontSize: 13, 
+    color: '#555', 
+    flex: 1, 
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
   heartBtn: {
     backgroundColor: '#777',
     width: 30,
@@ -786,15 +915,26 @@ const styles = StyleSheet.create({
   },
   heartIcon: { width: 14, height: 14, resizeMode: 'contain' },
   infoRow: { flexDirection: 'row', alignItems: 'center', marginTop: 10, gap: 6 },
-  subInfo: { color: '#777', fontSize: 13 ,fontFamily : 'Figtree-Medium'},
+  subInfo: { 
+    color: '#777', 
+    fontSize: 13,
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
   metaIcon: { width: 13, height: 13, marginHorizontal: 4, resizeMode: 'contain' },
-  metaText: { color: '#555', fontSize: 12,fontFamily : 'Figtree-Medium' },
+  metaText: { 
+    color: '#555', 
+    fontSize: 12,
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
 
   emptyText: {
     textAlign: 'center',
     color: '#777',
     fontSize: 15,
     marginTop: 60,
-    fontFamily : 'Figtree-Medium'
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
 });

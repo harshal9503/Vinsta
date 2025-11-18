@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
+import { getFontFamily, getFontWeight } from '../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -59,7 +60,7 @@ const Wishlist = () => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image source={require('../../assets/back.png')} style={styles.backIcon} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Favourite’s</Text>
+        <Text style={styles.headerTitle}>Favourite's</Text>
         <View style={{ width: 22 }} />
       </View>
 
@@ -78,7 +79,7 @@ const Wishlist = () => {
             <Text style={[
               styles.tabText,
               activeTab === 'Food' && styles.activeTabText,
-            ]}>Food Item’s</Text>
+            ]}>Food Item's</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -92,7 +93,7 @@ const Wishlist = () => {
             <Text style={[
               styles.tabText,
               activeTab === 'Restaurant' && styles.activeTabText
-            ]}>Restaurent’s</Text>
+            ]}>Restaurant's</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -151,11 +152,13 @@ const Wishlist = () => {
                 >
                   <Image source={r.img} style={styles.cardImg} />
                   <View style={styles.cardContent}>
-                    <View style={styles.ratingBadge}>
-                      <Image source={require('../../assets/star.png')} style={styles.starIcon} />
-                      <Text style={styles.ratingText}>4.4</Text>
+                    <View style={styles.titleRow}>
+                      <Text style={styles.title}>{r.name}</Text>
+                      <View style={styles.ratingBadge}>
+                        <Image source={require('../../assets/star.png')} style={styles.starIcon} />
+                        <Text style={styles.ratingText}>4.4</Text>
+                      </View>
                     </View>
-                    <Text style={styles.title}>{r.name}</Text>
                     <View style={styles.locationRow}>
                       <Image source={require('../../assets/location1.png')} style={styles.locIcon} />
                       <Text style={styles.location}>Near MC College, Barpeta Town</Text>
@@ -206,9 +209,9 @@ const styles = StyleSheet.create({
   backIcon: { width: 22, height: 22, tintColor: '#000' },
   headerTitle: {
     fontSize: width * 0.045,
-    fontWeight: '700',
     color: '#000',
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
 
   /** TABS **/
@@ -246,14 +249,14 @@ const styles = StyleSheet.create({
   },
   activeTabText: {
     color: '#fff',
-    fontWeight: '700',
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   tabText: {
     fontSize: 16,
-    fontWeight: '600',
     color: '#222',
-    fontFamily: 'Figtree-SemiBold',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   activeTabShadow: {
     elevation: 7,
@@ -283,11 +286,11 @@ const styles = StyleSheet.create({
   foodHeartWrapper: { position: 'absolute', top: 10, right: 10 },
   foodInfo: { padding: 10 },
   foodName: {
-    fontSize: 15,
-    fontWeight: '700',
+    fontSize: 18,
     color: '#000',
     marginVertical: 4,
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   priceRow: {
     flexDirection: 'row',
@@ -296,19 +299,25 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 14,
-    fontWeight: '400',
     color: '#000',
-    fontFamily: 'Figtree-Regular',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
   oldPrice: {
     fontSize: 13,
     color: 'red',
     textDecorationLine: 'line-through',
-    fontFamily: 'Figtree-Regular',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
   timeRow: { flexDirection: 'row', alignItems: 'center', marginTop: 4 },
   clockIcon: { width: 12, height: 12, marginRight: 6, resizeMode: 'contain' },
-  timeText: { fontSize: 12, color: '#555', fontFamily: 'Figtree-Regular' },
+  timeText: { 
+    fontSize: 12, 
+    color: '#555', 
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular')
+  },
 
   /** RESTAURANT **/
   card: {
@@ -321,32 +330,48 @@ const styles = StyleSheet.create({
   },
   cardImg: { width: '100%', height: 180, resizeMode: 'cover' },
   cardContent: { padding: 14 },
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 6,
+  },
+  title: {
+    fontSize: 20,
+    color: '#000',
+    flex: 1,
+    marginRight: 10,
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
   ratingBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: COLORS.primary,
-    alignSelf: 'flex-start',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
-    marginBottom: 6,
   },
   starIcon: { width: 12, height: 12, tintColor: '#fff', marginRight: 6 },
   ratingText: {
     color: '#fff',
     fontSize: 12,
-    fontWeight: '600',
-    fontFamily: 'Figtree-SemiBold',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
-  title: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#000',
-    fontFamily: 'Figtree-Bold',
+  locationRow: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    marginTop: 6 
   },
-  locationRow: { flexDirection: 'row', alignItems: 'center', marginTop: 6 },
   locIcon: { width: 12, height: 12, marginRight: 6, resizeMode: 'contain' },
-  location: { fontSize: 13, color: '#555', flex: 1, fontFamily: 'Figtree-Regular' },
+  location: { 
+    fontSize: 13, 
+    color: '#555', 
+    flex: 1, 
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular')
+  },
   heartBtn: {
     backgroundColor: 'rgba(0,0,0,0.25)',
     width: 30,
@@ -357,16 +382,32 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
   heartIcon: { width: 14, height: 14, resizeMode: 'contain' },
-  infoRow: { flexDirection: 'row', alignItems: 'center', marginTop: 10, gap: 6 },
-  subInfo: { color: '#777', fontSize: 13, fontFamily: 'Figtree-Medium' },
+  infoRow: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    marginTop: 10, 
+    gap: 6 
+  },
+  subInfo: { 
+    color: '#777', 
+    fontSize: 13, 
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium')
+  },
   metaIcon: { width: 13, height: 13, marginHorizontal: 4, resizeMode: 'contain' },
-  metaText: { color: '#555', fontSize: 12, fontFamily: 'Figtree-Regular' },
+  metaText: { 
+    color: '#555', 
+    fontSize: 12, 
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular')
+  },
 
   emptyText: {
     textAlign: 'center',
     color: '#777',
     fontSize: 15,
     marginTop: 60,
-    fontFamily: 'Figtree-Regular',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
 });

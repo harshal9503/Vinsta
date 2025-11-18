@@ -23,17 +23,11 @@ const AccountManagement = () => {
   const {theme} = useContext(ThemeContext);
 
   const managementOptions = [
-    // {
-    //   id: 1,
-    //   title: 'Download Your Data',
-    //   description: 'Get a copy of your personal data',
-    //   icon: require('../../../assets/b1.png'),
-    //   action: () => console.log('Download data'),
-    // },
     {
       id: 2,
       title: 'Clear Search History',
       description: 'Remove all your search queries',
+      
       icon: require('../../../assets/clear.png'),
       action: () => console.log('Clear history'),
     },
@@ -55,7 +49,6 @@ const AccountManagement = () => {
 
   const handleDeleteAccount = () => {
     setShowDeletePopup(false);
-    // Implement actual delete logic here
     navigation.navigate('SignIn');
   };
 
@@ -65,15 +58,15 @@ const AccountManagement = () => {
 
       <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : '#000000'}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color : theme.text}]}>Account Management</Text>
+        <Text style={[styles.headerTitle,{color : '#616161'}]}>Account Management</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <Text style={[styles.sectionTitle,{color : theme.text}]}>Manage Your Account</Text>
-        <Text style={[styles.sectionDescription,{color : theme.text}]}>
+        <Text style={[styles.sectionTitle,{color : '#616161'}]}>Manage Your Account</Text>
+        <Text style={[styles.sectionDescription,{color : '#616161'}]}>
           Control your data and account settings
         </Text>
 
@@ -84,20 +77,20 @@ const AccountManagement = () => {
             onPress={item.action}
           >
             <View style={styles.managementLeft}>
-              <Image source={item.icon} style={styles.managementIcon} />
+              <Image source={item.icon} style={[styles.managementIcon,{tintColor : COLORS.text}]} />
               <View style={styles.managementText}>
-                <Text style={[styles.managementTitle,{color : theme.text}]}>{item.title}</Text>
-                <Text style={[styles.managementDescription,{color : theme.text}]}>{item.description}</Text>
+                <Text style={[styles.managementTitle,{color : '#616161'}]}>{item.title}</Text>
+                <Text style={[styles.managementDescription,{color : '#616161'}]}>{item.description}</Text>
               </View>
             </View>
-            <Image source={require('../../../assets/right-arrow.png')} style={styles.arrowIcon} />
+            <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor : COLORS.text}]} />
           </TouchableOpacity>
         ))}
 
         {/* Delete Account Section */}
         <View style={styles.deleteSection}>
           <Text style={styles.deleteTitle}>Delete Account</Text>
-          <Text style={styles.deleteDescription}>
+          <Text style={[styles.deleteDescription,{color : '#616161'}]}>
             Permanently delete your account and all associated data. This action cannot be undone.
           </Text>
           <TouchableOpacity
@@ -126,8 +119,8 @@ const AccountManagement = () => {
               source={require('../../../assets/b1.png')} 
               style={styles.warningIcon} 
             />
-            <Text style={styles.popupTitle}>Delete Account</Text>
-            <Text style={styles.popupText}>
+            <Text style={[styles.popupTitle,{color : '#616161'}]}>Delete Account</Text>
+            <Text style={[styles.popupText,{color : '#616161'}]}>
               Are you sure you want to delete your account? This action is permanent and cannot be undone. All your data will be lost.
             </Text>
             
@@ -171,12 +164,12 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     resizeMode: 'contain',
-    tintColor: '#000',
+    tintColor: '#000000',
   },
   headerTitle: {
     fontSize: width * 0.045,
     fontWeight: '700',
-    color: '#000',
+    color: '#616161',
     fontFamily : 'Figtree-Bold',
   },
   content: {
@@ -185,13 +178,13 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: width * 0.05,
     fontWeight: '700',
-    color: '#000',
+    color: '#616161',
     marginBottom: 8,
     fontFamily : 'Figtree-Bold',
   },
   sectionDescription: {
     fontSize: width * 0.035,
-    color: '#666',
+    color: '#616161',
     marginBottom: 25,
     fontFamily : 'Figtree-Medium',
     fontWeight  :'500'
@@ -220,21 +213,21 @@ const styles = StyleSheet.create({
     height: 24,
     resizeMode: 'contain',
     marginRight: 12,
-    tintColor: COLORS.primary,
+    tintColor: COLORS.text,
   },
   managementText: {
     flex: 1,
   },
   managementTitle: {
     fontSize: width * 0.038,
-    color: '#000',
+    color: '#616161',
     marginBottom: 4,
     fontFamily : 'Figtree-SemiBold',
     fontWeight  :'600'
   },
   managementDescription: {
     fontSize: width * 0.03,
-    color: '#666',
+    color: '#616161',
     fontFamily : 'Figtree-Medium',
     fontWeight  :'500'
   },
@@ -242,7 +235,7 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     resizeMode: 'contain',
-    tintColor: COLORS.primary,
+    tintColor: COLORS.text,
   },
   deleteSection: {
     backgroundColor: '#ffebee',
@@ -258,11 +251,9 @@ const styles = StyleSheet.create({
     color: '#d32f2f',
     marginBottom: 8,
     fontFamily : 'Figtree-Bold',
-    
   },
   deleteDescription: {
     fontSize: width * 0.033,
-    color: '#666',
     marginBottom: 16,
     lineHeight: 18,
     fontFamily : 'Figtree-Medium',
@@ -313,15 +304,14 @@ const styles = StyleSheet.create({
   popupTitle: {
     fontSize: width * 0.045,
     fontWeight: '700',
-    color: '#000',
+    color: '#616161',
     marginBottom: 12,
     textAlign: 'center',
     fontFamily : 'Figtree-Bold',
-   
   },
   popupText: {
     fontSize: width * 0.035,
-    color: '#666',
+    color: '#616161',
     textAlign: 'center',
     marginBottom: 24,
     lineHeight: 20,

@@ -10,22 +10,64 @@ import {
   StatusBar,
   FlatList,
   TextInput,
+  Platform,
+  Vibration,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
-import font from '../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 
+// Map font weight to actual font family names on Android
+const fontMap: Record<string, string> = {
+  Thin: 'Figtree-Thin',
+  ExtraLight: 'Figtree-ExtraLight',
+  Light: 'Figtree-Light',
+  Regular: 'Figtree-Regular',
+  Medium: 'Figtree-Medium',
+  SemiBold: 'Figtree-SemiBold',
+  Bold: 'Figtree-Bold',
+  ExtraBold: 'Figtree-ExtraBold',
+  Black: 'Figtree-Black',
+};
+
+// On iOS, fontWeight works with base font family
+function getFontFamily(weight: keyof typeof fontMap = 'Regular') {
+  if (Platform.OS === 'android') {
+    return fontMap[weight] || fontMap.Regular;
+  }
+  // For iOS, use base family and fontWeight style instead
+  return 'Figtree';
+}
+
+function getFontWeight(weight: keyof typeof fontMap = 'Regular') {
+  if (Platform.OS === 'android') {
+    return undefined; // Android ignores fontWeight with custom fonts
+  }
+  // Map weight names to numeric fontWeight strings for iOS
+  const weightMap: Record<string, string> = {
+    Thin: '100',
+    ExtraLight: '200',
+    Light: '300',
+    Regular: '400',
+    Medium: '500',
+    SemiBold: '600',
+    Bold: '700',
+    ExtraBold: '800',
+    Black: '900',
+  };
+  return weightMap[weight] || '400';
+}
+
 const BestBurgers = () => {
   const navigation = useNavigation<any>();
-  
+
   const allBurgers = [
     {
       id: 1,
       name: 'Classic Cheese Burger',
-      price: 45.50,
-      oldPrice: 50.50,
+      price: 45.5,
+      oldPrice: 50.5,
       image: require('../../assets/b1.png'),
       rating: 4.4,
       deliveryTime: '10-15 mins',
@@ -36,8 +78,8 @@ const BestBurgers = () => {
     {
       id: 2,
       name: 'Veggie Delight Burger',
-      price: 38.00,
-      oldPrice: 42.00,
+      price: 38.0,
+      oldPrice: 42.0,
       image: require('../../assets/b2.png'),
       rating: 4.2,
       deliveryTime: '12-18 mins',
@@ -49,7 +91,7 @@ const BestBurgers = () => {
       id: 3,
       name: 'BBQ Bacon Burger',
       price: 52.75,
-      oldPrice: 58.00,
+      oldPrice: 58.0,
       image: require('../../assets/b3.png'),
       rating: 4.6,
       deliveryTime: '15-20 mins',
@@ -61,7 +103,7 @@ const BestBurgers = () => {
       id: 4,
       name: 'Chicken Crispy Burger',
       price: 48.25,
-      oldPrice: 53.00,
+      oldPrice: 53.0,
       image: require('../../assets/b1.png'),
       rating: 4.3,
       deliveryTime: '12-16 mins',
@@ -72,8 +114,8 @@ const BestBurgers = () => {
     {
       id: 5,
       name: 'Mushroom Swiss Burger',
-      price: 44.00,
-      oldPrice: 49.00,
+      price: 44.0,
+      oldPrice: 49.0,
       image: require('../../assets/b2.png'),
       rating: 4.1,
       deliveryTime: '14-18 mins',
@@ -84,8 +126,8 @@ const BestBurgers = () => {
     {
       id: 6,
       name: 'Spicy Jalapeño Burger',
-      price: 46.50,
-      oldPrice: 51.50,
+      price: 46.5,
+      oldPrice: 51.5,
       image: require('../../assets/b3.png'),
       rating: 4.5,
       deliveryTime: '10-14 mins',
@@ -96,8 +138,8 @@ const BestBurgers = () => {
     {
       id: 7,
       name: 'Double Cheese Burger',
-      price: 35.00,
-      oldPrice: 38.00,
+      price: 35.0,
+      oldPrice: 38.0,
       image: require('../../assets/b1.png'),
       rating: 3.9,
       deliveryTime: '8-12 mins',
@@ -108,8 +150,8 @@ const BestBurgers = () => {
     {
       id: 8,
       name: 'Premium Beef Burger',
-      price: 65.00,
-      oldPrice: 70.00,
+      price: 65.0,
+      oldPrice: 70.0,
       image: require('../../assets/b2.png'),
       rating: 4.8,
       deliveryTime: '18-25 mins',
@@ -121,21 +163,22 @@ const BestBurgers = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('All');
+  const [likedItems, setLikedItems] = useState<number[]>([]);
+
   const filters = ['All', 'Veg', 'Non-Veg', 'Under $40', 'Rating 4+', 'Fast Delivery'];
 
   const getFilteredBurgers = () => {
     let filtered = allBurgers;
 
-    // Apply search filter
     if (searchQuery.trim() !== '') {
-      filtered = filtered.filter(burger =>
-        burger.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        burger.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        burger.restaurant.toLowerCase().includes(searchQuery.toLowerCase())
+      filtered = filtered.filter(
+        burger =>
+          burger.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          burger.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          burger.restaurant.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
-    // Apply category filter
     switch (selectedFilter) {
       case 'Veg':
         filtered = filtered.filter(burger => burger.isVeg);
@@ -162,6 +205,15 @@ const BestBurgers = () => {
     return filtered;
   };
 
+  const filteredBurgers = getFilteredBurgers();
+
+  const toggleLike = (id: number) => {
+    Vibration.vibrate(50);
+    setLikedItems(prev =>
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    );
+  };
+
   const handleProductPress = (product: any) => {
     navigation.navigate('fooddetails', { product });
   };
@@ -170,34 +222,45 @@ const BestBurgers = () => {
     setSearchQuery('');
   };
 
-  const filteredBurgers = getFilteredBurgers();
-
   const renderBurgerItem = ({ item, index }: { item: any; index: number }) => {
-    const isLastItemInOddRow = filteredBurgers.length % 2 === 1 && index === filteredBurgers.length - 1;
-    
+    const isLastItemInOddRow =
+      filteredBurgers.length % 2 === 1 && index === filteredBurgers.length - 1;
+    const isLiked = likedItems.includes(item.id);
+
     return (
-      <TouchableOpacity 
-        style={[
-          styles.burgerCard,
-          isLastItemInOddRow && styles.lastItemCard
-        ]} 
+      <TouchableOpacity
+        style={[styles.burgerCard, isLastItemInOddRow && styles.lastItemCard]}
         activeOpacity={0.9}
         onPress={() => handleProductPress(item)}
       >
         <View style={styles.imageContainer}>
           <Image source={item.image} style={styles.burgerImage} />
-          
-          {/* Veg/Non-Veg Indicator */}
-          <View style={[styles.vegIndicator, { backgroundColor: item.isVeg ? '#4CAF50' : '#F44336' }]}>
+
+          <View
+            style={[
+              styles.vegIndicator,
+              { backgroundColor: item.isVeg ? '#4CAF50' : '#F44336' },
+            ]}
+          >
             <View style={styles.vegDot} />
           </View>
-          
-          {/* Heart Icon */}
-          <TouchableOpacity style={styles.heartBtn} activeOpacity={0.7}>
-            <Image source={require('../../assets/heart.png')} style={styles.heartIcon} />
+
+          <TouchableOpacity
+            style={[styles.heartBtn, isLiked && styles.heartBtnLiked]}
+            activeOpacity={0.7}
+            onPress={() => toggleLike(item.id)}
+          >
+            <Image
+              source={
+                isLiked
+                  ? require('../../assets/heartfill.png')
+                  : require('../../assets/heart.png')
+              }
+              style={styles.heartIcon}
+              resizeMode="contain"
+            />
           </TouchableOpacity>
 
-          {/* Rating Badge */}
           <View style={styles.ratingBadge}>
             <Image source={require('../../assets/star.png')} style={styles.starIcon} />
             <Text style={styles.ratingText}>{item.rating}</Text>
@@ -220,7 +283,7 @@ const BestBurgers = () => {
               <Text style={styles.price}>${item.price.toFixed(2)}</Text>
               <Text style={styles.oldPrice}>${item.oldPrice.toFixed(2)}</Text>
             </View>
-            
+
             <TouchableOpacity style={styles.addBtn} activeOpacity={0.7}>
               <Image source={require('../../assets/plus.png')} style={styles.addIcon} />
             </TouchableOpacity>
@@ -241,7 +304,6 @@ const BestBurgers = () => {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image source={require('../../assets/back.png')} style={styles.backIcon} />
@@ -250,7 +312,6 @@ const BestBurgers = () => {
         <View style={{ width: 22 }} />
       </View>
 
-      {/* Search Bar */}
       <View style={styles.searchContainer}>
         <View style={styles.searchInputContainer}>
           <Image source={require('../../assets/search.png')} style={styles.searchIcon} />
@@ -271,9 +332,12 @@ const BestBurgers = () => {
         </View>
       </View>
 
-      {/* Filters */}
       <View style={styles.filterContainer}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterScroll}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.filterScroll}
+        >
           {filters.map(filter => (
             <TouchableOpacity
               key={filter}
@@ -289,17 +353,16 @@ const BestBurgers = () => {
         </ScrollView>
       </View>
 
-      {/* Results Count */}
       <View style={styles.resultsContainer}>
         <Text style={styles.resultsText}>
           {filteredBurgers.length} burger{filteredBurgers.length !== 1 ? 's' : ''} found
         </Text>
         {(selectedFilter !== 'All' || searchQuery.trim() !== '') && (
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={() => {
               setSelectedFilter('All');
               setSearchQuery('');
-            }} 
+            }}
             style={styles.clearFiltersBtn}
           >
             <Text style={styles.clearFiltersText}>Clear All</Text>
@@ -307,15 +370,14 @@ const BestBurgers = () => {
         )}
       </View>
 
-      {/* Burgers Grid */}
       {filteredBurgers.length > 0 ? (
         <FlatList
           data={filteredBurgers}
           renderItem={renderBurgerItem}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={item => item.id.toString()}
           numColumns={2}
           contentContainerStyle={styles.burgerGrid}
-          columnWrapperStyle={filteredBurgers.length > 1 ? styles.burgerRow : null}
+          columnWrapperStyle={filteredBurgers.length > 1 ? styles.burgerRow : undefined}
           showsVerticalScrollIndicator={false}
         />
       ) : (
@@ -332,9 +394,9 @@ const BestBurgers = () => {
 export default BestBurgers;
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: '#f8f9fa' 
+  container: {
+    flex: 1,
+    backgroundColor: '#f8f9fa',
   },
   header: {
     flexDirection: 'row',
@@ -345,22 +407,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: '#fff',
   },
-  backIcon: { 
-    width: 22, 
-    height: 22, 
-    tintColor: '#000' 
+  backIcon: {
+    width: 22,
+    height: 22,
+    tintColor: '#000',
   },
-  headerTitle: { 
-    fontSize: width * 0.045, 
-    fontWeight: '700', 
+  headerTitle: {
+    fontSize: width * 0.045,
+    fontWeight: getFontWeight('Bold'),
     color: '#000',
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('Bold'),
   },
   searchContainer: {
     backgroundColor: '#fff',
     paddingHorizontal: 20,
     paddingVertical: 12,
-  }, 
+  },
   searchInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -380,8 +442,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#000',
     paddingVertical: 0,
-    fontFamily : 'Figtree-Medium',
-    fontWeight : '500'
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   clearButton: {
     padding: 4,
@@ -411,12 +473,12 @@ const styles = StyleSheet.create({
   filterText: {
     fontSize: 14,
     color: '#666',
-    fontWeight: '500',
-    fontFamily : 'Figtree-SemiBold'
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   activeFilterText: {
     color: '#fff',
-    fontWeight: '600',
+    fontWeight: getFontWeight('600'),
   },
   resultsContainer: {
     flexDirection: 'row',
@@ -431,8 +493,8 @@ const styles = StyleSheet.create({
   resultsText: {
     fontSize: 14,
     color: '#666',
-    fontWeight: '700',
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   clearFiltersBtn: {
     paddingHorizontal: 12,
@@ -443,7 +505,7 @@ const styles = StyleSheet.create({
   clearFiltersText: {
     color: '#fff',
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: getFontWeight('600'),
   },
   burgerGrid: {
     padding: 16,
@@ -462,16 +524,15 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    width: (width - 48) / 2, // Fixed width for consistent sizing
-    minHeight: 280, // Fixed minimum height for uniformity
+    width: (width - 48) / 2,
+    minHeight: 280,
   },
   lastItemCard: {
-    // Keep the same width even for the last item in odd rows
-    marginRight: (width - 48) / 2 + 16, // Push it to maintain grid alignment
+    marginRight: (width - 48) / 2 + 16,
   },
   imageContainer: {
     position: 'relative',
-    height: 140, // Fixed height for all images
+    height: 140,
     width: '100%',
   },
   burgerImage: {
@@ -499,17 +560,19 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 8,
     right: 8,
-    backgroundColor: COLORS.primary,
     width: 28,
     height: 28,
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  heartBtnLiked: {
+    backgroundColor: '#fff',
+  },
   heartIcon: {
     width: 14,
     height: 14,
-    tintColor: '#ffff',
+    tintColor: '#fff',
   },
   ratingBadge: {
     position: 'absolute',
@@ -531,46 +594,47 @@ const styles = StyleSheet.create({
   ratingText: {
     color: '#fff',
     fontSize: 10,
-    fontWeight: '600',
-    fontFamily : 'Figtree-SemiBold'
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   burgerInfo: {
     padding: 12,
-    flex: 1, // Allow the info section to expand and fill available space
-    justifyContent: 'space-between', // Distribute content evenly
+    flex: 1,
+    justifyContent: 'space-between',
   },
   burgerName: {
-    fontSize: 14,
-    fontWeight: '700',
+    fontSize: 18,
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     color: '#000',
     marginBottom: 4,
     lineHeight: 18,
-    minHeight: 18, // Ensure consistent height even for single line names
-    fontFamily : 'Figtree-Bold'
+    minHeight: 18,
   },
   restaurantName: {
     fontSize: 12,
     color: COLORS.primary,
-    fontWeight: '500',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
     marginBottom: 6,
     lineHeight: 16,
-    minHeight: 16, // Consistent height
-    fontFamily : 'Figtree-Medium'
+    minHeight: 16,
   },
   description: {
     fontSize: 11,
     color: '#666',
     marginBottom: 8,
     lineHeight: 14,
-    minHeight: 28, // Ensure space for 2 lines (14 * 2)
-    fontFamily : 'Figtree-Regular'
+    minHeight: 28,
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
   priceRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 8,
-    minHeight: 24, // Consistent height for price row
+    minHeight: 24,
   },
   priceContainer: {
     flexDirection: 'row',
@@ -579,15 +643,16 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 14,
-    fontWeight: '600',
     color: '#000',
-    fontFamily : 'Figtree-SemiBold'
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   oldPrice: {
     fontSize: 12,
     color: '#999',
     textDecorationLine: 'line-through',
-    fontFamily : 'Figtree-Regular'
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
   addBtn: {
     backgroundColor: COLORS.primary,
@@ -605,7 +670,7 @@ const styles = StyleSheet.create({
   deliveryRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    minHeight: 16, // Consistent height
+    minHeight: 16,
   },
   clockIcon: {
     width: 13,
@@ -616,9 +681,9 @@ const styles = StyleSheet.create({
   deliveryTime: {
     fontSize: 11,
     color: '#999',
-    flex: 1, // Allow text to take remaining space
-    fontFamily : 'Figtree-Medium',
-    fontWeight : '500'
+    flex: 1,
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   noResultsContainer: {
     alignItems: 'center',
@@ -635,7 +700,8 @@ const styles = StyleSheet.create({
   },
   noResultsText: {
     fontSize: 18,
-    fontWeight: '700',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     color: '#333',
     marginBottom: 8,
   },
@@ -643,5 +709,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     textAlign: 'center',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
 });

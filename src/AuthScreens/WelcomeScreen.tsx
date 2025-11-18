@@ -1,5 +1,3 @@
-// File: screens/WelcomeScreen.tsx
-
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
@@ -20,6 +18,7 @@ import CheckBox from '@react-native-community/checkbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { COLORS } from '../theme/colors';
+import { getFontFamily, getFontWeight } from '../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 const AVATAR_SIZE = width * 0.2;
@@ -192,8 +191,7 @@ const WelcomeScreen = () => {
                   Add a face to your profile
                 </Text>
                 <Text style={styles.avatarHelpText}>
-                  Tap to take a photo or upload from gallery. JPG / PNG up to ~5
-                  MB.
+                  Tap to take a photo or upload from gallery. JPG / PNG up to ~5 MB.
                 </Text>
               </View>
             </View>
@@ -368,25 +366,25 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   title: {
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     fontSize: 26,
-    fontWeight: '700',
     color: COLORS.primary,
     marginBottom: 4,
   },
   subtitle: {
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     fontSize: 14,
-    fontWeight: '700',
     color: '#777',
   },
   profileSection: {
     marginBottom: 25,
   },
   label: {
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     fontSize: 14,
-    fontWeight: '700',
     color: COLORS.textDark,
     marginBottom: 6,
   },
@@ -402,7 +400,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 14,
     paddingVertical: 12,
-    fontFamily: 'Figtree-Regular',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
     fontSize: 14,
     color: COLORS.textDark,
     backgroundColor: COLORS.secondary,
@@ -442,12 +441,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   avatarHelpTitle: {
-    fontFamily: 'Figtree-Semibold',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     fontSize: 13,
     color: COLORS.textDark,
   },
   avatarHelpText: {
-    fontFamily: 'Figtree-Regular',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
     fontSize: 12,
     color: '#777',
   },
@@ -457,7 +458,8 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   termsText: {
-    fontFamily: 'Figtree-Regular',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
     fontSize: 13,
     color: COLORS.textDark,
     marginLeft: 8,
@@ -466,7 +468,8 @@ const styles = StyleSheet.create({
   link: {
     color: COLORS.primary,
     textDecorationLine: 'underline',
-    fontFamily: 'Figtree-Semibold',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   button: {
     backgroundColor: COLORS.primary,
@@ -481,9 +484,9 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   buttonText: {
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     fontSize: 16,
-    fontWeight: '700',
     color: COLORS.secondary,
   },
   bottomSpacer: {
@@ -504,7 +507,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   popupText: {
-    fontFamily: 'Figtree-Regular',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
     fontSize: 14,
     color: COLORS.textDark,
     textAlign: 'center',
@@ -517,7 +521,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   popupButtonText: {
-    fontFamily: 'Figtree-Semibold',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     fontSize: 14,
     color: COLORS.secondary,
   },
@@ -532,7 +537,8 @@ const styles = StyleSheet.create({
     tintColor: COLORS.textDark,
   },
   popupTitle: {
-    fontFamily: 'Figtree-Semibold',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     fontSize: 16,
     color: COLORS.textDark,
     marginBottom: 16,
@@ -545,7 +551,8 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f0f0f0',
   },
   pickerButtonText: {
-    fontFamily: 'Figtree-Regular',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
     fontSize: 14,
     color: COLORS.textDark,
   },

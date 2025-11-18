@@ -76,11 +76,11 @@ const DarkMode = () => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
             source={require('../../assets/back.png')}
-            style={[styles.backIcon, { tintColor: theme.text }]}
+            style={[styles.backIcon, { tintColor: '#000000' }]}
           />
         </TouchableOpacity>
 
-        <Text style={[styles.headerTitle, { color: theme.text }]}>Appearance</Text>
+        <Text style={[styles.headerTitle, { color: '#616161' }]}>Appearance</Text>
 
         <View style={{ width: 22 }} />
       </View>
@@ -92,17 +92,17 @@ const DarkMode = () => {
       >
         {/* Theme Section */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Theme</Text>
+          <Text style={[styles.sectionTitle, { color: '#616161' }]}>Theme</Text>
 
           <View style={[styles.settingItem, { backgroundColor: theme.cardBackground }]}>
             <View style={styles.settingInfo}>
               <Image
                 source={require('../../assets/light.png')}
-                style={[styles.settingIcon, { tintColor: theme.text }]}
+                style={[styles.settingIcon, { tintColor: COLORS.text }]}
               />
               <View style={styles.settingTextContainer}>
-                <Text style={[styles.settingTitle, { color: theme.text }]}>Dark Mode</Text>
-                <Text style={[styles.settingDescription, { color: theme.textSecondary }]}>
+                <Text style={[styles.settingTitle, { color: '#616161' }]}>Dark Mode</Text>
+                <Text style={[styles.settingDescription, { color: '#616161' }]}>
                   Switch between light and dark theme
                 </Text>
               </View>
@@ -120,19 +120,19 @@ const DarkMode = () => {
 
         {/* Notifications */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Notifications</Text>
+          <Text style={[styles.sectionTitle, { color: '#616161' }]}>Notifications</Text>
 
           <View style={[styles.settingItem, { backgroundColor: theme.cardBackground }]}>
             <View style={styles.settingInfo}>
               <Image
                 source={require('../../assets/notification.png')}
-                style={[styles.settingIcon, { tintColor: theme.text }]}
+                style={[styles.settingIcon, { tintColor: COLORS.text }]}
               />
               <View style={styles.settingTextContainer}>
-                <Text style={[styles.settingTitle, { color: theme.text }]}>
+                <Text style={[styles.settingTitle, { color: '#616161' }]}>
                   Push Notifications
                 </Text>
-                <Text style={[styles.settingDescription, { color: theme.textSecondary }]}>
+                <Text style={[styles.settingDescription, { color: '#616161' }]}>
                   Receive app notifications and updates
                 </Text>
               </View>
@@ -150,19 +150,19 @@ const DarkMode = () => {
 
         {/* Email Preferences */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Email Preferences</Text>
+          <Text style={[styles.sectionTitle, { color: '#616161' }]}>Email Preferences</Text>
 
           <View style={[styles.settingItem, { backgroundColor: theme.cardBackground }]}>
             <View style={styles.settingInfo}>
               <Image
                 source={require('../../assets/email.png')}
-                style={[styles.settingIcon, { tintColor: theme.text }]}
+                style={[styles.settingIcon, { tintColor: COLORS.text }]}
               />
               <View style={styles.settingTextContainer}>
-                <Text style={[styles.settingTitle, { color: theme.text }]}>
+                <Text style={[styles.settingTitle, { color: '#616161' }]}>
                   Marketing Emails
                 </Text>
-                <Text style={[styles.settingDescription, { color: theme.textSecondary }]}>
+                <Text style={[styles.settingDescription, { color: '#616161' }]}>
                   Receive promotional emails and offers
                 </Text>
               </View>
@@ -188,8 +188,8 @@ const DarkMode = () => {
 
         {/* App Info */}
         <View style={styles.appInfoSection}>
-          <Text style={[styles.appInfoTitle, { color: theme.textSecondary }]}>Vinsta App</Text>
-          <Text style={[styles.appInfoVersion, { color: theme.textSecondary }]}>
+          <Text style={[styles.appInfoTitle, { color: '#616161' }]}>Vinsta App</Text>
+          <Text style={[styles.appInfoVersion, { color: '#616161' }]}>
             Version 1.0.0
           </Text>
         </View>
@@ -202,11 +202,11 @@ const DarkMode = () => {
             <TouchableOpacity style={styles.closeIconWrapper} onPress={closePopup}>
               <Image
                 source={require('../../assets/close.png')}
-                style={[styles.closeIcon, { tintColor: theme.text }]}
+                style={[styles.closeIcon, { tintColor: COLORS.text }]}
               />
             </TouchableOpacity>
 
-            <Text style={[styles.popupText, { color: theme.text }]}>{popupMessage}</Text>
+            <Text style={[styles.popupText, { color: '#616161' }]}>{popupMessage}</Text>
 
             <View style={styles.popupButtonsRow}>
               {popupMessage ===

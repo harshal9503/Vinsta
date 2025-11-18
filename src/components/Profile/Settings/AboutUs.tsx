@@ -15,18 +15,10 @@ import { COLORS } from '../../../theme/colors';
 import font from '../../../assets/fonts';
 import { ThemeContext } from '../../../theme/ThemeContext';
 
-
 const { width, height } = Dimensions.get('window');
 const AboutUs = () => {
   const navigation = useNavigation<any>();
-    const { theme } = useContext(ThemeContext);
-  
-
-  const appInfo = {
-    version: '1.0.0',
-    build: '2024.01.001',
-    releaseDate: 'January 2024',
-  };
+  const { theme } = useContext(ThemeContext);
 
   const contactInfo = [
     {
@@ -56,7 +48,6 @@ const AboutUs = () => {
       value: '123 App Street, Tech City',
       icon: require('../../../assets/location.png'),
       action: () => {
-        // Open maps with the address
         Linking.openURL('https://maps.google.com/?q=123+App+Street+Tech+City');
       },
     },
@@ -68,9 +59,9 @@ const AboutUs = () => {
 
       <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor:theme.text}]} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor:'#000000'}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color:theme.text}]}>About Us</Text>
+        <Text style={[styles.headerTitle,{color:'#616161'}]}>About Us</Text>
         <View style={{ width: 24 }} />
       </View>
 
@@ -81,17 +72,17 @@ const AboutUs = () => {
             source={require('../../../assets/Splash.png')} 
             style={styles.appLogo} 
           />
-          <Text style={[styles.appName,{color : theme.text}]}>Vinsta</Text>
-          <Text style={[styles.appVersion,{color : theme.text}]}>Version {appInfo.version}</Text>
-          <Text style={[styles.appDescription,{color : theme.text}]}>
+          <Text style={[styles.appName,{color : '#616161'}]}>Vinsta</Text>
+          <Text style={[styles.appVersion,{color : '#616161'}]}>Version 1.0.0</Text>
+          <Text style={[styles.appDescription,{color : '#616161'}]}>
             Delivering excellence one order at a time
           </Text>
         </View>
 
         {/* App Description */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle,{color : theme.text}]}>Our Story</Text>
-          <Text style={[styles.sectionText,{color : theme.text}]}>
+          <Text style={[styles.sectionTitle,{color : '#616161'}]}>Our Story</Text>
+          <Text style={[styles.sectionText,{color : '#616161'}]}>
             Founded in 2024, our mission is to provide the best food delivery experience 
             to our customers. We connect you with your favorite restaurants and deliver 
             delicious meals right to your doorstep.
@@ -100,30 +91,30 @@ const AboutUs = () => {
 
         {/* Features */}
         <View style={[styles.section,{backgroundColor : theme.background}]}>
-          <Text style={[styles.sectionTitle,{color : theme.text}]}>What We Offer</Text>
+          <Text style={[styles.sectionTitle,{color : '#616161'}]}>What We Offer</Text>
           <View style={[styles.featuresList,{backgroundColor : theme.background}]}>
             <View style={styles.featureItem}>
-              <Image source={require('../../../assets/tick.png')} style={styles.featureIcon} />
-              <Text style={[styles.featureText,{color : theme.text}]}>Fast Delivery</Text>
+              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:COLORS.text}]} />
+              <Text style={[styles.featureText,{color : '#616161'}]}>Fast Delivery</Text>
             </View>
             <View style={styles.featureItem}>
-              <Image source={require('../../../assets/tick.png')} style={styles.featureIcon} />
-              <Text style={[styles.featureText,{color : theme.text}]}>Wide Restaurant Selection</Text>
+              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:COLORS.text}]} />
+              <Text style={[styles.featureText,{color : '#616161'}]}>Wide Restaurant Selection</Text>
             </View>
             <View style={styles.featureItem}>
-              <Image source={require('../../../assets/tick.png')} style={styles.featureIcon} />
-              <Text style={[styles.featureText,{color : theme.text}]}>Secure Payments</Text>
+              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:COLORS.text}]} />
+              <Text style={[styles.featureText,{color : '#616161'}]}>Secure Payments</Text>
             </View>
             <View style={styles.featureItem}>
-              <Image source={require('../../../assets/tick.png')} style={styles.featureIcon} />
-              <Text style={[styles.featureText,{color : theme.text}]}>24/7 Customer Support</Text>
+              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:COLORS.text}]} />
+              <Text style={[styles.featureText,{color : '#616161'}]}>24/7 Customer Support</Text>
             </View>
           </View>
         </View>
 
         {/* Contact Information */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle,{color : theme.text}]}>Contact Us</Text>
+          <Text style={[styles.sectionTitle,{color : '#616161'}]}>Contact Us</Text>
           {contactInfo.map((item) => (
             <TouchableOpacity
               key={item.id}
@@ -131,39 +122,39 @@ const AboutUs = () => {
               onPress={item.action}
             >
               <View style={styles.contactLeft}>
-                <Image source={item.icon} style={styles.contactIcon} />
+                <Image source={item.icon} style={[styles.contactIcon,{tintColor:COLORS.text}]} />
                 <View>
-                  <Text style={[styles.contactTitle,{color : theme.text}]}>{item.title}</Text>
-                  <Text style={[styles.contactValue,{color : theme.text}]}>{item.value}</Text>
+                  <Text style={[styles.contactTitle,{color : '#616161'}]}>{item.title}</Text>
+                  <Text style={[styles.contactValue,{color : '#616161'}]}>{item.value}</Text>
                 </View>
               </View>
-              <Image source={require('../../../assets/right-arrow.png')} style={styles.arrowIcon} />
+              <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor:COLORS.text}]} />
             </TouchableOpacity>
           ))}
         </View>
 
         {/* Legal */}
         <View style={[styles.section]}>
-          <Text style={[styles.sectionTitle,{color : theme.text}]}>Legal</Text>
+          <Text style={[styles.sectionTitle,{color : '#616161'}]}>Legal</Text>
           <TouchableOpacity 
             style={[styles.legalItem,{backgroundColor : theme.background}]}
             onPress={() => navigation.navigate('PrivacyPolicy')}
           >
-            <Text style={[styles.legalText,{color : theme.text}]}>Privacy Policy</Text>
-            <Image source={require('../../../assets/right-arrow.png')} style={styles.arrowIcon} />
+            <Text style={[styles.legalText,{color : '#616161'}]}>Privacy Policy</Text>
+            <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor:COLORS.text}]} />
           </TouchableOpacity>
           <TouchableOpacity 
             style={[styles.legalItem,{backgroundColor : theme.background}]}
             onPress={() => navigation.navigate('TermsConditions')}
           >
-            <Text style={[styles.legalText,{color : theme.text}]}>Terms & Conditions</Text>
-            <Image source={require('../../../assets/right-arrow.png')} style={styles.arrowIcon} />
+            <Text style={[styles.legalText,{color : '#616161'}]}>Terms & Conditions</Text>
+            <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor:COLORS.text}]} />
           </TouchableOpacity>
         </View>
 
         {/* Copyright */}
         <View style={styles.copyrightSection}>
-          <Text style={[styles.copyrightText,{color : theme.text}]}>
+          <Text style={[styles.copyrightText,{color : '#616161'}]}>
             © 2024 Vinsta. All rights reserved.
           </Text>
         </View>
@@ -189,12 +180,12 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     resizeMode: 'contain',
-    tintColor: '#000',
+    tintColor: '#000000',
   },
   headerTitle: {
     fontSize: width * 0.045,
     fontWeight: '700',
-    color: '#000',
+    color: '#616161',
     fontFamily : 'Figtree-Bold'
   },
   content: {
@@ -213,13 +204,13 @@ const styles = StyleSheet.create({
   appName: {
     fontSize: width * 0.05,
     fontWeight: '700',
-    color: '#000',
+    color: '#616161',
     marginBottom: 4,
     fontFamily : 'Figtree-Bold'
   },
   appVersion: {
     fontSize: width * 0.035,
-    color: '#666',
+    color: '#616161',
     marginBottom: 8,
     fontFamily : 'Figtree-SemiBold',
     fontWeight  :'600'
@@ -229,8 +220,7 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: '500',
     textAlign: 'center',
-     fontFamily : 'Figtree-Medium',
-   
+    fontFamily : 'Figtree-Medium',
   },
   section: {
     marginBottom: 25,
@@ -238,18 +228,16 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: width * 0.04,
     fontWeight: '700',
-    color: '#000',
+    color: '#616161',
     marginBottom: 12,
-     fontFamily : 'Figtree-Bold',
-   
+    fontFamily : 'Figtree-Bold',
   },
   sectionText: {
     fontSize: width * 0.035,
-    color: '#666',
+    color: '#616161',
     lineHeight: 20,
     fontFamily : 'Figtree-Medium',
     fontWeight  :'500'
-
   },
   featuresList: {
     backgroundColor: '#fff',
@@ -270,12 +258,12 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     resizeMode: 'contain',
-    tintColor: COLORS.primary,
     marginRight: 12,
+    tintColor: COLORS.text,
   },
   featureText: {
     fontSize: width * 0.035,
-    color: '#000',
+    color: '#616161',
     fontFamily : 'Figtree-SemiBold',
     fontWeight  :'600'
   },
@@ -303,19 +291,18 @@ const styles = StyleSheet.create({
     height: 20,
     resizeMode: 'contain',
     marginRight: 12,
-    tintColor: COLORS.primary,
+    tintColor: COLORS.text,
   },
   contactTitle: {
     fontSize: width * 0.035,
-    // fontWeight: '600',
-    color: '#000',
+    color: '#616161',
     marginBottom: 2,
     fontFamily : 'Figtree-Bold',
     fontWeight  :'700'
   },
   contactValue: {
     fontSize: width * 0.032,
-    color: '#666',
+    color: '#616161',
     fontFamily : 'Figtree-SemiBold',
     fontWeight  :'600'
   },
@@ -323,7 +310,7 @@ const styles = StyleSheet.create({
     width: 14,
     height: 14,
     resizeMode: 'contain',
-    tintColor: '#999',
+    tintColor: COLORS.text,
   },
   legalItem: {
     flexDirection: 'row',
@@ -341,7 +328,7 @@ const styles = StyleSheet.create({
   },
   legalText: {
     fontSize: width * 0.035,
-    color: '#000',
+    color: '#616161',
     fontFamily : 'Figtree-SemiBold',
     fontWeight  :'600'
   },
@@ -354,7 +341,7 @@ const styles = StyleSheet.create({
   },
   copyrightText: {
     fontSize: width * 0.03,
-    color: '#999',
+    color: '#616161',
     textAlign: 'center',
     fontFamily : 'Figtree-SemiBold',
     fontWeight  :'600'
