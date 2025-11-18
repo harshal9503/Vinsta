@@ -6,9 +6,8 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Image, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context'; // 🔥 UPDATED — ensures correct bottom spacing
-
 import HomeScreen from '../components/HomeScreen/HomeScreens/HomeScreen';
-import MyOrders from '../components/MyOrders/myorders';
+import MyOrders from '../components/MyOrders/MyOrder/myorders';
 import Wishlist from '../components/Wishlist/wishlist';
 import Notification from '../components/Notification/notification';
 import Profile from '../components/Profile/profile';
