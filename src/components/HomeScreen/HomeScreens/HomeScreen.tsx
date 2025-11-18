@@ -22,6 +22,13 @@ import {
 } from 'react-native-responsive-screen';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
+import Categories from './Categories';
+import OfferCard from './OfferCard';
+import TitleRow from './TitleRow';
+import SearchItem from './SearchItem';
+import FeaturedRestaurant from './FeaturedRestaurant';
+import BesRatedBurger from './BesRatedBurger';
+import SearchModal from './SearchModal';
 
 const { width, height } = Dimensions.get('window');
 
@@ -83,7 +90,7 @@ const getFontWeight = (weight = 'Regular') => {
   if (Platform.OS === 'android') {
     return undefined; // Android doesn't use fontWeight with custom fonts
   }
-  
+
   // iOS fontWeight mapping
   const weightMap = {
     'Thin': '100',
@@ -117,52 +124,6 @@ const getTextStyle = (weight = 'Regular') => {
     textAlignVertical: 'center',
   };
 };
-
-const categories = [
-  { name: 'Burger', img: require('../../../assets/burger.png') },
-  { name: 'Mexican', img: require('../../../assets/burger.png') },
-  { name: 'Asian', img: require('../../../assets/burger.png') },
-  { name: 'Donut', img: require('../../../assets/donut.png') },
-];
-
-// Separate veg and non-veg restaurants
-const vegRestaurants = [
-  {
-    id: 1,
-    name: 'Bistro Excellence',
-    img: require('../../../assets/featuredrestaurant.png'),
-    rating: 4.4,
-    deliveryTime: '10-15 mins',
-    tags: ['Burger', 'Chicken', 'FastFood'],
-  },
-  {
-    id: 2,
-    name: 'Elite-Ember',
-    img: require('../../../assets/featuredrestaurant.png'),
-    rating: 4.4,
-    deliveryTime: '10-15 mins',
-    tags: ['Burger', 'Chicken', 'FastFood'],
-  },
-];
-
-const nonVegRestaurants = [
-  {
-    id: 2,
-    name: 'Elite-Ember',
-    img: require('../../../assets/featuredrestaurant.png'),
-    rating: 4.4,
-    deliveryTime: '10-15 mins',
-    tags: ['Chicken', 'Mutton', 'Seafood'],
-  },
-  {
-    id: 1,
-    name: 'Bistro Excellence',
-    img: require('../../../assets/featuredrestaurant.png'),
-    rating: 4.4,
-    deliveryTime: '10-15 mins',
-    tags: ['Chicken', 'Mutton', 'Seafood'],
-  },
-];
 
 // Separate veg and non-veg products
 const vegProducts = [
@@ -246,44 +207,16 @@ const nonVegProducts = [
 const HomeScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState('Burger');
   const navigation = useNavigation<any>();
-  const [isVegMode, setIsVegMode] = useState(true);
-  const toggleAnim = useState(new Animated.Value(0))[0];
   const insets = useSafeAreaInsets();
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isVegMode, setIsVegMode] = useState(true);
 
-  const toggleSwitch = () => {
-    Animated.timing(toggleAnim, {
-      toValue: isVegMode ? 1 : 0,
-      duration: 200,
-      useNativeDriver: false,
-    }).start();
-    setIsVegMode(!isVegMode);
+  const toggleVegMode = () => {
+    setIsVegMode(prev => !prev);
   };
-
-  // Calculate proper toggle dimensions
-  const switchWidth = isTablet ? scaleSize(wp('14%')) : scaleSize(wp('17%'));
-  const switchHeight = isTablet ? hp('3.5%') : hp('4%');
-  const circleSize = isTablet ? hp('2.8%') : hp('3.2%');
-  const padding = wp('0.8%');
-  const maxTranslateX = switchWidth - circleSize - padding * 2;
-
-  const translateX = toggleAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [padding, maxTranslateX],
-  });
-
-  const toggleBgColor = toggleAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['green', 'red'],
-  });
-
   // Navigation handlers
   const handleTodayOfferViewAll = () => {
-    navigation.navigate('todayOfferView');
-  };
-
-  const handleViewOffers = () => {
     navigation.navigate('todayOfferView');
   };
 
@@ -364,6 +297,43 @@ const HomeScreen = () => {
     return Object.values(appliedFilters).some(filter => filter !== 'All');
   };
 
+  const vegRestaurants = [
+    {
+      id: 1,
+      name: 'Bistro Excellence',
+      img: require('../../../assets/featuredrestaurant.png'),
+      rating: 4.4,
+      deliveryTime: '10-15 mins',
+      tags: ['Burger', 'Chicken', 'FastFood'],
+    },
+    {
+      id: 2,
+      name: 'Elite-Ember',
+      img: require('../../../assets/featuredrestaurant.png'),
+      rating: 4.4,
+      deliveryTime: '10-15 mins',
+      tags: ['Burger', 'Chicken', 'FastFood'],
+    },
+  ];
+
+  const nonVegRestaurants = [
+    {
+      id: 2,
+      name: 'Elite-Ember',
+      img: require('../../../assets/featuredrestaurant.png'),
+      rating: 4.4,
+      deliveryTime: '10-15 mins',
+      tags: ['Chicken', 'Mutton', 'Seafood'],
+    },
+    {
+      id: 1,
+      name: 'Bistro Excellence',
+      img: require('../../../assets/featuredrestaurant.png'),
+      rating: 4.4,
+      deliveryTime: '10-15 mins',
+      tags: ['Chicken', 'Mutton', 'Seafood'],
+    },
+  ];
   return (
     <View style={styles.container}>
       <StatusBar
@@ -371,7 +341,6 @@ const HomeScreen = () => {
         barStyle="light-content"
         translucent={false}
       />
-
       <View style={[styles.statusBarArea, { height: getStatusBarHeight() }]} />
 
       <ScrollView
@@ -421,93 +390,15 @@ const HomeScreen = () => {
             </View>
           </View>
 
-          <View style={styles.titleRow}>
-            <Text style={styles.headerTitle}>
-              What you{'\n'}Going eat for today ?
-            </Text>
-            <View style={styles.vegContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.switchOuter,
-                  {
-                    width: switchWidth,
-                    height: switchHeight,
-                  },
-                ]}
-                onPress={toggleSwitch}
-                activeOpacity={0.8}
-              >
-                <View style={styles.switchBackground} />
+          {/* Title Row */}
+          <TitleRow isVegMode={isVegMode} toggleVegMode={toggleVegMode} />
 
-                <Animated.View
-                  style={[
-                    styles.switchCircle,
-                    {
-                      width: circleSize,
-                      height: circleSize,
-                      borderRadius: circleSize / 2,
-                      transform: [{ translateX }],
-                      backgroundColor: toggleBgColor,
-                    },
-                  ]}
-                />
 
-                <View style={styles.switchLabelsContainer}>
-                  <Text
-                    style={[
-                      styles.switchTextLeft,
-                      {
-                        color: isVegMode ? '#fff' : '#000',
-                      },
-                    ]}
-                  >
-                    OFF
-                  </Text>
-                  <Text
-                    style={[
-                      styles.switchTextRight,
-                      {
-                        color: !isVegMode ? '#fff' : '#000',
-                      },
-                    ]}
-                  >
-                    ON
-                  </Text>
-                </View>
-              </TouchableOpacity>
-              <Text style={styles.vegModeTxt}>
-                {isVegMode ? 'Veg Mode' : 'Non-Veg Mode'}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.searchContainer}>
-            <TouchableOpacity
-              style={styles.searchBarContainer}
-              onPress={() => navigation.navigate('Search')}
-              activeOpacity={0.8}
-            >
-              <Image
-                source={require('../../../assets/search.png')}
-                style={styles.searchIcon}
-              />
-              <Text style={styles.searchPlaceholder}>
-                Find for food or restaurant...
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.filterBtn}
-              activeOpacity={0.8}
-              onPress={() => setShowFilterModal(true)}
-            >
-              <Image
-                source={require('../../../assets/filter.png')}
-                style={styles.filterIcon}
-              />
-              {hasActiveFilters() && <View style={styles.filterDot} />}
-            </TouchableOpacity>
-          </View>
+          {/* Search Items */}
+          <SearchItem
+            onOpenFilter={() => setShowFilterModal(true)}
+            hasActiveFilters={hasActiveFilters}
+          />
         </View>
 
         {/* Main Content */}
@@ -524,62 +415,10 @@ const HomeScreen = () => {
           </View>
 
           {/* Offer Card */}
-          <View style={styles.offerCard}>
-            <View style={styles.offerContent}>
-              <Text style={styles.offerHeader}>Free Delivery</Text>
-              <Text style={styles.offerSubTxt}>
-                Enjoy exclusive discount on tasty{'\n'}food today!
-              </Text>
-              <TouchableOpacity
-                style={styles.offerButton}
-                onPress={handleViewOffers}
-                activeOpacity={0.8}
-              >
-                <Text style={styles.offerBtnText}>VIEW OFFER'S</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.offerImageWrap}>
-              <Image
-                source={require('../../../assets/todayoffer.png')}
-                style={styles.offerImage}
-                resizeMode="contain"
-              />
-            </View>
-          </View>
+          <OfferCard />
 
           {/* Categories */}
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.categorySliderContent}
-            bounces={false}
-          >
-            {categories.map(cat => (
-              <TouchableOpacity
-                key={cat.name}
-                style={[
-                  styles.categoryBtn,
-                  selectedCategory === cat.name && styles.categoryBtnActive,
-                ]}
-                onPress={() => setSelectedCategory(cat.name)}
-                activeOpacity={0.8}
-              >
-                <Image
-                  source={cat.img}
-                  style={styles.categoryIcon}
-                  resizeMode="contain"
-                />
-                <Text
-                  style={[
-                    styles.categoryTxt,
-                    selectedCategory === cat.name && styles.categoryTxtActive,
-                  ]}
-                >
-                  {cat.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+          <Categories />
 
           {/* Featured Restaurants */}
           <View style={styles.sectionRowBetween}>
@@ -593,75 +432,10 @@ const HomeScreen = () => {
               <Text style={styles.sectionLink}>View All</Text>
             </TouchableOpacity>
           </View>
-
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.restaurantScrollContent}
-            bounces={false}
-          >
-            {getCurrentRestaurants().map(restaurant => (
-              <TouchableOpacity
-                key={restaurant.id}
-                style={styles.restaurantCard}
-                onPress={() => handleRestaurantPress(restaurant)}
-                activeOpacity={0.8}
-              >
-                <View style={styles.imageContainer}>
-                  <Image
-                    source={restaurant.img}
-                    style={styles.restaurantImg}
-                    resizeMode="cover"
-                  />
-
-                  <TouchableOpacity
-                    style={styles.iconWrapper}
-                    activeOpacity={0.7}
-                  >
-                    <Image
-                      source={require('../../../assets/heart.png')}
-                      style={styles.heartIcon}
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
-
-                  <View style={styles.ratingBadge}>
-                    <Image
-                      source={require('../../../assets/star.png')}
-                      style={styles.starIcon}
-                      resizeMode="contain"
-                    />
-                    <Text style={styles.ratingText}>{restaurant.rating}</Text>
-                  </View>
-                </View>
-
-                <Text style={styles.restaurantTitle}>{restaurant.name}</Text>
-
-                <View style={styles.restaurantInfoRow}>
-                  <Image
-                    source={require('../../../assets/bike.png')}
-                    style={styles.infoIcon}
-                    resizeMode="contain"
-                  />
-                  <Text style={styles.infoTxt}>free delivery</Text>
-                  <Image
-                    source={require('../../../assets/clock.png')}
-                    style={styles.infoIcon}
-                    resizeMode="contain"
-                  />
-                  <Text style={styles.infoTxt}>{restaurant.deliveryTime}</Text>
-                </View>
-
-                <View style={styles.tagsContainer}>
-                  {restaurant.tags.map((tag, index) => (
-                    <Text key={index} style={styles.restaurantTags}>
-                      {tag}
-                    </Text>
-                  ))}
-                </View>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+          <FeaturedRestaurant
+            getCurrentRestaurants={getCurrentRestaurants}
+            handleRestaurantPress={handleRestaurantPress}
+          />
 
           {/* Best-Rated Burgers */}
           <View style={styles.sectionRowBetween}>
@@ -683,7 +457,7 @@ const HomeScreen = () => {
             </TouchableOpacity>
           </View>
 
-          <FlatList
+          {/* <FlatList
             data={getCurrentProducts()}
             keyExtractor={item => item.id.toString()}
             numColumns={2}
@@ -753,6 +527,10 @@ const HomeScreen = () => {
                 </View>
               </TouchableOpacity>
             )}
+          /> */}
+          <BesRatedBurger
+            getCurrentProducts={getCurrentProducts}
+            handleProductPress={handleProductPress}
           />
 
           {/* Bottom info */}
@@ -778,237 +556,15 @@ const HomeScreen = () => {
           </View>
         </View>
       </ScrollView>
-
-      <Modal
-        visible={showFilterModal}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setShowFilterModal(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Sort & Filter</Text>
-              <View
-                style={{ height: 1, width: '85%', backgroundColor: '#dadada' }}
-              ></View>
-
-              {/* Close icon outside header (overlapping) */}
-              <TouchableOpacity
-                onPress={() => setShowFilterModal(false)}
-                style={styles.closeButtonWrapper}
-              >
-                <Image
-<<<<<<< HEAD:src/components/HomeScreen/HomeScreen.tsx
-                  source={require('../../assets/close1.png')}
-=======
-                  source={require('../../../assets/close1.png')}
->>>>>>> bfd592fb3b13ebb0bcaa6d21619f6bdc15a7a677:src/components/HomeScreen/HomeScreens/HomeScreen.tsx
-                  style={styles.closeIcon}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            </View>
-
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              style={styles.modalScroll}
-            >
-              {/* Category Filter */}
-              <View style={styles.filterSection}>
-                <Text style={styles.filterSectionTitle}>Category</Text>
-
-                <FlatList
-                  data={filterOptions.category}
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  keyExtractor={item => item}
-                  contentContainerStyle={{ paddingVertical: 6 }}
-                  renderItem={({ item }) => {
-                    const isActive = appliedFilters.category === item;
-                    return (
-                      <TouchableOpacity
-                        style={[
-                          styles.filterOption,
-                          isActive && styles.activeFilterOption,
-                          { marginRight: 10 },
-                        ]}
-                        onPress={() =>
-                          setAppliedFilters({
-                            ...appliedFilters,
-                            category: item,
-                          })
-                        }
-                      >
-                        <Text
-                          style={[
-                            styles.filterOptionText,
-                            isActive && styles.activeFilterOptionText,
-                          ]}
-                        >
-                          {item}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  }}
-                />
-              </View>
-
-              {/* Price Range Filter */}
-              <View style={styles.filterSection}>
-                <Text style={styles.filterLabel}>Price Range</Text>
-
-                {/* Histogram visual (optional) */}
-                <View style={styles.histogramContainer}>
-                  {[...Array(20)].map((_, i) => (
-                    <View
-                      key={i}
-                      style={[styles.bar, { height: Math.random() * 60 + 10 }]}
-                    />
-                  ))}
-                </View>
-
-                {/* Price Range Slider */}
-                <MultiSlider
-                  values={appliedFilters.priceRange}
-                  onValuesChange={values =>
-                    setAppliedFilters(prev => ({
-                      ...prev,
-                      priceRange: values,
-                    }))
-                  }
-                  min={0}
-                  max={1000}
-                  step={10}
-                  sliderLength={300}
-                  selectedStyle={{ backgroundColor: '#EB8B23' }}
-                  unselectedStyle={{ backgroundColor: '#ddd' }}
-                  markerStyle={{
-                    height: 20,
-                    width: 20,
-                    borderRadius: 10,
-                    backgroundColor: '#EB8B23',
-                  }}
-                />
-
-                {/* ✅ Stick the prices right below the slider */}
-                <View
-                  style={[styles.priceRangeRow, { marginTop: 0, paddingTop: 0 }]}
-                >
-                  <Text style={styles.priceRangeText}>
-                    ${appliedFilters.priceRange[0]}
-                  </Text>
-                  <Text style={styles.priceRangeText}>
-                    ${appliedFilters.priceRange[1]}
-                  </Text>
-                </View>
-              </View>
-
-              {/* Delivery Time Filter */}
-              <View style={styles.filterSection}>
-                <Text style={styles.filterSectionTitle}>Sort By</Text>
-
-                <FlatList
-                  data={filterOptions.sortBy}
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  keyExtractor={item => item}
-                  contentContainerStyle={{ paddingVertical: 6 }}
-                  renderItem={({ item }) => {
-                    const isActive = appliedFilters.sortBy === item;
-                    return (
-                      <TouchableOpacity
-                        style={[
-                          styles.filterOption,
-                          isActive && styles.activeFilterOption,
-                          { marginRight: 10 },
-                        ]}
-                        onPress={() =>
-                          setAppliedFilters({ ...appliedFilters, sortBy: item })
-                        }
-                      >
-                        <Text
-                          style={[
-                            styles.filterOptionText,
-                            isActive && styles.activeFilterOptionText,
-                          ]}
-                        >
-                          {item}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  }}
-                />
-              </View>
-
-              {/* Rating Filter */}
-              <View style={styles.filterSection}>
-                <Text style={styles.filterSectionTitle}>Rating</Text>
-                <View style={styles.filterOptions}>
-                  {filterOptions.rating.map(option => {
-                    const isActive = appliedFilters.rating === option;
-                    return (
-                      <TouchableOpacity
-                        key={option}
-                        style={[
-                          styles.filterOption,
-                          isActive && styles.activeFilterOption,
-                        ]}
-                        onPress={() =>
-                          setAppliedFilters({
-                            ...appliedFilters,
-                            rating: option,
-                          })
-                        }
-                      >
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: 6,
-                          }}
-                        >
-                          <Image
-<<<<<<< HEAD:src/components/HomeScreen/HomeScreen.tsx
-                            source={require('../../assets/star.png')}
-=======
-                            source={require('../../../assets/star.png')}
->>>>>>> bfd592fb3b13ebb0bcaa6d21619f6bdc15a7a677:src/components/HomeScreen/HomeScreens/HomeScreen.tsx
-                            style={{
-                              width: 13,
-                              height: 12,
-                              resizeMode: 'contain',
-                              tintColor: isActive ? '#fff' : COLORS.primary,
-                            }}
-                          />
-                          <Text
-                            style={[
-                              styles.filterOptionText,
-                              isActive && styles.activeFilterOptionText,
-                            ]}
-                          >
-                            {option}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-              </View>
-            </ScrollView>
-
-            <View style={styles.modalActions}>
-              <TouchableOpacity style={styles.resetBtn} onPress={resetFilters}>
-                <Text style={styles.resetBtnText}>Reset</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.applyBtn} onPress={applyFilters}>
-                <Text style={styles.applyBtnText}>Apply</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <SearchModal
+        showFilterModal={showFilterModal}
+        setShowFilterModal={setShowFilterModal}
+        filterOptions={filterOptions}
+        appliedFilters={appliedFilters}
+        setAppliedFilters={setAppliedFilters}
+        resetFilters={resetFilters}
+        applyFilters={applyFilters}
+      />
     </View>
   );
 };
@@ -1121,169 +677,6 @@ const styles = StyleSheet.create({
     height: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4.5%')),
     tintColor: COLORS.primary,
   },
-  titleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: hp('2%'),
-  },
-  headerTitle: {
-    ...getTextStyle('Bold'),
-    fontSize: fontScale(24),
-    color: COLORS.secondary,
-    lineHeight: isTablet ? hp('3.2%') : hp('3.6%'),
-    flex: 1,
-  },
-  vegContainer: {
-    alignItems: 'center',
-    marginLeft: wp('2%'),
-  },
-  switchOuter: {
-    borderRadius: hp('2.25%'),
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-    overflow: 'hidden',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
-  },
-  switchBackground: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.1)',
-    borderRadius: hp('2.25%'),
-  },
-  switchCircle: {
-    position: 'absolute',
-    left: 0,
-    top: '50%',
-    marginTop: -(isTablet ? hp('2.8%') : hp('3.2%')) / 2,
-    zIndex: 2,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.2,
-        shadowRadius: 2,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-  switchLabelsContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: wp('2.5%'),
-    zIndex: 1,
-  },
-  switchTextLeft: {
-    ...getTextStyle('SemiBold'),
-    fontSize: fontScale(10),
-  },
-  switchTextRight: {
-    ...getTextStyle('SemiBold'),
-    fontSize: fontScale(10),
-  },
-  vegModeTxt: {
-    ...getTextStyle('Bold'),
-    fontSize: fontScale(12),
-    marginTop: hp('0.6%'),
-    color: COLORS.secondary,
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: hp('1%'),
-  },
-  searchBarContainer: {
-    backgroundColor: '#fff',
-    borderRadius: scaleSize(wp('3%')),
-    paddingVertical: isIOS ? hp('1.8%') : hp('1.5%'),
-    paddingHorizontal: wp('3%'),
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-    marginRight: wp('3%'),
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-  searchIcon: {
-    width: isTablet ? scaleSize(wp('4%')) : scaleSize(wp('5%')),
-    height: isTablet ? scaleSize(wp('4%')) : scaleSize(wp('5%')),
-    resizeMode: 'contain',
-    marginRight: wp('2%'),
-    tintColor: '#999',
-  },
-  searchPlaceholder: {
-    ...getTextStyle('Regular'),
-    fontSize: fontScale(14),
-    flex: 1,
-    color: '#999',
-  },
-  filterBtn: {
-    backgroundColor: '#fff',
-    borderRadius: scaleSize(wp('3%')),
-    padding: scaleSize(wp('3%')),
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: isTablet ? scaleSize(wp('11%')) : scaleSize(wp('13%')),
-    height: isTablet ? scaleSize(wp('11%')) : scaleSize(wp('13%')),
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-  filterIcon: {
-    width: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
-    height: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
-    resizeMode: 'contain',
-  },
-  filterDot: {
-    position: 'absolute',
-    top: scaleSize(wp('2%')),
-    right: scaleSize(wp('2%')),
-    width: scaleSize(wp('2%')),
-    height: scaleSize(wp('2%')),
-    borderRadius: scaleSize(wp('1%')),
-    backgroundColor: 'red',
-  },
   mainContent: {
     marginTop: hp('2%'),
     paddingHorizontal: wp('4%'),
@@ -1315,354 +708,6 @@ const styles = StyleSheet.create({
     ...getTextStyle('Medium'),
     fontSize: fontScale(14),
     color: COLORS.primary,
-  },
-  offerCard: {
-    borderRadius: scaleSize(wp('4%')),
-    backgroundColor: COLORS.secondary,
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: scaleSize(wp('4%')),
-    marginBottom: hp('2%'),
-    ...Platform.select({
-      ios: {
-        shadowColor: COLORS.cardShadow || '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-  offerContent: {
-    flex: 1,
-    marginRight: wp('2%'),
-  },
-  offerHeader: {
-    ...getTextStyle('Bold'),
-    fontSize: fontScale(20),
-    color: 'black',
-    marginBottom: hp('0.5%'),
-  },
-  offerSubTxt: {
-    ...getTextStyle('Regular'),
-    fontSize: fontScale(13),
-    color: COLORS.textLight,
-    marginBottom: hp('1.5%'),
-    lineHeight: hp('2%'),
-  },
-  offerButton: {
-    backgroundColor: COLORS.primary,
-    borderRadius: scaleSize(wp('2%')),
-    paddingVertical: isIOS ? hp('1.2%') : hp('1%'),
-    paddingHorizontal: wp('4%'),
-    alignSelf: 'flex-start',
-  },
-  offerBtnText: {
-    ...getTextStyle('Bold'),
-    fontSize: fontScale(13),
-    color: COLORS.secondary,
-    letterSpacing: 0.3,
-  },
-  offerImageWrap: {
-    width: isTablet ? scaleSize(wp('25%')) : scaleSize(wp('30%')),
-    height: isTablet ? scaleSize(wp('25%')) : scaleSize(wp('30%')),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  offerImage: {
-    width: '100%',
-    height: '100%',
-  },
-  categorySliderContent: {
-    paddingVertical: hp('1%'),
-    paddingHorizontal: wp('1%'),
-  },
-  categoryBtn: {
-    backgroundColor: '#fff',
-    borderRadius: wp('50%'),
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: wp('3%'),
-    paddingVertical: isIOS ? hp('1.3%') : hp('1.1%'),
-    paddingHorizontal: wp('4%'),
-    flexDirection: 'row',
-    minWidth: isTablet ? scaleSize(wp('18%')) : scaleSize(wp('22%')),
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
-  },
-  categoryBtnActive: {
-    backgroundColor: COLORS.primary,
-  },
-  categoryIcon: {
-    width: isTablet ? scaleSize(wp('4.5%')) : scaleSize(wp('5.5%')),
-    height: isTablet ? scaleSize(wp('4.5%')) : scaleSize(wp('5.5%')),
-    marginRight: wp('2%'),
-  },
-  categoryTxt: {
-    ...getTextStyle('Medium'),
-    fontSize: fontScale(14),
-    color: COLORS.primary,
-  },
-  categoryTxtActive: {
-    ...getTextStyle('SemiBold'),
-    color: COLORS.secondary,
-  },
-  restaurantScrollContent: {
-    paddingHorizontal: wp('1%'),
-    paddingBottom: hp('1%'),
-  },
-  restaurantCard: {
-    width: isTablet ? scaleSize(wp('48%')) : scaleSize(wp('55%')),
-    backgroundColor: COLORS.secondary,
-    marginHorizontal: wp('1.5%'),
-    marginBottom: hp('1%'),
-    borderRadius: scaleSize(wp('4%')),
-    padding: scaleSize(wp('3%')),
-    ...Platform.select({
-      ios: {
-        shadowColor: COLORS.cardShadow || '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-  imageContainer: {
-    position: 'relative',
-    marginBottom: hp('1%'),
-  },
-  restaurantImg: {
-    width: '100%',
-    height: isTablet ? hp('12%') : hp('15%'),
-    borderRadius: scaleSize(wp('3%')),
-  },
-  iconWrapper: {
-    position: 'absolute',
-    top: scaleSize(wp('3%')),
-    right: scaleSize(wp('3%')),
-    backgroundColor: COLORS.primary,
-    borderRadius: scaleSize(wp('5%')),
-    padding: scaleSize(wp('2%')),
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-  heartIcon: {
-    width: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4%')),
-    height: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4%')),
-    tintColor: '#fff',
-  },
-  ratingBadge: {
-    position: 'absolute',
-    bottom: scaleSize(wp('3%')),
-    left: scaleSize(wp('3%')),
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.primary,
-    paddingHorizontal: wp('2.5%'),
-    paddingVertical: hp('0.5%'),
-    borderRadius: scaleSize(wp('2%')),
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
-  },
-  starIcon: {
-    width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
-    height: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
-    marginRight: wp('1%'),
-    tintColor: '#fff',
-  },
-  ratingText: {
-    ...getTextStyle('SemiBold'),
-    fontSize: fontScale(11),
-    color: '#fff',
-  },
-  restaurantTitle: {
-    ...getTextStyle('Bold'),
-    fontSize: fontScale(15),
-    color: COLORS.textDark,
-    marginBottom: hp('0.5%'),
-  },
-  restaurantInfoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: hp('0.5%'),
-    gap: wp('1%'),
-  },
-  infoIcon: {
-    width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
-    height: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
-    tintColor: COLORS.primary,
-  },
-  infoTxt: {
-    ...getTextStyle('Regular'),
-    fontSize: fontScale(12),
-    color: COLORS.textLight,
-    marginRight: wp('2%'),
-  },
-  tagsContainer: {
-    flexDirection: 'row',
-    gap: wp('1.5%'),
-    flexWrap: 'wrap',
-  },
-  restaurantTags: {
-    ...getTextStyle('Regular'),
-    fontSize: fontScale(11),
-    color: COLORS.primary,
-    backgroundColor: '#f3f1f1',
-    paddingHorizontal: wp('2.5%'),
-    paddingVertical: isIOS ? hp('0.3%') : hp('0.25%'),
-    borderRadius: scaleSize(wp('5%')),
-  },
-  productGrid: {
-    paddingHorizontal: wp('1%'),
-  },
-  productRow: {
-    justifyContent: 'space-between',
-    paddingHorizontal: wp('1%'),
-  },
-  productCard: {
-    backgroundColor: COLORS.secondary,
-    width: isTablet ? scaleSize(wp('45%')) : scaleSize(wp('43%')),
-    borderRadius: scaleSize(wp('4%')),
-    padding: scaleSize(wp('3%')),
-    marginBottom: hp('2%'),
-    ...Platform.select({
-      ios: {
-        shadowColor: COLORS.cardShadow || '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-  productImg: {
-    width: '100%',
-    height: isTablet ? hp('14%') : hp('16%'),
-    borderRadius: scaleSize(wp('3%')),
-  },
-  productHeartWrapper: {
-    position: 'absolute',
-    top: scaleSize(wp('3%')),
-    right: scaleSize(wp('3%')),
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    borderRadius: scaleSize(wp('5%')),
-    padding: scaleSize(wp('2%')),
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-  productRatingBadge: {
-    position: 'absolute',
-    bottom: scaleSize(wp('3%')),
-    left: scaleSize(wp('3%')),
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.primary,
-    paddingHorizontal: wp('2.5%'),
-    paddingVertical: hp('0.5%'),
-    borderRadius: scaleSize(wp('2%')),
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
-  },
-  productTitle: {
-    ...getTextStyle('Bold'),
-    fontSize: fontScale(14),
-    color: COLORS.textDark,
-    marginBottom: hp('0.5%'),
-    marginTop: hp('1%'),
-  },
-  priceRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: hp('0.5%'),
-  },
-  priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: wp('1.5%'),
-    flex: 1,
-  },
-  productPrice: {
-    ...getTextStyle('Bold'),
-    fontSize: fontScale(15),
-    color: '#111',
-  },
-  oldPrice: {
-    ...getTextStyle('Regular'),
-    fontSize: fontScale(12),
-    color: '#666',
-    textDecorationLine: 'line-through',
-  },
-  plusBtn: {
-    backgroundColor: COLORS.primary,
-    borderRadius: wp('50%'),
-    padding: scaleSize(wp('2%')),
-    alignItems: 'center',
-    justifyContent: 'center',
-    minWidth: scaleSize(wp('8%')),
-    minHeight: scaleSize(wp('8%')),
-  },
-  plusIcon: {
-    width: isTablet ? scaleSize(wp('3%')) : scaleSize(wp('3.5%')),
-    height: isTablet ? scaleSize(wp('3%')) : scaleSize(wp('3.5%')),
-    tintColor: '#fff',
-  },
-  deliveryTimeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: wp('1%'),
   },
   bottomRow: {
     flexDirection: 'row',
@@ -1700,156 +745,6 @@ const styles = StyleSheet.create({
     ...getTextStyle('Regular'),
     fontSize: fontScale(13),
     color: COLORS.textLight,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
-  },
-  modalContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: wp('6%'),
-    borderTopRightRadius: wp('6%'),
-    paddingTop: hp('3%'),
-    maxHeight: hp('80%'),
-  },
-  modalHeader: {
-    backgroundColor: '#fff',
-    paddingVertical: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    position: 'relative',
-  },
-  modalTitle: {
-    ...getTextStyle('Bold'),
-    fontSize: fontScale(18),
-    color: '#000',
-    marginBottom: 10,
-  },
-  closeButtonWrapper: {
-    position: 'absolute',
-    bottom: 70,
-    left: '50%',
-    transform: [{ translateX: -30 }],
-    backgroundColor: '#fff',
-    borderRadius: 100,
-    padding: 10,
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  closeIcon: {
-    width: 20,
-    height: 20,
-    tintColor: '#000',
-  },
-  modalScroll: {
-    flex: 1,
-  },
-  filterSection: {
-    padding: wp('5%'),
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
-    alignItems: 'center',
-  },
-  filterLabel: {
-    ...getTextStyle('Bold'),
-    fontSize: fontScale(16),
-    color: '#000',
-    marginBottom: 10,
-  },
-  histogramContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    height: 80,
-    marginVertical: 5,
-  },
-  bar: {
-    width: 6,
-    backgroundColor: '#e0e0e0',
-    marginHorizontal: 2,
-    borderRadius: 3,
-  },
-  filterSectionTitle: {
-    ...getTextStyle('Bold'),
-    fontSize: fontScale(16),
-    color: '#000',
-    marginBottom: hp('1.5%'),
-  },
-  filterOptions: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: wp('2%'),
-  },
-  filterOption: {
-    backgroundColor: '#f0f0f0',
-    paddingHorizontal: wp('4%'),
-    paddingVertical: hp('1%'),
-    borderRadius: wp('5%'),
-    marginBottom: hp('1%'),
-  },
-  activeFilterOption: {
-    backgroundColor: COLORS.primary,
-  },
-  filterOptionText: {
-    ...getTextStyle('Medium'),
-    fontSize: fontScale(14),
-    color: '#666',
-  },
-  activeFilterOptionText: {
-    ...getTextStyle('Medium'),
-    color: '#fff',
-  },
-  priceRangeRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 300,
-    marginTop: 0,
-    paddingTop: 0,
-  },
-  priceRangeText: {
-    ...getTextStyle('SemiBold'),
-    fontSize: fontScale(14),
-    color: '#000',
-  },
-  modalActions: {
-    flexDirection: 'row',
-    padding: wp('5%'),
-    gap: wp('3%'),
-    borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
-  },
-  resetBtn: {
-    flex: 1,
-    backgroundColor: '#f0f0f0',
-    paddingVertical: hp('1.8%'),
-    borderRadius: wp('10%'),
-    alignItems: 'center',
-  },
-  resetBtnText: {
-    ...getTextStyle('Bold'),
-    fontSize: fontScale(16),
-    color: '#666',
-  },
-  applyBtn: {
-    flex: 1,
-    backgroundColor: COLORS.primary,
-    paddingVertical: hp('1.8%'),
-    borderRadius: wp('10%'),
-    alignItems: 'center',
-  },
-  applyBtnText: {
-    ...getTextStyle('Bold'),
-    fontSize: fontScale(16),
-    color: '#fff',
   },
 });
 
