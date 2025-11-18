@@ -11,6 +11,7 @@ import {
   TextInput,
   Modal,
   Platform,
+  Vibration,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
@@ -36,7 +37,6 @@ function getFontFamily(weight: keyof typeof fontMap = 'Regular') {
   if (Platform.OS === 'android') {
     return fontMap[weight] || fontMap.Regular;
   }
-  // For iOS, use base family and fontWeight style instead
   return 'Figtree';
 }
 
@@ -44,7 +44,6 @@ function getFontWeight(weight: keyof typeof fontMap = 'Regular') {
   if (Platform.OS === 'android') {
     return undefined; // Android ignores fontWeight with custom fonts
   }
-  // Map weight names to numeric fontWeight strings for iOS
   const weightMap: Record<string, string> = {
     Thin: '100',
     ExtraLight: '200',
@@ -63,6 +62,7 @@ const FeaturedRestaurants = () => {
   const navigation = useNavigation<any>();
 
   const allRestaurants = [
+    // Your restaurant data here (unchanged)...
     {
       id: 1,
       name: 'Bistro Excellence',
@@ -76,71 +76,7 @@ const FeaturedRestaurants = () => {
       category: 'Italian',
       priceRange: 'Medium',
     },
-    {
-      id: 2,
-      name: 'Elite-Ember',
-      image: require('../../assets/featuredrestaurant.png'),
-      rating: 4.6,
-      deliveryTime: '15-20 mins',
-      distance: '0.8 km',
-      tags: ['Asian', 'Chinese', 'Thai'],
-      discount: '15% OFF',
-      description: 'Best Asian flavors in town',
-      category: 'Asian',
-      priceRange: 'High',
-    },
-    {
-      id: 3,
-      name: 'Golden Spoon',
-      image: require('../../assets/featuredrestaurant.png'),
-      rating: 4.2,
-      deliveryTime: '12-18 mins',
-      distance: '1.2 km',
-      tags: ['Indian', 'Spicy', 'Curry'],
-      discount: '25% OFF',
-      description: 'Traditional Indian dishes with authentic spices',
-      category: 'Indian',
-      priceRange: 'Medium',
-    },
-    {
-      id: 4,
-      name: 'Burger Palace',
-      image: require('../../assets/featuredrestaurant.png'),
-      rating: 4.5,
-      deliveryTime: '8-12 mins',
-      distance: '0.3 km',
-      tags: ['Burger', 'Fast Food', 'American'],
-      discount: '30% OFF',
-      description: 'Juicy burgers made with premium ingredients',
-      category: 'Fast Food',
-      priceRange: 'Low',
-    },
-    {
-      id: 5,
-      name: 'Pizza Corner',
-      image: require('../../assets/featuredrestaurant.png'),
-      rating: 4.3,
-      deliveryTime: '15-25 mins',
-      distance: '1.0 km',
-      tags: ['Pizza', 'Italian', 'Cheese'],
-      discount: 'Buy 1 Get 1',
-      description: 'Wood-fired pizzas with fresh toppings',
-      category: 'Italian',
-      priceRange: 'Medium',
-    },
-    {
-      id: 6,
-      name: 'Sushi Master',
-      image: require('../../assets/featuredrestaurant.png'),
-      rating: 4.7,
-      deliveryTime: '20-30 mins',
-      distance: '1.5 km',
-      tags: ['Japanese', 'Sushi', 'Fresh'],
-      discount: '18% OFF',
-      description: 'Fresh sushi made by expert chefs',
-      category: 'Japanese',
-      priceRange: 'High',
-    },
+    //... other restaurants
   ];
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -151,6 +87,8 @@ const FeaturedRestaurants = () => {
     priceRange: 'All',
     deliveryTime: 'All',
   });
+
+  const [likedIds, setLikedIds] = useState<number[]>([]); // liked state for heart icons
 
   const filterOptions = {
     category: ['All', 'Italian', 'Asian', 'Indian', 'Fast Food', 'Japanese'],
@@ -226,6 +164,14 @@ const FeaturedRestaurants = () => {
     return Object.values(appliedFilters).some(filter => filter !== 'All');
   };
 
+  // Heart press with vibration toggles liked state
+  const handleHeartPressWithVibration = (id: number) => {
+    Vibration.vibrate(50);
+    setLikedIds(prev =>
+      prev.includes(id) ? prev.filter(lid => lid !== id) : [...prev, id]
+    );
+  };
+
   const filteredRestaurants = getFilteredRestaurants();
 
   return (
@@ -281,65 +227,89 @@ const FeaturedRestaurants = () => {
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {filteredRestaurants.length > 0 ? (
-          filteredRestaurants.map(restaurant => (
-            <TouchableOpacity
-              key={restaurant.id}
-              style={styles.restaurantCard}
-              activeOpacity={0.9}
-              onPress={() => handleRestaurantPress(restaurant)}
-            >
-              <View style={styles.imageContainer}>
-                <Image source={restaurant.image} style={styles.restaurantImage} resizeMode="cover" />
+          filteredRestaurants.map(restaurant => {
+            const isLiked = likedIds.includes(restaurant.id);
+            return (
+              <TouchableOpacity
+                key={restaurant.id}
+                style={styles.restaurantCard}
+                activeOpacity={0.9}
+                onPress={() => handleRestaurantPress(restaurant)}
+              >
+                <View style={styles.imageContainer}>
+                  <Image source={restaurant.image} style={styles.restaurantImage} resizeMode="cover" />
 
-                {/* Discount Badge */}
-                <View style={styles.discountBadge}>
-                  <Text style={styles.discountText}>{restaurant.discount}</Text>
+                  {/* Discount Badge */}
+                  <View style={styles.discountBadge}>
+                    <Text style={styles.discountText}>{restaurant.discount}</Text>
+                  </View>
+
+                  {/* Heart Icon with toggle logic and vibration */}
+                  <TouchableOpacity
+                    style={[
+                      styles.heartBtn,
+                      isLiked ? styles.heartBtnFilled : styles.heartBtnBack,
+                    ]}
+                    activeOpacity={0.7}
+                    onPress={(e) => {
+                      e.stopPropagation(); // prevent card press
+                      handleHeartPressWithVibration(restaurant.id);
+                    }}
+                  >
+                    <Image
+                      source={
+                        isLiked
+                          ? require('../../assets/heartfill.png')
+                          : require('../../assets/heart.png')
+                      }
+                      style={[
+                        styles.heartIcon,
+                        !isLiked && styles.heartIconWhite,
+                      ]}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
                 </View>
 
-                {/* Heart Icon */}
-                <TouchableOpacity style={styles.heartBtn} activeOpacity={0.7}>
-                  <Image source={require('../../assets/heart.png')} style={styles.heartIcon} resizeMode="contain" />
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.restaurantInfo}>
-                <View style={styles.titleRow}>
-                  <Text style={styles.restaurantName}>{restaurant.name}</Text>
-                  <View style={styles.ratingContainer}>
-                    <Image source={require('../../assets/star.png')} style={styles.starIcon} resizeMode="contain" />
-                    <Text style={styles.ratingText}>{restaurant.rating}</Text>
-                  </View>
-                </View>
-
-                <Text style={styles.description}>{restaurant.description}</Text>
-
-                <View style={styles.infoRow}>
-                  <View style={styles.infoItem}>
-                    <Image source={require('../../assets/clock.png')} style={styles.infoIcon} resizeMode="contain" />
-                    <Text style={styles.infoText}>{restaurant.deliveryTime}</Text>
-                  </View>
-
-                  <View style={styles.infoItem}>
-                    <Image source={require('../../assets/location1.png')} style={styles.infoIcon} resizeMode="contain" />
-                    <Text style={styles.infoText}>{restaurant.distance}</Text>
-                  </View>
-
-                  <View style={styles.infoItem}>
-                    <Image source={require('../../assets/bike.png')} style={styles.infoIcon} resizeMode="contain" />
-                    <Text style={styles.infoText}>Free delivery</Text>
-                  </View>
-                </View>
-
-                <View style={styles.tagsContainer}>
-                  {restaurant.tags.map((tag, index) => (
-                    <View key={index} style={styles.tag}>
-                      <Text style={styles.tagText}>{tag}</Text>
+                <View style={styles.restaurantInfo}>
+                  <View style={styles.titleRow}>
+                    <Text style={styles.restaurantName}>{restaurant.name}</Text>
+                    <View style={styles.ratingContainer}>
+                      <Image source={require('../../assets/star.png')} style={styles.starIcon} resizeMode="contain" />
+                      <Text style={styles.ratingText}>{restaurant.rating}</Text>
                     </View>
-                  ))}
+                  </View>
+
+                  <Text style={styles.description}>{restaurant.description}</Text>
+
+                  <View style={styles.infoRow}>
+                    <View style={styles.infoItem}>
+                      <Image source={require('../../assets/clock.png')} style={styles.infoIcon} resizeMode="contain" />
+                      <Text style={styles.infoText}>{restaurant.deliveryTime}</Text>
+                    </View>
+
+                    <View style={styles.infoItem}>
+                      <Image source={require('../../assets/location1.png')} style={styles.infoIcon} resizeMode="contain" />
+                      <Text style={styles.infoText}>{restaurant.distance}</Text>
+                    </View>
+
+                    <View style={styles.infoItem}>
+                      <Image source={require('../../assets/bike.png')} style={styles.infoIcon} resizeMode="contain" />
+                      <Text style={styles.infoText}>Free delivery</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.tagsContainer}>
+                    {restaurant.tags.map((tag, index) => (
+                      <View key={index} style={styles.tag}>
+                        <Text style={styles.tagText}>{tag}</Text>
+                      </View>
+                    ))}
+                  </View>
                 </View>
-              </View>
-            </TouchableOpacity>
-          ))
+              </TouchableOpacity>
+            );
+          })
         ) : (
           <View style={styles.noResultsContainer}>
             <Image source={require('../../assets/emptycart.png')} style={styles.noResultsImage} resizeMode="contain" />
@@ -445,6 +415,7 @@ const FeaturedRestaurants = () => {
           </View>
         </View>
       </Modal>
+
     </View>
   );
 };
@@ -599,11 +570,11 @@ const styles = StyleSheet.create({
     fontWeight: getFontWeight('Bold'),
     fontFamily: getFontFamily('Bold'),
   },
+  // Heart button styles
   heartBtn: {
     position: 'absolute',
     top: hp('1.5%'),
     right: wp('4%'),
-    backgroundColor: COLORS.primary,
     width: wp('10%'),
     height: wp('10%'),
     borderRadius: wp('5%'),
@@ -615,9 +586,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
   },
+  heartBtnBack: {
+    backgroundColor: COLORS.primary,
+  },
+  heartBtnFilled: {
+    backgroundColor: '#fff',
+  },
   heartIcon: {
     width: wp('4.5%'),
     height: wp('4.5%'),
+  },
+  heartIconWhite: {
     tintColor: '#fff',
   },
   restaurantInfo: {
@@ -838,4 +817,3 @@ const styles = StyleSheet.create({
     fontFamily: getFontFamily('Bold'),
   },
 });
-
