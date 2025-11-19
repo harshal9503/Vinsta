@@ -52,7 +52,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   // You can define your themes here or import as objects
   const darkTheme: Theme = {
     background: '#121212',
-    cardBackground: '#1e1e1e',
+    cardBackground: '#1E1E1E',
     text: '#ffffff',
     textSecondary: '#a0a0a0',
     borderColor: '#333333',
@@ -62,7 +62,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     background: COLORS.secondary,
     cardBackground: '#ffffff',
     text: COLORS.text,
-    textSecondary: '#666666',
+    textSecondary: '#575757ff',
     borderColor: '#f0f0f0',
   };
 
