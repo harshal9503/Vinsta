@@ -212,7 +212,7 @@ const HomeScreen = () => {
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isVegMode, setIsVegMode] = useState(true);
-  const {theme} = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
 
   const toggleVegMode = () => {
     setIsVegMode(prev => !prev);
@@ -337,7 +337,7 @@ const HomeScreen = () => {
     },
   ];
   return (
-    <View style={[styles.container,{backgroundColor : theme.background}]}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <StatusBar
         backgroundColor={COLORS.primary}
         barStyle="light-content"
@@ -358,19 +358,19 @@ const HomeScreen = () => {
               <View style={styles.locationRow}>
                 <Image
                   source={require('../../../assets/location.png')}
-                  style={[styles.icon,{tintColor : theme.background}]}
+                  style={[styles.icon, { tintColor: theme.background }]}
                 />
-                <Text style={[styles.locationText,{color :  theme.background}]}>Location</Text>
+                <Text style={[styles.locationText, { color: theme.background }]}>Location</Text>
                 <Image
                   source={require('../../../assets/dropdown.png')}
-                  style={[styles.dropdownIcon,{tintColor : theme.background}]}
+                  style={[styles.dropdownIcon, { tintColor: theme.background }]}
                 />
               </View>
-              <Text style={[styles.addressText,{color :  theme.background}]}>4102 Pretty View Lane</Text>
+              <Text style={[styles.addressText, { color: theme.background }]}>4102 Pretty View Lane</Text>
             </View>
             <View style={styles.walletBagRow}>
               <TouchableOpacity
-                style={[styles.walletBtn,{backgroundColor :  theme.background}]}
+                style={[styles.walletBtn, { backgroundColor: theme.background }]}
                 activeOpacity={0.7}
                 onPress={handleWalletPress}
               >
@@ -380,7 +380,7 @@ const HomeScreen = () => {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.bagBtn,{backgroundColor : theme.background}]}
+                style={[styles.bagBtn, { backgroundColor: theme.background }]}
                 activeOpacity={0.7}
                 onPress={handleCartPress}
               >
@@ -395,7 +395,6 @@ const HomeScreen = () => {
           {/* Title Row */}
           <TitleRow isVegMode={isVegMode} toggleVegMode={toggleVegMode} />
 
-
           {/* Search Items */}
           <SearchItem
             onOpenFilter={() => setShowFilterModal(true)}
@@ -404,15 +403,15 @@ const HomeScreen = () => {
         </View>
 
         {/* Main Content */}
-        <View style={[styles.mainContent,{backgroundColor :  theme.background}]}>
+        <View style={[styles.mainContent, { backgroundColor: theme.background }]}>
           {/* Today's Offers */}
           <View style={styles.sectionRowBetween}>
-            <Text style={[styles.sectionTitle,{color : theme.text}]}>Today's Offer's</Text>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>Today's Offer's</Text>
             <TouchableOpacity
               onPress={handleTodayOfferViewAll}
               activeOpacity={0.7}
             >
-              <Text style={styles.sectionLink}>View All</Text>
+              <Text style={[styles.sectionLink, { color: theme.primary }]}>View All</Text>
             </TouchableOpacity>
           </View>
 
@@ -425,13 +424,13 @@ const HomeScreen = () => {
           {/* Featured Restaurants */}
           <View style={styles.sectionRowBetween}>
             <View style={styles.sectionTitleRow}>
-              <Text style={[styles.sectionTitle,{color : theme.text}]}>Featured restaurants</Text>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>Featured restaurants</Text>
             </View>
             <TouchableOpacity
               onPress={handleFeaturedRestaurantViewAll}
               activeOpacity={0.7}
             >
-              <Text style={styles.sectionLink}>View All</Text>
+              <Text style={[styles.sectionLink, { color: theme.primary }]}>View All</Text>
             </TouchableOpacity>
           </View>
           <FeaturedRestaurant
@@ -444,10 +443,10 @@ const HomeScreen = () => {
             <View style={styles.sectionTitleRow}>
               <Image
                 source={require('../../../assets/popular.png')}
-                style={styles.sectionIcon}
+                style={[styles.sectionIcon, { tintColor: theme.primary }]}
                 resizeMode="contain"
               />
-              <Text style={[styles.sectionTitle,{color : theme.text}]}>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>
                 {isVegMode ? 'Best-Rated Burgers' : 'Best-Rated Non-Veg'}
               </Text>
             </View>
@@ -455,7 +454,7 @@ const HomeScreen = () => {
               onPress={handleBestBurgerViewAll}
               activeOpacity={0.7}
             >
-              <Text style={styles.sectionLink}>View All</Text>
+              <Text style={[styles.sectionLink, { color: theme.primary }]}>View All</Text>
             </TouchableOpacity>
           </View>
 
@@ -468,18 +467,18 @@ const HomeScreen = () => {
           <View style={styles.bottomRow}>
             <Image
               source={require('../../../assets/walk.png')}
-              style={styles.bottomImage}
+              style={[styles.bottomImage, { tintColor: theme.primary }]}
               resizeMode="contain"
             />
             <View style={styles.bottomTextContainer}>
-              <Text style={[styles.reachingTxt]}>Reaching at your doorstep</Text>
+              <Text style={[styles.reachingTxt, { color: theme.primary }]}>Reaching at your doorstep</Text>
               <View style={styles.deliveryTimeContainer}>
                 <Image
                   source={require('../../../assets/clock.png')}
-                  style={[styles.deliveryClockIcon,{tintColor : theme.text}]}
+                  style={[styles.deliveryClockIcon, { tintColor: theme.textLight }]}
                   resizeMode="contain"
                 />
-                <Text style={[styles.getDeliveredTxt,{color : theme.text}]}>
+                <Text style={[styles.getDeliveredTxt, { color: theme.textLight }]}>
                   Get delivered in 15 minutes
                 </Text>
               </View>
@@ -542,19 +541,16 @@ const styles = StyleSheet.create({
   locationText: {
     ...getTextStyle('Medium'),
     fontSize: fontScale(14),
-    color: COLORS.secondary,
     marginRight: wp('0.5%'),
   },
   dropdownIcon: {
     width: isTablet ? scaleSize(wp('1.8%')) : scaleSize(wp('2.5%')),
     height: isTablet ? scaleSize(wp('1%')) : scaleSize(wp('1.2%')),
-    tintColor: COLORS.secondary,
     marginLeft: wp('1.5%'),
   },
   addressText: {
     ...getTextStyle('Regular'),
     fontSize: fontScale(13),
-    color: COLORS.secondary,
     opacity: 0.9,
   },
   walletBagRow: {
@@ -562,7 +558,6 @@ const styles = StyleSheet.create({
     gap: wp('2.5%'),
   },
   walletBtn: {
-    backgroundColor: '#fff',
     padding: isTablet ? scaleSize(wp('2%')) : scaleSize(wp('2.5%')),
     borderRadius: wp('50%'),
     alignItems: 'center',
@@ -580,7 +575,6 @@ const styles = StyleSheet.create({
     }),
   },
   bagBtn: {
-    backgroundColor: '#fff',
     padding: isTablet ? scaleSize(wp('1.8%')) : scaleSize(wp('2.2%')),
     borderRadius: wp('50%'),
     alignItems: 'center',
@@ -610,7 +604,6 @@ const styles = StyleSheet.create({
   mainContent: {
     marginTop: hp('2%'),
     paddingHorizontal: wp('4%'),
-    backgroundColor: COLORS.background,
     flex: 1,
   },
   sectionRowBetween: {
@@ -632,12 +625,10 @@ const styles = StyleSheet.create({
   sectionTitle: {
     ...getTextStyle('Bold'),
     fontSize: fontScale(18),
-    color: COLORS.textDark,
   },
   sectionLink: {
     ...getTextStyle('Medium'),
     fontSize: fontScale(14),
-    color: COLORS.primary,
   },
   bottomRow: {
     flexDirection: 'row',
@@ -658,7 +649,6 @@ const styles = StyleSheet.create({
   reachingTxt: {
     ...getTextStyle('SemiBold'),
     fontSize: fontScale(14),
-    color: COLORS.primary,
     marginBottom: hp('0.4%'),
   },
   deliveryTimeContainer: {
@@ -669,12 +659,10 @@ const styles = StyleSheet.create({
   deliveryClockIcon: {
     width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
     height: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
-    tintColor: COLORS.textLight,
   },
   getDeliveredTxt: {
     ...getTextStyle('Regular'),
     fontSize: fontScale(13),
-    color: COLORS.textLight,
   },
 });
 

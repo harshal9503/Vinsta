@@ -1,8 +1,9 @@
 import { Dimensions, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext, useState } from 'react'
-import { widthPercentageToDP as wp,heightPercentageToDP as hp } from 'react-native-responsive-screen'
+import React, { useContext } from 'react'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { useNavigation } from '@react-navigation/native'
 import { ThemeContext } from '../../../theme/ThemeContext';
+import { COLORS } from '../../../theme/colors';
 const { width, height } = Dimensions.get('window');
 
 const isTablet = width >= 768;
@@ -94,39 +95,39 @@ const getTextStyle = (weight = 'Regular') => {
         textAlignVertical: 'center',
     };
 };
+
 const SearchItem = ({ onOpenFilter, hasActiveFilters }) => {
   const navigation = useNavigation();
-  const {theme} = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
+  
   return (
-    <View style={[styles.searchContainer]}>
-
+    <View style={styles.searchContainer}>
       <TouchableOpacity
-        style={[styles.searchBarContainer,{backgroundColor : theme.cardBackground}]}
+        style={[styles.searchBarContainer, { backgroundColor: theme.cardBackground }]}
         onPress={() => navigation.navigate('Search')}
         activeOpacity={0.8}
       >
         <Image
           source={require('../../../assets/search.png')}
-          style={[styles.searchIcon,{tintColor : theme.text}]}
+          style={[styles.searchIcon, { tintColor: theme.text}]}
         />
-        <Text style={[styles.searchPlaceholder,{color : theme.text}]}>
+        <Text style={[styles.searchPlaceholder, { color: theme.text }]}>
           Find for food or restaurant...
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={[styles.filterBtn,{backgroundColor  :theme.cardBackground}]}
+        style={[styles.filterBtn, { backgroundColor: theme.cardBackground }]}
         activeOpacity={0.8}
         onPress={onOpenFilter}
       >
         <Image
           source={require('../../../assets/filter.png')}
-          style={styles.filterIcon}
+          style={[styles.filterIcon, { tintColor: COLORS.primary }]}
         />
 
         {hasActiveFilters() && <View style={styles.filterDot} />}
       </TouchableOpacity>
-
     </View>
   );
 };
@@ -134,48 +135,44 @@ const SearchItem = ({ onOpenFilter, hasActiveFilters }) => {
 export default SearchItem
 
 const styles = StyleSheet.create({
-      searchContainer: {
+    searchContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         marginTop: hp('1%'),
-      },
-      searchBarContainer: {
-        backgroundColor: '#fff',
+    },
+    searchBarContainer: {
         borderRadius: scaleSize(wp('3%')),
-        paddingVertical: isIOS ? hp('1.8%') : hp('2%'),
+        paddingVertical: isIOS ? hp('1.8%') : hp('1.5%'),
         paddingHorizontal: wp('3%'),
         flexDirection: 'row',
         alignItems: 'center',
         flex: 1,
         marginRight: wp('3%'),
         ...Platform.select({
-          ios: {
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.1,
-            shadowRadius: 4,
-          },
-          android: {
-            elevation: 3,
-          },
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+            },
+            android: {
+                elevation: 3,
+            },
         }),
-      },
-      searchIcon: {
+    },
+    searchIcon: {
         width: isTablet ? scaleSize(wp('4%')) : scaleSize(wp('5%')),
         height: isTablet ? scaleSize(wp('4%')) : scaleSize(wp('5%')),
         resizeMode: 'contain',
         marginRight: wp('2%'),
-        tintColor: '#999',
-      },
-      searchPlaceholder: {
+    },
+    searchPlaceholder: {
         ...getTextStyle('Regular'),
         fontSize: fontScale(14),
         flex: 1,
-        color: '#999',
-      },
-      filterBtn: {
-        backgroundColor: '#fff',
+    },
+    filterBtn: {
         borderRadius: scaleSize(wp('3%')),
         padding: scaleSize(wp('3%')),
         justifyContent: 'center',
@@ -183,29 +180,29 @@ const styles = StyleSheet.create({
         width: isTablet ? scaleSize(wp('11%')) : scaleSize(wp('13%')),
         height: isTablet ? scaleSize(wp('11%')) : scaleSize(wp('13%')),
         ...Platform.select({
-          ios: {
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.1,
-            shadowRadius: 4,
-          },
-          android: {
-            elevation: 3,
-          },
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+            },
+            android: {
+                elevation: 3,
+            },
         }),
-      },
-      filterIcon: {
+    },
+    filterIcon: {
         width: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
         height: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
         resizeMode: 'contain',
-      },
-      filterDot: {
+    },
+    filterDot: {
         position: 'absolute',
         top: scaleSize(wp('2%')),
         right: scaleSize(wp('2%')),
-        width: scaleSize(wp('0%')),
-        height: scaleSize(wp('0%')),
+        width: scaleSize(wp('2%')),
+        height: scaleSize(wp('2%')),
         borderRadius: scaleSize(wp('1%')),
         backgroundColor: 'red',
-      },
+    },
 })

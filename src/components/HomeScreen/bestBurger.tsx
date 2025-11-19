@@ -16,8 +16,6 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
 
-const { width, height } = Dimensions.get('window');
-
 // Map font weight to actual font family names on Android
 const fontMap: Record<string, string> = {
   Thin: 'Figtree-Thin',
@@ -31,20 +29,19 @@ const fontMap: Record<string, string> = {
   Black: 'Figtree-Black',
 };
 
-// On iOS, fontWeight works with base font family
+const { width, height } = Dimensions.get('window');
+
 function getFontFamily(weight: keyof typeof fontMap = 'Regular') {
   if (Platform.OS === 'android') {
     return fontMap[weight] || fontMap.Regular;
   }
-  // For iOS, use base family and fontWeight style instead
   return 'Figtree';
 }
 
 function getFontWeight(weight: keyof typeof fontMap = 'Regular') {
   if (Platform.OS === 'android') {
-    return undefined; // Android ignores fontWeight with custom fonts
+    return undefined;
   }
-  // Map weight names to numeric fontWeight strings for iOS
   const weightMap: Record<string, string> = {
     Thin: '100',
     ExtraLight: '200',
@@ -163,8 +160,7 @@ const BestBurgers = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('All');
-  const [likedItems, setLikedItems] = useState<number[]>([]);
-
+  const [likedIds, setLikedIds] = useState<number[]>([]);
   const filters = ['All', 'Veg', 'Non-Veg', 'Under $40', 'Rating 4+', 'Fast Delivery'];
 
   const getFilteredBurgers = () => {
@@ -205,15 +201,6 @@ const BestBurgers = () => {
     return filtered;
   };
 
-  const filteredBurgers = getFilteredBurgers();
-
-  const toggleLike = (id: number) => {
-    Vibration.vibrate(50);
-    setLikedItems(prev =>
-      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
-    );
-  };
-
   const handleProductPress = (product: any) => {
     navigation.navigate('fooddetails', { product });
   };
@@ -222,10 +209,19 @@ const BestBurgers = () => {
     setSearchQuery('');
   };
 
+  // Heart press toggles liked state with vibration
+  const handleHeartPressWithVibration = (id: number) => {
+    Vibration.vibrate(50);
+    setLikedIds(prev =>
+      prev.includes(id) ? prev.filter(lid => lid !== id) : [...prev, id]
+    );
+  };
+
+  const filteredBurgers = getFilteredBurgers();
+
   const renderBurgerItem = ({ item, index }: { item: any; index: number }) => {
-    const isLastItemInOddRow =
-      filteredBurgers.length % 2 === 1 && index === filteredBurgers.length - 1;
-    const isLiked = likedItems.includes(item.id);
+    const isLastItemInOddRow = filteredBurgers.length % 2 === 1 && index === filteredBurgers.length - 1;
+    const isLiked = likedIds.includes(item.id);
 
     return (
       <TouchableOpacity
@@ -236,19 +232,21 @@ const BestBurgers = () => {
         <View style={styles.imageContainer}>
           <Image source={item.image} style={styles.burgerImage} />
 
-          <View
-            style={[
-              styles.vegIndicator,
-              { backgroundColor: item.isVeg ? '#4CAF50' : '#F44336' },
-            ]}
-          >
+          <View style={[styles.vegIndicator, { backgroundColor: item.isVeg ? '#4CAF50' : '#F44336' }]}>
             <View style={styles.vegDot} />
           </View>
 
+          {/* Heart Button */}
           <TouchableOpacity
-            style={[styles.heartBtn, isLiked && styles.heartBtnLiked]}
+            style={[
+              styles.heartBtn,
+              isLiked ? styles.heartBtnFilled : styles.heartBtnBack,
+            ]}
             activeOpacity={0.7}
-            onPress={() => toggleLike(item.id)}
+            onPress={(e) => {
+              e.stopPropagation(); // prevent parent touchable press
+              handleHeartPressWithVibration(item.id);
+            }}
           >
             <Image
               source={
@@ -256,7 +254,10 @@ const BestBurgers = () => {
                   ? require('../../assets/heartfill.png')
                   : require('../../assets/heart.png')
               }
-              style={styles.heartIcon}
+              style={[
+                styles.heartIcon,
+                !isLiked && styles.heartIconWhite,
+              ]}
               resizeMode="contain"
             />
           </TouchableOpacity>
@@ -333,11 +334,7 @@ const BestBurgers = () => {
       </View>
 
       <View style={styles.filterContainer}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.filterScroll}
-        >
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterScroll}>
           {filters.map(filter => (
             <TouchableOpacity
               key={filter}
@@ -565,13 +562,19 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
+    zIndex: 5,
   },
-  heartBtnLiked: {
+  heartBtnBack: {
+    backgroundColor: COLORS.primary,
+  },
+  heartBtnFilled: {
     backgroundColor: '#fff',
   },
   heartIcon: {
     width: 14,
     height: 14,
+  },
+  heartIconWhite: {
     tintColor: '#fff',
   },
   ratingBadge: {

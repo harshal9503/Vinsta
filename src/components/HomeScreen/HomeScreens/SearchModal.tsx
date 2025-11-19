@@ -119,17 +119,17 @@ const SearchModal = ({
           <View style={[styles.modalHeader, { backgroundColor: theme.background }]}>
             <Text style={[styles.modalTitle, { color: theme.text }]}>Sort & Filter</Text>
             <View
-              style={{ height: 1, width: '85%', backgroundColor: theme.text }}
+              style={{ height: 1, width: '85%', backgroundColor: theme.borderColor }}
             ></View>
 
             {/* Close icon outside header (overlapping) */}
             <TouchableOpacity
               onPress={() => setShowFilterModal(false)}
-              style={[styles.closeButtonWrapper,{backgroundColor:theme.cardBackground}]}
+              style={[styles.closeButtonWrapper, { backgroundColor: theme.cardBackground }]}
             >
               <Image
                 source={require('../../../assets/close1.png')}
-                style={[styles.closeIcon,{tintColor : theme.text}]}
+                style={[styles.closeIcon, { tintColor: theme.text }]}
                 resizeMode="contain"
               />
             </TouchableOpacity>
@@ -140,8 +140,8 @@ const SearchModal = ({
             style={styles.modalScroll}
           >
             {/* Category Filter */}
-            <View style={styles.filterSection}>
-              <Text style={[styles.filterSectionTitle,{color  :theme.text}]}>Category</Text>
+            <View style={[styles.filterSection, { borderBottomColor: theme.borderColor }]}>
+              <Text style={[styles.filterSectionTitle, { color: theme.text }]}>Category</Text>
 
               <FlatList
                 data={filterOptions.category}
@@ -154,7 +154,8 @@ const SearchModal = ({
                   return (
                     <TouchableOpacity
                       style={[
-                        styles.filterOption,{backgroundColor  :theme.cardBackground},
+                        styles.filterOption,
+                        { backgroundColor: theme.cardBackground },
                         isActive && styles.activeFilterOption,
                         { marginRight: 10 },
                       ]}
@@ -167,8 +168,9 @@ const SearchModal = ({
                     >
                       <Text
                         style={[
-                          styles.filterOptionText,{color : theme.text},
-                          isActive && styles.activeFilterOptionText,{color : theme.text}
+                          styles.filterOptionText,
+                          { color: theme.text },
+                          isActive && [styles.activeFilterOptionText, { color: theme.buttonText }],
                         ]}
                       >
                         {item}
@@ -180,15 +182,15 @@ const SearchModal = ({
             </View>
 
             {/* Price Range Filter */}
-            <View style={styles.filterSection}>
-              <Text style={[styles.filterLabel,{color : theme.text}]}>Price Range</Text>
+            <View style={[styles.filterSection, { borderBottomColor: theme.borderColor }]}>
+              <Text style={[styles.filterLabel, { color: theme.text }]}>Price Range</Text>
 
               {/* Histogram visual (optional) */}
               <View style={styles.histogramContainer}>
                 {[...Array(20)].map((_, i) => (
                   <View
                     key={i}
-                    style={[styles.bar, { height: Math.random() * 60 + 10 }]}
+                    style={[styles.bar, { height: Math.random() * 60 + 10, backgroundColor: theme.borderColor }]}
                   />
                 ))}
               </View>
@@ -206,13 +208,13 @@ const SearchModal = ({
                 max={1000}
                 step={10}
                 sliderLength={300}
-                selectedStyle={{ backgroundColor: '#EB8B23' }}
-                unselectedStyle={{ backgroundColor: '#ddd' }}
+                selectedStyle={{ backgroundColor: COLORS.primary }}
+                unselectedStyle={{ backgroundColor: theme.borderColor }}
                 markerStyle={{
                   height: 20,
                   width: 20,
                   borderRadius: 10,
-                  backgroundColor: '#EB8B23',
+                  backgroundColor: COLORS.primary,
                 }}
               />
 
@@ -220,18 +222,18 @@ const SearchModal = ({
               <View
                 style={[styles.priceRangeRow, { marginTop: 0, paddingTop: 0 }]}
               >
-                <Text style={[styles.priceRangeText,{color : theme.text}]}>
+                <Text style={[styles.priceRangeText, { color: theme.text }]}>
                   ${appliedFilters.priceRange[0]}
                 </Text>
-                <Text style={[styles.priceRangeText,{color : theme.text}]}>
+                <Text style={[styles.priceRangeText, { color: theme.text }]}>
                   ${appliedFilters.priceRange[1]}
                 </Text>
               </View>
             </View>
 
             {/* Delivery Time Filter */}
-            <View style={styles.filterSection}>
-              <Text style={[styles.filterSectionTitle,{color:theme.text}]}>Sort By</Text>
+            <View style={[styles.filterSection, { borderBottomColor: theme.borderColor }]}>
+              <Text style={[styles.filterSectionTitle, { color: theme.text }]}>Sort By</Text>
 
               <FlatList
                 data={filterOptions.sortBy}
@@ -244,7 +246,8 @@ const SearchModal = ({
                   return (
                     <TouchableOpacity
                       style={[
-                        styles.filterOption,{backgroundColor : theme.cardBackground},
+                        styles.filterOption,
+                        { backgroundColor: theme.cardBackground },
                         isActive && styles.activeFilterOption,
                         { marginRight: 10 },
                       ]}
@@ -254,8 +257,9 @@ const SearchModal = ({
                     >
                       <Text
                         style={[
-                          styles.filterOptionText,{color : theme.text},
-                          isActive && styles.activeFilterOptionText,{color : theme.text}
+                          styles.filterOptionText,
+                          { color: theme.text },
+                          isActive && [styles.activeFilterOptionText, { color: theme.buttonText }],
                         ]}
                       >
                         {item}
@@ -267,8 +271,8 @@ const SearchModal = ({
             </View>
 
             {/* Rating Filter */}
-            <View style={styles.filterSection}>
-              <Text style={[styles.filterSectionTitle,{color : theme.text}]}>Rating</Text>
+            <View style={[styles.filterSection, { borderBottomColor: theme.borderColor }]}>
+              <Text style={[styles.filterSectionTitle, { color: theme.text }]}>Rating</Text>
               <View style={styles.filterOptions}>
                 {filterOptions.rating.map(option => {
                   const isActive = appliedFilters.rating === option;
@@ -277,7 +281,7 @@ const SearchModal = ({
                       key={option}
                       style={[
                         styles.filterOption,
-                        {backgroundColor : theme.cardBackground},
+                        { backgroundColor: theme.cardBackground },
                         isActive && styles.activeFilterOption,
                       ]}
                       onPress={() =>
@@ -301,13 +305,14 @@ const SearchModal = ({
                             width: 13,
                             height: 12,
                             resizeMode: 'contain',
-                            tintColor: isActive ? theme.background : COLORS.primary,
+                            tintColor: isActive ? theme.buttonText : COLORS.primary,
                           }}
                         />
                         <Text
                           style={[
-                            styles.filterOptionText,{color : theme.text},
-                            isActive && [styles.activeFilterOptionText,{color : theme.background}],
+                            styles.filterOptionText,
+                            { color: theme.text },
+                            isActive && [styles.activeFilterOptionText, { color: theme.buttonText }],
                           ]}
                         >
                           {option}
@@ -320,12 +325,12 @@ const SearchModal = ({
             </View>
           </ScrollView>
 
-          <View style={styles.modalActions}>
-            <TouchableOpacity style={[styles.resetBtn,{backgroundColor : theme.cardBackground}]} onPress={resetFilters}>
-              <Text style={[styles.resetBtnText,{color : theme.text}]}>Reset</Text>
+          <View style={[styles.modalActions, { borderTopColor: theme.borderColor }]}>
+            <TouchableOpacity style={[styles.resetBtn, { backgroundColor: theme.cardBackground }]} onPress={resetFilters}>
+              <Text style={[styles.resetBtnText, { color: theme.text }]}>Reset</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.applyBtn} onPress={applyFilters}>
-              <Text style={[styles.applyBtnText,{color  : theme.background}]}>Apply</Text>
+              <Text style={[styles.applyBtnText, { color: theme.buttonText }]}>Apply</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -350,7 +355,6 @@ const styles = StyleSheet.create({
     maxHeight: hp('80%'),
   },
   modalHeader: {
-    backgroundColor: '#fff',
     paddingVertical: 18,
     alignItems: 'center',
     justifyContent: 'center',
@@ -361,7 +365,6 @@ const styles = StyleSheet.create({
   modalTitle: {
     ...getTextStyle('Bold'),
     fontSize: fontScale(18),
-    color: '#000',
     marginBottom: 10,
   },
   closeButtonWrapper: {
@@ -372,7 +375,6 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: 45,
     transform: [{ translateX: -22.5 }],
-    backgroundColor: '#fff',
     elevation: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -381,11 +383,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   closeIcon: {
     width: 20,
     height: 20,
-    tintColor: '#000',
     resizeMode: 'contain',
   },
   modalScroll: {
@@ -394,14 +394,12 @@ const styles = StyleSheet.create({
   filterSection: {
     padding: wp('5%'),
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
-   },
+  },
   filterLabel: {
     ...getTextStyle('Bold'),
     fontSize: fontScale(16),
-    color: '#000',
     marginBottom: 10,
-    alignSelf : 'flex-start'
+    alignSelf: 'flex-start'
   },
   histogramContainer: {
     flexDirection: 'row',
@@ -412,31 +410,27 @@ const styles = StyleSheet.create({
   },
   bar: {
     width: 6,
-    backgroundColor: '#e0e0e0',
     marginHorizontal: 2,
     borderRadius: 3,
   },
   filterSectionTitle: {
     ...getTextStyle('Bold'),
     fontSize: fontScale(16),
-    color: '#000',
     marginBottom: hp('1.5%'),
-    alignSelf : 'flex-start'
+    alignSelf: 'flex-start'
   },
   filterOptions: {
     flexDirection: 'row',
-    //flexWrap: 'wrap',
     gap: wp('2%'),
-    alignItems : 'flex-start',
-    justifyContent : 'flex-start'
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start'
   },
   filterOption: {
-    backgroundColor: '#f0f0f0',
     paddingHorizontal: wp('4%'),
     paddingVertical: hp('1%'),
     borderRadius: wp('5%'),
     marginBottom: hp('1%'),
-    alignItems : 'flex-start'
+    alignItems: 'flex-start'
   },
   activeFilterOption: {
     backgroundColor: COLORS.primary,
@@ -444,7 +438,6 @@ const styles = StyleSheet.create({
   filterOptionText: {
     ...getTextStyle('Medium'),
     fontSize: fontScale(14),
-    color: '#666',
   },
   activeFilterOptionText: {
     ...getTextStyle('Medium'),
@@ -459,18 +452,15 @@ const styles = StyleSheet.create({
   priceRangeText: {
     ...getTextStyle('SemiBold'),
     fontSize: fontScale(14),
-    color: '#000',
   },
   modalActions: {
     flexDirection: 'row',
     padding: wp('5%'),
     gap: wp('3%'),
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
   },
   resetBtn: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
     paddingVertical: hp('1.8%'),
     borderRadius: wp('10%'),
     alignItems: 'center',
@@ -478,7 +468,6 @@ const styles = StyleSheet.create({
   resetBtnText: {
     ...getTextStyle('Bold'),
     fontSize: fontScale(16),
-    color: '#666',
   },
   applyBtn: {
     flex: 1,
@@ -490,6 +479,5 @@ const styles = StyleSheet.create({
   applyBtnText: {
     ...getTextStyle('Bold'),
     fontSize: fontScale(16),
-    color: '#fff',
   },
 })
