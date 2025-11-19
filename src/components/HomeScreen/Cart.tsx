@@ -117,9 +117,7 @@ const CartScreen = () => {
                     },
                   ]}
                 >
-                  <Text style={[styles.qtyText, { color: COLORS.primary }]}>
-                    -
-                  </Text>
+                  <Text style={[styles.qtyText, { color: COLORS.primary }]}>-</Text>
                 </TouchableOpacity>
 
                 <Text style={styles.qtyNumber}>
@@ -128,9 +126,16 @@ const CartScreen = () => {
 
                 <TouchableOpacity
                   onPress={() => updateQuantity(item.id, true)}
-                  style={[styles.qtyBtn, { backgroundColor: COLORS.primary }]}
+                  style={[
+                    styles.qtyBtn,
+                    {
+                      backgroundColor: '#fff',
+                      borderWidth: 1,
+                      borderColor: COLORS.primary,
+                    },
+                  ]}
                 >
-                  <Text style={[styles.qtyText, { color: '#fff' }]}>+</Text>
+                  <Text style={[styles.qtyText, { color: COLORS.primary }]}>+</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -227,7 +232,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   backIcon: { width: 22, height: 22, tintColor: '#000' },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: '#000',fontFamily : 'Figtree-Bold' },
+  headerTitle: { fontSize: 18, fontWeight: '700', color: '#000', fontFamily: 'Figtree-Bold' },
 
   cartCard: {
     flexDirection: 'row',
@@ -243,9 +248,9 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   foodImg: { width: 80, height: 80, borderRadius: 10, resizeMode: 'cover' },
-  foodName: { fontSize: 16, fontWeight: '700', color: '#000', fontFamily : 'Figtree-Bold' },
-  foodSub: { fontSize: 13, color: '#777', marginBottom: 5 ,fontFamily : 'Figtree-SemiBold',fontWeight  : '600'},
-  foodPrice: { fontSize: 15, fontWeight: '700', color: '#000',fontFamily : 'Figtree-Bold' },
+  foodName: { fontSize: 16, fontWeight: '700', color: '#000', fontFamily: 'Figtree-Bold' },
+  foodSub: { fontSize: 13, color: '#777', marginBottom: 5, fontFamily: 'Figtree-SemiBold', fontWeight: '600' },
+  foodPrice: { fontSize: 15, fontWeight: '700', color: '#000', fontFamily: 'Figtree-Bold' },
   qtyContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -258,13 +263,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  qtyText: { fontSize: 16, fontWeight: '700' },
+  qtyText: { fontSize: 16, fontWeight: '700', textAlign: 'center', textAlignVertical: 'center' },
   qtyNumber: {
     marginHorizontal: 10,
     fontSize: 14,
     fontWeight: '600',
     color: '#000',
-    fontFamily : 'Figtree-SemiBold'
+    fontFamily: 'Figtree-SemiBold',
   },
   deleteIcon: { width: 20, height: 20, tintColor: '#FF6B6B' },
 
@@ -296,7 +301,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: COLORS.primary,
     flex: 1,
-    fontFamily : 'Figtree-Bold'
+    fontFamily: 'Figtree-Bold',
   },
   changeButton: {
     marginLeft: 'auto',
@@ -305,21 +310,21 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: '700',
     fontSize: 14,
-    fontFamily : 'Figtree-Bold'
+    fontFamily: 'Figtree-Bold',
   },
-  addressText: { fontSize: 13, color: '#555', marginTop: 4, lineHeight: 18,fontFamily : 'Figtree-Medium',fontWeight : '500' },
+  addressText: { fontSize: 13, color: '#555', marginTop: 4, lineHeight: 18, fontFamily: 'Figtree-Medium', fontWeight: '500' },
 
   priceRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 8,
   },
-  priceLabel: { fontSize: 14, color: '#000',fontFamily : 'Figtree-SemiBold',fontWeight : '600' },
-  priceValue: { fontSize: 14, fontWeight: '600', color: '#000',fontFamily : 'Figtree-SemiBold' },
+  priceLabel: { fontSize: 14, color: '#000', fontFamily: 'Figtree-SemiBold', fontWeight: '600' },
+  priceValue: { fontSize: 14, fontWeight: '600', color: '#000', fontFamily: 'Figtree-SemiBold' },
   divider: { height: 1, backgroundColor: '#E0E0E0', marginVertical: 10 },
 
-  subtotalLabel: { fontSize: 16, fontWeight: '700', color: '#000',fontFamily : 'Figtree-Bold' },
-  subtotalValue: { fontSize: 16, fontWeight: '700', color: COLORS.primary,fontFamily : 'Figtree-Bold' },
+  subtotalLabel: { fontSize: 16, fontWeight: '700', color: '#000', fontFamily: 'Figtree-Bold' },
+  subtotalValue: { fontSize: 16, fontWeight: '700', color: COLORS.primary, fontFamily: 'Figtree-Bold' },
 
   input: {
     borderWidth: 1,
@@ -330,8 +335,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 10,
     color: '#000',
-    fontFamily : 'Figtree-Regular',
-    fontWeight : '400'
+    fontFamily: 'Figtree-Regular',
+    fontWeight: '400',
   },
   couponBtn: {
     marginTop: 10,
@@ -344,7 +349,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '600',
     fontSize: 14,
-    fontFamily : 'Figtree-SemiBold'
+    fontFamily: 'Figtree-SemiBold',
   },
   checkoutBtn: {
     backgroundColor: COLORS.primary,
@@ -357,7 +362,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '700',
-    fontFamily : 'Figtree-Bold'
+    fontFamily: 'Figtree-Bold',
   },
 });
-

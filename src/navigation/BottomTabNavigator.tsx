@@ -2,20 +2,19 @@
 // FILE: navigation/BottomTabNavigator.tsx
 // ==============================================
 
-import React, { useContext } from 'react';
+import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Image, Platform } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context'; 
+import { useSafeAreaInsets } from 'react-native-safe-area-context'; // 🔥 UPDATED — ensures correct bottom spacing
+
 import HomeScreen from '../components/HomeScreen/HomeScreens/HomeScreen';
 import MyOrders from '../components/MyOrders/MyOrder/myorders';
 import Wishlist from '../components/Wishlist/wishlist';
 import Notification from '../components/Notification/notification';
 import Profile from '../components/Profile/profile';
-import { ThemeContext } from '../theme/ThemeContext';
 
 import { COLORS } from '../theme/colors';
-import { ThemeContext } from '../theme/ThemeContext';
-
+ 
 const Tab = createBottomTabNavigator();
 
 const TabBarIcon = ({ routeName, color, size }) => {
@@ -54,11 +53,6 @@ const TabBarIcon = ({ routeName, color, size }) => {
 
 const BottomTabNavigator = () => {
   const insets = useSafeAreaInsets(); // 🔥 UPDATED — fix for Android nav keys
-<<<<<<< HEAD
-  const { theme } = useContext(ThemeContext);
-=======
-  const {theme} = useContext(ThemeContext);
->>>>>>> b6fcf8cacc9b90ab7c7285435bc0240be6816ba9
 
   const getScreenOptions = ({ route }) => ({
     tabBarIcon: ({ color, size }) => (
@@ -72,34 +66,17 @@ const BottomTabNavigator = () => {
       includeFontPadding: false,
       letterSpacing: 0.2,
       fontWeight: Platform.OS === 'ios' ? '600' : undefined,
-      color: theme.tabBarLabel, // 🔥 UPDATED — dynamic label color
     },
 
     tabBarActiveTintColor: COLORS.primary,
-    tabBarInactiveTintColor: theme.tabBarInactive,
+    tabBarInactiveTintColor: '#000000d3',
 
     tabBarStyle: {
-      backgroundColor: theme.tabBarBackground,
-    tabBarInactiveTintColor: theme.text,
+      backgroundColor: COLORS.secondary,
 
-    tabBarStyle: {
-      backgroundColor: theme.background,
       height: 80 + insets.bottom * 0.3,   // 🔥 UPDATED — taller bar + safe-area support
       paddingBottom: insets.bottom > 0 ? insets.bottom : 12, // 🔥 UPDATED — floats above nav keys
       paddingTop: 10,                      // 🔥 UPDATED — better spacing
-      borderTopWidth: 1,
-      borderTopColor: theme.tabBarBorder,
-      ...Platform.select({
-        ios: {
-          shadowColor: theme.tabBarShadow,
-          shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 8,
-        },
-        android: {
-          elevation: 8,
-        },
-      }),
     },
 
     headerShown: false,

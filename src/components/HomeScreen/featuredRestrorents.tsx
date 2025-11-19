@@ -16,53 +16,14 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { getFontFamily, getFontWeight } from '../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
-
-// Map font weight to actual font family names on Android
-const fontMap: Record<string, string> = {
-  Thin: 'Figtree-Thin',
-  ExtraLight: 'Figtree-ExtraLight',
-  Light: 'Figtree-Light',
-  Regular: 'Figtree-Regular',
-  Medium: 'Figtree-Medium',
-  SemiBold: 'Figtree-SemiBold',
-  Bold: 'Figtree-Bold',
-  ExtraBold: 'Figtree-ExtraBold',
-  Black: 'Figtree-Black',
-};
-
-// On iOS, fontWeight works with base font family
-function getFontFamily(weight: keyof typeof fontMap = 'Regular') {
-  if (Platform.OS === 'android') {
-    return fontMap[weight] || fontMap.Regular;
-  }
-  return 'Figtree';
-}
-
-function getFontWeight(weight: keyof typeof fontMap = 'Regular') {
-  if (Platform.OS === 'android') {
-    return undefined; // Android ignores fontWeight with custom fonts
-  }
-  const weightMap: Record<string, string> = {
-    Thin: '100',
-    ExtraLight: '200',
-    Light: '300',
-    Regular: '400',
-    Medium: '500',
-    SemiBold: '600',
-    Bold: '700',
-    ExtraBold: '800',
-    Black: '900',
-  };
-  return weightMap[weight] || '400';
-}
 
 const FeaturedRestaurants = () => {
   const navigation = useNavigation<any>();
 
   const allRestaurants = [
-    // Your restaurant data here (unchanged)...
     {
       id: 1,
       name: 'Bistro Excellence',
@@ -76,7 +37,71 @@ const FeaturedRestaurants = () => {
       category: 'Italian',
       priceRange: 'Medium',
     },
-    //... other restaurants
+    {
+      id: 2,
+      name: 'Tokyo Sushi',
+      image: require('../../assets/featuredrestaurant.png'),
+      rating: 4.7,
+      deliveryTime: '20-25 mins',
+      distance: '1.2 km',
+      tags: ['Japanese', 'Sushi', 'Asian'],
+      discount: '15% OFF',
+      description: 'Fresh sushi and authentic Japanese dishes',
+      category: 'Japanese',
+      priceRange: 'High',
+    },
+    {
+      id: 3,
+      name: 'Spice Garden',
+      image: require('../../assets/featuredrestaurant.png'),
+      rating: 4.2,
+      deliveryTime: '15-20 mins',
+      distance: '0.8 km',
+      tags: ['Indian', 'Vegetarian', 'Spicy'],
+      discount: '25% OFF',
+      description: 'Traditional Indian flavors with modern presentation',
+      category: 'Indian',
+      priceRange: 'Medium',
+    },
+    {
+      id: 4,
+      name: 'Burger Hub',
+      image: require('../../assets/featuredrestaurant.png'),
+      rating: 4.0,
+      deliveryTime: '10-12 mins',
+      distance: '0.3 km',
+      tags: ['Fast Food', 'Burgers', 'American'],
+      discount: '10% OFF',
+      description: 'Gourmet burgers and crispy fries',
+      category: 'Fast Food',
+      priceRange: 'Low',
+    },
+    {
+      id: 5,
+      name: 'Dragon Palace',
+      image: require('../../assets/featuredrestaurant.png'),
+      rating: 4.5,
+      deliveryTime: '18-22 mins',
+      distance: '1.5 km',
+      tags: ['Chinese', 'Asian', 'Noodles'],
+      discount: '30% OFF',
+      description: 'Authentic Chinese cuisine with Sichuan specialties',
+      category: 'Asian',
+      priceRange: 'Medium',
+    },
+    {
+      id: 6,
+      name: 'Mediterranean Delight',
+      image: require('../../assets/featuredrestaurant.png'),
+      rating: 4.6,
+      deliveryTime: '25-30 mins',
+      distance: '2.0 km',
+      tags: ['Mediterranean', 'Healthy', 'Greek'],
+      discount: '20% OFF',
+      description: 'Fresh Mediterranean dishes with olive oil and herbs',
+      category: 'Mediterranean',
+      priceRange: 'High',
+    },
   ];
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -88,16 +113,15 @@ const FeaturedRestaurants = () => {
     deliveryTime: 'All',
   });
 
-  const [likedIds, setLikedIds] = useState<number[]>([]); // liked state for heart icons
+  const [likedIds, setLikedIds] = useState<number[]>([]);
 
   const filterOptions = {
-    category: ['All', 'Italian', 'Asian', 'Indian', 'Fast Food', 'Japanese'],
+    category: ['All', 'Italian', 'Asian', 'Indian', 'Fast Food', 'Japanese', 'Mediterranean'],
     rating: ['All', '4.0+', '4.5+'],
     priceRange: ['All', 'Low', 'Medium', 'High'],
     deliveryTime: ['All', 'Under 15 mins', 'Under 20 mins'],
   };
 
-  // Filter and search functionality
   const getFilteredRestaurants = () => {
     let filtered = allRestaurants;
 
@@ -164,7 +188,6 @@ const FeaturedRestaurants = () => {
     return Object.values(appliedFilters).some(filter => filter !== 'All');
   };
 
-  // Heart press with vibration toggles liked state
   const handleHeartPressWithVibration = (id: number) => {
     Vibration.vibrate(50);
     setLikedIds(prev =>
@@ -244,7 +267,7 @@ const FeaturedRestaurants = () => {
                     <Text style={styles.discountText}>{restaurant.discount}</Text>
                   </View>
 
-                  {/* Heart Icon with toggle logic and vibration */}
+                  {/* Heart Icon */}
                   <TouchableOpacity
                     style={[
                       styles.heartBtn,
@@ -252,7 +275,7 @@ const FeaturedRestaurants = () => {
                     ]}
                     activeOpacity={0.7}
                     onPress={(e) => {
-                      e.stopPropagation(); // prevent card press
+                      e.stopPropagation();
                       handleHeartPressWithVibration(restaurant.id);
                     }}
                   >
@@ -320,7 +343,12 @@ const FeaturedRestaurants = () => {
       </ScrollView>
 
       {/* Filter Modal */}
-      <Modal visible={showFilterModal} animationType="slide" transparent={true} onRequestClose={() => setShowFilterModal(false)}>
+      <Modal
+        visible={showFilterModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowFilterModal(false)}
+      >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
             <View style={styles.modalHeader}>
@@ -415,7 +443,6 @@ const FeaturedRestaurants = () => {
           </View>
         </View>
       </Modal>
-
     </View>
   );
 };
@@ -447,10 +474,10 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: wp('4.8%'),
-    fontWeight: getFontWeight('Bold'),
     color: '#000',
     textAlign: 'center',
     fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   filterButton: {
     padding: wp('1%'),
@@ -529,7 +556,8 @@ const styles = StyleSheet.create({
   clearFiltersText: {
     color: '#fff',
     fontSize: wp('3%'),
-    fontWeight: getFontWeight('600'),
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   scrollContent: {
     paddingBottom: hp('10%'),
@@ -567,10 +595,9 @@ const styles = StyleSheet.create({
   discountText: {
     color: '#fff',
     fontSize: wp('3%'),
-    fontWeight: getFontWeight('Bold'),
     fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
-  // Heart button styles
   heartBtn: {
     position: 'absolute',
     top: hp('1.5%'),
@@ -610,11 +637,11 @@ const styles = StyleSheet.create({
   },
   restaurantName: {
     fontSize: wp('5.2%'),
-    fontWeight: getFontWeight('Bold'),
     color: '#000',
     flex: 1,
     marginRight: wp('2%'),
     fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   ratingContainer: {
     flexDirection: 'row',
@@ -633,8 +660,8 @@ const styles = StyleSheet.create({
   ratingText: {
     color: '#fff',
     fontSize: wp('3%'),
-    fontWeight: getFontWeight('600'),
-    fontFamily: getFontFamily('Medium'),
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   description: {
     fontSize: wp('3.5%'),
@@ -662,8 +689,8 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: wp('3%'),
     color: '#666',
-    fontWeight: getFontWeight('Medium'),
     fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   tagsContainer: {
     flexDirection: 'row',
@@ -679,8 +706,8 @@ const styles = StyleSheet.create({
   tagText: {
     fontSize: wp('3%'),
     color: COLORS.primary,
-    fontWeight: getFontWeight('Medium'),
     fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   noResultsContainer: {
     alignItems: 'center',
@@ -696,11 +723,11 @@ const styles = StyleSheet.create({
   },
   noResultsText: {
     fontSize: wp('4.5%'),
-    fontWeight: getFontWeight('Bold'),
     color: '#333',
     marginBottom: hp('1%'),
     textAlign: 'center',
     fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   noResultsSubtext: {
     fontSize: wp('3.8%'),
@@ -712,11 +739,10 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'flex-end',
   },
   modalContainer: {
-    flex: 1,
     backgroundColor: '#fff',
     borderTopLeftRadius: wp('6%'),
     borderTopRightRadius: wp('6%'),
@@ -734,16 +760,16 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: wp('4.8%'),
-    fontWeight: getFontWeight('Bold'),
     color: '#000',
     fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   closeIcon: {
     width: wp('5%'),
     height: wp('5%'),
   },
   modalScroll: {
-    flex: 1,
+    maxHeight: hp('55%'),
   },
   filterSection: {
     padding: wp('5%'),
@@ -752,10 +778,10 @@ const styles = StyleSheet.create({
   },
   filterSectionTitle: {
     fontSize: wp('4%'),
-    fontWeight: getFontWeight('Bold'),
     color: '#000',
     marginBottom: hp('1.5%'),
     fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   filterOptions: {
     flexDirection: 'row',
@@ -775,13 +801,13 @@ const styles = StyleSheet.create({
   filterOptionText: {
     fontSize: wp('3.5%'),
     color: '#666',
-    fontWeight: getFontWeight('Medium'),
     fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   activeFilterOptionText: {
     color: '#fff',
-    fontWeight: getFontWeight('600'),
-    fontFamily: getFontFamily('Medium'),
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   modalActions: {
     flexDirection: 'row',
@@ -799,9 +825,9 @@ const styles = StyleSheet.create({
   },
   resetBtnText: {
     fontSize: wp('4%'),
-    fontWeight: getFontWeight('600'),
     color: '#666',
-    fontFamily: getFontFamily('Bold'),
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   applyBtn: {
     flex: 2,
@@ -812,8 +838,8 @@ const styles = StyleSheet.create({
   },
   applyBtnText: {
     fontSize: wp('4%'),
-    fontWeight: getFontWeight('Bold'),
     color: '#fff',
     fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
 });
