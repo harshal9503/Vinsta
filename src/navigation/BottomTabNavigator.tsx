@@ -2,15 +2,16 @@
 // FILE: navigation/BottomTabNavigator.tsx
 // ==============================================
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Image, Platform } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context'; // 🔥 UPDATED — ensures correct bottom spacing
+import { useSafeAreaInsets } from 'react-native-safe-area-context'; 
 import HomeScreen from '../components/HomeScreen/HomeScreens/HomeScreen';
 import MyOrders from '../components/MyOrders/MyOrder/myorders';
 import Wishlist from '../components/Wishlist/wishlist';
 import Notification from '../components/Notification/notification';
 import Profile from '../components/Profile/profile';
+import { ThemeContext } from '../theme/ThemeContext';
 
 import { COLORS } from '../theme/colors';
 
@@ -52,6 +53,7 @@ const TabBarIcon = ({ routeName, color, size }) => {
 
 const BottomTabNavigator = () => {
   const insets = useSafeAreaInsets(); // 🔥 UPDATED — fix for Android nav keys
+  const {theme} = useContext(ThemeContext);
 
   const getScreenOptions = ({ route }) => ({
     tabBarIcon: ({ color, size }) => (
@@ -68,11 +70,10 @@ const BottomTabNavigator = () => {
     },
 
     tabBarActiveTintColor: COLORS.primary,
-    tabBarInactiveTintColor: '#000000d3',
+    tabBarInactiveTintColor: theme.text,
 
     tabBarStyle: {
-      backgroundColor: COLORS.secondary,
-
+      backgroundColor: theme.background,
       height: 80 + insets.bottom * 0.3,   // 🔥 UPDATED — taller bar + safe-area support
       paddingBottom: insets.bottom > 0 ? insets.bottom : 12, // 🔥 UPDATED — floats above nav keys
       paddingTop: 10,                      // 🔥 UPDATED — better spacing
