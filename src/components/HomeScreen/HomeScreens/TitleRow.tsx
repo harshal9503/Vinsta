@@ -1,8 +1,9 @@
 import { Animated, Dimensions, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { COLORS } from '../../../theme/colors'
 import { useNavigation } from '@react-navigation/native';
+import { ThemeContext } from '../../../theme/ThemeContext';
 const { width, height } = Dimensions.get('window');
 
 const isTablet = width >= 768;
@@ -94,6 +95,7 @@ const getTextStyle = (weight = 'Regular') => {
         textAlignVertical: 'center',
     };
 };
+
 const TitleRow = ({ isVegMode, toggleVegMode }) => {
     const toggleAnim = useState(new Animated.Value(0))[0];
     const switchWidth = isTablet ? scaleSize(wp('14%')) : scaleSize(wp('17%'));
@@ -121,16 +123,19 @@ const TitleRow = ({ isVegMode, toggleVegMode }) => {
 
         toggleVegMode();
     };
+    
+    const { theme } = useContext(ThemeContext);
 
     return (
         <View style={styles.titleRow}>
-            <Text style={styles.headerTitle}>
+            <Text style={[styles.headerTitle, { color: theme.background }]}>
                 What you{'\n'}Going eat for today ?
             </Text>
             <View style={styles.vegContainer}>
                 <TouchableOpacity
                     style={[
                         styles.switchOuter,
+                        { backgroundColor: theme.background },
                         {
                             width: switchWidth,
                             height: switchHeight,
@@ -139,7 +144,7 @@ const TitleRow = ({ isVegMode, toggleVegMode }) => {
                     onPress={toggleSwitch}
                     activeOpacity={0.8}
                 >
-                    <View style={styles.switchBackground} />
+                    <View style={[styles.switchBackground, { backgroundColor: theme.switchBackground }]} />
 
                     <Animated.View
                         style={[
@@ -159,7 +164,7 @@ const TitleRow = ({ isVegMode, toggleVegMode }) => {
                             style={[
                                 styles.switchTextLeft,
                                 {
-                                    color: isVegMode ? '#fff' : '#000',
+                                    color: isVegMode ? theme.buttonText : theme.text,
                                 },
                             ]}
                         >
@@ -169,7 +174,7 @@ const TitleRow = ({ isVegMode, toggleVegMode }) => {
                             style={[
                                 styles.switchTextRight,
                                 {
-                                    color: !isVegMode ? '#fff' : '#000',
+                                    color: !isVegMode ? theme.buttonText : theme.text,
                                 },
                             ]}
                         >
@@ -177,7 +182,7 @@ const TitleRow = ({ isVegMode, toggleVegMode }) => {
                         </Text>
                     </View>
                 </TouchableOpacity>
-                <Text style={styles.vegModeTxt}>
+                <Text style={[styles.vegModeTxt, { color: theme.background }]}>
                     {isVegMode ? 'Veg Mode' : 'Non-Veg Mode'}
                 </Text>
             </View>
@@ -197,7 +202,6 @@ const styles = StyleSheet.create({
     headerTitle: {
         ...getTextStyle('Bold'),
         fontSize: fontScale(24),
-        color: COLORS.secondary,
         lineHeight: isTablet ? hp('3.2%') : hp('3.6%'),
         flex: 1,
     },
@@ -207,7 +211,6 @@ const styles = StyleSheet.create({
     },
     switchOuter: {
         borderRadius: hp('2.25%'),
-        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
@@ -230,7 +233,6 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0,0,0,0.1)',
         borderRadius: hp('2.25%'),
     },
     switchCircle: {
@@ -275,6 +277,5 @@ const styles = StyleSheet.create({
         ...getTextStyle('Bold'),
         fontSize: fontScale(12),
         marginTop: hp('0.6%'),
-        color: COLORS.secondary,
     },
 })

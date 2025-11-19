@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Dimensions, Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View, Vibration } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { COLORS } from '../../../theme/colors';
+import { ThemeContext } from '../../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
 const isTablet = width >= 768;
+const isSmallScreen = width < 380;
+const screenRatio = width / height;
 const isIOS = Platform.OS === 'ios';
 
 const fontScale = size => {
@@ -26,7 +29,7 @@ const getFontFamily = (weight = 'Regular') => {
   if (Platform.OS === 'ios') {
       return 'Figtree';
   } else {
-      const fontMap: Record<string, string> = {
+      const fontMap = {
           '100': 'Figtree-Thin',
           '200': 'Figtree-ExtraLight',
           '300': 'Figtree-Light',
@@ -55,7 +58,7 @@ const getFontWeight = (weight = 'Regular') => {
       return undefined;
   }
 
-  const weightMap: Record<string, string> = {
+  const weightMap = {
       'Thin': '100',
       'ExtraLight': '200',
       'Light': '300',
@@ -88,10 +91,12 @@ const getTextStyle = (weight = 'Regular') => {
 };
 
 const FeaturedRestaurant = ({ getCurrentRestaurants, handleRestaurantPress }) => {
+  const { theme } = useContext(ThemeContext);
+  
   // Keep liked restaurants ids
-  const [likedIds, setLikedIds] = useState<number[]>([]);
+  const [likedIds, setLikedIds] = useState([]);
 
-  const handleHeartPressWithVibration = (id: number) => {
+  const handleHeartPressWithVibration = (id) => {
     Vibration.vibrate(50);
     setLikedIds(prev =>
       prev.includes(id) ? prev.filter(lid => lid !== id) : [...prev, id]
@@ -110,7 +115,7 @@ const FeaturedRestaurant = ({ getCurrentRestaurants, handleRestaurantPress }) =>
         return (
           <TouchableOpacity
             key={restaurant.id}
-            style={styles.restaurantCard}
+            style={[styles.restaurantCard, { backgroundColor: theme.cardBackground }]}
             onPress={() => handleRestaurantPress(restaurant)}
             activeOpacity={0.8}
           >
@@ -150,27 +155,27 @@ const FeaturedRestaurant = ({ getCurrentRestaurants, handleRestaurantPress }) =>
               </View>
             </View>
 
-            <Text style={styles.restaurantTitle}>{restaurant.name}</Text>
+            <Text style={[styles.restaurantTitle, { color: theme.text }]}>{restaurant.name}</Text>
 
             <View style={styles.restaurantInfoRow}>
               <Image
                 source={require('../../../assets/bike.png')}
-                style={styles.infoIcon}
+                style={[styles.infoIcon, { tintColor: theme.primary }]}
                 resizeMode="contain"
               />
-              <Text style={styles.infoTxt}>free delivery</Text>
+              <Text style={[styles.infoTxt, { color: theme.textLight }]}>free delivery</Text>
 
               <Image
                 source={require('../../../assets/clock.png')}
-                style={styles.infoIcon}
+                style={[styles.infoIcon, { tintColor: theme.primary }]}
                 resizeMode="contain"
               />
-              <Text style={styles.infoTxt}>{restaurant.deliveryTime}</Text>
+              <Text style={[styles.infoTxt, { color: theme.textLight }]}>{restaurant.deliveryTime}</Text>
             </View>
 
             <View style={styles.tagsContainer}>
               {restaurant.tags.map((tag, index) => (
-                <Text key={index} style={styles.restaurantTags}>
+                <Text key={index} style={[styles.restaurantTags, { backgroundColor: theme.tagBackground, color: theme.primary }]}>
                   {tag}
                 </Text>
               ))}
@@ -191,7 +196,6 @@ const styles = StyleSheet.create({
   },
   restaurantCard: {
     width: isTablet ? scaleSize(wp('48%')) : scaleSize(wp('55%')),
-    backgroundColor: COLORS.secondary,
     marginHorizontal: wp('1.5%'),
     marginBottom: hp('1%'),
     borderRadius: scaleSize(wp('4%')),
@@ -287,7 +291,6 @@ const styles = StyleSheet.create({
   restaurantTitle: {
     ...getTextStyle('Bold'),
     fontSize: fontScale(18),
-    color: COLORS.textDark,
     marginBottom: hp('0.5%'),
   },
   restaurantInfoRow: {
@@ -299,12 +302,10 @@ const styles = StyleSheet.create({
   infoIcon: {
     width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
     height: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
-    tintColor: COLORS.primary,
   },
   infoTxt: {
     ...getTextStyle('Regular'),
     fontSize: fontScale(12),
-    color: COLORS.textLight,
     marginRight: wp('2%'),
   },
   tagsContainer: {
@@ -315,8 +316,6 @@ const styles = StyleSheet.create({
   restaurantTags: {
     ...getTextStyle('Regular'),
     fontSize: fontScale(11),
-    color: COLORS.primary,
-    backgroundColor: '#f3f1f1',
     paddingHorizontal: wp('2.5%'),
     paddingVertical: isIOS ? hp('0.3%') : hp('0.25%'),
     borderRadius: scaleSize(wp('5%')),

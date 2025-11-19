@@ -1,8 +1,9 @@
 import { Dimensions, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { COLORS } from '../../../theme/colors'
 import { useNavigation } from '@react-navigation/native';
+import { ThemeContext } from '../../../theme/ThemeContext';
 const { width, height } = Dimensions.get('window');
 
 const isTablet = width >= 768;
@@ -96,16 +97,18 @@ const getTextStyle = (weight = 'Regular') => {
 };
 
 const OfferCard = () => {
-      const navigation = useNavigation<any>();
+    const { theme } = useContext(ThemeContext);
+    const navigation = useNavigation<any>();
+    
     const handleViewOffers = () => {
-    navigation.navigate('todayOfferView');
-  };
+        navigation.navigate('todayOfferView');
+    };
 
     return (
-        <View style={styles.offerCard}>
+        <View style={[styles.offerCard, { backgroundColor: theme.cardBackground }]}>
             <View style={styles.offerContent}>
-                <Text style={styles.offerHeader}>Free Delivery</Text>
-                <Text style={styles.offerSubTxt}>
+                <Text style={[styles.offerHeader, { color: theme.text }]}>Free Delivery</Text>
+                <Text style={[styles.offerSubTxt, { color: theme.textLight }]}>
                     Enjoy exclusive discount on tasty{'\n'}food today!
                 </Text>
                 <TouchableOpacity
@@ -113,15 +116,15 @@ const OfferCard = () => {
                     onPress={handleViewOffers}
                     activeOpacity={0.8}
                 >
-                    <Text style={styles.offerBtnText}>VIEW OFFER'S</Text>
+                    <Text style={[styles.offerBtnText, { color: theme.buttonText }]}>VIEW OFFER'S</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.offerImageWrap}>
-                {/* <Image
+                <Image
                     source={require('../../../assets/todayoffer.png')}
                     style={styles.offerImage}
                     resizeMode="contain"
-                /> */}
+                />
             </View>
         </View>
     )
@@ -132,7 +135,6 @@ export default OfferCard
 const styles = StyleSheet.create({
     offerCard: {
         borderRadius: scaleSize(wp('4%')),
-        backgroundColor: COLORS.secondary,
         flexDirection: 'row',
         alignItems: 'center',
         padding: scaleSize(wp('4%')),
@@ -156,13 +158,11 @@ const styles = StyleSheet.create({
     offerHeader: {
         ...getTextStyle('Bold'),
         fontSize: fontScale(20),
-        color: 'black',
         marginBottom: hp('0.5%'),
     },
     offerSubTxt: {
         ...getTextStyle('Regular'),
         fontSize: fontScale(13),
-        color: COLORS.textLight,
         marginBottom: hp('1.5%'),
         lineHeight: hp('2%'),
     },
@@ -176,7 +176,6 @@ const styles = StyleSheet.create({
     offerBtnText: {
         ...getTextStyle('Bold'),
         fontSize: fontScale(13),
-        color: COLORS.secondary,
         letterSpacing: 0.3,
     },
     offerImageWrap: {
