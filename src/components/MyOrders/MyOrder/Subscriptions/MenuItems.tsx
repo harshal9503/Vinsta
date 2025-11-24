@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
     paddingVertical: hp('1.5%'),
     alignItems: 'center',
     marginHorizontal: wp('5%'),
-    marginBottom: hp('2%'),
+    marginBottom: hp('3%'),
   },
   menuText: {
     color: '#FFFFFF',

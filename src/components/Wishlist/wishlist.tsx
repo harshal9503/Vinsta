@@ -373,7 +373,7 @@ const styles = StyleSheet.create({
     fontWeight: getFontWeight('Regular')
   },
   heartBtn: {
-    backgroundColor: 'rgba(0,0,0,0.25)',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
     width: 30,
     height: 30,
     borderRadius: 15,

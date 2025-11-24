@@ -10,10 +10,11 @@ import {
   Dimensions,
   StatusBar,
   Animated,
+  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
-import font from '../../../assets/fonts';
+import { vibrate } from '../../../utils/vibrationHelper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -89,6 +90,9 @@ const SearchScreen = () => {
   ];
 
   const handleHeartPress = (id: number) => {
+    // Vibration effect using vibrationHelper
+    vibrate(40);
+
     if (!heartScales[id]) heartScales[id] = new Animated.Value(1);
     Animated.sequence([
       Animated.timing(heartScales[id], {
@@ -241,28 +245,29 @@ const SearchScreen = () => {
                   <Text style={styles.location}>
                     Near MC College, Barpeta Town
                   </Text>
-                  <Animated.View
-                    style={{ transform: [{ scale: heartScales[r.id] || 1 }] }}
+                  
+                  {/* Heart Button - Same style as previous components */}
+                  <TouchableOpacity
+                    style={[
+                      styles.productHeartWrapper,
+                      { backgroundColor: likedItems.includes(r.id) ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)' }
+                    ]}
+                    onPress={() => handleHeartPress(r.id)}
+                    activeOpacity={0.7}
                   >
-                    <TouchableOpacity
-                      style={styles.heartBtn}
-                      onPress={() => handleHeartPress(r.id)}
-                      activeOpacity={0.7}
-                    >
-                      <Image
-                        source={
-                          likedItems.includes(r.id)
-                            ? require('../../../assets/heartfill.png')
-                            : require('../../../assets/heart.png')
-                        }
-                        style={
-                          likedItems.includes(r.id)
-                            ? [styles.heartIcon] // no tintColor for heartfill.png
-                            : [styles.heartIcon, { tintColor: '#fff' }]
-                        }
-                      />
-                    </TouchableOpacity>
-                  </Animated.View>
+                    <Animated.Image
+                      source={
+                        likedItems.includes(r.id)
+                          ? require('../../../assets/heartfill.png')
+                          : require('../../../assets/heart.png')
+                      }
+                      style={[
+                        styles.heartIcon,
+                        { tintColor: likedItems.includes(r.id) ? COLORS.primary : '#fff' },
+                        { transform: [{ scale: heartScales[r.id] || 1 }] },
+                      ]}
+                    />
+                  </TouchableOpacity>
                 </View>
 
                 <View style={styles.infoRow}>
@@ -291,31 +296,29 @@ const SearchScreen = () => {
                 onPress={() => navigation.navigate('fooddetails')}
               >
                 <Image source={f.img} style={styles.foodImg} />
-                <Animated.View
+                
+                {/* Heart Button - Same style as previous components */}
+                <TouchableOpacity
                   style={[
-                    styles.foodHeartWrapper,
-                    { transform: [{ scale: heartScales[f.id] || 1 }] },
+                    styles.productHeartWrapper,
+                    { backgroundColor: likedItems.includes(f.id) ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)' }
                   ]}
+                  onPress={() => handleHeartPress(f.id)}
+                  activeOpacity={0.7}
                 >
-                  <TouchableOpacity
-                    style={styles.heartBtn}
-                    onPress={() => handleHeartPress(f.id)}
-                    activeOpacity={0.7}
-                  >
-                    <Image
-                      source={
-                        likedItems.includes(f.id)
-                          ? require('../../../assets/heartfill.png')
-                          : require('../../../assets/heart.png')
-                      }
-                      style={
-                        likedItems.includes(f.id)
-                          ? [styles.heartIcon] // no tintColor for heartfill.png
-                          : [styles.heartIcon, { tintColor: '#fff' }]
-                      }
-                    />
-                  </TouchableOpacity>
-                </Animated.View>
+                  <Animated.Image
+                    source={
+                      likedItems.includes(f.id)
+                        ? require('../../../assets/heartfill.png')
+                        : require('../../../assets/heart.png')
+                    }
+                    style={[
+                      styles.heartIcon,
+                      { tintColor: likedItems.includes(f.id) ? COLORS.primary : '#fff' },
+                      { transform: [{ scale: heartScales[f.id] || 1 }] },
+                    ]}
+                  />
+                </TouchableOpacity>
 
                 <View style={styles.foodInfo}>
                   <View style={styles.ratingBadge}>
@@ -381,7 +384,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   backIcon: { width: 22, height: 22, tintColor: '#000' },
-  headerTitle: { fontSize: width * 0.045, fontWeight: '700', color: '#000',fontFamily : 'Figtree-Bold' },
+  headerTitle: { 
+    fontSize: width * 0.045, 
+    fontWeight: '700', 
+    color: '#000',
+    fontFamily: 'Figtree-Bold' 
+  },
 
   /** SEARCH **/
   searchWrapper: {
@@ -406,7 +414,14 @@ const styles = StyleSheet.create({
     marginRight: 8,
     resizeMode: 'contain',
   },
-  input: { flex: 1, paddingVertical: 12, fontSize: 14, color: '#000' , fontFamily : "Figtree-Medium", fontWeight : '500' },
+  input: { 
+    flex: 1, 
+    paddingVertical: 12, 
+    fontSize: 14, 
+    color: '#000',
+    fontFamily: "Figtree-Medium", 
+    fontWeight: '500' 
+  },
   filterContainer: {
     width: 48,
     height: 48,
@@ -449,7 +464,12 @@ const styles = StyleSheet.create({
   activeTabSides: {
     borderRadius: 10,
   },
-  tabText: { fontSize: 14, fontWeight: '700', color: '#000', fontFamily : 'Figtree-Bold' },
+  tabText: { 
+    fontSize: 14, 
+    fontWeight: '700', 
+    color: '#000', 
+    fontFamily: 'Figtree-Bold' 
+  },
 
   /** RESTAURANT CARD **/
   card: {
@@ -473,35 +493,77 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   starIcon: { width: 12, height: 12, tintColor: '#fff', marginRight: 6 },
-  ratingText: { color: '#fff', fontSize: 12, fontWeight: '700', fontFamily : 'Figtree-Bold' },
-  title: { fontSize: 16, fontWeight: '700', color: '#000',fontFamily : 'Figtree-Bold' },
-  locationRow: { flexDirection: 'row', alignItems: 'center', marginTop: 6 },
-  locIcon: { width: 12, height: 12, marginRight: 6, resizeMode: 'contain' },
-  location: { fontSize: 13, color: '#555', flex: 1,fontFamily : 'Figtree-Medium', fontWeight : '500' },
-  heartBtn: {
-    backgroundColor: COLORS.primary,
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 6,
+  ratingText: { 
+    color: '#fff', 
+    fontSize: 12, 
+    fontWeight: '700', 
+    fontFamily: 'Figtree-Bold' 
   },
-  heartIcon: { width: 14, height: 14, resizeMode: 'contain' },
+  title: { 
+    fontSize: 16, 
+    fontWeight: '700', 
+    color: '#000',
+    fontFamily: 'Figtree-Bold' 
+  },
+  locationRow: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    marginTop: 6 
+  },
+  locIcon: { width: 12, height: 12, marginRight: 6, resizeMode: 'contain' },
+  location: { 
+    fontSize: 13, 
+    color: '#555', 
+    flex: 1,
+    fontFamily: 'Figtree-Medium', 
+    fontWeight: '500' 
+  },
+  // Heart wrapper styles - Same as previous components
+  productHeartWrapper: {
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: 15,
+    padding: 8,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  heartIcon: { 
+    width: 14, 
+    height: 14, 
+    resizeMode: 'contain' 
+  },
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 10,
     gap: 6,
   },
-  subInfo: { color: '#777', fontSize: 13,fontFamily : 'Figtree-Medium' , fontWeight : '500' },
+  subInfo: { 
+    color: '#777', 
+    fontSize: 13,
+    fontFamily: 'Figtree-Medium',
+    fontWeight: '500' 
+  },
   metaIcon: {
     width: 13,
     height: 13,
     marginHorizontal: 4,
     resizeMode: 'contain',
   },
-  metaText: { color: '#555', fontSize: 12,fontFamily : 'Figtree-Medium',fontWeight : '500' },
+  metaText: { 
+    color: '#555', 
+    fontSize: 12,
+    fontFamily: 'Figtree-Medium',
+    fontWeight: '500' 
+  },
 
   /** FOOD GRID **/
   grid: {
@@ -517,6 +579,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     overflow: 'hidden',
     elevation: 3,
+    position: 'relative',
   },
   foodImg: { width: '100%', height: 140, resizeMode: 'cover' },
   foodHeartWrapper: {
@@ -530,19 +593,24 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
     marginVertical: 4,
-    fontFamily : 'Figtree-Bold'
+    fontFamily: 'Figtree-Bold'
   },
   priceRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  price: { fontSize: 14, fontWeight: '600', color: '#000',fontFamily : 'Figtree-SemiBold' },
+  price: { 
+    fontSize: 14, 
+    fontWeight: '600', 
+    color: '#000',
+    fontFamily: 'Figtree-SemiBold' 
+  },
   oldPrice: {
     fontSize: 13,
     color: 'red',
     textDecorationLine: 'line-through',
-    fontFamily : 'Figtree-Regular'
+    fontFamily: 'Figtree-Regular'
   },
   plusBtn: {
     backgroundColor: COLORS.primary,
@@ -555,5 +623,9 @@ const styles = StyleSheet.create({
   plusIcon: { width: 14, height: 14, tintColor: '#fff', resizeMode: 'contain' },
   timeRow: { flexDirection: 'row', alignItems: 'center', marginTop: 4 },
   clockIcon: { width: 12, height: 12, marginRight: 6, resizeMode: 'contain' },
-  timeText: { fontSize: 12, color: '#555',fontFamily : 'Figtree-Regular' },
+  timeText: { 
+    fontSize: 12, 
+    color: '#555',
+    fontFamily: 'Figtree-Regular' 
+  },
 });

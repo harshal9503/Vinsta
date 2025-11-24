@@ -13,7 +13,6 @@ import {
   Modal,
   Pressable,
   Platform,
-  Vibration,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
@@ -21,6 +20,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import { vibrate } from '../../../utils/vibrationHelper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -52,10 +52,8 @@ const FoodDetails = () => {
   };
 
   const handleHeartPress = () => {
-    // Vibration effect
-    if (Platform.OS === 'android' || Platform.OS === 'ios') {
-      Vibration.vibrate(50);
-    }
+    // Vibration effect using vibrationHelper
+    vibrate(40);
 
     // Heart scale animation
     Animated.sequence([
@@ -216,13 +214,14 @@ const FoodDetails = () => {
           />
         </TouchableOpacity>
 
-        {/* Heart Button */}
+        {/* Heart Button - Same style as previous components */}
         <TouchableOpacity
           style={[
-            styles.heartBtn,
-            liked ? styles.heartBtnFilled : styles.heartBtnUnfilled,
+            styles.productHeartWrapper,
+            { backgroundColor: liked ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)' }
           ]}
           onPress={handleHeartPress}
+          activeOpacity={0.7}
         >
           <Animated.Image
             source={
@@ -232,7 +231,7 @@ const FoodDetails = () => {
             }
             style={[
               styles.heartIcon,
-              liked ? styles.heartIconFilled : styles.heartIconUnfilled,
+              { tintColor: liked ? COLORS.primary : '#fff' },
               { transform: [{ scale: heartScale }] },
             ]}
             resizeMode="contain"
@@ -240,7 +239,7 @@ const FoodDetails = () => {
         </TouchableOpacity>
 
         {/* Rating Badge */}
-        <View style={styles.ratingBadge}>
+        <View style={styles.productRatingBadge}>
           <Image
             source={require('../../../assets/star.png')}
             style={styles.starIcon}
@@ -453,57 +452,58 @@ const styles = StyleSheet.create({
     height: wp('5.5%'),
     tintColor: '#fff',
   },
-  heartBtn: {
+  // Heart wrapper styles - Same as previous components
+  productHeartWrapper: {
     position: 'absolute',
     top: Platform.OS === 'ios' ? hp('6%') : hp('4%'),
     right: wp('4%'),
-    borderRadius: wp('50%'),
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: wp('5%'),
     padding: wp('2%'),
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  heartBtnUnfilled: {
-    backgroundColor: COLORS.primary,
-  },
-  heartBtnFilled: {
-    backgroundColor: '#fff',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   heartIcon: {
-    width: wp('3.4%'),
-    height: wp('3.4%'),
+    width: wp('4%'),
+    height: wp('4%'),
   },
-  heartIconUnfilled: {
-    tintColor: '#fff',
-  },
-  heartIconFilled: {
-    tintColor: undefined, // No tint color for filled heart
-  },
-  ratingBadge: {
+  // Rating badge styles - Same as previous components
+  productRatingBadge: {
     position: 'absolute',
     bottom: hp('2%'),
     right: wp('4%'),
-    backgroundColor: COLORS.primary,
-    borderRadius: wp('2.5%'),
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: wp('3%'),
-    paddingVertical: hp('0.8%'),
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: wp('2.5%'),
+    paddingVertical: hp('0.5%'),
+    borderRadius: wp('2%'),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   starIcon: {
-    width: wp('4%'),
-    height: wp('4%'),
+    width: wp('3%'),
+    height: wp('3%'),
+    marginRight: wp('1%'),
     tintColor: '#fff',
-    marginRight: wp('1.5%'),
   },
   ratingText: {
     color: '#fff',

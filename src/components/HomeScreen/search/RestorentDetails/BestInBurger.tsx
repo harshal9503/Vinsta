@@ -4,8 +4,7 @@ import { Animated, StyleSheet, Text, TouchableOpacity, View, Image, Platform } f
 import { COLORS } from '../../../../theme/colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { getFontFamily, getFontWeight } from '../../../../utils/fontHelper';
-import { vibrate } from '../../../../utils/vibrationHelper'; // <-- vibration import
-
+import { vibrate } from '../../../../utils/vibrationHelper';
 
 const BestInBurger = ({
   foodItems,
@@ -18,7 +17,7 @@ const BestInBurger = ({
 }) => {
 
   const handleHeartPressWithVibration = (id: number) => {
-    vibrate(50);
+    vibrate(40); // Consistent vibration duration
     handleHeartPress(id);
   };
 
@@ -34,13 +33,14 @@ const BestInBurger = ({
         return (
           <View key={`best-${f.id}`} style={styles.foodCard}>
 
-            {/* Heart Icon with bg color condition and vibration */}
+            {/* Heart Icon - Same style as previous components */}
             <TouchableOpacity
               style={[
-                styles.heartWrapper,
-                isLiked ? styles.heartWrapperFilled : styles.heartWrapperBack,
+                styles.productHeartWrapper,
+                { backgroundColor: isLiked ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)' }
               ]}
               onPress={() => handleHeartPressWithVibration(f.id)}
+              activeOpacity={0.7}
             >
               <Animated.Image
                 source={
@@ -49,8 +49,8 @@ const BestInBurger = ({
                     : require('../../../../assets/heart.png')
                 }
                 style={[
-                  styles.heartIconSmall,
-                  isLiked && styles.heartIconFilled,
+                  styles.heartIcon,
+                  { tintColor: isLiked ? COLORS.primary : '#fff' },
                   { transform: [{ scale: heartScales[f.id] || 1 }] },
                 ]}
                 resizeMode="contain"
@@ -62,20 +62,13 @@ const BestInBurger = ({
               <Image source={f.img} style={styles.foodImg} resizeMode="cover" />
 
               {/* Rating Badge */}
-              <View style={styles.foodRatingBadge}>
+              <View style={styles.productRatingBadge}>
                 <Image
                   source={require('../../../../assets/star.png')}
                   style={styles.starIcon}
                   resizeMode="contain"
                 />
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontSize: hp('1.3%'),
-                    fontFamily: getFontFamily('SemiBold'),
-                    fontWeight: getFontWeight('SemiBold'),
-                  }}
-                >
+                <Text style={styles.ratingText}>
                   4.4
                 </Text>
               </View>
@@ -83,41 +76,17 @@ const BestInBurger = ({
 
             {/* Food Info */}
             <View style={styles.foodInfo}>
-              <Text
-                style={{
-                  fontSize: hp('1.6%'),
-                  color: '#222',
-                  marginBottom: hp('0.3%'),
-                  fontFamily: getFontFamily('Bold'),
-                  fontWeight: getFontWeight('Bold'),
-                }}
-              >
+              <Text style={styles.foodName}>
                 {f.name}
               </Text>
 
               {/* Price Row */}
               <View style={styles.priceRow}>
-                <Text
-                  style={{
-                    fontSize: hp('1.6%'),
-                    color: '#222',
-                    fontFamily: getFontFamily('SemiBold'),
-                    fontWeight: getFontWeight('SemiBold'),
-                  }}
-                >
+                <Text style={styles.price}>
                   ₹ {f.price.toFixed(2)}
                 </Text>
 
-                <Text
-                  style={{
-                    fontSize: hp('1.3%'),
-                    color: '#FA463D',
-                    textDecorationLine: 'line-through',
-                    marginLeft: wp('1%'),
-                    fontFamily: getFontFamily('Regular'),
-                    fontWeight: getFontWeight('Regular'),
-                  }}
-                >
+                <Text style={styles.oldPrice}>
                   ₹ {f.oldPrice.toFixed(2)}
                 </Text>
 
@@ -135,15 +104,12 @@ const BestInBurger = ({
 
               {/* Time Row */}
               <View style={styles.timeRow}>
-                <Image source={require('../../../../assets/clockk.png')} style={styles.clockIcon} resizeMode="contain" />
-                <Text
-                  style={{
-                    fontSize: hp('1.3%'),
-                    color: '#666',
-                    fontFamily: getFontFamily('Medium'),
-                    fontWeight: getFontWeight('Medium'),
-                  }}
-                >
+                <Image 
+                  source={require('../../../../assets/clockk.png')} 
+                  style={styles.clockIcon} 
+                  resizeMode="contain" 
+                />
+                <Text style={styles.timeText}>
                   {f.time}
                 </Text>
               </View>
@@ -155,9 +121,7 @@ const BestInBurger = ({
   );
 };
 
-
 export default BestInBurger;
-
 
 const styles = StyleSheet.create({
   grid: {
@@ -179,31 +143,30 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     position: 'relative',
   },
-  heartWrapper: {
+  // Heart wrapper styles - Same as previous components
+  productHeartWrapper: {
     position: 'absolute',
     right: wp('3%'),
     top: hp('1.2%'),
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
     borderRadius: wp('5%'),
-    padding: wp('1.8%'),
+    padding: wp('2%'),
     zIndex: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.09,
-    shadowRadius: 5,
-    elevation: 2,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
-  heartWrapperBack: {
-    backgroundColor: 'rgba(0,0,0,0.25)', // same as RecommendedFood
-  },
-  heartWrapperFilled: {
-    backgroundColor: '#fff',
-  },
-  heartIconSmall: {
-    width: wp('4.5%'),
-    height: wp('4.5%'),
-    tintColor: '#fff',
-  },
-  heartIconFilled: {
-    tintColor: undefined,
+  heartIcon: {
+    width: wp('4%'),
+    height: wp('4%'),
   },
   foodImg: {
     width: '100%',
@@ -211,32 +174,71 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: wp('4.5%'),
     borderTopRightRadius: wp('4.5%'),
   },
-  foodRatingBadge: {
+  // Rating badge styles - Same as previous components
+  productRatingBadge: {
     position: 'absolute',
     bottom: hp('1%'),
     right: wp('3%'),
-    backgroundColor: COLORS.primary,
-    borderRadius: wp('2.5%'),
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: wp('1.5%'),
-    paddingVertical: hp('0.4%'),
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: wp('2.5%'),
+    paddingVertical: hp('0.5%'),
+    borderRadius: wp('2%'),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   starIcon: {
     width: wp('3%'),
     height: wp('3%'),
-    tintColor: '#fff',
     marginRight: wp('1%'),
+    tintColor: '#fff',
+  },
+  ratingText: {
+    color: '#fff',
+    fontSize: hp('1.3%'),
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   foodInfo: {
     padding: wp('2.5%'),
     paddingTop: hp('0.8%'),
+  },
+  foodName: {
+    fontSize: hp('1.6%'),
+    color: '#222',
+    marginBottom: hp('0.3%'),
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   priceRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: hp('0.2%'),
+  },
+  price: {
+    fontSize: hp('1.6%'),
+    color: '#222',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
+  },
+  oldPrice: {
+    fontSize: hp('1.3%'),
+    color: '#FA463D',
+    textDecorationLine: 'line-through',
+    marginLeft: wp('1%'),
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
   plusBtn: {
     backgroundColor: COLORS.primary,
@@ -262,5 +264,11 @@ const styles = StyleSheet.create({
     width: wp('4%'),
     height: wp('4%'),
     tintColor: COLORS.primary,
+  },
+  timeText: {
+    fontSize: hp('1.3%'),
+    color: '#666',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
 });

@@ -94,9 +94,10 @@ const getTextStyle = (weight = 'Regular') => {
         textAlignVertical: 'center',
     };
 };
-// Separate veg and non-veg restaurants
-const FeaturedRestaurant = ({ getCurrentRestaurants, handleRestaurantPress }) => {
+
+const FeaturedRestaurant = ({ getCurrentRestaurants, handleRestaurantPress, toggleFavorite, isVegMode }) => {
   const {theme} = useContext(ThemeContext);
+  
   return (
     <ScrollView
       horizontal
@@ -118,15 +119,28 @@ const FeaturedRestaurant = ({ getCurrentRestaurants, handleRestaurantPress }) =>
               resizeMode="cover"
             />
 
-            <TouchableOpacity style={styles.iconWrapper} activeOpacity={0.7}>
+            <TouchableOpacity 
+              style={[
+                styles.productHeartWrapper,
+                { backgroundColor: restaurant.isFavorite ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)' }
+              ]} 
+              activeOpacity={0.7}
+              onPress={() => toggleFavorite(restaurant.id, isVegMode)}
+            >
               <Image
-                source={require('../../../assets/heart.png')}
-                style={styles.heartIcon}
+                source={restaurant.isFavorite 
+                  ? require('../../../assets/heartfill.png')
+                  : require('../../../assets/heart.png')
+                }
+                style={[
+                  styles.heartIcon,
+                  { tintColor: restaurant.isFavorite ? COLORS.primary : '#fff' }
+                ]}
                 resizeMode="contain"
               />
             </TouchableOpacity>
 
-            <View style={styles.ratingBadge}>
+            <View style={styles.productRatingBadge}>
               <Image
                 source={require('../../../assets/star.png')}
                 style={styles.starIcon}
@@ -169,7 +183,8 @@ const FeaturedRestaurant = ({ getCurrentRestaurants, handleRestaurantPress }) =>
 
 export default FeaturedRestaurant
 
-const styles = StyleSheet.create({ restaurantScrollContent: {
+const styles = StyleSheet.create({ 
+  restaurantScrollContent: {
     paddingHorizontal: wp('1%'),
     paddingBottom: hp('1%'),
   },
@@ -201,11 +216,11 @@ const styles = StyleSheet.create({ restaurantScrollContent: {
     height: isTablet ? hp('12%') : hp('15%'),
     borderRadius: scaleSize(wp('3%')),
   },
-  iconWrapper: {
+  productHeartWrapper: {
     position: 'absolute',
     top: scaleSize(wp('3%')),
     right: scaleSize(wp('3%')),
-    backgroundColor: COLORS.primary,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
     borderRadius: scaleSize(wp('5%')),
     padding: scaleSize(wp('2%')),
     ...Platform.select({
@@ -223,9 +238,8 @@ const styles = StyleSheet.create({ restaurantScrollContent: {
   heartIcon: {
     width: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4%')),
     height: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4%')),
-    tintColor: '#fff',
   },
-  ratingBadge: {
+  productRatingBadge: {
     position: 'absolute',
     bottom: scaleSize(wp('3%')),
     left: scaleSize(wp('3%')),

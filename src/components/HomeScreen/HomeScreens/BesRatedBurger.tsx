@@ -3,8 +3,8 @@ import React, { useContext } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { COLORS } from '../../../theme/colors'
 import { ThemeContext } from '../../../theme/ThemeContext';
-const { width, height } = Dimensions.get('window');
 
+const { width, height } = Dimensions.get('window');
 
 const isTablet = width >= 768;
 const isSmallScreen = width < 380;
@@ -95,8 +95,8 @@ const getTextStyle = (weight = 'Regular') => {
     textAlignVertical: 'center',
   };
 };
-const BesRatedBurger = ({ getCurrentProducts, handleProductPress }) => {
 
+const BesRatedBurger = ({ getCurrentProducts, handleProductPress, toggleFavorite, isVegMode }) => {
   const { theme } = useContext(ThemeContext);
 
   return (
@@ -123,10 +123,17 @@ const BesRatedBurger = ({ getCurrentProducts, handleProductPress }) => {
             <TouchableOpacity
               style={styles.productHeartWrapper}
               activeOpacity={0.7}
+              onPress={() => toggleFavorite(item.id, isVegMode)}
             >
               <Image
-                source={require('../../../assets/heart.png')}
-                style={styles.heartIcon}
+                source={item.isFavorite 
+                  ? require('../../../assets/heartfill.png')
+                  : require('../../../assets/heart.png')
+                }
+                style={[
+                  styles.heartIcon,
+                  { tintColor: item.isFavorite ? COLORS.primary : '#fff' }
+                ]}
                 resizeMode="contain"
               />
             </TouchableOpacity>
@@ -171,7 +178,6 @@ const BesRatedBurger = ({ getCurrentProducts, handleProductPress }) => {
         </TouchableOpacity>
       )}
     />
-
   )
 }
 
@@ -256,7 +262,6 @@ const styles = StyleSheet.create({
   heartIcon: {
     width: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4%')),
     height: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4%')),
-    tintColor: '#fff',
   },
   productTitle: {
     ...getTextStyle('Bold'),
