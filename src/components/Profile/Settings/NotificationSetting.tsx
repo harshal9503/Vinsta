@@ -78,23 +78,23 @@ const NotificationSetting = () => {
 
       <View style={[styles.header,{backgroundColor  :theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : '#000000'}]} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color : '#616161'}]}>Notification Settings</Text>
+        <Text style={[styles.headerTitle,{color : theme.textSecondary}]}>Notification Settings</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <Text style={[styles.sectionTitle,{color : '#616161'}]}>Notification Preferences</Text>
-        <Text style={[styles.sectionDescription,{color : '#616161'}]}>
+        <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>Notification Preferences</Text>
+        <Text style={[styles.sectionDescription,{color : theme.textSecondary}]}>
           Choose what type of notifications you want to receive
         </Text>
 
         {notificationOptions.map((item) => (
           <View key={item.id} style={[styles.notificationRow,{backgroundColor : theme.background}]}>
             <View style={styles.notificationLeft}>
-              <Text style={[styles.notificationTitle,{color : '#616161'}]}>{item.title}</Text>
-              <Text style={[styles.notificationDescription,{color : '#616161'}]}>{item.description}</Text>
+              <Text style={[styles.notificationTitle,{color : theme.textSecondary}]}>{item.title}</Text>
+              <Text style={[styles.notificationDescription,{color : theme.textSecondary}]}>{item.description}</Text>
             </View>
             <Switch
               value={item.value}

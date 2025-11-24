@@ -58,15 +58,15 @@ const AccountManagement = () => {
 
       <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : '#000000'}]} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color : '#616161'}]}>Account Management</Text>
+        <Text style={[styles.headerTitle,{color : theme.textSecondary}]}>Account Management</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <Text style={[styles.sectionTitle,{color : '#616161'}]}>Manage Your Account</Text>
-        <Text style={[styles.sectionDescription,{color : '#616161'}]}>
+        <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>Manage Your Account</Text>
+        <Text style={[styles.sectionDescription,{color : theme.textSecondary}]}>
           Control your data and account settings
         </Text>
 
@@ -77,13 +77,13 @@ const AccountManagement = () => {
             onPress={item.action}
           >
             <View style={styles.managementLeft}>
-              <Image source={item.icon} style={[styles.managementIcon,{tintColor : COLORS.text}]} />
+              <Image source={item.icon} style={[styles.managementIcon,{tintColor : theme.text}]} />
               <View style={styles.managementText}>
-                <Text style={[styles.managementTitle,{color : '#616161'}]}>{item.title}</Text>
-                <Text style={[styles.managementDescription,{color : '#616161'}]}>{item.description}</Text>
+                <Text style={[styles.managementTitle,{color : theme.textSecondary}]}>{item.title}</Text>
+                <Text style={[styles.managementDescription,{color : theme.textSecondary}]}>{item.description}</Text>
               </View>
             </View>
-            <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor : COLORS.text}]} />
+            <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor : theme.text}]} />
           </TouchableOpacity>
         ))}
 

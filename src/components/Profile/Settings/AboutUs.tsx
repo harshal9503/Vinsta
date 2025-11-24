@@ -59,9 +59,9 @@ const AboutUs = () => {
 
       <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor:'#000000'}]} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor:theme.text}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color:'#616161'}]}>About Us</Text>
+        <Text style={[styles.headerTitle,{color : theme.textSecondary}]}>About Us</Text>
         <View style={{ width: 24 }} />
       </View>
 
@@ -72,17 +72,17 @@ const AboutUs = () => {
             source={require('../../../assets/Splash.png')} 
             style={styles.appLogo} 
           />
-          <Text style={[styles.appName,{color : '#616161'}]}>Vinsta</Text>
-          <Text style={[styles.appVersion,{color : '#616161'}]}>Version 1.0.0</Text>
-          <Text style={[styles.appDescription,{color : '#616161'}]}>
+          <Text style={[styles.appName,{color : theme.textSecondary}]}>Vinsta</Text>
+          <Text style={[styles.appVersion,{color : theme.textSecondary}]}>Version 1.0.0</Text>
+          <Text style={[styles.appDescription,{color : theme.textSecondary}]}>
             Delivering excellence one order at a time
           </Text>
         </View>
 
         {/* App Description */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle,{color : '#616161'}]}>Our Story</Text>
-          <Text style={[styles.sectionText,{color : '#616161'}]}>
+          <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>Our Story</Text>
+          <Text style={[styles.sectionText,{color : theme.textSecondary}]}>
             Founded in 2024, our mission is to provide the best food delivery experience 
             to our customers. We connect you with your favorite restaurants and deliver 
             delicious meals right to your doorstep.
@@ -91,30 +91,30 @@ const AboutUs = () => {
 
         {/* Features */}
         <View style={[styles.section,{backgroundColor : theme.background}]}>
-          <Text style={[styles.sectionTitle,{color : '#616161'}]}>What We Offer</Text>
+          <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>What We Offer</Text>
           <View style={[styles.featuresList,{backgroundColor : theme.background}]}>
             <View style={styles.featureItem}>
-              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:COLORS.text}]} />
-              <Text style={[styles.featureText,{color : '#616161'}]}>Fast Delivery</Text>
+              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:theme.text}]} />
+              <Text style={[styles.featureText,{color : theme.textSecondary}]}>Fast Delivery</Text>
             </View>
             <View style={styles.featureItem}>
-              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:COLORS.text}]} />
-              <Text style={[styles.featureText,{color : '#616161'}]}>Wide Restaurant Selection</Text>
+              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:theme.text}]} />
+              <Text style={[styles.featureText,{color : theme.textSecondary}]}>Wide Restaurant Selection</Text>
             </View>
             <View style={styles.featureItem}>
-              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:COLORS.text}]} />
-              <Text style={[styles.featureText,{color : '#616161'}]}>Secure Payments</Text>
+              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:theme.text}]} />
+              <Text style={[styles.featureText,{color : theme.textSecondary}]}>Secure Payments</Text>
             </View>
             <View style={styles.featureItem}>
-              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:COLORS.text}]} />
-              <Text style={[styles.featureText,{color : '#616161'}]}>24/7 Customer Support</Text>
+              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:theme.text}]} />
+              <Text style={[styles.featureText,{color : theme.textSecondary}]}>24/7 Customer Support</Text>
             </View>
           </View>
         </View>
 
         {/* Contact Information */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle,{color : '#616161'}]}>Contact Us</Text>
+          <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>Contact Us</Text>
           {contactInfo.map((item) => (
             <TouchableOpacity
               key={item.id}
@@ -122,39 +122,39 @@ const AboutUs = () => {
               onPress={item.action}
             >
               <View style={styles.contactLeft}>
-                <Image source={item.icon} style={[styles.contactIcon,{tintColor:COLORS.text}]} />
+                <Image source={item.icon} style={[styles.contactIcon,{tintColor:theme.text}]} />
                 <View>
-                  <Text style={[styles.contactTitle,{color : '#616161'}]}>{item.title}</Text>
-                  <Text style={[styles.contactValue,{color : '#616161'}]}>{item.value}</Text>
+                  <Text style={[styles.contactTitle,{color : theme.textSecondary}]}>{item.title}</Text>
+                  <Text style={[styles.contactValue,{color : theme.textSecondary}]}>{item.value}</Text>
                 </View>
               </View>
-              <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor:COLORS.text}]} />
+              <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor:theme.text}]} />
             </TouchableOpacity>
           ))}
         </View>
 
         {/* Legal */}
         <View style={[styles.section]}>
-          <Text style={[styles.sectionTitle,{color : '#616161'}]}>Legal</Text>
+          <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>Legal</Text>
           <TouchableOpacity 
             style={[styles.legalItem,{backgroundColor : theme.background}]}
             onPress={() => navigation.navigate('PrivacyPolicy')}
           >
-            <Text style={[styles.legalText,{color : '#616161'}]}>Privacy Policy</Text>
-            <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor:COLORS.text}]} />
+            <Text style={[styles.legalText,{color : theme.textSecondary}]}>Privacy Policy</Text>
+            <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor:theme.text}]} />
           </TouchableOpacity>
           <TouchableOpacity 
             style={[styles.legalItem,{backgroundColor : theme.background}]}
             onPress={() => navigation.navigate('TermsConditions')}
           >
-            <Text style={[styles.legalText,{color : '#616161'}]}>Terms & Conditions</Text>
-            <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor:COLORS.text}]} />
+            <Text style={[styles.legalText,{color : theme.textSecondary}]}>Terms & Conditions</Text>
+            <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor:theme.text}]} />
           </TouchableOpacity>
         </View>
 
         {/* Copyright */}
         <View style={styles.copyrightSection}>
-          <Text style={[styles.copyrightText,{color : '#616161'}]}>
+          <Text style={[styles.copyrightText,{color : theme.textSecondary}]}>
             © 2024 Vinsta. All rights reserved.
           </Text>
         </View>

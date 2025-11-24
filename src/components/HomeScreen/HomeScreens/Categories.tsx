@@ -1,7 +1,8 @@
 import { Dimensions, Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { COLORS } from '../../../theme/colors';
+import { ThemeContext } from '../../../theme/ThemeContext';
 const { width, height } = Dimensions.get('window');
 
  const isTablet = width >= 768;
@@ -106,6 +107,7 @@ const { width, height } = Dimensions.get('window');
     
 const Categories = () => {
       const [selectedCategory, setSelectedCategory] = useState('Burger');
+      const {theme} = useContext(ThemeContext);
     
     return (
         <ScrollView
@@ -119,6 +121,7 @@ const Categories = () => {
                     key={cat.name}
                     style={[
                         styles.categoryBtn,
+                        {backgroundColor : theme.cardBackground},
                         selectedCategory === cat.name && styles.categoryBtnActive,
                     ]}
                     onPress={() => setSelectedCategory(cat.name)}

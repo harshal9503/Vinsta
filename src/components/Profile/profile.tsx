@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
+import { ThemeContext } from '../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
@@ -49,17 +50,23 @@ const Profile = () => {
     navigation.navigate(route);
   };
 
+  const { theme } = useContext(ThemeContext);
+
   return (
-    <View style={styles.container}>
-      <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle={theme.mode === 'dark' ? 'light-content' : 'dark-content'}
+      />
       <Image source={require('../../assets/bg.png')} style={styles.bgImage} />
 
       {/* ===== Header ===== */}
-      <View style={styles.fixedHeader}>
+      <View style={[styles.fixedHeader, { backgroundColor: theme.background }]}>
         <View style={styles.backRow}>
           <TouchableOpacity onPress={() => navigation.navigate('Home')} />
           <TouchableOpacity onPress={() => navigation.navigate('Help')}>
-            <Text style={styles.helpText}>Help</Text>
+            <Text style={[styles.helpText, { color: theme.primary }]}>Help</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -68,16 +75,16 @@ const Profile = () => {
       <ScrollView
         style={{ flex: 1 }}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 60 }}
+        contentContainerStyle={{ paddingBottom: 60, backgroundColor: theme.background }}
       >
         {/* ===== Profile Header ===== */}
         <View style={styles.profileHeader}>
           <View style={styles.userRow}>
             <Image source={require('../../assets/user.png')} style={styles.userImage} />
             <View style={styles.userInfo}>
-              <Text style={styles.userName}>Harshal Sharma</Text>
-              <Text style={styles.userEmail}>harshal@gmail.com</Text>
-              <Text style={styles.userPhone}>+91 1234567890</Text>
+              <Text style={[styles.userName, { color: theme.text }]}>{`Harshal Sharma`}</Text>
+              <Text style={[styles.userEmail, { color: theme.textSecondary }]}>harshal@gmail.com</Text>
+              <Text style={[styles.userPhone, { color: theme.textSecondary }]}>+91 1234567890</Text>
             </View>
           </View>
         </View>
@@ -85,9 +92,16 @@ const Profile = () => {
         {/* ===== Top Options ===== */}
         <View style={styles.topOptionsContainer}>
           {topOptions.map(item => (
-            <TouchableOpacity key={item.id} style={styles.topOption} onPress={() => navigation.navigate(item.route)}>
-              <Image source={item.icon} style={styles.topIcon} />
-              <Text style={styles.topLabel}>{item.label}</Text>
+            <TouchableOpacity
+              key={item.id}
+              style={[
+                styles.topOption,
+                { backgroundColor: theme.cardBackground, borderColor: theme.border },
+              ]}
+              onPress={() => navigation.navigate(item.route)}
+            >
+              <Image source={item.icon} style={[styles.topIcon, { tintColor: theme.text }]} />
+              <Text style={[styles.topLabel, { color: theme.textSecondary }]}>{item.label}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -95,35 +109,41 @@ const Profile = () => {
         {/* ===== Bottom Options ===== */}
         <View style={styles.bottomSection}>
           {bottomOptions.map(item => (
-            <TouchableOpacity key={item.id} style={styles.optionRow} onPress={() => handleNavigation(item.route)}>
+            <TouchableOpacity
+              key={item.id}
+              style={[styles.optionRow, { borderBottomColor: theme.border }]}
+              onPress={() => handleNavigation(item.route)}
+            >
               <View style={styles.optionLeft}>
-                <Image source={item.icon} style={styles.optionIcon} />
-                <Text style={styles.optionLabel}>{item.label}</Text>
+                <Image source={item.icon} style={[styles.optionIcon, { tintColor: theme.textSecondary }]} />
+                <Text style={[styles.optionLabel, { color: theme.textSecondary }]}>{item.label}</Text>
               </View>
-              <Image source={require('../../assets/right-arrow.png')} style={styles.arrowIcon} />
+              <Image source={require('../../assets/right-arrow.png')} style={[styles.arrowIcon, { tintColor: theme.textSecondary }]} />
             </TouchableOpacity>
           ))}
 
           {/* ===== Logout ===== */}
           <TouchableOpacity
-            style={styles.optionRow}
+            style={[styles.optionRow, { borderBottomColor: theme.border }]}
             onPress={() =>
               openPopup('Are you sure you want to logout?', () => navigation.navigate('SignIn'))
-            }>
+            }
+          >
             <View style={styles.optionLeft}>
-              <Image source={require('../../assets/logout.png')} style={styles.optionIcon} />
+              <Image source={require('../../assets/logout.png')} style={[styles.optionIcon, { tintColor: '#E53935' }]} />
               <Text style={[styles.optionLabel, { color: '#E53935' }]}>Logout</Text>
             </View>
           </TouchableOpacity>
 
           {/* ===== Delete Account ===== */}
           <TouchableOpacity
-            style={styles.optionRow}
+            style={[styles.optionRow, { borderBottomColor: theme.border }]}
             onPress={() =>
               openPopup('Are you sure you want to delete your account?', () => navigation.navigate('SignIn'))
-            }>
+            }
+          >
             <View style={styles.optionLeft}>
-              <Image source={require('../../assets/delete.png')} style={styles.optionIcon} />
+              <Image source={require('../../assets/delete.png')} style={[styles.optionIcon, { tintColor: '#E53935' }]} />
               <Text style={[styles.optionLabel, { color: '#E53935' }]}>Delete Account</Text>
             </View>
           </TouchableOpacity>
@@ -133,21 +153,23 @@ const Profile = () => {
       {/* ===== Popup Modal ===== */}
       <Modal transparent visible={showPopup} animationType="fade" onRequestClose={() => setShowPopup(false)}>
         <View style={styles.popupOverlay}>
-          <View style={styles.popupBox}>
-            <Text style={styles.popupText}>{popupMessage}</Text>
+          <View style={[styles.popupBox, { backgroundColor: theme.cardBackground }]}>
+            <Text style={[styles.popupText, { color: theme.text }]}>{popupMessage}</Text>
             <View style={styles.popupButtonsContainer}>
               <TouchableOpacity
                 style={[styles.popupButton, styles.popupCancelButton]}
-                onPress={() => setShowPopup(false)}>
-                <Text style={[styles.popupButtonText, { color: COLORS.text }]}>Cancel</Text>
+                onPress={() => setShowPopup(false)}
+              >
+                <Text style={[styles.popupButtonText, { color: theme.text }]}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.popupButton, styles.popupConfirmButton]}
                 onPress={() => {
                   setShowPopup(false);
                   popupAction && popupAction();
-                }}>
-                <Text style={styles.popupButtonText}>OK</Text>
+                }}
+              >
+                <Text style={[styles.popupButtonText, { color: theme.cardBackground }]}>OK</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -160,51 +182,86 @@ const Profile = () => {
 export default Profile;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.secondary },
+  container: { flex: 1 },
 
   bgImage: { position: 'absolute', top: 0, left: 0, width, height: height * 0.25, resizeMode: 'cover' },
 
-  fixedHeader: { position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, backgroundColor: 'transparent', paddingTop: height * 0.07, paddingBottom: 10 },
-  backRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20 },
-  helpText: { fontSize: width * 0.035, color: '#E87C23', fontFamily: 'Figtree-SemiBold' },
+  fixedHeader: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
+    paddingTop: height * 0.07,
+    paddingBottom: 10,
+  },
+  backRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  helpText: {
+    fontSize: width * 0.035,
+    fontFamily: 'Figtree-SemiBold',
+  },
 
   profileHeader: { width: '100%', marginTop: height * 0.13 },
   userRow: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20 },
   userImage: { width: 85, height: 85, borderRadius: 42, borderWidth: 2, borderColor: '#fff' },
   userInfo: { flex: 1, marginLeft: 15 },
-  userName: { fontSize: width * 0.048, color: '#616161', fontFamily: 'Figtree-Bold' },
-  userEmail: { fontSize: width * 0.032, color: '#666', marginTop: 3, fontFamily: 'Figtree-Regular' },
-  userPhone: { fontSize: width * 0.032, color: '#666', marginTop: 2, fontFamily: 'Figtree-Regular' },
+  userName: {
+    fontSize: width * 0.048,
+    fontFamily: 'Figtree-Bold',
+  },
+  userEmail: {
+    fontSize: width * 0.032,
+    marginTop: 3,
+    fontFamily: 'Figtree-Regular',
+  },
+  userPhone: {
+    fontSize: width * 0.032,
+    marginTop: 2,
+    fontFamily: 'Figtree-Regular',
+  },
 
-  topOptionsContainer: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 15, marginTop: 25 },
+  topOptionsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 15,
+    marginTop: 25,
+  },
   topOption: {
     width: width * 0.21,
-    backgroundColor: '#fff',
     borderRadius: 16,
     paddingVertical: 14,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#ddd',
     ...Platform.select({
       ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 3 },
       android: { elevation: 4 },
     }),
   },
-  topIcon: { width: 26, height: 26, resizeMode: 'contain', marginBottom: 5, tintColor: COLORS.text },
-  topLabel: { fontSize: width * 0.030, color: '#616161', textAlign: 'center', fontFamily: 'Figtree-Medium' },
+  topIcon: { width: 26, height: 26, resizeMode: 'contain', marginBottom: 5 },
+  topLabel: { fontSize: width * 0.030, textAlign: 'center', fontFamily: 'Figtree-Medium' },
 
   bottomSection: { marginTop: 30, paddingHorizontal: 20 },
-  optionRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 15, borderBottomWidth: 0.5, borderBottomColor: '#eee' },
+  optionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 15,
+    borderBottomWidth: 0.5,
+  },
   optionLeft: { flexDirection: 'row', alignItems: 'center' },
-  optionIcon: { width: 22, height: 22, resizeMode: 'contain', marginRight: 15, tintColor: '#616161' },
-  optionLabel: { fontSize: width * 0.037, color: '#616161', fontFamily: 'Figtree-SemiBold' },
-  arrowIcon: { width: 14, height: 14, resizeMode: 'contain', tintColor: COLORS.text },
+  optionIcon: { width: 22, height: 22, resizeMode: 'contain', marginRight: 15 },
+  optionLabel: { fontSize: width * 0.037, fontFamily: 'Figtree-SemiBold' },
+  arrowIcon: { width: 14, height: 14, resizeMode: 'contain' },
 
   popupOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', alignItems: 'center', justifyContent: 'center' },
   popupBox: {
     width: width * 0.8,
-    backgroundColor: COLORS.secondary,
     borderRadius: 12,
     padding: 20,
     alignItems: 'center',
@@ -213,10 +270,10 @@ const styles = StyleSheet.create({
       android: { elevation: 6 },
     }),
   },
-  popupText: { fontSize: width * 0.04, color: '#616161', textAlign: 'center', marginBottom: 20, fontFamily: 'Figtree-Medium' },
+  popupText: { fontSize: width * 0.04, textAlign: 'center', marginBottom: 20, fontFamily: 'Figtree-Medium' },
   popupButtonsContainer: { flexDirection: 'row', justifyContent: 'space-between', width: '100%' },
   popupButton: { borderRadius: 8, paddingVertical: 10, paddingHorizontal: 20, minWidth: 80, alignItems: 'center' },
   popupCancelButton: { backgroundColor: '#f0f0f0', marginRight: 10 },
   popupConfirmButton: { backgroundColor: COLORS.primary, marginLeft: 10 },
-  popupButtonText: { color: COLORS.secondary, fontSize: width * 0.035, fontFamily: 'Figtree-SemiBold' },
+  popupButtonText: { fontSize: width * 0.035, fontFamily: 'Figtree-SemiBold' },
 });

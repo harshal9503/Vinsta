@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -17,6 +17,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
 import font from '../../assets/fonts';
+import { ThemeContext } from '../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
@@ -140,7 +141,7 @@ const Address = () => {
     icon: string;
   }) => (
     <TouchableOpacity
-      style={[styles.typeBtn, addressType === type && styles.typeBtnActive]}
+      style={[styles.typeBtn,{backgroundColor  :theme.cardBackground,borderColor : theme.cardBackground}, addressType === type && styles.typeBtnActive,{backgroundColor : theme.cardBackground}]}
       onPress={() => setAddressType(type)}
     >
       <Text style={styles.typeIcon}>{icon}</Text>
@@ -151,9 +152,9 @@ const Address = () => {
       </Text>
     </TouchableOpacity>
   );
-
+  const {theme} = useContext(ThemeContext);
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar
         barStyle="dark-content"
         backgroundColor="transparent"
@@ -161,14 +162,14 @@ const Address = () => {
       />
 
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
             source={require('../../assets/back.png')}
-            style={styles.backIcon}
+            style={[styles.backIcon,{tintColor : theme.text}]}
           />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>My Addresses</Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>My Addresses</Text>
         <View style={{ width: 24 }} />
       </View>
 
@@ -177,18 +178,18 @@ const Address = () => {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>Saved Addresses</Text>
+        <Text style={[styles.title,{color : theme.text}]}>Saved Addresses</Text>
 
         {addresses.length === 0 ? (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>No saved addresses yet</Text>
-            <Text style={styles.emptySubText}>
+            <Text style={[styles.emptySubText,{color : theme.text}]}>
               Add your delivery addresses to get started
             </Text>
           </View>
         ) : (
           addresses.map(address => (
-            <View key={address.id} style={styles.card}>
+            <View key={address.id} style={[styles.card,{backgroundColor  :theme.cardBackground}]}>
               <View style={styles.cardContent}>
                 <View style={styles.cardHeader}>
                   <View style={styles.labelContainer}>
@@ -203,14 +204,14 @@ const Address = () => {
                   </View>
                 </View>
 
-                <Text style={styles.nameText}>{address.name}</Text>
-                <Text style={styles.text}>{address.address}</Text>
+                <Text style={[styles.nameText,{color : theme.text}]}>{address.name}</Text>
+                <Text style={[styles.text,{color : theme.textSecondary}]}>{address.address}</Text>
                 {address.landmark && (
-                  <Text style={styles.landmarkText}>
+                  <Text style={[styles.landmarkText,{color : theme.textSecondary}]}>
                     Landmark: {address.landmark}
                   </Text>
                 )}
-                <Text style={styles.phoneText}>{address.phone}</Text>
+                <Text style={[styles.phoneText,{color : theme.textSecondary}]}>{address.phone}</Text>
               </View>
 
               <TouchableOpacity
@@ -230,7 +231,7 @@ const Address = () => {
           style={styles.addButton}
           onPress={() => setIsModalVisible(true)}
         >
-          <Text style={styles.addButtonText}>+ Add New Address</Text>
+          <Text style={[styles.addButtonText,{color : theme.background}]}>+ Add New Address</Text>
         </TouchableOpacity>
       </ScrollView>
 
@@ -245,16 +246,16 @@ const Address = () => {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.modalContainer}
         >
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Add New Address</Text>
+          <View style={[styles.modalContent,{backgroundColor : theme.background}]}>
+            <View style={[styles.modalHeader,{borderBottomColor : theme.cardBackground}]}>
+              <Text style={[styles.modalTitle,{color : theme.text}]}>Add New Address</Text>
               <TouchableOpacity
                 onPress={() => {
                   setIsModalVisible(false);
                   resetForm();
                 }}
               >
-                <Text style={styles.closeBtn}>✕</Text>
+                <Text style={[styles.closeBtn]}>✕</Text>
               </TouchableOpacity>
             </View>
 
@@ -264,9 +265,9 @@ const Address = () => {
             >
               {/* Name Input */}
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Full Name *</Text>
+                <Text style={[styles.inputLabel,{color : theme.text}]}>Full Name *</Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input,{backgroundColor : theme.cardBackground,borderColor : theme.cardBackground}]}
                   placeholder="Enter your name"
                   placeholderTextColor="#999"
                   value={name}
@@ -276,11 +277,11 @@ const Address = () => {
 
               {/* Phone Input */}
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Phone Number *</Text>
+                <Text style={[styles.inputLabel,{color : theme.text}]}>Phone Number *</Text>
                 <View style={styles.phoneInput}>
-                  <Text style={styles.phonePrefix}>+91</Text>
+                  <Text style={[styles.phonePrefix,{backgroundColor  :theme.cardBackground,color :"#999"}]}>+91</Text>
                   <TextInput
-                    style={[styles.input, { flex: 1, marginBottom: 0 }]}
+                    style={[styles.input, { flex: 1, marginBottom: 0 ,backgroundColor : theme.cardBackground,borderColor : theme.cardBackground}]}
                     placeholder="Enter 10-digit number"
                     placeholderTextColor="#999"
                     value={phone}
@@ -293,9 +294,9 @@ const Address = () => {
 
               {/* House/Flat No */}
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>House/Flat/Block No. *</Text>
+                <Text style={[styles.inputLabel,{color : theme.text}]}>House/Flat/Block No. *</Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input,{backgroundColor : theme.cardBackground,borderColor : theme.cardBackground}]}
                   placeholder="Enter house/flat/block no."
                   placeholderTextColor="#999"
                   value={houseNo}
@@ -305,9 +306,9 @@ const Address = () => {
 
               {/* Area/Street */}
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Area/Street/Sector *</Text>
+                <Text style={[styles.inputLabel,{color : theme.text}]}>Area/Street/Sector *</Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input,{backgroundColor : theme.cardBackground,borderColor : theme.cardBackground}]}
                   placeholder="Enter area/street/sector"
                   placeholderTextColor="#999"
                   value={area}
@@ -317,9 +318,9 @@ const Address = () => {
 
               {/* Landmark */}
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Landmark (Optional)</Text>
+                <Text style={[styles.inputLabel,{color : theme.text}]}>Landmark (Optional)</Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input,{backgroundColor : theme.cardBackground,borderColor : theme.cardBackground}]}
                   placeholder="E.g. Near City Mall"
                   placeholderTextColor="#999"
                   value={landmark}
@@ -329,9 +330,9 @@ const Address = () => {
 
               {/* City */}
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>City *</Text>
+                <Text style={[styles.inputLabel,{color : theme.text}]}>City *</Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input,{backgroundColor : theme.cardBackground,borderColor : theme.cardBackground}]}
                   placeholder="Enter city"
                   placeholderTextColor="#999"
                   value={city}
@@ -341,9 +342,9 @@ const Address = () => {
 
               {/* Pincode */}
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Pincode *</Text>
+                <Text style={[styles.inputLabel,{color : theme.text}]}>Pincode *</Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input,{backgroundColor : theme.cardBackground,borderColor : theme.cardBackground}]}
                   placeholder="Enter 6-digit pincode"
                   placeholderTextColor="#999"
                   value={pincode}
@@ -355,7 +356,7 @@ const Address = () => {
 
               {/* Address Type */}
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Save Address As *</Text>
+                <Text style={[styles.inputLabel,{color : theme.text}]}>Save Address As *</Text>
                 <View style={styles.typeContainer}>
                   <AddressTypeButton type="Home" icon="🏠" />
                   <AddressTypeButton type="Office" icon="💼" />
@@ -367,7 +368,7 @@ const Address = () => {
                 style={styles.saveButton}
                 onPress={handleAddAddress}
               >
-                <Text style={styles.saveButtonText}>Save Address</Text>
+                <Text style={[styles.saveButtonText,{color  :theme.background}]}>Save Address</Text>
               </TouchableOpacity>
             </ScrollView>
           </View>
@@ -382,7 +383,7 @@ const Address = () => {
         onRequestClose={cancelDelete}
       >
         <View style={styles.popupOverlay}>
-          <View style={styles.popupBox}>
+          <View style={[styles.popupBox,{backgroundColor : theme.cardBackground}]}>
             <TouchableOpacity
               style={styles.closeIconWrapper}
               onPress={cancelDelete}
@@ -393,8 +394,8 @@ const Address = () => {
                 resizeMode="contain"
               />
             </TouchableOpacity>
-            <Text style={styles.popupTitle}>Delete Address</Text>
-            <Text style={styles.popupText}>
+            <Text style={[styles.popupTitle,{color : theme.text}]}>Delete Address</Text>
+            <Text style={[styles.popupText,{color : theme.textSecondary}]}>
               Are you sure you want to delete this address? This action cannot
               be undone.
             </Text>
@@ -409,7 +410,7 @@ const Address = () => {
                 style={[styles.popupButton, styles.deleteConfirmButton]}
                 onPress={confirmDelete}
               >
-                <Text style={styles.deleteButtonText}>Delete</Text>
+                <Text style={[styles.deleteButtonText,{color : theme.background}]}>Delete</Text>
               </TouchableOpacity>
             </View>
           </View>

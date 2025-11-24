@@ -50,9 +50,9 @@ const Settings = () => {
       {/* ===== HEADER ===== */}
       <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : COLORS.text}]} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color : '#616161'}]}>Settings</Text>
+        <Text style={[styles.headerTitle,{color : theme.textSecondary }]}>Settings</Text>
         <View style={{ width: 24 }} />
       </View>
 
@@ -67,10 +67,10 @@ const Settings = () => {
               onPress={() => navigation.navigate(item.route)}
             >
               <View style={styles.optionLeft}>
-                <Image source={item.icon} style={[styles.optionIcon,{tintColor : COLORS.text}]} />
-                <Text style={[styles.optionLabel,{color : '#616161'}]}>{item.label}</Text>
+                <Image source={item.icon} style={[styles.optionIcon,{tintColor : theme.text}]} />
+                <Text style={[styles.optionLabel,{color : theme.text}]}>{item.label}</Text>
               </View>
-              <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor : COLORS.text}]} />
+              <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor : theme.text}]} />
             </TouchableOpacity>
           ))}
 
@@ -83,7 +83,7 @@ const Settings = () => {
             }
           >
             <View style={styles.optionLeft}>
-              <Image source={require('../../../assets/logout.png')} style={[styles.optionIcon,{tintColor : COLORS.text}]} />
+              <Image source={require('../../../assets/logout.png')} style={[styles.optionIcon,{tintColor : '#E53935'}]} />
               <Text style={[styles.optionLabel, { color: '#E53935' }]}>Log out</Text>
             </View>
           </TouchableOpacity>
@@ -112,8 +112,8 @@ const Settings = () => {
         onRequestClose={() => setShowPopup(false)}
       >
         <View style={styles.popupOverlay}>
-          <View style={styles.popupBox}>
-            <Text style={styles.popupText}>{popupMessage}</Text>
+          <View style={[styles.popupBox,{backgroundColor  : theme.background}]}>
+            <Text style={[styles.popupText,{color : theme.text}]}>{popupMessage}</Text>
 
             <View style={styles.popupButtonsRow}>
               {/* CANCEL */}
@@ -132,7 +132,7 @@ const Settings = () => {
                   popupAction && popupAction();
                 }}
               >
-                <Text style={styles.popupButtonText}>OK</Text>
+                <Text style={[styles.popupButtonText,{color : theme.background}]}>OK</Text>
               </TouchableOpacity>
             </View>
           </View>
