@@ -36,7 +36,7 @@ import AboutUs from '../components/Profile/Settings/AboutUs';
 
 // Home
 import Search from '../components/HomeScreen/search/search';
-import restaurentDetails from '../components/HomeScreen/search/restaurentDetails';
+import restaurentDetails from '../components/HomeScreen/search/RestorentDetails/restaurentDetails';
 import fooddetails from '../components/HomeScreen/search/fooddetails';
 import todayOfferView from '../components/HomeScreen/todayOfferView';
 import featuredRestrorents from '../components/HomeScreen/featuredRestrorents';
@@ -56,6 +56,9 @@ import CancelOrder from '../components/MyOrders/CancelOrder';
 import TopUp from '../components/Profile/Wallet/TopUp';
 import TransactionHistory from '../components/Profile/Wallet/TransactionHistory';
 import EReceipt from '../components/Profile/Wallet/EReceipt';
+import AddMoreSubscription from '../components/MyOrders/MyOrder/Subscriptions/AddMoreSubscription';
+import ViewMenu from '../components/MyOrders/MyOrder/Subscriptions/ViewMenu';
+import MenuItems from '../components/MyOrders/MyOrder/Subscriptions/MenuItems';
 
 const Stack = createStackNavigator();
 
@@ -123,6 +126,9 @@ const AppNavigator = () => (
       <Stack.Screen name="MenuScreen" component={MenuScreen} />
       <Stack.Screen name="Payment" component={PaymentScreen} />
       <Stack.Screen name="PaymentSuccess" component={PaymentSuccess} />
+      <Stack.Screen name="AddMoreSubscription" component={AddMoreSubscription} />
+      <Stack.Screen name="ViewMenu" component={ViewMenu} />
+      <Stack.Screen name="MenuItems" component={MenuItems} />
 
       {/* Main App */}
       <Stack.Screen name="Home" component={BottomTabNavigator} />

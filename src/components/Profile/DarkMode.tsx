@@ -1,4 +1,4 @@
-import React, {useState, useContext, useCallback} from 'react';
+import React, { useState, useContext, useCallback } from 'react';
 import {
   View,
   Text,
@@ -11,30 +11,28 @@ import {
   Switch,
   Modal,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {ThemeContext} from '../../theme/ThemeContext';
-import {COLORS} from '../../theme/colors';
-import font from '../../assets/fonts';
+import { useNavigation } from '@react-navigation/native';
+import { ThemeContext } from '../../theme/ThemeContext';
+import { COLORS } from '../../theme/colors';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const DarkMode = () => {
   const navigation = useNavigation<any>();
-  const {isDarkMode, toggleDarkMode, theme} = useContext(ThemeContext);
+  const { isDarkMode, toggleDarkMode, theme } = useContext(ThemeContext);
+
   const [notifications, setNotifications] = useState(true);
   const [marketingEmails, setMarketingEmails] = useState(false);
 
-  // Popup modal states
+  // Popup States
   const [popupVisible, setPopupVisible] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
 
-  // Show popup with message
   const showPopup = useCallback((msg: string) => {
     setPopupMessage(msg);
     setPopupVisible(true);
   }, []);
 
-  // Close popup
   const closePopup = useCallback(() => setPopupVisible(false), []);
 
   const handleToggleDarkMode = () => {
@@ -47,24 +45,17 @@ const DarkMode = () => {
     setPopupVisible(true);
   };
 
-  // Confirm reset preferences action from popup
   const confirmResetPreferences = () => {
     setNotifications(true);
     setMarketingEmails(false);
-    if (isDarkMode) {
-      toggleDarkMode();
-    }
+
+    if (isDarkMode) toggleDarkMode();
+
     showPopup('All preferences have been reset to default.');
   };
 
-  // Popup button action handler
-  // Show confirm for reset or close popup
   const onPopupButtonPress = () => {
-    // If popup message is the reset confirmation text, do reset
-    if (
-      popupMessage === 'Are you sure you want to reset all preferences to default?'
-    ) {
-      // Close current confirmation popup then reset preferences after slight delay
+    if (popupMessage === 'Are you sure you want to reset all preferences to default?') {
       setPopupVisible(false);
       setTimeout(confirmResetPreferences, 200);
     } else {
@@ -73,169 +64,166 @@ const DarkMode = () => {
   };
 
   return (
-    <View style={[styles.container, {backgroundColor: theme.background}]}>
-      {/* ===== Header ===== */}
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      
+      {/* Header */}
       <View
         style={[
           styles.header,
-          {backgroundColor: theme.background, borderBottomColor: theme.borderColor},
+          { backgroundColor: theme.background, borderBottomColor: theme.borderColor },
         ]}
       >
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
             source={require('../../assets/back.png')}
-            style={[styles.backIcon, {tintColor: theme.text}]}
+            style={[styles.backIcon, { tintColor: theme.text }]}
           />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, {color: theme.text}]}>Appearance</Text>
-        <View style={{width: 22}} />
+
+        <Text style={[styles.headerTitle, { color: theme.text }]}>Appearance</Text>
+
+        <View style={{ width: 22 }} />
       </View>
 
-      {/* ===== Scrollable Content ===== */}
+      {/* Content */}
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* ===== Dark Mode Section ===== */}
+        {/* Theme Section */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, {color: theme.text}]}>Theme</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Theme</Text>
 
-          <View style={[styles.settingItem, {backgroundColor: theme.cardBackground}]}>
+          <View style={[styles.settingItem, { backgroundColor: theme.cardBackground }]}>
             <View style={styles.settingInfo}>
               <Image
                 source={require('../../assets/light.png')}
-                style={[styles.settingIcon, {tintColor: theme.text}]}
+                style={[styles.settingIcon, { tintColor: theme.text }]}
               />
               <View style={styles.settingTextContainer}>
-                <Text style={[styles.settingTitle, {color: theme.text}]}>Dark Mode</Text>
-                <Text style={[styles.settingDescription, {color: theme.textSecondary}]}>
+                <Text style={[styles.settingTitle, { color: theme.text }]}>Dark Mode</Text>
+                <Text style={[styles.settingDescription, { color: theme.text }]}>
                   Switch between light and dark theme
                 </Text>
               </View>
             </View>
+
             <Switch
               value={isDarkMode}
               onValueChange={handleToggleDarkMode}
-              trackColor={{false: '#767577', true: COLORS.primary}}
-              thumbColor={isDarkMode ? '#f4f3f4' : '#f4f3f4'}
+              trackColor={{ false: '#767577', true: COLORS.primary }}
+              thumbColor="#f4f3f4"
               ios_backgroundColor="#3e3e3e"
             />
           </View>
         </View>
 
-        {/* ===== Notification Settings ===== */}
+        {/* Notifications */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, {color: theme.text}]}>Notifications</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Notifications</Text>
 
-          <View style={[styles.settingItem, {backgroundColor: theme.cardBackground}]}>
+          <View style={[styles.settingItem, { backgroundColor: theme.cardBackground }]}>
             <View style={styles.settingInfo}>
               <Image
                 source={require('../../assets/notification.png')}
-                style={[styles.settingIcon, {tintColor: theme.text}]}
+                style={[styles.settingIcon, { tintColor: theme.text }]}
               />
               <View style={styles.settingTextContainer}>
-                <Text style={[styles.settingTitle, {color: theme.text}]}>
+                <Text style={[styles.settingTitle, { color: theme.text }]}>
                   Push Notifications
                 </Text>
-                <Text style={[styles.settingDescription, {color: theme.textSecondary}]}>
+                <Text style={[styles.settingDescription, { color: theme.text }]}>
                   Receive app notifications and updates
                 </Text>
               </View>
             </View>
+
             <Switch
               value={notifications}
               onValueChange={setNotifications}
-              trackColor={{false: '#767577', true: COLORS.primary}}
-              thumbColor={notifications ? '#f4f3f4' : '#f4f3f4'}
+              trackColor={{ false: '#767577', true: COLORS.primary }}
+              thumbColor="#f4f3f4"
               ios_backgroundColor="#3e3e3e"
             />
           </View>
         </View>
 
-        {/* ===== Email Preferences ===== */}
+        {/* Email Preferences */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, {color: theme.text}]}>Email Preferences</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Email Preferences</Text>
 
-          <View style={[styles.settingItem, {backgroundColor: theme.cardBackground}]}>
+          <View style={[styles.settingItem, { backgroundColor: theme.cardBackground }]}>
             <View style={styles.settingInfo}>
               <Image
                 source={require('../../assets/email.png')}
-                style={[styles.settingIcon, {tintColor: theme.text}]}
+                style={[styles.settingIcon,{ tintColor: theme.text }]}
               />
               <View style={styles.settingTextContainer}>
-                <Text style={[styles.settingTitle, {color: theme.text}]}>Marketing Emails</Text>
-                <Text style={[styles.settingDescription, {color: theme.textSecondary}]}>
+                <Text style={[styles.settingTitle, { color: theme.text }]}>
+                  Marketing Emails
+                </Text>
+                <Text style={[styles.settingDescription, { color: theme.text }]}>
                   Receive promotional emails and offers
                 </Text>
               </View>
             </View>
+
             <Switch
               value={marketingEmails}
               onValueChange={setMarketingEmails}
-              trackColor={{false: '#767577', true: COLORS.primary}}
-              thumbColor={marketingEmails ? '#f4f3f4' : '#f4f3f4'}
+              trackColor={{ false: '#767577', true: COLORS.primary }}
+              thumbColor="#f4f3f4"
               ios_backgroundColor="#3e3e3e"
             />
           </View>
         </View>
 
-        {/* ===== Reset Button ===== */}
+        {/* Reset Button */}
         <TouchableOpacity
-          style={[styles.resetBtn, {backgroundColor: theme.cardBackground}]}
+          style={[styles.resetBtn, { backgroundColor: theme.cardBackground }]}
           onPress={handleResetPreferences}
         >
-          <Text style={[styles.resetText, {color: '#FF3B30'}]}>Reset to Default</Text>
+          <Text style={[styles.resetText, { color: '#FF3B30' }]}>Reset to Default</Text>
         </TouchableOpacity>
 
-        {/* ===== App Info ===== */}
+        {/* App Info */}
         <View style={styles.appInfoSection}>
-          <Text style={[styles.appInfoTitle, {color: theme.textSecondary}]}>Vinsta App</Text>
-          <Text style={[styles.appInfoVersion, {color: theme.textSecondary}]}>Version 1.0.0</Text>
-          <Text style={[styles.appInfoDescription, {color: theme.textSecondary}]}>
-           
+          <Text style={[styles.appInfoTitle, { color: theme.text }]}>Vinsta App</Text>
+          <Text style={[styles.appInfoVersion, { color: theme.text }]}>
+            Version 1.0.0
           </Text>
         </View>
       </ScrollView>
 
-      {/* ===== Popup Modal ===== */}
-      <Modal
-        transparent
-        visible={popupVisible}
-        animationType="fade"
-        onRequestClose={closePopup}
-      >
+      {/* Popup Modal */}
+      <Modal transparent visible={popupVisible} animationType="fade">
         <View style={styles.popupOverlay}>
-          <View style={[styles.popupBox, {backgroundColor: theme.cardBackground}]}>
+          <View style={[styles.popupBox, { backgroundColor: theme.cardBackground }]}>
             <TouchableOpacity style={styles.closeIconWrapper} onPress={closePopup}>
               <Image
                 source={require('../../assets/close.png')}
-                style={[styles.closeIcon, {tintColor: theme.text}]}
-                resizeMode="contain"
+                style={[styles.closeIcon, { tintColor: COLORS.text }]}
               />
             </TouchableOpacity>
-            <Text style={[styles.popupText, {color: theme.text}]}>{popupMessage}</Text>
+
+            <Text style={[styles.popupText, { color: '#616161' }]}>{popupMessage}</Text>
 
             <View style={styles.popupButtonsRow}>
-              {/* Show Cancel & Reset buttons for confirmation popup */}
-              {popupMessage === 'Are you sure you want to reset all preferences to default?' ? (
+              {popupMessage ===
+              'Are you sure you want to reset all preferences to default?' ? (
                 <>
                   <TouchableOpacity
                     style={[styles.popupButton, styles.popupCancelButton]}
                     onPress={closePopup}
                   >
-                    <Text style={[styles.popupButtonText, styles.popupCancelButtonText]}>
-                      Cancel
-                    </Text>
+                    <Text style={[styles.popupButtonText, { color: '#333' }]}>Cancel</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.popupButton}
-                    onPress={onPopupButtonPress}
-                  >
-                    <Text style={styles.popupButtonText}>Reset</Text>
+
+                  <TouchableOpacity style={styles.popupButton} onPress={onPopupButtonPress}>
+                    <Text style={[styles.popupButtonText]}>Reset</Text>
                   </TouchableOpacity>
                 </>
               ) : (
-                /* Single OK button for info popups */
                 <TouchableOpacity style={styles.popupButton} onPress={onPopupButtonPress}>
                   <Text style={styles.popupButtonText}>OK</Text>
                 </TouchableOpacity>
@@ -250,12 +238,13 @@ const DarkMode = () => {
 
 export default DarkMode;
 
+/* ========================= STYLES ========================= */
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
 
-  /** HEADER **/
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -265,37 +254,37 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderBottomWidth: 1,
   },
+
   backIcon: {
     width: 22,
     height: 22,
     resizeMode: 'contain',
   },
+
   headerTitle: {
     textAlign: 'center',
     fontSize: width * 0.045,
     fontWeight: '700',
-     fontFamily : "Figtree-Bold",
+    fontFamily: 'Figtree-Bold',
   },
 
-  /** SCROLL CONTENT **/
   scrollContent: {
     paddingBottom: 50,
     paddingHorizontal: 20,
   },
 
-  /** SECTIONS **/
   section: {
     marginTop: 25,
   },
+
   sectionTitle: {
     fontSize: width * 0.04,
     fontWeight: '600',
     marginBottom: 15,
     marginLeft: 5,
-     fontFamily : "Figtree-SemiBold",
+    fontFamily: 'Figtree-SemiBold',
   },
 
-  /** SETTING ITEMS **/
   settingItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -308,38 +297,39 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOpacity: 0.05,
         shadowRadius: 3,
-        shadowOffset: {width: 0, height: 1},
+        shadowOffset: { width: 0, height: 1 },
       },
-      android: {elevation: 2},
+      android: { elevation: 2 },
     }),
   },
+
   settingInfo: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
   },
+
   settingIcon: {
     width: 24,
     height: 24,
-    resizeMode: 'contain',
     marginRight: 12,
   },
-  settingTextContainer: {
-    flex: 1,
-  },
+
+  settingTextContainer: { flex: 1 },
+
   settingTitle: {
     fontSize: width * 0.038,
     fontWeight: '600',
     marginBottom: 4,
-    fontFamily : "Figtree-SemiBold",
-  },
-  settingDescription: {
-    fontSize: width * 0.032,
-     fontFamily : "Figtree-Regular",
-    fontWeight : '400'
+    fontFamily: 'Figtree-SemiBold',
   },
 
-  /** RESET BUTTON **/
+  settingDescription: {
+    fontSize: width * 0.032,
+    fontFamily: 'Figtree-Regular',
+    fontWeight: '400',
+  },
+
   resetBtn: {
     borderRadius: 12,
     alignItems: 'center',
@@ -347,23 +337,14 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     marginTop: 30,
     marginBottom: 20,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOpacity: 0.05,
-        shadowRadius: 3,
-        shadowOffset: {width: 0, height: 1},
-      },
-      android: {elevation: 2},
-    }),
-  },
-  resetText: {
-    fontSize: width * 0.038,
-     fontFamily : "Figtree-Medium",
-    fontWeight : '500'
   },
 
-  /** APP INFO **/
+  resetText: {
+    fontSize: width * 0.038,
+    fontFamily: 'Figtree-Medium',
+    fontWeight: '500',
+  },
+
   appInfoSection: {
     alignItems: 'center',
     marginTop: 30,
@@ -371,52 +352,41 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#f0f0f0',
   },
+
   appInfoTitle: {
     fontSize: width * 0.038,
-    fontWeight: '700',
-    marginBottom: 4,
-     fontFamily : "Figtree-Bold",
-  },
-  appInfoVersion: {
-    fontSize: width * 0.032,
-    fontWeight: '400',
-    marginBottom: 8,
-     fontFamily : "Figtree-Regular",
-  },
-  appInfoDescription: {
-    fontSize: width * 0.032,
-    fontWeight: '400',
-    textAlign: 'center',
-    lineHeight: 18,
-     fontFamily : "Figtree-Regular",
+    fontFamily: 'Figtree-Bold',
   },
 
-  /** POPUP MODAL **/
+  appInfoVersion: {
+    fontSize: width * 0.032,
+    fontFamily: 'Figtree-Regular',
+    marginBottom: 8,
+  },
+
   popupOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.4)',
     alignItems: 'center',
     justifyContent: 'center',
   },
+
   popupBox: {
     width: width * 0.8,
     borderRadius: 12,
     padding: 20,
     alignItems: 'center',
     position: 'relative',
-    shadowColor: COLORS.shadow,
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
     elevation: 6,
   },
+
   popupText: {
     fontSize: width * 0.04,
     textAlign: 'center',
     marginBottom: 16,
-     fontFamily : "Figtree-Regular",
-    fontWeight : '400'
+    fontFamily: 'Figtree-Regular',
   },
+
   popupButton: {
     backgroundColor: COLORS.primary,
     borderRadius: 8,
@@ -426,18 +396,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 5,
   },
+
   popupButtonText: {
     color: COLORS.secondary,
     fontSize: width * 0.04,
-     fontFamily : "Figtree-Bold",
-    fontWeight : '700'
+    fontFamily: 'Figtree-Bold',
   },
+
   closeIconWrapper: {
     position: 'absolute',
     top: 10,
     right: 10,
-    padding: 4,
   },
+
   closeIcon: {
     width: 18,
     height: 18,
@@ -451,8 +422,5 @@ const styles = StyleSheet.create({
 
   popupCancelButton: {
     backgroundColor: '#ccc',
-  },
-  popupCancelButtonText: {
-    color: '#333',
   },
 });

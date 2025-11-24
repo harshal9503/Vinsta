@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Text,
@@ -13,17 +13,12 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import font from '../../../assets/fonts';
+import { ThemeContext } from '../../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
-
 const AboutUs = () => {
   const navigation = useNavigation<any>();
-
-  const appInfo = {
-    version: '1.0.0',
-    build: '2024.01.001',
-    releaseDate: 'January 2024',
-  };
+  const { theme } = useContext(ThemeContext);
 
   const contactInfo = [
     {
@@ -53,42 +48,41 @@ const AboutUs = () => {
       value: '123 App Street, Tech City',
       icon: require('../../../assets/location.png'),
       action: () => {
-        // Open maps with the address
         Linking.openURL('https://maps.google.com/?q=123+App+Street+Tech+City');
       },
     },
   ];
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
-      <View style={styles.header}>
+      <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={styles.backIcon} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor:theme.text}]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>About Us</Text>
+        <Text style={[styles.headerTitle,{color : theme.textSecondary}]}>About Us</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
         {/* App Logo and Basic Info */}
-        <View style={styles.appHeader}>
+        <View style={[styles.appHeader]}>
           <Image 
             source={require('../../../assets/Splash.png')} 
             style={styles.appLogo} 
           />
-          <Text style={styles.appName}>Vinsta</Text>
-          <Text style={styles.appVersion}>Version {appInfo.version}</Text>
-          <Text style={styles.appDescription}>
+          <Text style={[styles.appName,{color : theme.textSecondary}]}>Vinsta</Text>
+          <Text style={[styles.appVersion,{color : theme.textSecondary}]}>Version 1.0.0</Text>
+          <Text style={[styles.appDescription,{color : theme.textSecondary}]}>
             Delivering excellence one order at a time
           </Text>
         </View>
 
         {/* App Description */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Our Story</Text>
-          <Text style={styles.sectionText}>
+          <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>Our Story</Text>
+          <Text style={[styles.sectionText,{color : theme.textSecondary}]}>
             Founded in 2024, our mission is to provide the best food delivery experience 
             to our customers. We connect you with your favorite restaurants and deliver 
             delicious meals right to your doorstep.
@@ -96,71 +90,71 @@ const AboutUs = () => {
         </View>
 
         {/* Features */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>What We Offer</Text>
-          <View style={styles.featuresList}>
+        <View style={[styles.section,{backgroundColor : theme.background}]}>
+          <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>What We Offer</Text>
+          <View style={[styles.featuresList,{backgroundColor : theme.background}]}>
             <View style={styles.featureItem}>
-              <Image source={require('../../../assets/tick.png')} style={styles.featureIcon} />
-              <Text style={styles.featureText}>Fast Delivery</Text>
+              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:theme.text}]} />
+              <Text style={[styles.featureText,{color : theme.textSecondary}]}>Fast Delivery</Text>
             </View>
             <View style={styles.featureItem}>
-              <Image source={require('../../../assets/tick.png')} style={styles.featureIcon} />
-              <Text style={styles.featureText}>Wide Restaurant Selection</Text>
+              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:theme.text}]} />
+              <Text style={[styles.featureText,{color : theme.textSecondary}]}>Wide Restaurant Selection</Text>
             </View>
             <View style={styles.featureItem}>
-              <Image source={require('../../../assets/tick.png')} style={styles.featureIcon} />
-              <Text style={styles.featureText}>Secure Payments</Text>
+              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:theme.text}]} />
+              <Text style={[styles.featureText,{color : theme.textSecondary}]}>Secure Payments</Text>
             </View>
             <View style={styles.featureItem}>
-              <Image source={require('../../../assets/tick.png')} style={styles.featureIcon} />
-              <Text style={styles.featureText}>24/7 Customer Support</Text>
+              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:theme.text}]} />
+              <Text style={[styles.featureText,{color : theme.textSecondary}]}>24/7 Customer Support</Text>
             </View>
           </View>
         </View>
 
         {/* Contact Information */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Contact Us</Text>
+          <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>Contact Us</Text>
           {contactInfo.map((item) => (
             <TouchableOpacity
               key={item.id}
-              style={styles.contactItem}
+              style={[styles.contactItem,{backgroundColor : theme.background}]}
               onPress={item.action}
             >
               <View style={styles.contactLeft}>
-                <Image source={item.icon} style={styles.contactIcon} />
+                <Image source={item.icon} style={[styles.contactIcon,{tintColor:theme.text}]} />
                 <View>
-                  <Text style={styles.contactTitle}>{item.title}</Text>
-                  <Text style={styles.contactValue}>{item.value}</Text>
+                  <Text style={[styles.contactTitle,{color : theme.textSecondary}]}>{item.title}</Text>
+                  <Text style={[styles.contactValue,{color : theme.textSecondary}]}>{item.value}</Text>
                 </View>
               </View>
-              <Image source={require('../../../assets/right-arrow.png')} style={styles.arrowIcon} />
+              <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor:theme.text}]} />
             </TouchableOpacity>
           ))}
         </View>
 
         {/* Legal */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Legal</Text>
+        <View style={[styles.section]}>
+          <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>Legal</Text>
           <TouchableOpacity 
-            style={styles.legalItem}
+            style={[styles.legalItem,{backgroundColor : theme.background}]}
             onPress={() => navigation.navigate('PrivacyPolicy')}
           >
-            <Text style={styles.legalText}>Privacy Policy</Text>
-            <Image source={require('../../../assets/right-arrow.png')} style={styles.arrowIcon} />
+            <Text style={[styles.legalText,{color : theme.textSecondary}]}>Privacy Policy</Text>
+            <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor:theme.text}]} />
           </TouchableOpacity>
           <TouchableOpacity 
-            style={styles.legalItem}
+            style={[styles.legalItem,{backgroundColor : theme.background}]}
             onPress={() => navigation.navigate('TermsConditions')}
           >
-            <Text style={styles.legalText}>Terms & Conditions</Text>
-            <Image source={require('../../../assets/right-arrow.png')} style={styles.arrowIcon} />
+            <Text style={[styles.legalText,{color : theme.textSecondary}]}>Terms & Conditions</Text>
+            <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor:theme.text}]} />
           </TouchableOpacity>
         </View>
 
         {/* Copyright */}
         <View style={styles.copyrightSection}>
-          <Text style={styles.copyrightText}>
+          <Text style={[styles.copyrightText,{color : theme.textSecondary}]}>
             © 2024 Vinsta. All rights reserved.
           </Text>
         </View>
@@ -172,7 +166,6 @@ const AboutUs = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.secondary,
   },
   header: {
     flexDirection: 'row',
@@ -187,12 +180,12 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     resizeMode: 'contain',
-    tintColor: '#000',
+    tintColor: '#000000',
   },
   headerTitle: {
     fontSize: width * 0.045,
     fontWeight: '700',
-    color: '#000',
+    color: '#616161',
     fontFamily : 'Figtree-Bold'
   },
   content: {
@@ -211,13 +204,13 @@ const styles = StyleSheet.create({
   appName: {
     fontSize: width * 0.05,
     fontWeight: '700',
-    color: '#000',
+    color: '#616161',
     marginBottom: 4,
     fontFamily : 'Figtree-Bold'
   },
   appVersion: {
     fontSize: width * 0.035,
-    color: '#666',
+    color: '#616161',
     marginBottom: 8,
     fontFamily : 'Figtree-SemiBold',
     fontWeight  :'600'
@@ -227,8 +220,7 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: '500',
     textAlign: 'center',
-     fontFamily : 'Figtree-Medium',
-   
+    fontFamily : 'Figtree-Medium',
   },
   section: {
     marginBottom: 25,
@@ -236,18 +228,16 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: width * 0.04,
     fontWeight: '700',
-    color: '#000',
+    color: '#616161',
     marginBottom: 12,
-     fontFamily : 'Figtree-Bold',
-   
+    fontFamily : 'Figtree-Bold',
   },
   sectionText: {
     fontSize: width * 0.035,
-    color: '#666',
+    color: '#616161',
     lineHeight: 20,
     fontFamily : 'Figtree-Medium',
     fontWeight  :'500'
-
   },
   featuresList: {
     backgroundColor: '#fff',
@@ -268,12 +258,12 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     resizeMode: 'contain',
-    tintColor: COLORS.primary,
     marginRight: 12,
+    tintColor: COLORS.text,
   },
   featureText: {
     fontSize: width * 0.035,
-    color: '#000',
+    color: '#616161',
     fontFamily : 'Figtree-SemiBold',
     fontWeight  :'600'
   },
@@ -301,19 +291,18 @@ const styles = StyleSheet.create({
     height: 20,
     resizeMode: 'contain',
     marginRight: 12,
-    tintColor: COLORS.primary,
+    tintColor: COLORS.text,
   },
   contactTitle: {
     fontSize: width * 0.035,
-    // fontWeight: '600',
-    color: '#000',
+    color: '#616161',
     marginBottom: 2,
     fontFamily : 'Figtree-Bold',
     fontWeight  :'700'
   },
   contactValue: {
     fontSize: width * 0.032,
-    color: '#666',
+    color: '#616161',
     fontFamily : 'Figtree-SemiBold',
     fontWeight  :'600'
   },
@@ -321,7 +310,7 @@ const styles = StyleSheet.create({
     width: 14,
     height: 14,
     resizeMode: 'contain',
-    tintColor: '#999',
+    tintColor: COLORS.text,
   },
   legalItem: {
     flexDirection: 'row',
@@ -339,7 +328,7 @@ const styles = StyleSheet.create({
   },
   legalText: {
     fontSize: width * 0.035,
-    color: '#000',
+    color: '#616161',
     fontFamily : 'Figtree-SemiBold',
     fontWeight  :'600'
   },
@@ -352,7 +341,7 @@ const styles = StyleSheet.create({
   },
   copyrightText: {
     fontSize: width * 0.03,
-    color: '#999',
+    color: '#616161',
     textAlign: 'center',
     fontFamily : 'Figtree-SemiBold',
     fontWeight  :'600'

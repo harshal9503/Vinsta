@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import font from '../../../assets/fonts';
+import { ThemeContext } from '../../../theme/ThemeContext';
 const { width, height } = Dimensions.get('window');
 
 const transactions = [
@@ -77,15 +78,14 @@ const Wallet = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const [filterType, setFilterType] = useState<string | null>(null);
-  const [filteredTransactions, setFilteredTransactions] =
-    useState(transactions);
+  const [filteredTransactions, setFilteredTransactions] = useState(transactions);
 
   const handleFilterPress = (type: string) => {
     console.log('Selected filter:', type);
     setFilterType(type);
-
+    
     let filtered = [...transactions];
-
+    
     switch (type) {
       case 'Older':
         // Sort by date (assuming older first)
@@ -97,20 +97,16 @@ const Wallet = () => {
         break;
       case 'Credit':
         // Filter only credit transactions (down arrow)
-        filtered = transactions.filter(
-          item => item.arrow === require('../../../assets/down1.png'),
-        );
+        filtered = transactions.filter(item => item.arrow === require('../../../assets/down1.png'));
         break;
       case 'Debit':
         // Filter only debit transactions (up arrow)
-        filtered = transactions.filter(
-          item => item.arrow === require('../../../assets/up1.png'),
-        );
+        filtered = transactions.filter(item => item.arrow === require('../../../assets/up1.png'));
         break;
       default:
         filtered = transactions;
     }
-
+    
     setFilteredTransactions(filtered);
     setShowOptions(false);
   };
@@ -120,43 +116,25 @@ const Wallet = () => {
     setFilteredTransactions(transactions);
   };
 
-  // Navigate back to Profile tab in Bottom Tab Navigator
-  const handleBackPress = () => {
-    navigation.navigate('Home', {
-      screen: 'Profile',
-    });
-  };
 
+  const {theme} = useContext(ThemeContext);
   return (
-    <View style={styles.container}>
-      <StatusBar
-        barStyle="dark-content"
-        translucent
-        backgroundColor="transparent"
-      />
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
+      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={handleBackPress}>
-          <Image
-            source={require('../../../assets/back.png')}
-            style={styles.backIcon}
-          />
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>My E-Wallet</Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>My E-Wallet</Text>
         <View style={styles.headerIcons}>
           <TouchableOpacity onPress={() => setShowSearch(!showSearch)}>
-            <Image
-              source={require('../../../assets/s1.png')}
-              style={styles.icon}
-            />
+            <Image source={require('../../../assets/s1.png')} style={[styles.icon,{tintColor : theme.text}]} />
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => setShowOptions(!showOptions)}>
-            <Image
-              source={require('../../../assets/options.png')}
-              style={[styles.icon, { marginLeft: 10 }]}
-            />
+            <Image source={require('../../../assets/options.png')} style={[styles.icon, { marginLeft: 10 ,tintColor : theme.text}]} />
           </TouchableOpacity>
         </View>
       </View>
@@ -174,94 +152,61 @@ const Wallet = () => {
 
       {/* Options Dropdown */}
       {showOptions && (
-        <View style={styles.dropdown}>
-          <TouchableOpacity
-            style={styles.optionItem}
-            onPress={() => handleFilterPress('Older')}
-          >
-            <Text style={styles.optionText}>Older First</Text>
+        <View style={[styles.dropdown,{backgroundColor : theme.cardBackground}]}>
+          <TouchableOpacity style={[styles.optionItem,{borderColor : theme.background}]} onPress={() => handleFilterPress('Older')}>
+            <Text style={[styles.optionText,{color : theme.text}]}>Older First</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.optionItem}
-            onPress={() => handleFilterPress('Latest')}
-          >
-            <Text style={styles.optionText}>Latest First</Text>
+          <TouchableOpacity style={[styles.optionItem,{borderColor : theme.background}]} onPress={() => handleFilterPress('Latest')}>
+            <Text style={[styles.optionText,{color : theme.text}]}>Latest First</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.optionItem}
-            onPress={() => handleFilterPress('Credit')}
-          >
-            <Text style={styles.optionText}>Only Credit</Text>
-            <Image
-              source={require('../../../assets/down1.png')}
-              style={styles.optionIcon}
-            />
+          <TouchableOpacity style={[styles.optionItem,{borderColor : theme.background}]} onPress={() => handleFilterPress('Credit')}>
+            <Text style={[styles.optionText,{color : theme.text}]}>Only Credit</Text>
+            <Image source={require('../../../assets/down1.png')} style={styles.optionIcon} />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.optionItem}
-            onPress={() => handleFilterPress('Debit')}
-          >
-            <Text style={styles.optionText}>Only Debit</Text>
-            <Image
-              source={require('../../../assets/up1.png')}
-              style={styles.optionIcon}
-            />
+          <TouchableOpacity style={[styles.optionItem,{borderColor : theme.background}]} onPress={() => handleFilterPress('Debit')}>
+            <Text style={[styles.optionText,{color : theme.text}]}>Only Debit</Text>
+            <Image source={require('../../../assets/up1.png')} style={styles.optionIcon} />
           </TouchableOpacity>
           {filterType && (
-            <TouchableOpacity
-              style={[styles.optionItem, { borderBottomWidth: 0 }]}
-              onPress={clearFilter}
-            >
-              <Text style={[styles.optionText, { color: COLORS.primary }]}>
-                Clear Filter
-              </Text>
+            <TouchableOpacity style={[styles.optionItem, { borderBottomWidth: 0 }]} onPress={clearFilter}>
+              <Text style={[styles.optionText, { color: COLORS.primary }]}>Clear Filter</Text>
             </TouchableOpacity>
           )}
         </View>
       )}
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 50 }}
-      >
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 50 }}>
         {/* Wallet Card */}
         <View style={styles.cardWrapper}>
           <View style={styles.cardBase} />
           <View style={styles.cardOverlay} />
 
           <View style={styles.cardContent}>
-            <Text style={styles.cardName}>Harshal Sharma</Text>
-            <Text style={styles.cardNumber}>1234567890</Text>
-            <Text style={styles.balanceLabel}>Your balance</Text>
+            <Text style={[styles.cardName,{color : theme.background}]}>Harshal Sharma</Text>
+            <Text style={[styles.cardNumber,{color : theme.background}]}>1234567890</Text>
+            <Text style={[styles.balanceLabel,{color : theme.background}]}>Your balance</Text>
 
             {/* Row for balance + top up */}
             <View style={styles.balanceRow}>
-              <Text style={styles.balanceAmount}>₹ 9,379</Text>
+              <Text style={[styles.balanceAmount,{color : theme.background}]}>₹ 9,379</Text>
               <TouchableOpacity
-                style={styles.topUpBtn}
-                onPress={() => navigation.navigate('TopUp')}
-              >
-                <Image
-                  source={require('../../../assets/topup.png')}
-                  style={styles.bagIcon}
-                />
-                <Text style={styles.topUpText}>Top Up</Text>
+                style={[styles.topUpBtn,{backgroundColor : theme.background}]}
+                onPress={() => navigation.navigate('TopUp')}>
+                <Image source={require('../../../assets/topup.png')} style={[styles.bagIcon,{tintColor: theme.text}]} />
+                <Text style={[styles.topUpText,{color : theme.text}]}>Top Up</Text>
               </TouchableOpacity>
             </View>
           </View>
 
           <View style={styles.cardLogos}>
-            <Image
-              source={require('../../../assets/Splash.png')}
-              style={[styles.cardLogo, { marginLeft: 8 }]}
-            />
+            <Image source={require('../../../assets/Splash.png')} style={[styles.cardLogo, { marginLeft: 8 }]} />
           </View>
         </View>
 
         {/* Filter Indicator */}
         {filterType && (
-          <View style={styles.filterIndicator}>
-            <Text style={styles.filterText}>Filter: {filterType}</Text>
+          <View style={[styles.filterIndicator,{backgroundColor : theme.cardBackground}]}>
+            <Text style={[styles.filterText,{color : theme.text}]}>Filter: {filterType}</Text>
             <TouchableOpacity onPress={clearFilter}>
               <Text style={styles.clearFilterText}>Clear</Text>
             </TouchableOpacity>
@@ -271,24 +216,22 @@ const Wallet = () => {
         {/* Transaction History */}
         <View style={styles.transactionSection}>
           <View style={styles.transactionHeader}>
-            <Text style={styles.transactionTitle}>Transaction History</Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('TransactionHistory')}
-            >
+            <Text style={[styles.transactionTitle,{color : theme.text}]}>Transaction History</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('TransactionHistory')}>
               <Text style={styles.seeAll}>See All</Text>
             </TouchableOpacity>
           </View>
 
           {filteredTransactions.map(item => (
-            <View key={item.id} style={styles.transactionRow}>
+            <View key={item.id} style={[styles.transactionRow,{borderColor : theme.cardBackground}]}>
               <Image source={item.icon} style={styles.foodImg} />
               <View style={{ flex: 1 }}>
-                <Text style={styles.foodTitle}>{item.title}</Text>
+                <Text style={[styles.foodTitle,{color :theme.text}]}>{item.title}</Text>
                 <Text style={styles.foodTime}>{item.time}</Text>
               </View>
 
               <View style={{ alignItems: 'flex-end' }}>
-                <Text style={styles.foodAmount}>{item.amount}</Text>
+                <Text style={[styles.foodAmount,{color : theme.text}]}>{item.amount}</Text>
                 <View style={styles.typeRow}>
                   <Text style={styles.typeText}>{item.type}</Text>
                   <Image source={item.arrow} style={styles.arrowIcon} />
@@ -317,12 +260,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   backIcon: { width: 22, height: 22, resizeMode: 'contain' },
-  headerTitle: {
-    fontSize: width * 0.045,
-    fontWeight: '700',
-    color: '#000',
-    fontFamily: 'Figtree-Bold',
-  },
+  headerTitle: { fontSize: width * 0.045, fontWeight: '700', color: '#000',fontFamily : 'Figtree-Bold' },
   headerIcons: { flexDirection: 'row', alignItems: 'center' },
   icon: { width: 20, height: 20, tintColor: '#000', resizeMode: 'contain' },
 
@@ -360,12 +298,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderColor: '#eee',
   },
-  optionText: {
-    color: '#000',
-    fontWeight: '500',
-    fontSize: 14,
-    fontFamily: 'Figtree-Medium',
-  },
+  optionText: { color: '#000', fontWeight: '500', fontSize: 14, fontFamily : "Figtree-Medium",
+   },
   optionIcon: { width: 14, height: 14, resizeMode: 'contain' },
 
   /** CARD **/
@@ -389,29 +323,15 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '-18deg' }],
   },
   cardContent: { position: 'absolute', top: 20, left: 25, right: 25 },
-  cardName: {
-    color: '#fff',
-    fontSize: width * 0.045,
-    fontWeight: '700',
-    fontFamily: 'Figtree-Bold',
-  },
-  cardNumber: {
-    color: '#fff',
-    opacity: 0.9,
-    marginTop: 4,
-    fontFamily: 'Figtree-Regular',
-    fontWeight: '400',
-  },
-  balanceLabel: {
-    color: '#fff',
-    opacity: 0.9,
-    marginTop: 18,
-    fontFamily: 'Figtree-Medium',
-    fontWeight: '500',
-  },
-  balanceRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  cardName: { color: '#fff', fontSize: width * 0.045, fontWeight: '700', fontFamily : "Figtree-Bold",
+    },
+  cardNumber: { color: '#fff', opacity: 0.9, marginTop: 4, fontFamily : "Figtree-Regular",
+    fontWeight : '400' },
+  balanceLabel: { color: '#fff', opacity: 0.9, marginTop: 18, fontFamily : "Figtree-Medium",
+    fontWeight : '500' },
+  balanceRow: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
     marginTop: 4,
     justifyContent: 'space-between',
   },
@@ -419,7 +339,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: width * 0.08,
     fontWeight: '700',
-    fontFamily: 'Figtree-Bold',
+     fontFamily : "Figtree-Bold",
   },
   topUpBtn: {
     flexDirection: 'row',
@@ -431,19 +351,8 @@ const styles = StyleSheet.create({
     marginRight: 0,
   },
   bagIcon: { width: 16, height: 16, resizeMode: 'contain', marginRight: 6 },
-  topUpText: {
-    color: '#000',
-    fontWeight: '600',
-    fontSize: width * 0.035,
-    fontFamily: 'Figtree-SemiBold',
-  },
-  cardLogos: {
-    position: 'absolute',
-    top: 18,
-    right: 25,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
+  topUpText: { color: '#000', fontWeight: '600', fontSize: width * 0.035, fontFamily : "Figtree-SemiBold",},
+  cardLogos: { position: 'absolute', top: 18, right: 25, flexDirection: 'row', alignItems: 'center' },
   cardLogo: { width: 50, height: 50, resizeMode: 'contain' },
 
   /** FILTER INDICATOR **/
@@ -459,18 +368,9 @@ const styles = StyleSheet.create({
     borderLeftWidth: 4,
     borderLeftColor: COLORS.primary,
   },
-  filterText: {
-    color: '#000',
-    fontWeight: '600',
-    fontSize: 14,
-    fontFamily: 'Figtree-SemiBold',
-  },
-  clearFilterText: {
-    color: COLORS.primary,
-    fontSize: 14,
-    fontFamily: 'Figtree-Medium',
-    fontWeight: '500',
-  },
+  filterText: { color: '#000', fontWeight: '600', fontSize: 14, fontFamily : "Figtree-SemiBold",},
+  clearFilterText: { color: COLORS.primary, fontSize: 14, fontFamily : "Figtree-Medium",
+    fontWeight : '500' },
 
   /** TRANSACTION SECTION **/
   transactionSection: { marginTop: 25, paddingHorizontal: 20 },
@@ -480,18 +380,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 10,
   },
-  transactionTitle: {
-    fontWeight: '700',
-    fontSize: width * 0.042,
-    color: '#000',
-    fontFamily: 'Figtree-Bold',
-  },
-  seeAll: {
-    color: COLORS.primary,
-    fontSize: width * 0.037,
-    fontFamily: 'Figtree-Medium',
-    fontWeight: '500',
-  },
+  transactionTitle: { fontWeight: '700', fontSize: width * 0.042, color: '#000' , fontFamily : "Figtree-Bold",},
+  seeAll: { color: COLORS.primary, fontSize: width * 0.037, fontFamily : "Figtree-Medium",
+    fontWeight : '500' },
   transactionRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -500,32 +391,12 @@ const styles = StyleSheet.create({
     borderColor: '#eee',
   },
   foodImg: { width: 45, height: 45, borderRadius: 22.5, marginRight: 12 },
-  foodTitle: {
-    fontWeight: '600',
-    fontSize: width * 0.038,
-    color: '#000',
-    fontFamily: 'Figtree-SemiBold',
-  },
-  foodTime: {
-    color: '#888',
-    fontSize: width * 0.032,
-    marginTop: 2,
-    fontFamily: 'Figtree-Medium',
-    fontWeight: '500',
-  },
-  foodAmount: {
-    fontWeight: '700',
-    fontSize: width * 0.038,
-    color: '#000',
-    fontFamily: 'Figtree-Bold',
-  },
+  foodTitle: { fontWeight: '600', fontSize: width * 0.038, color: '#000', fontFamily : "Figtree-SemiBold"},
+  foodTime: { color: '#888', fontSize: width * 0.032, marginTop: 2 , fontFamily : "Figtree-Medium",
+    fontWeight : '500'},
+  foodAmount: { fontWeight: '700', fontSize: width * 0.038, color: '#000',fontFamily : 'Figtree-Bold' },
   typeRow: { flexDirection: 'row', alignItems: 'center', marginTop: 2 },
-  typeText: {
-    color: '#888',
-    fontSize: width * 0.032,
-    marginRight: 4,
-    fontFamily: 'Figtree-Medium',
-    fontWeight: '500',
-  },
+  typeText: { color: '#888', fontSize: width * 0.032, marginRight: 4 , fontFamily : "Figtree-Medium",
+    fontWeight : '500'},
   arrowIcon: { width: 12, height: 12, resizeMode: 'contain' },
 });

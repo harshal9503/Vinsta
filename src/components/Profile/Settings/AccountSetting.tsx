@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Text,
@@ -12,11 +12,13 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import font from '../../../assets/fonts';
+import { ThemeContext } from '../../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
 const AccountSetting = () => {
   const navigation = useNavigation<any>();
+  const {theme} = useContext(ThemeContext);
 
   const accountOptions = [
     {
@@ -26,13 +28,6 @@ const AccountSetting = () => {
       icon: require('../../../assets/user1.png'),
       route: 'ProfileEdit'
     },
-    // {
-    //   id: 2,
-    //   title: 'Change Password',
-    //   description: 'Update your password regularly',
-    //   icon: require('../../../assets/p1.png'),
-    //   route: 'ChangePassword'
-    // },
     {
       id: 3,
       title: 'Privacy Settings',
@@ -40,54 +35,47 @@ const AccountSetting = () => {
       icon: require('../../../assets/privacy.png'),
       route: 'PrivacyPolicy'
     },
-    // {
-    //   id: 4,
-    //   title: 'Two-Factor Authentication',
-    //   description: 'Add extra security to your account',
-    //   icon: require('../../../assets/p1.png'),
-    //   route: 'TwoFactorAuth'
-    // },
   ];
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={styles.backIcon} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor :theme.text}]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Account Setting</Text>
+        <Text style={[styles.headerTitle,{color : theme.textSecondary}]}>Account Setting</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <Text style={styles.sectionTitle}>Account Management</Text>
-        <Text style={styles.sectionDescription}>
+        <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>Account Management</Text>
+        <Text style={[styles.sectionDescription,{color : theme.textSecondary}]}>
           Manage your account settings and preferences
         </Text>
 
         {accountOptions.map((item) => (
           <TouchableOpacity
             key={item.id}
-            style={styles.optionCard}
+            style={[styles.optionCard,{backgroundColor : theme.background,borderLeftColor : theme.text}]}
             onPress={() => navigation.navigate(item.route)}
           >
             <View style={styles.optionLeft}>
-              <Image source={item.icon} style={styles.optionIcon} />
+              <Image source={item.icon} style={[styles.optionIcon,{tintColor : theme.text}]} />
               <View style={styles.optionText}>
-                <Text style={styles.optionTitle}>{item.title}</Text>
-                <Text style={styles.optionDescription}>{item.description}</Text>
+                <Text style={[styles.optionTitle,{color : theme.textSecondary}]}>{item.title}</Text>
+                <Text style={[styles.optionDescription,{color : theme.textSecondary}]}>{item.description}</Text>
               </View>
             </View>
-            <Image source={require('../../../assets/right-arrow.png')} style={styles.arrowIcon} />
+            <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor : theme.text}]} />
           </TouchableOpacity>
         ))}
 
         {/* Delete Account Option */}
         <TouchableOpacity
-          style={[styles.optionCard, { borderLeftColor: '#E53935' }]}
+          style={[styles.optionCard, { borderLeftColor: '#E53935',backgroundColor : theme.background }]}
           onPress={() => navigation.navigate('AccountManagement')}
         >
           <View style={styles.optionLeft}>
@@ -99,12 +87,12 @@ const AccountSetting = () => {
               <Text style={[styles.optionTitle, { color: '#E53935' }]}>
                 Delete Account
               </Text>
-              <Text style={styles.optionDescription}>
+              <Text style={[styles.optionDescription,{color : theme.textSecondary}]}>
                 Permanently delete your account and all data
               </Text>
             </View>
           </View>
-          <Image source={require('../../../assets/right-arrow.png')} style={styles.arrowIcon} />
+          <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
       </ScrollView>
     </View>
@@ -129,12 +117,12 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     resizeMode: 'contain',
-    tintColor: '#000',
+    tintColor: '#000000',
   },
   headerTitle: {
     fontSize: width * 0.045,
     fontWeight: '700',
-    color: '#000',
+    color: '#616161',
     fontFamily : 'Figtree-Bold',
   },
   content: {
@@ -143,14 +131,13 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: width * 0.05,
     fontWeight: '700',
-    color: '#000',
+    color: '#616161',
     marginBottom: 8,
     fontFamily : 'Figtree-Bold',
-    
   },
   sectionDescription: {
     fontSize: width * 0.035,
-    color: '#666',
+    color: '#616161',
     marginBottom: 25,
     fontFamily : 'Figtree-SemiBold',
     fontWeight  :'600'
@@ -181,7 +168,7 @@ const styles = StyleSheet.create({
     height: 24,
     resizeMode: 'contain',
     marginRight: 12,
-    tintColor: COLORS.primary,
+    tintColor: COLORS.text,
   },
   optionText: {
     flex: 1,
@@ -189,13 +176,13 @@ const styles = StyleSheet.create({
   optionTitle: {
     fontSize: width * 0.038,
     fontWeight: '600',
-    color: '#000',
+    color: '#616161',
     marginBottom: 4,
     fontFamily : 'Figtree-SemiBold',
   },
   optionDescription: {
     fontSize: width * 0.03,
-    color: '#666',
+    color: '#616161',
     fontFamily : 'Figtree-Regular',
     fontWeight  :'400'
   },
@@ -203,7 +190,7 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     resizeMode: 'contain',
-    tintColor: '#999',
+    tintColor: COLORS.text,
   },
 });
 

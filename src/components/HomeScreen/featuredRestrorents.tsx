@@ -10,18 +10,19 @@ import {
   StatusBar,
   TextInput,
   Modal,
+  Platform,
+  Vibration,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import font from '../../assets/fonts';
-
+import { getFontFamily, getFontWeight } from '../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 
 const FeaturedRestaurants = () => {
   const navigation = useNavigation<any>();
-  
+
   const allRestaurants = [
     {
       id: 1,
@@ -38,67 +39,67 @@ const FeaturedRestaurants = () => {
     },
     {
       id: 2,
-      name: 'Elite-Ember',
+      name: 'Tokyo Sushi',
       image: require('../../assets/featuredrestaurant.png'),
-      rating: 4.6,
-      deliveryTime: '15-20 mins',
-      distance: '0.8 km',
-      tags: ['Asian', 'Chinese', 'Thai'],
+      rating: 4.7,
+      deliveryTime: '20-25 mins',
+      distance: '1.2 km',
+      tags: ['Japanese', 'Sushi', 'Asian'],
       discount: '15% OFF',
-      description: 'Best Asian flavors in town',
-      category: 'Asian',
+      description: 'Fresh sushi and authentic Japanese dishes',
+      category: 'Japanese',
       priceRange: 'High',
     },
     {
       id: 3,
-      name: 'Golden Spoon',
+      name: 'Spice Garden',
       image: require('../../assets/featuredrestaurant.png'),
       rating: 4.2,
-      deliveryTime: '12-18 mins',
-      distance: '1.2 km',
-      tags: ['Indian', 'Spicy', 'Curry'],
+      deliveryTime: '15-20 mins',
+      distance: '0.8 km',
+      tags: ['Indian', 'Vegetarian', 'Spicy'],
       discount: '25% OFF',
-      description: 'Traditional Indian dishes with authentic spices',
+      description: 'Traditional Indian flavors with modern presentation',
       category: 'Indian',
       priceRange: 'Medium',
     },
     {
       id: 4,
-      name: 'Burger Palace',
+      name: 'Burger Hub',
       image: require('../../assets/featuredrestaurant.png'),
-      rating: 4.5,
-      deliveryTime: '8-12 mins',
+      rating: 4.0,
+      deliveryTime: '10-12 mins',
       distance: '0.3 km',
-      tags: ['Burger', 'Fast Food', 'American'],
-      discount: '30% OFF',
-      description: 'Juicy burgers made with premium ingredients',
+      tags: ['Fast Food', 'Burgers', 'American'],
+      discount: '10% OFF',
+      description: 'Gourmet burgers and crispy fries',
       category: 'Fast Food',
       priceRange: 'Low',
     },
     {
       id: 5,
-      name: 'Pizza Corner',
+      name: 'Dragon Palace',
       image: require('../../assets/featuredrestaurant.png'),
-      rating: 4.3,
-      deliveryTime: '15-25 mins',
-      distance: '1.0 km',
-      tags: ['Pizza', 'Italian', 'Cheese'],
-      discount: 'Buy 1 Get 1',
-      description: 'Wood-fired pizzas with fresh toppings',
-      category: 'Italian',
+      rating: 4.5,
+      deliveryTime: '18-22 mins',
+      distance: '1.5 km',
+      tags: ['Chinese', 'Asian', 'Noodles'],
+      discount: '30% OFF',
+      description: 'Authentic Chinese cuisine with Sichuan specialties',
+      category: 'Asian',
       priceRange: 'Medium',
     },
     {
       id: 6,
-      name: 'Sushi Master',
+      name: 'Mediterranean Delight',
       image: require('../../assets/featuredrestaurant.png'),
-      rating: 4.7,
-      deliveryTime: '20-30 mins',
-      distance: '1.5 km',
-      tags: ['Japanese', 'Sushi', 'Fresh'],
-      discount: '18% OFF',
-      description: 'Fresh sushi made by expert chefs',
-      category: 'Japanese',
+      rating: 4.6,
+      deliveryTime: '25-30 mins',
+      distance: '2.0 km',
+      tags: ['Mediterranean', 'Healthy', 'Greek'],
+      discount: '20% OFF',
+      description: 'Fresh Mediterranean dishes with olive oil and herbs',
+      category: 'Mediterranean',
       priceRange: 'High',
     },
   ];
@@ -112,18 +113,18 @@ const FeaturedRestaurants = () => {
     deliveryTime: 'All',
   });
 
+  const [likedIds, setLikedIds] = useState<number[]>([]);
+
   const filterOptions = {
-    category: ['All', 'Italian', 'Asian', 'Indian', 'Fast Food', 'Japanese'],
+    category: ['All', 'Italian', 'Asian', 'Indian', 'Fast Food', 'Japanese', 'Mediterranean'],
     rating: ['All', '4.0+', '4.5+'],
     priceRange: ['All', 'Low', 'Medium', 'High'],
     deliveryTime: ['All', 'Under 15 mins', 'Under 20 mins'],
   };
 
-  // Filter and search functionality
   const getFilteredRestaurants = () => {
     let filtered = allRestaurants;
 
-    // Apply search filter
     if (searchQuery.trim() !== '') {
       filtered = filtered.filter(restaurant =>
         restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -132,23 +133,19 @@ const FeaturedRestaurants = () => {
       );
     }
 
-    // Apply category filter
     if (appliedFilters.category !== 'All') {
       filtered = filtered.filter(restaurant => restaurant.category === appliedFilters.category);
     }
 
-    // Apply rating filter
     if (appliedFilters.rating !== 'All') {
       const minRating = parseFloat(appliedFilters.rating.replace('+', ''));
       filtered = filtered.filter(restaurant => restaurant.rating >= minRating);
     }
 
-    // Apply price range filter
     if (appliedFilters.priceRange !== 'All') {
       filtered = filtered.filter(restaurant => restaurant.priceRange === appliedFilters.priceRange);
     }
 
-    // Apply delivery time filter
     if (appliedFilters.deliveryTime !== 'All') {
       if (appliedFilters.deliveryTime === 'Under 15 mins') {
         filtered = filtered.filter(restaurant => {
@@ -189,6 +186,13 @@ const FeaturedRestaurants = () => {
 
   const hasActiveFilters = () => {
     return Object.values(appliedFilters).some(filter => filter !== 'All');
+  };
+
+  const handleHeartPressWithVibration = (id: number) => {
+    Vibration.vibrate(50);
+    setLikedIds(prev =>
+      prev.includes(id) ? prev.filter(lid => lid !== id) : [...prev, id]
+    );
   };
 
   const filteredRestaurants = getFilteredRestaurants();
@@ -244,70 +248,91 @@ const FeaturedRestaurants = () => {
         )}
       </View>
 
-      <ScrollView 
-        showsVerticalScrollIndicator={false} 
-        contentContainerStyle={styles.scrollContent}
-      >
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {filteredRestaurants.length > 0 ? (
-          filteredRestaurants.map(restaurant => (
-            <TouchableOpacity 
-              key={restaurant.id} 
-              style={styles.restaurantCard} 
-              activeOpacity={0.9}
-              onPress={() => handleRestaurantPress(restaurant)}
-            >
-              <View style={styles.imageContainer}>
-                <Image source={restaurant.image} style={styles.restaurantImage} resizeMode="cover" />
-                
-                {/* Discount Badge */}
-                <View style={styles.discountBadge}>
-                  <Text style={styles.discountText}>{restaurant.discount}</Text>
-                </View>
-                
-                {/* Heart Icon */}
-                <TouchableOpacity style={styles.heartBtn} activeOpacity={0.7}>
-                  <Image source={require('../../assets/heart.png')} style={styles.heartIcon} resizeMode="contain" />
-                </TouchableOpacity>
-              </View>
+          filteredRestaurants.map(restaurant => {
+            const isLiked = likedIds.includes(restaurant.id);
+            return (
+              <TouchableOpacity
+                key={restaurant.id}
+                style={styles.restaurantCard}
+                activeOpacity={0.9}
+                onPress={() => handleRestaurantPress(restaurant)}
+              >
+                <View style={styles.imageContainer}>
+                  <Image source={restaurant.image} style={styles.restaurantImage} resizeMode="cover" />
 
-              <View style={styles.restaurantInfo}>
-                <View style={styles.titleRow}>
-                  <Text style={styles.restaurantName}>{restaurant.name}</Text>
-                  <View style={styles.ratingContainer}>
-                    <Image source={require('../../assets/star.png')} style={styles.starIcon} resizeMode="contain" />
-                    <Text style={styles.ratingText}>{restaurant.rating}</Text>
+                  {/* Discount Badge */}
+                  <View style={styles.discountBadge}>
+                    <Text style={styles.discountText}>{restaurant.discount}</Text>
                   </View>
-                </View>
 
-                <Text style={styles.description}>{restaurant.description}</Text>
-
-                <View style={styles.infoRow}>
-                  <View style={styles.infoItem}>
-                    <Image source={require('../../assets/clock.png')} style={styles.infoIcon} resizeMode="contain" />
-                    <Text style={styles.infoText}>{restaurant.deliveryTime}</Text>
-                  </View>
-                  
-                  <View style={styles.infoItem}>
-                    <Image source={require('../../assets/location1.png')} style={styles.infoIcon} resizeMode="contain" />
-                    <Text style={styles.infoText}>{restaurant.distance}</Text>
-                  </View>
-                  
-                  <View style={styles.infoItem}>
-                    <Image source={require('../../assets/bike.png')} style={styles.infoIcon} resizeMode="contain" />
-                    <Text style={styles.infoText}>Free delivery</Text>
-                  </View>
+                  {/* Heart Icon */}
+                  <TouchableOpacity
+                    style={[
+                      styles.heartBtn,
+                      isLiked ? styles.heartBtnFilled : styles.heartBtnBack,
+                    ]}
+                    activeOpacity={0.7}
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      handleHeartPressWithVibration(restaurant.id);
+                    }}
+                  >
+                    <Image
+                      source={
+                        isLiked
+                          ? require('../../assets/heartfill.png')
+                          : require('../../assets/heart.png')
+                      }
+                      style={[
+                        styles.heartIcon,
+                        !isLiked && styles.heartIconWhite,
+                      ]}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
                 </View>
 
-                <View style={styles.tagsContainer}>
-                  {restaurant.tags.map((tag, index) => (
-                    <View key={index} style={styles.tag}>
-                      <Text style={styles.tagText}>{tag}</Text>
+                <View style={styles.restaurantInfo}>
+                  <View style={styles.titleRow}>
+                    <Text style={styles.restaurantName}>{restaurant.name}</Text>
+                    <View style={styles.ratingContainer}>
+                      <Image source={require('../../assets/star.png')} style={styles.starIcon} resizeMode="contain" />
+                      <Text style={styles.ratingText}>{restaurant.rating}</Text>
                     </View>
-                  ))}
+                  </View>
+
+                  <Text style={styles.description}>{restaurant.description}</Text>
+
+                  <View style={styles.infoRow}>
+                    <View style={styles.infoItem}>
+                      <Image source={require('../../assets/clock.png')} style={styles.infoIcon} resizeMode="contain" />
+                      <Text style={styles.infoText}>{restaurant.deliveryTime}</Text>
+                    </View>
+
+                    <View style={styles.infoItem}>
+                      <Image source={require('../../assets/location1.png')} style={styles.infoIcon} resizeMode="contain" />
+                      <Text style={styles.infoText}>{restaurant.distance}</Text>
+                    </View>
+
+                    <View style={styles.infoItem}>
+                      <Image source={require('../../assets/bike.png')} style={styles.infoIcon} resizeMode="contain" />
+                      <Text style={styles.infoText}>Free delivery</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.tagsContainer}>
+                    {restaurant.tags.map((tag, index) => (
+                      <View key={index} style={styles.tag}>
+                        <Text style={styles.tagText}>{tag}</Text>
+                      </View>
+                    ))}
+                  </View>
                 </View>
-              </View>
-            </TouchableOpacity>
-          ))
+              </TouchableOpacity>
+            );
+          })
         ) : (
           <View style={styles.noResultsContainer}>
             <Image source={require('../../assets/emptycart.png')} style={styles.noResultsImage} resizeMode="contain" />
@@ -320,8 +345,8 @@ const FeaturedRestaurants = () => {
       {/* Filter Modal */}
       <Modal
         visible={showFilterModal}
-        animationType="slide"
         transparent={true}
+        animationType="slide"
         onRequestClose={() => setShowFilterModal(false)}
       >
         <View style={styles.modalOverlay}>
@@ -341,16 +366,10 @@ const FeaturedRestaurants = () => {
                   {filterOptions.category.map(option => (
                     <TouchableOpacity
                       key={option}
-                      style={[
-                        styles.filterOption,
-                        appliedFilters.category === option && styles.activeFilterOption
-                      ]}
-                      onPress={() => setAppliedFilters({...appliedFilters, category: option})}
+                      style={[styles.filterOption, appliedFilters.category === option && styles.activeFilterOption]}
+                      onPress={() => setAppliedFilters({ ...appliedFilters, category: option })}
                     >
-                      <Text style={[
-                        styles.filterOptionText,
-                        appliedFilters.category === option && styles.activeFilterOptionText
-                      ]}>
+                      <Text style={[styles.filterOptionText, appliedFilters.category === option && styles.activeFilterOptionText]}>
                         {option}
                       </Text>
                     </TouchableOpacity>
@@ -365,16 +384,10 @@ const FeaturedRestaurants = () => {
                   {filterOptions.rating.map(option => (
                     <TouchableOpacity
                       key={option}
-                      style={[
-                        styles.filterOption,
-                        appliedFilters.rating === option && styles.activeFilterOption
-                      ]}
-                      onPress={() => setAppliedFilters({...appliedFilters, rating: option})}
+                      style={[styles.filterOption, appliedFilters.rating === option && styles.activeFilterOption]}
+                      onPress={() => setAppliedFilters({ ...appliedFilters, rating: option })}
                     >
-                      <Text style={[
-                        styles.filterOptionText,
-                        appliedFilters.rating === option && styles.activeFilterOptionText
-                      ]}>
+                      <Text style={[styles.filterOptionText, appliedFilters.rating === option && styles.activeFilterOptionText]}>
                         {option}
                       </Text>
                     </TouchableOpacity>
@@ -389,16 +402,10 @@ const FeaturedRestaurants = () => {
                   {filterOptions.priceRange.map(option => (
                     <TouchableOpacity
                       key={option}
-                      style={[
-                        styles.filterOption,
-                        appliedFilters.priceRange === option && styles.activeFilterOption
-                      ]}
-                      onPress={() => setAppliedFilters({...appliedFilters, priceRange: option})}
+                      style={[styles.filterOption, appliedFilters.priceRange === option && styles.activeFilterOption]}
+                      onPress={() => setAppliedFilters({ ...appliedFilters, priceRange: option })}
                     >
-                      <Text style={[
-                        styles.filterOptionText,
-                        appliedFilters.priceRange === option && styles.activeFilterOptionText
-                      ]}>
+                      <Text style={[styles.filterOptionText, appliedFilters.priceRange === option && styles.activeFilterOptionText]}>
                         {option}
                       </Text>
                     </TouchableOpacity>
@@ -413,16 +420,10 @@ const FeaturedRestaurants = () => {
                   {filterOptions.deliveryTime.map(option => (
                     <TouchableOpacity
                       key={option}
-                      style={[
-                        styles.filterOption,
-                        appliedFilters.deliveryTime === option && styles.activeFilterOption
-                      ]}
-                      onPress={() => setAppliedFilters({...appliedFilters, deliveryTime: option})}
+                      style={[styles.filterOption, appliedFilters.deliveryTime === option && styles.activeFilterOption]}
+                      onPress={() => setAppliedFilters({ ...appliedFilters, deliveryTime: option })}
                     >
-                      <Text style={[
-                        styles.filterOptionText,
-                        appliedFilters.deliveryTime === option && styles.activeFilterOptionText
-                      ]}>
+                      <Text style={[styles.filterOptionText, appliedFilters.deliveryTime === option && styles.activeFilterOptionText]}>
                         {option}
                       </Text>
                     </TouchableOpacity>
@@ -449,9 +450,9 @@ const FeaturedRestaurants = () => {
 export default FeaturedRestaurants;
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: '#f8f9fa' 
+  container: {
+    flex: 1,
+    backgroundColor: '#f8f9fa',
   },
   header: {
     flexDirection: 'row',
@@ -467,16 +468,16 @@ const styles = StyleSheet.create({
   backButton: {
     padding: wp('1%'),
   },
-  backIcon: { 
-    width: wp('6%'), 
+  backIcon: {
+    width: wp('6%'),
     height: wp('6%'),
   },
-  headerTitle: { 
-    fontSize: wp('4.8%'), 
-    fontWeight: '700', 
+  headerTitle: {
+    fontSize: wp('4.8%'),
     color: '#000',
     textAlign: 'center',
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   filterButton: {
     padding: wp('1%'),
@@ -520,8 +521,8 @@ const styles = StyleSheet.create({
     fontSize: wp('3.8%'),
     color: '#000',
     paddingVertical: 0,
-    fontFamily : 'Figtree-Medium',
-    fontWeight : '500'
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   clearButton: {
     padding: wp('1%'),
@@ -543,8 +544,8 @@ const styles = StyleSheet.create({
   resultsText: {
     fontSize: wp('3.5%'),
     color: '#666',
-    fontWeight: '500',
-    fontFamily : 'Figtree-SemiBold'
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   clearFiltersBtn: {
     paddingHorizontal: wp('3%'),
@@ -555,7 +556,8 @@ const styles = StyleSheet.create({
   clearFiltersText: {
     color: '#fff',
     fontSize: wp('3%'),
-    fontWeight: '600',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   scrollContent: {
     paddingBottom: hp('10%'),
@@ -593,14 +595,13 @@ const styles = StyleSheet.create({
   discountText: {
     color: '#fff',
     fontSize: wp('3%'),
-    fontWeight: '700',
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   heartBtn: {
     position: 'absolute',
     top: hp('1.5%'),
     right: wp('4%'),
-    backgroundColor: COLORS.primary,
     width: wp('10%'),
     height: wp('10%'),
     borderRadius: wp('5%'),
@@ -612,9 +613,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
   },
+  heartBtnBack: {
+    backgroundColor: COLORS.primary,
+  },
+  heartBtnFilled: {
+    backgroundColor: '#fff',
+  },
   heartIcon: {
     width: wp('4.5%'),
     height: wp('4.5%'),
+  },
+  heartIconWhite: {
     tintColor: '#fff',
   },
   restaurantInfo: {
@@ -627,12 +636,12 @@ const styles = StyleSheet.create({
     marginBottom: hp('0.8%'),
   },
   restaurantName: {
-    fontSize: wp('4.2%'),
-    fontWeight: '700',
+    fontSize: wp('5.2%'),
     color: '#000',
     flex: 1,
     marginRight: wp('2%'),
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   ratingContainer: {
     flexDirection: 'row',
@@ -651,16 +660,16 @@ const styles = StyleSheet.create({
   ratingText: {
     color: '#fff',
     fontSize: wp('3%'),
-    fontWeight: '600',
-    fontFamily : 'Figtree-Medium'
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   description: {
     fontSize: wp('3.5%'),
     color: '#666',
     marginBottom: hp('1.5%'),
     lineHeight: hp('2.2%'),
-    fontFamily : 'Figtree-Medium',
-    fontWeight : '500'
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   infoRow: {
     flexDirection: 'row',
@@ -680,8 +689,8 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: wp('3%'),
     color: '#666',
-    fontWeight: '500',
-    fontFamily : 'Figtree-Medium'
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   tagsContainer: {
     flexDirection: 'row',
@@ -697,8 +706,8 @@ const styles = StyleSheet.create({
   tagText: {
     fontSize: wp('3%'),
     color: COLORS.primary,
-    fontWeight: '500',
-     fontFamily : 'Figtree-Medium'
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   noResultsContainer: {
     alignItems: 'center',
@@ -714,28 +723,26 @@ const styles = StyleSheet.create({
   },
   noResultsText: {
     fontSize: wp('4.5%'),
-    fontWeight: '700',
     color: '#333',
     marginBottom: hp('1%'),
     textAlign: 'center',
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   noResultsSubtext: {
     fontSize: wp('3.8%'),
     color: '#666',
     textAlign: 'center',
     lineHeight: hp('2.5%'),
-    fontFamily : 'Figtree-Medium',
-    fontWeight  :'500'
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
-  // Modal Styles
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'flex-end',
   },
   modalContainer: {
-    flex: 1,
     backgroundColor: '#fff',
     borderTopLeftRadius: wp('6%'),
     borderTopRightRadius: wp('6%'),
@@ -753,16 +760,16 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: wp('4.8%'),
-    fontWeight: '700',
     color: '#000',
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   closeIcon: {
     width: wp('5%'),
     height: wp('5%'),
   },
   modalScroll: {
-    flex: 1,
+    maxHeight: hp('55%'),
   },
   filterSection: {
     padding: wp('5%'),
@@ -771,10 +778,10 @@ const styles = StyleSheet.create({
   },
   filterSectionTitle: {
     fontSize: wp('4%'),
-    fontWeight: '700',
     color: '#000',
     marginBottom: hp('1.5%'),
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   filterOptions: {
     flexDirection: 'row',
@@ -794,13 +801,13 @@ const styles = StyleSheet.create({
   filterOptionText: {
     fontSize: wp('3.5%'),
     color: '#666',
-    fontWeight: '500',
-    fontFamily : 'Figtree-Medium'
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   activeFilterOptionText: {
     color: '#fff',
-    fontWeight: '600',
-    fontFamily : 'Figtree-Medium'
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   modalActions: {
     flexDirection: 'row',
@@ -818,9 +825,9 @@ const styles = StyleSheet.create({
   },
   resetBtnText: {
     fontSize: wp('4%'),
-    fontWeight: '600',
     color: '#666',
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   applyBtn: {
     flex: 2,
@@ -831,8 +838,8 @@ const styles = StyleSheet.create({
   },
   applyBtnText: {
     fontSize: wp('4%'),
-    fontWeight: '700',
     color: '#fff',
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
 });

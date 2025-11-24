@@ -1,5 +1,3 @@
-// File: screens/OtpVerificationScreen.tsx
-
 import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
@@ -17,7 +15,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { COLORS } from '../theme/colors';
-import font from '../assets/fonts'
+import { getFontFamily, getFontWeight } from '../utils/fontHelper';
 
 const { height: screenHeight, width } = Dimensions.get('window');
 
@@ -38,7 +36,7 @@ const OtpVerificationScreen = ({ navigation, route }: any) => {
 
   useEffect(() => {
     if (timer === 0) return;
-    const interval = setInterval(() => setTimer(prev => prev - 1), 1000);
+    const interval = setInterval(() => setTimer((prev) => prev - 1), 1000);
     return () => clearInterval(interval);
   }, [timer]);
 
@@ -122,31 +120,26 @@ const OtpVerificationScreen = ({ navigation, route }: any) => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Logo */}
           <Image
             source={require('../assets/Splash.png')}
             style={[styles.logo, keyboardVisible && styles.logoKeyboardVisible]}
             resizeMode="contain"
           />
 
-          {/* Title */}
           <Text style={styles.title}>O.T.P. Verification</Text>
 
-          {/* Subtitle */}
           <Text style={styles.subtitle}>
             Enter the code from SMS we sent to {'\n'}
             <Text style={styles.mobileText}>+91 {mobile}</Text>
           </Text>
 
-          {/* Timer */}
           <Text style={styles.timerText}>{formatTime()}</Text>
 
-          {/* OTP Inputs */}
           <View style={styles.otpContainer}>
             {otp.map((digit, index) => (
               <TextInput
                 key={index}
-                ref={ref => (inputs.current[index] = ref!)}
+                ref={(ref) => (inputs.current[index] = ref!)}
                 style={[
                   styles.otpInput,
                   digit !== '' && { borderColor: COLORS.primary },
@@ -154,20 +147,16 @@ const OtpVerificationScreen = ({ navigation, route }: any) => {
                 keyboardType="number-pad"
                 maxLength={1}
                 value={digit}
-                onChangeText={text => handleChange(text, index)}
-                onKeyPress={e => handleKeyPress(e, index)}
+                onChangeText={(text) => handleChange(text, index)}
+                onKeyPress={(e) => handleKeyPress(e, index)}
                 selectionColor={COLORS.primary}
                 textAlign="center"
               />
             ))}
           </View>
 
-          {/* Verify Button */}
           <TouchableOpacity
-            style={[
-              styles.button,
-              { opacity: otp.join('').length === 6 ? 1 : 0.6 },
-            ]}
+            style={[styles.button, { opacity: otp.join('').length === 6 ? 1 : 0.6 }]}
             onPress={handleVerify}
             disabled={loadingVerify || otp.join('').length !== 6}
             activeOpacity={0.8}
@@ -179,7 +168,6 @@ const OtpVerificationScreen = ({ navigation, route }: any) => {
             )}
           </TouchableOpacity>
 
-          {/* Resend Section */}
           <View style={styles.resendContainer}>
             <Text style={styles.resendText}>Didn’t receive the OTP? </Text>
             {timer > 0 ? (
@@ -232,8 +220,8 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     textAlign: 'center',
     marginBottom: 8,
-    fontFamily: 'Figtree-Bold',
-    fontWeight: '700',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   subtitle: {
     textAlign: 'center',
@@ -241,20 +229,20 @@ const styles = StyleSheet.create({
     fontSize: width * 0.04,
     marginBottom: 20,
     lineHeight: 20,
-    fontFamily: 'Figtree-Medium',
-    fontWeight: '500',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   mobileText: {
     color: COLORS.primary,
-    fontFamily: 'Figtree-SemiBold',
-    fontWeight: '600',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   timerText: {
     color: COLORS.primary,
     fontSize: width * 0.05,
     marginVertical: 12,
-    fontFamily: 'Figtree-Bold',
-    fontWeight: '700',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   otpContainer: {
     flexDirection: 'row',
@@ -271,8 +259,8 @@ const styles = StyleSheet.create({
     fontSize: width * 0.06,
     color: COLORS.text,
     textAlign: 'center',
-    fontFamily: 'Figtree-SemiBold',
-    fontWeight: '600',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   button: {
     backgroundColor: COLORS.primary,
@@ -291,8 +279,8 @@ const styles = StyleSheet.create({
   buttonText: {
     color: COLORS.secondary,
     fontSize: width * 0.045,
-    fontFamily: 'Figtree-Bold',
-    fontWeight: '700',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   resendContainer: {
     flexDirection: 'row',
@@ -303,14 +291,14 @@ const styles = StyleSheet.create({
   resendText: {
     color: COLORS.text,
     fontSize: width * 0.04,
-    fontFamily: 'Figtree-Regular',
-    fontWeight: '400',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
   resendButton: {
     color: COLORS.primary,
     fontSize: width * 0.04,
-    fontFamily: 'Figtree-Bold',
-    fontWeight: '700',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
 });
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -14,6 +14,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import font from '../../../assets/fonts';
+import { ThemeContext } from '../../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
@@ -22,6 +23,7 @@ const Settings = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
   const [popupAction, setPopupAction] = useState<null | (() => void)>(null);
+  const {theme} = useContext(ThemeContext);
 
   /** ─── Function to open confirmation popup ─── **/
   const openPopup = (message: string, onConfirm: () => void) => {
@@ -42,15 +44,15 @@ const Settings = () => {
   ];
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
       {/* ===== HEADER ===== */}
-      <View style={styles.header}>
+      <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={styles.backIcon} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Settings</Text>
+        <Text style={[styles.headerTitle,{color : theme.textSecondary }]}>Settings</Text>
         <View style={{ width: 24 }} />
       </View>
 
@@ -65,10 +67,10 @@ const Settings = () => {
               onPress={() => navigation.navigate(item.route)}
             >
               <View style={styles.optionLeft}>
-                <Image source={item.icon} style={styles.optionIcon} />
-                <Text style={styles.optionLabel}>{item.label}</Text>
+                <Image source={item.icon} style={[styles.optionIcon,{tintColor : theme.text}]} />
+                <Text style={[styles.optionLabel,{color : theme.text}]}>{item.label}</Text>
               </View>
-              <Image source={require('../../../assets/right-arrow.png')} style={styles.arrowIcon} />
+              <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor : theme.text}]} />
             </TouchableOpacity>
           ))}
 
@@ -81,7 +83,7 @@ const Settings = () => {
             }
           >
             <View style={styles.optionLeft}>
-              <Image source={require('../../../assets/logout.png')} style={styles.optionIcon} />
+              <Image source={require('../../../assets/logout.png')} style={[styles.optionIcon,{tintColor : '#E53935'}]} />
               <Text style={[styles.optionLabel, { color: '#E53935' }]}>Log out</Text>
             </View>
           </TouchableOpacity>
@@ -110,8 +112,8 @@ const Settings = () => {
         onRequestClose={() => setShowPopup(false)}
       >
         <View style={styles.popupOverlay}>
-          <View style={styles.popupBox}>
-            <Text style={styles.popupText}>{popupMessage}</Text>
+          <View style={[styles.popupBox,{backgroundColor  : theme.background}]}>
+            <Text style={[styles.popupText,{color : theme.text}]}>{popupMessage}</Text>
 
             <View style={styles.popupButtonsRow}>
               {/* CANCEL */}
@@ -130,7 +132,7 @@ const Settings = () => {
                   popupAction && popupAction();
                 }}
               >
-                <Text style={styles.popupButtonText}>OK</Text>
+                <Text style={[styles.popupButtonText,{color : theme.background}]}>OK</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -163,12 +165,12 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     resizeMode: 'contain',
-    tintColor: '#000',
+    tintColor: COLORS.text,
   },
   headerTitle: {
     fontSize: width * 0.045,
     fontWeight: '700',
-    color: '#000',
+    color: '#616161',
     fontFamily : 'Figtree-Bold',
   },
 
@@ -194,11 +196,11 @@ const styles = StyleSheet.create({
     height: 22,
     resizeMode: 'contain',
     marginRight: 15,
-    tintColor: '#000',
+    tintColor: COLORS.text,
   },
   optionLabel: {
     fontSize: width * 0.037,
-    color: '#000',
+    color: '#616161',
     fontWeight: '600',
     fontFamily : 'Figtree-SemiBold',
   },
@@ -206,7 +208,7 @@ const styles = StyleSheet.create({
     width: 14,
     height: 14,
     resizeMode: 'contain',
-    tintColor: '#000',
+    tintColor: COLORS.text,
   },
 
   /** POPUP **/
@@ -234,7 +236,7 @@ const styles = StyleSheet.create({
   },
   popupText: {
     fontSize: width * 0.04,
-    color: '#000',
+    color: '#616161',
     textAlign: 'center',
     marginBottom: 20,
     fontFamily : 'Figtree-Medium',

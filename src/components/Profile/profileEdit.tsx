@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -16,12 +16,13 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { COLORS } from '../../theme/colors';
+import { ThemeContext } from '../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
 const ProfileEdit = () => {
   const navigation = useNavigation<any>();
-
+  const {theme} = useContext(ThemeContext);
   const [name, setName] = useState('Harshal');
   const [phone, setPhone] = useState('+910202388848');
   const [email, setEmail] = useState('h@gmail.com');
@@ -34,7 +35,6 @@ const ProfileEdit = () => {
   const closeIcon = require('../../assets/close1.png');
 
   const clearField = (field: string) => {
-    // Clear the specified field and stay in editable mode for typing
     if (field === 'name') setName('');
     else if (field === 'phone') setPhone('');
     else if (field === 'email') setEmail('');
@@ -43,10 +43,7 @@ const ProfileEdit = () => {
   };
 
   const handleSave = () => {
-    Alert.alert(
-      'Profile Updated',
-      'Your details have been saved successfully!',
-    );
+    Alert.alert('Profile Updated', 'Your details have been saved successfully!');
     setEditableField(null);
   };
 
@@ -54,7 +51,7 @@ const ProfileEdit = () => {
     setEditableField(field);
   };
 
-  // ==================== IMAGE PICKER ====================
+  // Image Picker Handlers
   const openPicker = () => setPickerVisible(true);
   const closePicker = () => setPickerVisible(false);
 
@@ -90,50 +87,38 @@ const ProfileEdit = () => {
   };
 
   return (
-    <View style={styles.container}>
-      {/* ===== Header ===== */}
-      <View style={styles.header}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
+      {/* Header */}
+      <View style={[styles.header,{backgroundColor : theme.background, borderBottomColor : theme.cardBackground}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={require('../../assets/back.png')}
-            style={styles.backIcon}
-          />
+          <Image source={require('../../assets/back.png')} style={[styles.backIcon, {tintColor: theme.text}]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>My Profile</Text>
-        <View style={{ width: 22 }} /> {/* Spacer to center text */}
+        <Text style={[styles.headerTitle, {color : theme.textSecondary}]}>My Profile</Text>
+        <View style={{ width: 22 }} />
       </View>
 
-      {/* ===== Scrollable Content ===== */}
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
-        {/* ===== Profile Avatar ===== */}
+      {/* Scrollable Content */}
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        {/* Profile Avatar */}
         <View style={styles.profileSection}>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={openPicker}
-            style={styles.profileWrapper}
-          >
+          <TouchableOpacity activeOpacity={0.8} onPress={openPicker} style={styles.profileWrapper}>
             <Image
-              source={
-                profileImage?.uri ? { uri: profileImage.uri } : defaultUserImage
-              }
-              style={styles.profileImage}
+              source={profileImage?.uri ? { uri: profileImage.uri } : defaultUserImage}
+              style={[styles.profileImage,{borderColor : theme.cardBackground}]}
             />
-            <View style={styles.cameraBadge}>
+            <View style={[styles.cameraBadge,{backgroundColor : theme.background, borderColor : theme.cardBackground}]}>
               <Text style={styles.cameraIcon}>📷</Text>
             </View>
           </TouchableOpacity>
         </View>
 
-        {/* ===== Input Fields ===== */}
+        {/* Input Fields */}
         <View style={styles.formContainer}>
           {/* Name */}
-          <Text style={styles.label}>Name</Text>
-          <View style={styles.inputBox}>
+          <Text style={[styles.label, {color : theme.textSecondary}]}>Name</Text>
+          <View style={[styles.inputBox,{backgroundColor  :theme.cardBackground,borderColor : theme.cardBackground}]}>
             <TextInput
-              style={styles.input}
+              style={[styles.input, {color : theme.textSecondary}]}
               value={name}
               onChangeText={setName}
               editable={editableField === 'name'}
@@ -143,23 +128,20 @@ const ProfileEdit = () => {
             />
             {editableField === 'name' ? (
               <TouchableOpacity onPress={() => clearField('name')}>
-                <Image source={closeIcon} style={styles.closeIcon} />
+                <Image source={closeIcon} style={[styles.closeIcon, { opacity: 0.3, tintColor: theme.text }]} />
               </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={() => setFieldEditable('name')}>
-                <Image
-                  source={closeIcon}
-                  style={[styles.closeIcon, { opacity: 0.3 }]}
-                />
+                <Image source={closeIcon} style={[styles.closeIcon, { opacity: 0.3, tintColor: theme.text }]} />
               </TouchableOpacity>
             )}
           </View>
 
           {/* Phone Number */}
-          <Text style={styles.label}>Phone Number</Text>
-          <View style={styles.inputBox}>
+          <Text style={[styles.label, {color : theme.textSecondary}]}>Phone Number</Text>
+          <View style={[styles.inputBox,{backgroundColor  :theme.cardBackground,borderColor : theme.cardBackground}]}>
             <TextInput
-              style={styles.input}
+              style={[styles.input, {color : theme.textSecondary}]}
               value={phone}
               onChangeText={setPhone}
               editable={editableField === 'phone'}
@@ -170,23 +152,20 @@ const ProfileEdit = () => {
             />
             {editableField === 'phone' ? (
               <TouchableOpacity onPress={() => clearField('phone')}>
-                <Image source={closeIcon} style={styles.closeIcon} />
+                <Image source={closeIcon} style={[styles.closeIcon, { opacity: 0.3, tintColor: theme.text }]} />
               </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={() => setFieldEditable('phone')}>
-                <Image
-                  source={closeIcon}
-                  style={[styles.closeIcon, { opacity: 0.3 }]}
-                />
+                <Image source={closeIcon} style={[styles.closeIcon, { opacity: 0.3, tintColor: theme.text }]} />
               </TouchableOpacity>
             )}
           </View>
 
           {/* Email */}
-          <Text style={styles.label}>Gmail</Text>
-          <View style={styles.inputBox}>
+          <Text style={[styles.label, {color : theme.textSecondary}]}>Gmail</Text>
+          <View style={[styles.inputBox,{backgroundColor  :theme.cardBackground,borderColor : theme.cardBackground}]}>
             <TextInput
-              style={styles.input}
+              style={[styles.input, {color : theme.textSecondary}]}
               value={email}
               onChangeText={setEmail}
               editable={editableField === 'email'}
@@ -197,23 +176,20 @@ const ProfileEdit = () => {
             />
             {editableField === 'email' ? (
               <TouchableOpacity onPress={() => clearField('email')}>
-                <Image source={closeIcon} style={styles.closeIcon} />
+                <Image source={closeIcon} style={[styles.closeIcon, { opacity: 0.3, tintColor: theme.text }]} />
               </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={() => setFieldEditable('email')}>
-                <Image
-                  source={closeIcon}
-                  style={[styles.closeIcon, { opacity: 0.3 }]}
-                />
+                <Image source={closeIcon} style={[styles.closeIcon, { opacity: 0.3, tintColor: theme.text }]} />
               </TouchableOpacity>
             )}
           </View>
 
           {/* Address */}
-          <Text style={styles.label}>Delivery Address</Text>
-          <View style={styles.inputBox}>
+          <Text style={[styles.label, {color : theme.textSecondary}]}>Delivery Address</Text>
+          <View style={[styles.inputBox,{backgroundColor  :theme.cardBackground,borderColor : theme.cardBackground}]}>
             <TextInput
-              style={styles.input}
+              style={[styles.input, {color : theme.textSecondary}]}
               value={address}
               onChangeText={setAddress}
               editable={editableField === 'address'}
@@ -224,14 +200,11 @@ const ProfileEdit = () => {
             />
             {editableField === 'address' ? (
               <TouchableOpacity onPress={() => clearField('address')}>
-                <Image source={closeIcon} style={styles.closeIcon} />
+                <Image source={closeIcon} style={[styles.closeIcon, { opacity: 0.3, tintColor: theme.text }]} />
               </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={() => setFieldEditable('address')}>
-                <Image
-                  source={closeIcon}
-                  style={[styles.closeIcon, { opacity: 0.3 }]}
-                />
+                <Image source={closeIcon} style={[styles.closeIcon, { opacity: 0.3, tintColor: theme.text }]} />
               </TouchableOpacity>
             )}
           </View>
@@ -243,41 +216,23 @@ const ProfileEdit = () => {
         </View>
       </ScrollView>
 
-      {/* ===== Image Picker Modal ===== */}
+      {/* Image Picker Modal */}
       <Modal visible={pickerVisible} transparent animationType="fade">
         <View style={styles.popupOverlay}>
           <View style={styles.popupBox}>
-            <TouchableOpacity
-              style={styles.closeIconWrapper}
-              onPress={closePicker}
-            >
-              <Image
-                source={closeIcon}
-                style={styles.closeIcon}
-                resizeMode="contain"
-              />
+            <TouchableOpacity style={styles.closeIconWrapper} onPress={closePicker}>
+              <Image source={closeIcon} style={[styles.closeIcon, {tintColor: COLORS.text}]} resizeMode="contain" />
             </TouchableOpacity>
-            <Text style={styles.popupTitle}>Change your Profile pic</Text>
-            <TouchableOpacity
-              style={styles.pickerButton}
-              onPress={handleTakePhoto}
-            >
-              <Text style={styles.pickerButtonText}>Take photo</Text>
+            <Text style={[styles.popupTitle, {color : theme.textSecondary}]}>Change your Profile pic</Text>
+            <TouchableOpacity style={styles.pickerButton} onPress={handleTakePhoto}>
+              <Text style={[styles.pickerButtonText, {color : theme.textSecondary}]}>Take photo</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.pickerButton}
-              onPress={handleChooseFromGallery}
-            >
-              <Text style={styles.pickerButtonText}>Choose from Gallery</Text>
+            <TouchableOpacity style={styles.pickerButton} onPress={handleChooseFromGallery}>
+              <Text style={[styles.pickerButtonText, {color : theme.textSecondary}]}>Choose from Gallery</Text>
             </TouchableOpacity>
             {profileImage && (
-              <TouchableOpacity
-                style={styles.pickerButton}
-                onPress={removeProfileImage}
-              >
-                <Text style={[styles.pickerButtonText, { color: '#FF3B30' }]}>
-                  Remove Profile Photo
-                </Text>
+              <TouchableOpacity style={styles.pickerButton} onPress={removeProfileImage}>
+                <Text style={[styles.pickerButtonText, { color: '#FF3B30' }]}>Remove Profile Photo</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -312,14 +267,12 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     resizeMode: 'contain',
-    tintColor: '#000',
   },
   headerTitle: {
     textAlign: 'center',
     fontSize: width * 0.045,
     fontWeight: '700',
-    color: COLORS.text,
-    fontFamily: 'Figtree-Bold', // ✅ Added
+    fontFamily: 'Figtree-Bold',
   },
 
   /** SCROLL CONTENT **/
@@ -368,7 +321,7 @@ const styles = StyleSheet.create({
   },
   cameraIcon: {
     fontSize: 16,
-    fontFamily: 'Figtree-Regular', // ✅ Added
+    fontFamily: 'Figtree-Regular',
   },
 
   /** FORM **/
@@ -378,21 +331,20 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: width * 0.038,
-    color: COLORS.text,
     fontWeight: '600',
     marginBottom: 8,
     marginTop: 15,
-    fontFamily: 'Figtree-SemiBold', // ✅ Added
+    fontFamily: 'Figtree-SemiBold',
   },
   inputBox: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
-    borderRadius: 12,
+    borderRadius: 8,
     borderWidth: 1,
     borderColor: '#e0e0e0',
     paddingHorizontal: 16,
-    paddingVertical: Platform.OS === 'ios' ? 8 : 6,
+    paddingVertical: Platform.OS === 'ios' ? 12 : 10,
     marginBottom: 5,
     ...Platform.select({
       ios: {
@@ -407,16 +359,14 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: width * 0.04,
-    color: '#999',
     padding: 0,
     margin: 0,
-    fontFamily: 'Figtree-Regular', // ✅ Added
+    fontFamily: 'Figtree-Regular',
   },
   closeIcon: {
     width: 18,
     height: 18,
     resizeMode: 'contain',
-    tintColor: '#616161',
     marginLeft: 8,
   },
 
@@ -443,7 +393,7 @@ const styles = StyleSheet.create({
     color: COLORS.secondary,
     fontSize: width * 0.042,
     fontWeight: '700',
-    fontFamily: 'Figtree-Bold', // ✅ Added
+    fontFamily: 'Figtree-Bold',
   },
 
   /** POPUP **/
@@ -474,10 +424,9 @@ const styles = StyleSheet.create({
   popupTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.text,
     marginBottom: 20,
     textAlign: 'center',
-    fontFamily: 'Figtree-SemiBold', // ✅ Added
+    fontFamily: 'Figtree-SemiBold',
   },
   pickerButton: {
     paddingVertical: 14,
@@ -488,9 +437,8 @@ const styles = StyleSheet.create({
   },
   pickerButtonText: {
     fontSize: 16,
-    color: COLORS.text,
     fontWeight: '500',
-    fontFamily: 'Figtree-Medium', // ✅ Added
+    fontFamily: 'Figtree-Medium',
   },
   closeIconWrapper: {
     position: 'absolute',
