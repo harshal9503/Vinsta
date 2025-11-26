@@ -195,7 +195,10 @@ const Wishlist = () => {
 export default Wishlist;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.secondary },
+  container: { 
+    flex: 1, 
+    backgroundColor: COLORS.secondary 
+  },
 
   header: {
     flexDirection: 'row',
@@ -206,7 +209,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 
-  backIcon: { width: 22, height: 22, tintColor: '#000' },
+  backIcon: { 
+    width: 22, 
+    height: 22, 
+    tintColor: '#000' 
+  },
   headerTitle: {
     fontSize: width * 0.045,
     color: '#000',
@@ -282,9 +289,19 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     elevation: 3,
   },
-  foodImg: { width: '100%', height: 140, resizeMode: 'cover' },
-  foodHeartWrapper: { position: 'absolute', top: 10, right: 10 },
-  foodInfo: { padding: 10 },
+  foodImg: { 
+    width: '100%', 
+    height: 140, 
+    resizeMode: 'cover' 
+  },
+  foodHeartWrapper: { 
+    position: 'absolute', 
+    top: 10, 
+    right: 10 
+  },
+  foodInfo: { 
+    padding: 10 
+  },
   foodName: {
     fontSize: 18,
     color: '#000',
@@ -300,8 +317,8 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 14,
     color: '#000',
-    fontFamily: getFontFamily('Regular'),
-    fontWeight: getFontWeight('Regular'),
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   oldPrice: {
     fontSize: 13,
@@ -310,8 +327,17 @@ const styles = StyleSheet.create({
     fontFamily: getFontFamily('Regular'),
     fontWeight: getFontWeight('Regular'),
   },
-  timeRow: { flexDirection: 'row', alignItems: 'center', marginTop: 4 },
-  clockIcon: { width: 12, height: 12, marginRight: 6, resizeMode: 'contain' },
+  timeRow: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    marginTop: 4 
+  },
+  clockIcon: { 
+    width: 12, 
+    height: 12, 
+    marginRight: 6, 
+    resizeMode: 'contain' 
+  },
   timeText: { 
     fontSize: 12, 
     color: '#555', 
@@ -328,8 +354,14 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     elevation: 3,
   },
-  cardImg: { width: '100%', height: 180, resizeMode: 'cover' },
-  cardContent: { padding: 14 },
+  cardImg: { 
+    width: '100%', 
+    height: 180, 
+    resizeMode: 'cover' 
+  },
+  cardContent: { 
+    padding: 14 
+  },
   titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -352,7 +384,12 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 8,
   },
-  starIcon: { width: 12, height: 12, tintColor: '#fff', marginRight: 6 },
+  starIcon: { 
+    width: 12, 
+    height: 12, 
+    tintColor: '#fff', 
+    marginRight: 6 
+  },
   ratingText: {
     color: '#fff',
     fontSize: 12,
@@ -364,7 +401,12 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     marginTop: 6 
   },
-  locIcon: { width: 12, height: 12, marginRight: 6, resizeMode: 'contain' },
+  locIcon: { 
+    width: 12, 
+    height: 12, 
+    marginRight: 6, 
+    resizeMode: 'contain' 
+  },
   location: { 
     fontSize: 13, 
     color: '#555', 
@@ -381,7 +423,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: 6,
   },
-  heartIcon: { width: 14, height: 14, resizeMode: 'contain' },
+  heartIcon: { 
+    width: 14, 
+    height: 14, 
+    resizeMode: 'contain' 
+  },
   infoRow: { 
     flexDirection: 'row', 
     alignItems: 'center', 
@@ -394,7 +440,12 @@ const styles = StyleSheet.create({
     fontFamily: getFontFamily('Medium'),
     fontWeight: getFontWeight('Medium')
   },
-  metaIcon: { width: 13, height: 13, marginHorizontal: 4, resizeMode: 'contain' },
+  metaIcon: { 
+    width: 13, 
+    height: 13, 
+    marginHorizontal: 4, 
+    resizeMode: 'contain' 
+  },
   metaText: { 
     color: '#555', 
     fontSize: 12, 

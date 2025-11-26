@@ -208,7 +208,7 @@ const MenuItems = () => {
       {/* NEXT BUTTON */}
       <TouchableOpacity
         style={styles.menuButton}
-        onPress={() => navigation.navigate('NextScreenName')}
+        onPress={() => navigation.navigate('SelectPlan')}
       >
         <Text style={styles.menuText}>Next</Text>
       </TouchableOpacity>

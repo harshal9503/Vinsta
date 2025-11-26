@@ -59,6 +59,8 @@ import EReceipt from '../components/Profile/Wallet/EReceipt';
 import AddMoreSubscription from '../components/MyOrders/MyOrder/Subscriptions/AddMoreSubscription';
 import ViewMenu from '../components/MyOrders/MyOrder/Subscriptions/ViewMenu';
 import MenuItems from '../components/MyOrders/MyOrder/Subscriptions/MenuItems';
+import SelectPlan from '../components/MyOrders/MyOrder/Subscriptions/SelectPlan';
+import PlanDetails from '../components/MyOrders/MyOrder/Subscriptions/PlanDetails';
 
 const Stack = createStackNavigator();
 
@@ -129,6 +131,8 @@ const AppNavigator = () => (
       <Stack.Screen name="AddMoreSubscription" component={AddMoreSubscription} />
       <Stack.Screen name="ViewMenu" component={ViewMenu} />
       <Stack.Screen name="MenuItems" component={MenuItems} />
+      <Stack.Screen name="SelectPlan" component={SelectPlan} />
+      <Stack.Screen name="PlanDetails" component={PlanDetails} />
 
       {/* Main App */}
       <Stack.Screen name="Home" component={BottomTabNavigator} />

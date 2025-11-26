@@ -16,6 +16,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import Share from 'react-native-share';
 import { COLORS } from '../../theme/colors';
 import { ThemeContext } from '../../theme/ThemeContext';
+import { getFontFamily, getFontWeight } from '../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -176,8 +177,8 @@ const styles = StyleSheet.create({
   headerTitle: {
     textAlign: 'center',
     fontSize: width * 0.045,
-    fontWeight: '700',
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
 
   /** INVITE CARD **/
@@ -201,9 +202,9 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: width * 0.037,
-    fontWeight: '600',
     marginBottom: 8,
-    fontFamily: 'Figtree-Medium',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   codeBox: {
     flexDirection: 'row',
@@ -218,10 +219,10 @@ const styles = StyleSheet.create({
   },
   codeText: {
     fontSize: width * 0.04,
-    fontWeight: '700',
     letterSpacing: 1,
     flex: 1,
-    fontFamily: 'Figtree-SemiBold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   iconSmall: {
     width: 20,
@@ -257,9 +258,9 @@ const styles = StyleSheet.create({
   inviteText: {
     color: '#fff',
     fontSize: width * 0.038,
-    fontWeight: '700',
     textTransform: 'capitalize',
-    fontFamily: 'Figtree-SemiBold',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
 
   /** INFO **/
@@ -271,7 +272,8 @@ const styles = StyleSheet.create({
   infoText: {
     flex: 1,
     fontSize: width * 0.033,
-    fontFamily: 'Figtree-Regular',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
   infoIcon: {
     width: 18,
@@ -311,9 +313,9 @@ const styles = StyleSheet.create({
   },
   rewardText: {
     fontSize: width * 0.036,
-    fontWeight: '600',
     marginTop: 6,
-    fontFamily: 'Figtree-Medium',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
 
   /** POPUP **/
@@ -332,15 +334,16 @@ const styles = StyleSheet.create({
   },
   popupTitle: {
     fontSize: width * 0.045,
-    fontWeight: '700',
     marginBottom: 10,
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   popupContent: {
     fontSize: width * 0.035,
     textAlign: 'center',
     marginBottom: 15,
-    fontFamily: 'Figtree-Regular',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
   popupButton: {
     backgroundColor: COLORS.primary,
@@ -350,8 +353,8 @@ const styles = StyleSheet.create({
   },
   popupButtonText: {
     color: COLORS.secondary,
-    fontWeight: '700',
     fontSize: width * 0.04,
-    fontFamily: 'Figtree-SemiBold',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
 });
