@@ -1,20 +1,10 @@
-import React, { useState, useContext } from 'react';
-import {
-  Dimensions,
-  FlatList,
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Vibration,
-} from 'react-native';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { COLORS } from '../../../theme/colors';
+import { Dimensions, FlatList, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useContext } from 'react'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
+import { COLORS } from '../../../theme/colors'
 import { ThemeContext } from '../../../theme/ThemeContext';
-
 const { width, height } = Dimensions.get('window');
+
 
 const isTablet = width >= 768;
 const isSmallScreen = width < 380;
@@ -105,20 +95,9 @@ const getTextStyle = (weight = 'Regular') => {
     textAlignVertical: 'center',
   };
 };
-
 const BesRatedBurger = ({ getCurrentProducts, handleProductPress }) => {
-  const { theme } = useContext(ThemeContext);
-  
-  // Maintain liked state ids here
-  const [likedIds, setLikedIds] = useState<number[]>([]);
 
-  // Heart press handler with vibration and toggle liked state
-  const handleHeartPressWithVibration = (id: number) => {
-    Vibration.vibrate(50);
-    setLikedIds(prev =>
-      prev.includes(id) ? prev.filter(lid => lid !== id) : [...prev, id]
-    );
-  };
+  const { theme } = useContext(ThemeContext);
 
   return (
     <FlatList
@@ -128,92 +107,75 @@ const BesRatedBurger = ({ getCurrentProducts, handleProductPress }) => {
       scrollEnabled={false}
       contentContainerStyle={styles.productGrid}
       columnWrapperStyle={styles.productRow}
-      renderItem={({ item }) => {
-        const isLiked = likedIds.includes(item.id);
-        return (
-          <TouchableOpacity
-            style={[styles.productCard, { backgroundColor: theme.cardBackground }]}
-            onPress={() => handleProductPress(item)}
-            activeOpacity={0.8}
-          >
-            <View style={styles.imageContainer}>
+      renderItem={({ item }) => (
+        <TouchableOpacity
+          style={[styles.productCard,{backgroundColor : theme.cardBackground}]}
+          onPress={() => handleProductPress(item)}
+          activeOpacity={0.8}
+        >
+          <View style={styles.imageContainer}>
+            <Image
+              source={item.img}
+              style={styles.productImg}
+              resizeMode="cover"
+            />
+
+            <TouchableOpacity
+              style={styles.productHeartWrapper}
+              activeOpacity={0.7}
+            >
               <Image
-                source={item.img}
-                style={styles.productImg}
-                resizeMode="cover"
-              />
-
-              {/* Heart button with background and icon toggle */}
-              <TouchableOpacity
-                style={[
-                  styles.productHeartWrapper,
-                  isLiked ? styles.heartWrapperFilled : styles.heartWrapperBack,
-                ]}
-                activeOpacity={0.7}
-                onPress={e => {
-                  e.stopPropagation();
-                  handleHeartPressWithVibration(item.id);
-                }}
-              >
-                <Image
-                  source={
-                    isLiked
-                      ? require('../../../assets/heartfill.png')
-                      : require('../../../assets/heart.png')
-                  }
-                  style={[
-                    styles.heartIcon,
-                    isLiked ? styles.heartIconFilled : styles.heartIconWhite,
-                  ]}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-
-              <View style={styles.productRatingBadge}>
-                <Image
-                  source={require('../../../assets/star.png')}
-                  style={styles.starIcon}
-                  resizeMode="contain"
-                />
-                <Text style={[styles.ratingText, { color: theme.text }]}>{item.rating}</Text>
-              </View>
-            </View>
-
-            <Text style={[styles.productTitle, { color: theme.text }]} numberOfLines={2}>
-              {item.name}
-            </Text>
-
-            <View style={styles.priceRow}>
-              <View style={styles.priceContainer}>
-                <Text style={[styles.productPrice, { color: theme.text }]}>{item.price}</Text>
-                <Text style={[styles.oldPrice, { color: theme.textLight }]}>{item.oldPrice}</Text>
-              </View>
-
-              <TouchableOpacity style={styles.plusBtn} activeOpacity={0.7}>
-                <Image
-                  source={require('../../../assets/plus.png')}
-                  style={styles.plusIcon}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.deliveryTimeRow}>
-              <Image
-                source={require('../../../assets/clock.png')}
-                style={[styles.infoIcon, { tintColor: theme.primary }]}
+                source={require('../../../assets/heart.png')}
+                style={styles.heartIcon}
                 resizeMode="contain"
               />
-              <Text style={[styles.infoTxt, { color: theme.textLight }]}>{item.deliveryTime}</Text>
-            </View>
-          </TouchableOpacity>
-        );
-      }}
-    />
-  );
-};
+            </TouchableOpacity>
 
-export default BesRatedBurger;
+            <View style={styles.productRatingBadge}>
+              <Image
+                source={require('../../../assets/star.png')}
+                style={styles.starIcon}
+                resizeMode="contain"
+              />
+              <Text style={[styles.ratingText,{color: theme.text}]}>{item.rating}</Text>
+            </View>
+          </View>
+
+          <Text style={[styles.productTitle,{color: theme.text}]} numberOfLines={2}>
+            {item.name}
+          </Text>
+
+          <View style={styles.priceRow}>
+            <View style={styles.priceContainer}>
+              <Text style={[styles.productPrice,{color: theme.text}]}>{item.price}</Text>
+              <Text style={styles.oldPrice}>{item.oldPrice}</Text>
+            </View>
+
+            <TouchableOpacity style={styles.plusBtn} activeOpacity={0.7}>
+              <Image
+                source={require('../../../assets/plus.png')}
+                style={styles.plusIcon}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.deliveryTimeRow}>
+            <Image
+              source={require('../../../assets/clock.png')}
+              style={styles.infoIcon}
+              resizeMode="contain"
+            />
+            <Text style={[styles.infoTxt,{color: theme.text}]}>{item.deliveryTime}</Text>
+          </View>
+        </TouchableOpacity>
+      )}
+    />
+
+  )
+}
+
+export default BesRatedBurger
 
 const styles = StyleSheet.create({
   productGrid: {
@@ -224,6 +186,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp('1%'),
   },
   productCard: {
+    backgroundColor: COLORS.secondary,
     width: isTablet ? scaleSize(wp('45%')) : scaleSize(wp('43%')),
     borderRadius: scaleSize(wp('4%')),
     padding: scaleSize(wp('3%')),
@@ -240,10 +203,6 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  imageContainer: {
-    position: 'relative',
-    marginBottom: hp('1%'),
-  },
   productImg: {
     width: '100%',
     height: isTablet ? hp('14%') : hp('16%'),
@@ -253,6 +212,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: scaleSize(wp('3%')),
     right: scaleSize(wp('3%')),
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
     borderRadius: scaleSize(wp('5%')),
     padding: scaleSize(wp('2%')),
     ...Platform.select({
@@ -267,21 +227,9 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  heartWrapperBack: {
-    backgroundColor: COLORS.primary,
-  },
-  heartWrapperFilled: {
-    backgroundColor: '#fff',
-  },
-  heartIcon: {
-    width: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4%')),
-    height: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4%')),
-  },
-  heartIconWhite: {
-    tintColor: '#fff',
-  },
-  heartIconFilled: {
-    tintColor: undefined,
+  imageContainer: {
+    position: 'relative',
+    marginBottom: hp('1%'),
   },
   productRatingBadge: {
     position: 'absolute',
@@ -305,19 +253,15 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  starIcon: {
-    width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
-    height: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
-    marginRight: wp('1%'),
+  heartIcon: {
+    width: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4%')),
+    height: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4%')),
     tintColor: '#fff',
-  },
-  ratingText: {
-    ...getTextStyle('SemiBold'),
-    fontSize: fontScale(11),
   },
   productTitle: {
     ...getTextStyle('Bold'),
     fontSize: fontScale(18),
+    color: COLORS.textDark,
     marginBottom: hp('0.5%'),
     marginTop: hp('1%'),
   },
@@ -336,10 +280,12 @@ const styles = StyleSheet.create({
   productPrice: {
     ...getTextStyle('Bold'),
     fontSize: fontScale(15),
+    color: '#111',
   },
   oldPrice: {
     ...getTextStyle('Regular'),
     fontSize: fontScale(12),
+    color: '#666',
     textDecorationLine: 'line-through',
   },
   plusBtn: {
@@ -364,10 +310,23 @@ const styles = StyleSheet.create({
   infoIcon: {
     width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
     height: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
+    tintColor: COLORS.primary,
   },
   infoTxt: {
     ...getTextStyle('Regular'),
     fontSize: fontScale(12),
+    color: COLORS.textLight,
     marginRight: wp('2%'),
   },
-});
+  starIcon: {
+    width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
+    height: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
+    marginRight: wp('1%'),
+    tintColor: '#fff',
+  },
+  ratingText: {
+    ...getTextStyle('SemiBold'),
+    fontSize: fontScale(11),
+    color: '#fff',
+  },
+})

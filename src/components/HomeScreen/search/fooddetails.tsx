@@ -13,7 +13,6 @@ import {
   Modal,
   Pressable,
   Platform,
-  Vibration,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
@@ -52,12 +51,6 @@ const FoodDetails = () => {
   };
 
   const handleHeartPress = () => {
-    // Vibration effect
-    if (Platform.OS === 'android' || Platform.OS === 'ios') {
-      Vibration.vibrate(50);
-    }
-
-    // Heart scale animation
     Animated.sequence([
       Animated.timing(heartScale, {
         toValue: 1.3,
@@ -70,7 +63,6 @@ const FoodDetails = () => {
         useNativeDriver: true,
       }),
     ]).start();
-    
     setLiked(!liked);
   };
 
@@ -217,24 +209,14 @@ const FoodDetails = () => {
         </TouchableOpacity>
 
         {/* Heart Button */}
-        <TouchableOpacity
-          style={[
-            styles.heartBtn,
-            liked ? styles.heartBtnFilled : styles.heartBtnUnfilled,
-          ]}
-          onPress={handleHeartPress}
-        >
+        <TouchableOpacity style={styles.heartBtn} onPress={handleHeartPress}>
           <Animated.Image
             source={
               liked
                 ? require('../../../assets/heartfill.png')
                 : require('../../../assets/heart.png')
             }
-            style={[
-              styles.heartIcon,
-              liked ? styles.heartIconFilled : styles.heartIconUnfilled,
-              { transform: [{ scale: heartScale }] },
-            ]}
+            style={[styles.heartIcon, { transform: [{ scale: heartScale }] }]}
             resizeMode="contain"
           />
         </TouchableOpacity>
@@ -457,6 +439,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: Platform.OS === 'ios' ? hp('6%') : hp('4%'),
     right: wp('4%'),
+    backgroundColor: COLORS.primary,
     borderRadius: wp('50%'),
     padding: wp('2%'),
     elevation: 3,
@@ -467,21 +450,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  heartBtnUnfilled: {
-    backgroundColor: COLORS.primary,
-  },
-  heartBtnFilled: {
-    backgroundColor: '#fff',
-  },
   heartIcon: {
-    width: wp('3.4%'),
-    height: wp('3.4%'),
-  },
-  heartIconUnfilled: {
+    width: wp('3.1%'),
+    height: wp('3.1%'),
     tintColor: '#fff',
-  },
-  heartIconFilled: {
-    tintColor: undefined, // No tint color for filled heart
   },
   ratingBadge: {
     position: 'absolute',

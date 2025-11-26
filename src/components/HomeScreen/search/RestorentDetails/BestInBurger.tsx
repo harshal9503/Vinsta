@@ -1,11 +1,11 @@
 // components/BestInBurger/index.tsx
+// CHANGES: Added getFontFamily + getFontWeight for ALL text styles.
+
 import React from 'react';
-import { Animated, StyleSheet, Text, TouchableOpacity, View, Image, Platform } from 'react-native';
+import { Animated, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { COLORS } from '../../../../theme/colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { getFontFamily, getFontWeight } from '../../../../utils/fontHelper';
-import { vibrate } from '../../../../utils/vibrationHelper'; // <-- vibration import
-
+import { getFontFamily, getFontWeight } from '../../../../utils/fontHelper'; // ✅ FIXED FONT PATH
 
 const BestInBurger = ({
   foodItems,
@@ -16,148 +16,119 @@ const BestInBurger = ({
   handlePlusPress,
   handleFoodItemPress,
 }) => {
-
-  const handleHeartPressWithVibration = (id: number) => {
-    vibrate(50);
-    handleHeartPress(id);
-  };
-
-  const handlePlusPressWithVibration = (id: number) => {
-    vibrate(30);
-    handlePlusPress(id);
-  };
-
   return (
     <View style={styles.grid}>
-      {foodItems.map((f) => {
-        const isLiked = likedItems.includes(f.id);
-        return (
-          <View key={`best-${f.id}`} style={styles.foodCard}>
+      {foodItems.map((f) => (
+        <View key={`best-${f.id}`} style={styles.foodCard}>
+          
+          {/* ❤️ Like Button */}
+          <TouchableOpacity style={styles.heartWrapper} onPress={() => handleHeartPress(f.id)}>
+            <Animated.Image
+              source={
+                likedItems.includes(f.id)
+                  ? require('../../../../assets/heartfill.png')
+                  : require('../../../../assets/heart.png')
+              }
+              style={[styles.heartIconSmall, { transform: [{ scale: heartScales[f.id] || 1 }] }]}
+            />
+          </TouchableOpacity>
 
-            {/* Heart Icon with bg color condition and vibration */}
-            <TouchableOpacity
-              style={[
-                styles.heartWrapper,
-                isLiked ? styles.heartWrapperFilled : styles.heartWrapperBack,
-              ]}
-              onPress={() => handleHeartPressWithVibration(f.id)}
+          {/* Food Image */}
+          <TouchableOpacity activeOpacity={0.9} onPress={() => handleFoodItemPress(f)}>
+            <Image source={f.img} style={styles.foodImg} />
+
+            {/* ⭐ Rating */}
+            <View style={styles.foodRatingBadge}>
+              <Image source={require('../../../../assets/star.png')} style={styles.starIcon} />
+
+              <Text
+                style={{
+                  color: '#fff',
+                  fontSize: hp('1.3%'),
+                  fontFamily: getFontFamily('SemiBold'), // ⭐ CHANGED
+                  fontWeight: getFontWeight('SemiBold'), // ⭐ CHANGED
+                }}
+              >
+                4.4
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          {/* Food Info */}
+          <View style={styles.foodInfo}>
+            {/* Food Name */}
+            <Text
+              style={{
+                fontSize: hp('1.6%'),
+                color: '#222',
+                marginBottom: hp('0.3%'),
+                fontFamily: getFontFamily('Bold'), // ⭐ CHANGED
+                fontWeight: getFontWeight('Bold'),
+              }}
             >
-              <Animated.Image
-                source={
-                  isLiked
-                    ? require('../../../../assets/heartfill.png')
-                    : require('../../../../assets/heart.png')
-                }
-                style={[
-                  styles.heartIconSmall,
-                  isLiked && styles.heartIconFilled,
-                  { transform: [{ scale: heartScales[f.id] || 1 }] },
-                ]}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
+              {f.name}
+            </Text>
 
-            {/* Food Image */}
-            <TouchableOpacity activeOpacity={0.9} onPress={() => handleFoodItemPress(f)}>
-              <Image source={f.img} style={styles.foodImg} resizeMode="cover" />
-
-              {/* Rating Badge */}
-              <View style={styles.foodRatingBadge}>
-                <Image
-                  source={require('../../../../assets/star.png')}
-                  style={styles.starIcon}
-                  resizeMode="contain"
-                />
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontSize: hp('1.3%'),
-                    fontFamily: getFontFamily('SemiBold'),
-                    fontWeight: getFontWeight('SemiBold'),
-                  }}
-                >
-                  4.4
-                </Text>
-              </View>
-            </TouchableOpacity>
-
-            {/* Food Info */}
-            <View style={styles.foodInfo}>
+            {/* Price Row */}
+            <View style={styles.priceRow}>
+              {/* New Price */}
               <Text
                 style={{
                   fontSize: hp('1.6%'),
                   color: '#222',
-                  marginBottom: hp('0.3%'),
-                  fontFamily: getFontFamily('Bold'),
-                  fontWeight: getFontWeight('Bold'),
+                  fontFamily: getFontFamily('SemiBold'), // ⭐ CHANGED
+                  fontWeight: getFontWeight('SemiBold'),
                 }}
               >
-                {f.name}
+                ₹ {f.price.toFixed(2)}
               </Text>
 
-              {/* Price Row */}
-              <View style={styles.priceRow}>
-                <Text
-                  style={{
-                    fontSize: hp('1.6%'),
-                    color: '#222',
-                    fontFamily: getFontFamily('SemiBold'),
-                    fontWeight: getFontWeight('SemiBold'),
-                  }}
-                >
-                  ₹ {f.price.toFixed(2)}
-                </Text>
+              {/* Old Price */}
+              <Text
+                style={{
+                  fontSize: hp('1.3%'),
+                  color: '#FA463D',
+                  textDecorationLine: 'line-through',
+                  marginLeft: wp('1%'),
+                  fontFamily: getFontFamily('Regular'), // ⭐ CHANGED
+                  fontWeight: getFontWeight('Regular'),
+                }}
+              >
+                ₹ {f.oldPrice.toFixed(2)}
+              </Text>
 
-                <Text
-                  style={{
-                    fontSize: hp('1.3%'),
-                    color: '#FA463D',
-                    textDecorationLine: 'line-through',
-                    marginLeft: wp('1%'),
-                    fontFamily: getFontFamily('Regular'),
-                    fontWeight: getFontWeight('Regular'),
-                  }}
-                >
-                  ₹ {f.oldPrice.toFixed(2)}
-                </Text>
+              {/* + Button */}
+              <TouchableOpacity onPress={() => handlePlusPress(f.id)} style={styles.plusBtn}>
+                <Animated.Image
+                  source={require('../../../../assets/plus.png')}
+                  style={[styles.plusIcon, { transform: [{ scale: plusScales[f.id] || 1 }] }]}
+                />
+              </TouchableOpacity>
+            </View>
 
-                <TouchableOpacity
-                  onPress={() => handlePlusPressWithVibration(f.id)}
-                  style={styles.plusBtn}
-                >
-                  <Animated.Image
-                    source={require('../../../../assets/plus.png')}
-                    style={[styles.plusIcon, { transform: [{ scale: plusScales[f.id] || 1 }] }]}
-                    resizeMode="contain"
-                  />
-                </TouchableOpacity>
-              </View>
+            {/* Time Row */}
+            <View style={styles.timeRow}>
+              <Image source={require('../../../../assets/clockk.png')} style={styles.clockIcon} />
 
-              {/* Time Row */}
-              <View style={styles.timeRow}>
-                <Image source={require('../../../../assets/clockk.png')} style={styles.clockIcon} resizeMode="contain" />
-                <Text
-                  style={{
-                    fontSize: hp('1.3%'),
-                    color: '#666',
-                    fontFamily: getFontFamily('Medium'),
-                    fontWeight: getFontWeight('Medium'),
-                  }}
-                >
-                  {f.time}
-                </Text>
-              </View>
+              <Text
+                style={{
+                  fontSize: hp('1.3%'),
+                  color: '#666',
+                  fontFamily: getFontFamily('Medium'), // ⭐ CHANGED
+                  fontWeight: getFontWeight('Medium'),
+                }}
+              >
+                {f.time}
+              </Text>
             </View>
           </View>
-        );
-      })}
+        </View>
+      ))}
     </View>
   );
 };
 
-
 export default BestInBurger;
-
 
 const styles = StyleSheet.create({
   grid: {
@@ -183,33 +154,20 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: wp('3%'),
     top: hp('1.2%'),
+    backgroundColor: COLORS.primary,
     borderRadius: wp('5%'),
     padding: wp('1.8%'),
     zIndex: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.09,
-    shadowRadius: 5,
     elevation: 2,
   },
-  heartWrapperBack: {
-    backgroundColor: 'rgba(0,0,0,0.25)', // same as RecommendedFood
-  },
-  heartWrapperFilled: {
-    backgroundColor: '#fff',
-  },
   heartIconSmall: {
-    width: wp('4.5%'),
-    height: wp('4.5%'),
+    width: wp('3.8%'),
+    height: wp('3.8%'),
     tintColor: '#fff',
-  },
-  heartIconFilled: {
-    tintColor: undefined,
   },
   foodImg: {
     width: '100%',
     height: hp('13%'),
-    borderTopLeftRadius: wp('4.5%'),
-    borderTopRightRadius: wp('4.5%'),
   },
   foodRatingBadge: {
     position: 'absolute',
@@ -248,8 +206,8 @@ const styles = StyleSheet.create({
     marginLeft: wp('2%'),
   },
   plusIcon: {
-    width: wp('4%'),
-    height: wp('4%'),
+    width: wp('3.5%'),
+    height: wp('3.5%'),
     tintColor: '#fff',
   },
   timeRow: {
@@ -259,8 +217,8 @@ const styles = StyleSheet.create({
     gap: wp('1.8%'),
   },
   clockIcon: {
-    width: wp('4%'),
-    height: wp('4%'),
+    width: wp('3.2%'),
+    height: wp('3.2%'),
     tintColor: COLORS.primary,
   },
 });

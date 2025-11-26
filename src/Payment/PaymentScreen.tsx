@@ -7,11 +7,11 @@ import {
   TouchableOpacity,
   Image,
   StatusBar,
+  
   Platform,
   Modal,
   Dimensions,
   ScrollView,
-  Vibration,
 } from 'react-native';
 import RazorpayCheckout from 'react-native-razorpay';
 import { useNavigation } from '@react-navigation/native';
@@ -19,26 +19,13 @@ import { COLORS } from '../theme/colors';
 
 const { width, height } = Dimensions.get('window');
 
-// Vibration helper function
-const vibrate = (duration: number = 40) => {
-  if (Platform.OS === "ios") {
-    // iOS requires a pattern array
-    Vibration.vibrate([0, duration]);
-  } else {
-    // Android accepts duration directly
-    Vibration.vibrate(duration);
-  }
-};
-
 const PaymentScreen = () => {
   const navigation = useNavigation<any>();
   const [popupVisible, setPopupVisible] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
   const [popupType, setPopupType] = useState<'success' | 'error'>('success');
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   const closeIcon = require('../assets/close.png');
-  const successIcon = require('../assets/sucess.png');
 
   const showPopup = (msg: string, type: 'success' | 'error' = 'success') => {
     setPopupMessage(msg);
@@ -48,19 +35,6 @@ const PaymentScreen = () => {
 
   const closePopup = () => {
     setPopupVisible(false);
-  };
-
-  const showSuccessPaymentPopup = () => {
-    setShowSuccessPopup(true);
-    vibrate(100); // Vibrate on success
-    
-    // Auto navigate after 2 seconds
-    setTimeout(() => {
-      setShowSuccessPopup(false);
-      navigation.navigate('PaymentSuccess', {
-        paymentId: 'temp_payment_id', // You'll replace this with actual payment ID
-      });
-    }, 2000);
   };
 
   const handlePayment = () => {
@@ -82,14 +56,12 @@ const PaymentScreen = () => {
     RazorpayCheckout.open(options)
       .then(data => {
         console.log('Payment Success:', data);
-        vibrate(100); // Success vibration
-        
-        // Show success popup with image
-        setShowSuccessPopup(true);
-        
-        // Auto navigate after 2 seconds
+        showPopup(
+          `Payment Successful!\nPayment ID: ${data.razorpay_payment_id}`,
+          'success',
+        );
         setTimeout(() => {
-          setShowSuccessPopup(false);
+          setPopupVisible(false);
           navigation.navigate('PaymentSuccess', {
             paymentId: data.razorpay_payment_id,
           });
@@ -102,7 +74,6 @@ const PaymentScreen = () => {
           error.error?.description ||
           'Payment cancelled by user.';
         showPopup(errMsg, 'error');
-        vibrate(50); // Error vibration - shorter duration
       });
   };
 
@@ -246,7 +217,7 @@ const PaymentScreen = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Error/Success Popup Modal */}
+      {/* Popup Modal */}
       <Modal
         transparent
         visible={popupVisible}
@@ -269,38 +240,6 @@ const PaymentScreen = () => {
             <TouchableOpacity style={styles.popupButton} onPress={closePopup}>
               <Text style={styles.popupButtonText}>OK</Text>
             </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Success Payment Popup with Image */}
-      <Modal
-        transparent
-        visible={showSuccessPopup}
-        animationType="fade"
-        onRequestClose={() => setShowSuccessPopup(false)}
-      >
-        <View style={styles.successPopupOverlay}>
-          <View style={styles.successPopupBox}>
-            {/* Success Image */}
-            <Image
-              source={successIcon}
-              style={styles.successImage}
-              resizeMode="contain"
-            />
-            
-            {/* Success Message */}
-            <Text style={styles.successTitle}>Order Confirmed!</Text>
-            <Text style={styles.successSubtitle}>
-              Your payment was successful and your order has been confirmed.
-            </Text>
-            
-            {/* Loading/Progress indicator */}
-            <View style={styles.progressBar}>
-              <View style={styles.progressFill} />
-            </View>
-            
-            <Text style={styles.redirectText}>Redirecting...</Text>
           </View>
         </View>
       </Modal>
@@ -538,7 +477,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Figtree-Bold',
   },
 
-  /** ERROR/SUCCESS POPUP **/
+  /** POPUP **/
   popupOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.4)',
@@ -589,66 +528,5 @@ const styles = StyleSheet.create({
     width: width * 0.045,
     height: width * 0.045,
     tintColor: COLORS.text,
-  },
-
-  /** SUCCESS POPUP WITH IMAGE **/
-  successPopupOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: width * 0.1,
-  },
-  successPopupBox: {
-    width: width * 0.85,
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    padding: 30,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    elevation: 10,
-  },
-  successImage: {
-    width: 80,
-    height: 80,
-    marginBottom: 20,
-  },
-  successTitle: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: COLORS.primary,
-    textAlign: 'center',
-    marginBottom: 10,
-    fontFamily: 'Figtree-Bold',
-  },
-  successSubtitle: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-    lineHeight: 22,
-    marginBottom: 25,
-    fontFamily: 'Figtree-Regular',
-  },
-  progressBar: {
-    width: '100%',
-    height: 4,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 2,
-    marginBottom: 10,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: COLORS.primary,
-    borderRadius: 2,
-    width: '100%',
-  },
-  redirectText: {
-    fontSize: 14,
-    color: '#999',
-    fontFamily: 'Figtree-Regular',
   },
 });

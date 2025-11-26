@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
+import { ThemeContext } from '../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
@@ -49,13 +50,15 @@ const Profile = () => {
     navigation.navigate(route);
   };
 
+  const {theme} = useContext(ThemeContext);
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
       <Image source={require('../../assets/bg.png')} style={styles.bgImage} />
 
       {/* ===== Header ===== */}
-      <View style={styles.fixedHeader}>
+      <View style={[styles.fixedHeader,{backgroundColor : theme.background}]}>
         <View style={styles.backRow}>
           <TouchableOpacity onPress={() => navigation.navigate('Home')} />
           <TouchableOpacity onPress={() => navigation.navigate('Help')}>
@@ -68,16 +71,16 @@ const Profile = () => {
       <ScrollView
         style={{ flex: 1 }}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 60 }}
+        contentContainerStyle={{ paddingBottom: 60,backgroundColor : theme.background }}
       >
         {/* ===== Profile Header ===== */}
         <View style={styles.profileHeader}>
           <View style={styles.userRow}>
             <Image source={require('../../assets/user.png')} style={styles.userImage} />
             <View style={styles.userInfo}>
-              <Text style={styles.userName}>Harshal Sharma</Text>
-              <Text style={styles.userEmail}>harshal@gmail.com</Text>
-              <Text style={styles.userPhone}>+91 1234567890</Text>
+              <Text style={[styles.userName,{color : theme.textSecondary}]}>Harshal Sharma</Text>
+              <Text style={[styles.userEmail,{color : theme.textSecondary}]}>harshal@gmail.com</Text>
+              <Text style={[styles.userPhone,{color : theme.textSecondary}]}>+91 1234567890</Text>
             </View>
           </View>
         </View>
@@ -85,9 +88,9 @@ const Profile = () => {
         {/* ===== Top Options ===== */}
         <View style={styles.topOptionsContainer}>
           {topOptions.map(item => (
-            <TouchableOpacity key={item.id} style={styles.topOption} onPress={() => navigation.navigate(item.route)}>
-              <Image source={item.icon} style={styles.topIcon} />
-              <Text style={styles.topLabel}>{item.label}</Text>
+            <TouchableOpacity key={item.id} style={[styles.topOption,{backgroundColor : theme.background,borderColor : theme.cardBackground}]} onPress={() => navigation.navigate(item.route)}>
+              <Image source={item.icon} style={[styles.topIcon,{tintColor: theme.text}]} />
+              <Text style={[styles.topLabel,{color : theme.textSecondary}]}>{item.label}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -95,35 +98,35 @@ const Profile = () => {
         {/* ===== Bottom Options ===== */}
         <View style={styles.bottomSection}>
           {bottomOptions.map(item => (
-            <TouchableOpacity key={item.id} style={styles.optionRow} onPress={() => handleNavigation(item.route)}>
+            <TouchableOpacity key={item.id} style={[styles.optionRow,{borderBottomColor : theme.cardBackground}]} onPress={() => handleNavigation(item.route)}>
               <View style={styles.optionLeft}>
-                <Image source={item.icon} style={styles.optionIcon} />
-                <Text style={styles.optionLabel}>{item.label}</Text>
+                <Image source={item.icon} style={[styles.optionIcon,{tintColor : theme.textSecondary}]} />
+                <Text style={[styles.optionLabel,{color : theme.textSecondary}]}>{item.label}</Text>
               </View>
-              <Image source={require('../../assets/right-arrow.png')} style={styles.arrowIcon} />
+              <Image source={require('../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor : theme.textSecondary}]} />
             </TouchableOpacity>
           ))}
 
           {/* ===== Logout ===== */}
           <TouchableOpacity
-            style={styles.optionRow}
+            style={[styles.optionRow,{borderBottomColor : theme.cardBackground}]}
             onPress={() =>
               openPopup('Are you sure you want to logout?', () => navigation.navigate('SignIn'))
             }>
             <View style={styles.optionLeft}>
-              <Image source={require('../../assets/logout.png')} style={styles.optionIcon} />
+              <Image source={require('../../assets/logout.png')} style={[styles.optionIcon,{tintColor : theme.textSecondary}]} />
               <Text style={[styles.optionLabel, { color: '#E53935' }]}>Logout</Text>
             </View>
           </TouchableOpacity>
 
           {/* ===== Delete Account ===== */}
           <TouchableOpacity
-            style={styles.optionRow}
+            style={[styles.optionRow,{borderBottomColor : theme.cardBackground}]}
             onPress={() =>
               openPopup('Are you sure you want to delete your account?', () => navigation.navigate('SignIn'))
             }>
             <View style={styles.optionLeft}>
-              <Image source={require('../../assets/delete.png')} style={styles.optionIcon} />
+              <Image source={require('../../assets/delete.png')} style={[styles.optionIcon,{tintColor : theme.textSecondary}]} />
               <Text style={[styles.optionLabel, { color: '#E53935' }]}>Delete Account</Text>
             </View>
           </TouchableOpacity>
@@ -133,8 +136,8 @@ const Profile = () => {
       {/* ===== Popup Modal ===== */}
       <Modal transparent visible={showPopup} animationType="fade" onRequestClose={() => setShowPopup(false)}>
         <View style={styles.popupOverlay}>
-          <View style={styles.popupBox}>
-            <Text style={styles.popupText}>{popupMessage}</Text>
+          <View style={[styles.popupBox,{backgroundColor: theme.background}]}>
+            <Text style={[styles.popupText,{color:theme.textSecondary}]}>{popupMessage}</Text>
             <View style={styles.popupButtonsContainer}>
               <TouchableOpacity
                 style={[styles.popupButton, styles.popupCancelButton]}
@@ -147,7 +150,7 @@ const Profile = () => {
                   setShowPopup(false);
                   popupAction && popupAction();
                 }}>
-                <Text style={styles.popupButtonText}>OK</Text>
+                <Text style={[styles.popupButtonText,{color:theme.background}]}>OK</Text>
               </TouchableOpacity>
             </View>
           </View>
