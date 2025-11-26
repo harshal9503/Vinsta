@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import font from '../../../assets/fonts';
+import { ThemeContext } from '../../../theme/ThemeContext';
 const { width, height } = Dimensions.get('window');
 
 const transactions = [
@@ -115,23 +116,25 @@ const Wallet = () => {
     setFilteredTransactions(transactions);
   };
 
+
+  const {theme} = useContext(ThemeContext);
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
 
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-          <Image source={require('../../../assets/back.png')} style={styles.backIcon} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>My E-Wallet</Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>My E-Wallet</Text>
         <View style={styles.headerIcons}>
           <TouchableOpacity onPress={() => setShowSearch(!showSearch)}>
-            <Image source={require('../../../assets/s1.png')} style={styles.icon} />
+            <Image source={require('../../../assets/s1.png')} style={[styles.icon,{tintColor : theme.text}]} />
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => setShowOptions(!showOptions)}>
-            <Image source={require('../../../assets/options.png')} style={[styles.icon, { marginLeft: 10 }]} />
+            <Image source={require('../../../assets/options.png')} style={[styles.icon, { marginLeft: 10 ,tintColor : theme.text}]} />
           </TouchableOpacity>
         </View>
       </View>
@@ -149,19 +152,19 @@ const Wallet = () => {
 
       {/* Options Dropdown */}
       {showOptions && (
-        <View style={styles.dropdown}>
-          <TouchableOpacity style={styles.optionItem} onPress={() => handleFilterPress('Older')}>
-            <Text style={styles.optionText}>Older First</Text>
+        <View style={[styles.dropdown,{backgroundColor : theme.cardBackground}]}>
+          <TouchableOpacity style={[styles.optionItem,{borderColor : theme.background}]} onPress={() => handleFilterPress('Older')}>
+            <Text style={[styles.optionText,{color : theme.text}]}>Older First</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.optionItem} onPress={() => handleFilterPress('Latest')}>
-            <Text style={styles.optionText}>Latest First</Text>
+          <TouchableOpacity style={[styles.optionItem,{borderColor : theme.background}]} onPress={() => handleFilterPress('Latest')}>
+            <Text style={[styles.optionText,{color : theme.text}]}>Latest First</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.optionItem} onPress={() => handleFilterPress('Credit')}>
-            <Text style={styles.optionText}>Only Credit</Text>
+          <TouchableOpacity style={[styles.optionItem,{borderColor : theme.background}]} onPress={() => handleFilterPress('Credit')}>
+            <Text style={[styles.optionText,{color : theme.text}]}>Only Credit</Text>
             <Image source={require('../../../assets/down1.png')} style={styles.optionIcon} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.optionItem} onPress={() => handleFilterPress('Debit')}>
-            <Text style={styles.optionText}>Only Debit</Text>
+          <TouchableOpacity style={[styles.optionItem,{borderColor : theme.background}]} onPress={() => handleFilterPress('Debit')}>
+            <Text style={[styles.optionText,{color : theme.text}]}>Only Debit</Text>
             <Image source={require('../../../assets/up1.png')} style={styles.optionIcon} />
           </TouchableOpacity>
           {filterType && (
@@ -179,18 +182,18 @@ const Wallet = () => {
           <View style={styles.cardOverlay} />
 
           <View style={styles.cardContent}>
-            <Text style={styles.cardName}>Harshal Sharma</Text>
-            <Text style={styles.cardNumber}>1234567890</Text>
-            <Text style={styles.balanceLabel}>Your balance</Text>
+            <Text style={[styles.cardName,{color : theme.background}]}>Harshal Sharma</Text>
+            <Text style={[styles.cardNumber,{color : theme.background}]}>1234567890</Text>
+            <Text style={[styles.balanceLabel,{color : theme.background}]}>Your balance</Text>
 
             {/* Row for balance + top up */}
             <View style={styles.balanceRow}>
-              <Text style={styles.balanceAmount}>₹ 9,379</Text>
+              <Text style={[styles.balanceAmount,{color : theme.background}]}>₹ 9,379</Text>
               <TouchableOpacity
-                style={styles.topUpBtn}
+                style={[styles.topUpBtn,{backgroundColor : theme.background}]}
                 onPress={() => navigation.navigate('TopUp')}>
-                <Image source={require('../../../assets/topup.png')} style={styles.bagIcon} />
-                <Text style={styles.topUpText}>Top Up</Text>
+                <Image source={require('../../../assets/topup.png')} style={[styles.bagIcon,{tintColor: theme.text}]} />
+                <Text style={[styles.topUpText,{color : theme.text}]}>Top Up</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -202,8 +205,8 @@ const Wallet = () => {
 
         {/* Filter Indicator */}
         {filterType && (
-          <View style={styles.filterIndicator}>
-            <Text style={styles.filterText}>Filter: {filterType}</Text>
+          <View style={[styles.filterIndicator,{backgroundColor : theme.cardBackground}]}>
+            <Text style={[styles.filterText,{color : theme.text}]}>Filter: {filterType}</Text>
             <TouchableOpacity onPress={clearFilter}>
               <Text style={styles.clearFilterText}>Clear</Text>
             </TouchableOpacity>
@@ -213,22 +216,22 @@ const Wallet = () => {
         {/* Transaction History */}
         <View style={styles.transactionSection}>
           <View style={styles.transactionHeader}>
-            <Text style={styles.transactionTitle}>Transaction History</Text>
+            <Text style={[styles.transactionTitle,{color : theme.text}]}>Transaction History</Text>
             <TouchableOpacity onPress={() => navigation.navigate('TransactionHistory')}>
               <Text style={styles.seeAll}>See All</Text>
             </TouchableOpacity>
           </View>
 
           {filteredTransactions.map(item => (
-            <View key={item.id} style={styles.transactionRow}>
+            <View key={item.id} style={[styles.transactionRow,{borderColor : theme.cardBackground}]}>
               <Image source={item.icon} style={styles.foodImg} />
               <View style={{ flex: 1 }}>
-                <Text style={styles.foodTitle}>{item.title}</Text>
+                <Text style={[styles.foodTitle,{color :theme.text}]}>{item.title}</Text>
                 <Text style={styles.foodTime}>{item.time}</Text>
               </View>
 
               <View style={{ alignItems: 'flex-end' }}>
-                <Text style={styles.foodAmount}>{item.amount}</Text>
+                <Text style={[styles.foodAmount,{color : theme.text}]}>{item.amount}</Text>
                 <View style={styles.typeRow}>
                   <Text style={styles.typeText}>{item.type}</Text>
                   <Image source={item.arrow} style={styles.arrowIcon} />

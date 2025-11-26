@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -16,12 +16,14 @@ import { useNavigation } from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { COLORS } from '../../../theme/colors';
 import font from '../../../assets/fonts';
+import { ThemeContext } from '../../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
 const EReceipt = () => {
   const navigation = useNavigation<any>();
   const transactionId = 'SK7263727399';
+  const {theme} = useContext(ThemeContext);
 
   const copyToClipboard = () => {
     Clipboard.setString(transactionId);
@@ -37,7 +39,7 @@ const EReceipt = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar
         barStyle="dark-content"
         translucent
@@ -49,10 +51,10 @@ const EReceipt = () => {
         <TouchableOpacity onPress={() => navigation.navigate('TopUp')}>
           <Image
             source={require('../../../assets/back.png')}
-            style={styles.backIcon}
+            style={[styles.backIcon,{tintColor : theme.text}]}
           />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>E- Receipt</Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>E- Receipt</Text>
         <View style={{ width: 25 }} />
       </View>
 
@@ -64,11 +66,11 @@ const EReceipt = () => {
         <View style={styles.barcodeContainer}>
           <Image
             source={require('../../../assets/barcode.png')}
-            style={styles.barcodeImg}
+            style={[styles.barcodeImg,{tintColor : theme.text}]}
           />
           <View style={styles.barcodeNumbers}>
-            <Text style={styles.barcodeNum}>273628</Text>
-            <Text style={styles.barcodeNum}>837279</Text>
+            <Text style={[styles.barcodeNum,{color : theme.text}]}>273628</Text>
+            <Text style={[styles.barcodeNum,{color : theme.text}]}>837279</Text>
           </View>
         </View>
 
@@ -79,12 +81,12 @@ const EReceipt = () => {
             style={styles.walletImg}
           />
           <View style={{ flex: 1 }}>
-            <Text style={styles.txTitle}>Top up wallet</Text>
+            <Text style={[styles.txTitle,{color : theme.text}]}>Top up wallet</Text>
             <Text style={styles.txTime}>22 Sep, 9.00</Text>
           </View>
 
           <View style={{ alignItems: 'flex-end' }}>
-            <Text style={styles.txAmount}>₹ 50.00</Text>
+            <Text style={[styles.txAmount,{color:theme.text}]}>₹ 50.00</Text>
             <View style={styles.typeRow}>
               <Text style={styles.txType}>Top Up</Text>
               <Image
@@ -96,10 +98,10 @@ const EReceipt = () => {
         </View>
 
         {/* AMOUNT DETAILS */}
-        <View style={styles.card}>
+        <View style={[styles.card,{backgroundColor:theme.cardBackground}]}>
           <View style={styles.rowBetween}>
             <Text style={styles.label}>Amount</Text>
-            <Text style={styles.value}>₹375.00</Text>
+            <Text style={[styles.value,{color:theme.text}]}>₹375.00</Text>
           </View>
 
           <View style={styles.rowBetween}>
@@ -107,24 +109,24 @@ const EReceipt = () => {
             <Text style={[styles.value, { color: '#E63946' }]}>- ₹112.50</Text>
           </View>
 
-          <View style={styles.divider} />
+          <View style={[styles.divider,{backgroundColor:theme.background}]} />
 
           <View style={styles.rowBetween}>
             <Text style={[styles.label, { fontWeight: '700' }]}>Total</Text>
-            <Text style={[styles.value, { fontWeight: '700' }]}>₹262.50</Text>
+            <Text style={[styles.value, { fontWeight: '700',color:theme.text }]}>₹262.50</Text>
           </View>
         </View>
 
         {/* PAYMENT DETAILS */}
-        <View style={styles.card}>
+        <View style={[styles.card,{backgroundColor:theme.cardBackground}]}>
           <View style={styles.rowBetween}>
             <Text style={styles.label}>Payment Methods</Text>
-            <Text style={styles.value}>My E-Wallet</Text>
+            <Text style={[styles.value,{color:theme.text}]}>My E-Wallet</Text>
           </View>
 
           <View style={styles.rowBetween}>
             <Text style={styles.label}>Date</Text>
-            <Text style={styles.value}>Dec 15, 2024</Text>
+            <Text style={[styles.value,{color:theme.text}]}>Dec 15, 2024</Text>
           </View>
 
           <View style={styles.rowBetween}>
@@ -145,16 +147,16 @@ const EReceipt = () => {
           <View style={styles.rowBetween}>
             <Text style={styles.label}>Status</Text>
             <View style={styles.statusBadge}>
-              <Text style={styles.statusText}>Paid</Text>
+              <Text style={[styles.statusText,{color:theme.background}]}>Paid</Text>
             </View>
           </View>
         </View>
 
         {/* CATEGORY SECTION */}
-        <View style={styles.card}>
+        <View style={[styles.card,{backgroundColor:theme.cardBackground}]}>
           <View style={styles.rowBetween}>
             <Text style={styles.label}>Category</Text>
-            <Text style={styles.value}>Orders</Text>
+            <Text style={[styles.value,{color:theme.text}]}>Orders</Text>
           </View>
         </View>
       </ScrollView>

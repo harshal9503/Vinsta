@@ -97,18 +97,17 @@ const getTextStyle = (weight = 'Regular') => {
 };
 
 const OfferCard = () => {
-    const { theme } = useContext(ThemeContext);
-    const navigation = useNavigation<any>();
-    
+    const {theme} = useContext(ThemeContext);
+      const navigation = useNavigation<any>();
     const handleViewOffers = () => {
-        navigation.navigate('todayOfferView');
-    };
+    navigation.navigate('todayOfferView');
+  };
 
     return (
-        <View style={[styles.offerCard, { backgroundColor: theme.cardBackground }]}>
+        <View style={[styles.offerCard,{backgroundColor : theme.cardBackground}]}>
             <View style={styles.offerContent}>
-                <Text style={[styles.offerHeader, { color: theme.text }]}>Free Delivery</Text>
-                <Text style={[styles.offerSubTxt, { color: theme.textLight }]}>
+                <Text style={[styles.offerHeader,{color : theme.text}]}>Free Delivery</Text>
+                <Text style={[styles.offerSubTxt,{color : theme.text}]}>
                     Enjoy exclusive discount on tasty{'\n'}food today!
                 </Text>
                 <TouchableOpacity
@@ -116,7 +115,7 @@ const OfferCard = () => {
                     onPress={handleViewOffers}
                     activeOpacity={0.8}
                 >
-                    <Text style={[styles.offerBtnText, { color: theme.buttonText }]}>VIEW OFFER'S</Text>
+                    <Text style={[styles.offerBtnText,{color : theme.background}]}>VIEW OFFER'S</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.offerImageWrap}>
@@ -135,6 +134,7 @@ export default OfferCard
 const styles = StyleSheet.create({
     offerCard: {
         borderRadius: scaleSize(wp('4%')),
+        backgroundColor: COLORS.secondary,
         flexDirection: 'row',
         alignItems: 'center',
         padding: scaleSize(wp('4%')),
@@ -158,11 +158,13 @@ const styles = StyleSheet.create({
     offerHeader: {
         ...getTextStyle('Bold'),
         fontSize: fontScale(20),
+        color: 'black',
         marginBottom: hp('0.5%'),
     },
     offerSubTxt: {
         ...getTextStyle('Regular'),
         fontSize: fontScale(13),
+        color: COLORS.textLight,
         marginBottom: hp('1.5%'),
         lineHeight: hp('2%'),
     },
@@ -176,6 +178,7 @@ const styles = StyleSheet.create({
     offerBtnText: {
         ...getTextStyle('Bold'),
         fontSize: fontScale(13),
+        color: COLORS.secondary,
         letterSpacing: 0.3,
     },
     offerImageWrap: {

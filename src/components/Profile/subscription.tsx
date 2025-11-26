@@ -1,36 +1,37 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Dimensions, StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
+import { ThemeContext } from '../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
 const Subscription = () => {
   const navigation = useNavigation<any>();
-
+  const {theme} = useContext(ThemeContext);
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar barStyle="dark-content" translucent />
 
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../assets/back.png')} style={styles.backIcon} />
+          <Image source={require('../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>My Subscription</Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>My Subscription</Text>
         <View style={{ width: 24 }} />
       </View>
 
       {/* Content */}
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.card}>
+        <View style={[styles.card,{backgroundColor : theme.cardBackground}]}>
           <Text style={styles.title}>Active Plan</Text>
-          <Text style={styles.text}>Premium Membership</Text>
-          <Text style={styles.text}>Valid until: 30 Nov 2025</Text>
+          <Text style={[styles.text,{color : theme.textSecondary}]}>Premium Membership</Text>
+          <Text style={[styles.text,{color : theme.textSecondary}]}>Valid until: 30 Nov 2025</Text>
         </View>
 
         <TouchableOpacity style={styles.renewButton}>
-          <Text style={styles.renewButtonText}>Renew Plan</Text>
+          <Text style={[styles.renewButtonText,{color : theme.background}]}>Renew Plan</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>

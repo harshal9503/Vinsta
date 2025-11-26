@@ -70,7 +70,7 @@ const Support = () => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
             source={require('../../assets/back.png')}
-            style={styles.backIcon}
+            style={[styles.backIcon,{tintColor : theme.text}]}
           />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, {color: theme.text}]}>Support</Text>
@@ -90,7 +90,7 @@ const Support = () => {
             <View style={styles.contactInfo}>
               <Image
                 source={require('../../assets/email.png')}
-                style={[styles.contactIcon]}
+                style={[styles.contactIcon,{tintColor : COLORS.primary}]}
               />
               <View style={styles.contactTextContainer}>
                 <Text style={[styles.contactTitle, {color: theme.text}]}>Email Support</Text>
@@ -101,7 +101,7 @@ const Support = () => {
             </View>
             <Image
               source={require('../../assets/right-arrow.png')}
-              style={[styles.chevronIcon]}
+              style={[styles.chevronIcon,{tintColor : COLORS.primary}]}
             />
           </TouchableOpacity>
 
@@ -112,7 +112,7 @@ const Support = () => {
             <View style={styles.contactInfo}>
               <Image
                 source={require('../../assets/phone.png')}
-                style={[styles.contactIcon, ]}
+                style={[styles.contactIcon,{tintColor : COLORS.primary} ]}
               />
               <View style={styles.contactTextContainer}>
                 <Text style={[styles.contactTitle, {color: theme.text}]}>Phone Support</Text>
@@ -123,7 +123,7 @@ const Support = () => {
             </View>
             <Image
               source={require('../../assets/right-arrow.png')}
-              style={[styles.chevronIcon,]}
+              style={[styles.chevronIcon,{tintColor : COLORS.primary}]}
             />
           </TouchableOpacity>
 
@@ -134,7 +134,7 @@ const Support = () => {
             <View style={styles.contactInfo}>
               <Image
                 source={require('../../assets/website.png')}
-                style={[styles.contactIcon, ]}
+                style={[styles.contactIcon,{tintColor : COLORS.primary} ]}
               />
               <View style={styles.contactTextContainer}>
                 <Text style={[styles.contactTitle, {color: theme.text}]}>Help Center</Text>
@@ -145,7 +145,7 @@ const Support = () => {
             </View>
             <Image
               source={require('../../assets/right-arrow.png')}
-              style={[styles.chevronIcon, ]}
+              style={[styles.chevronIcon, {tintColor : COLORS.primary}]}
             />
           </TouchableOpacity>
 
@@ -156,7 +156,7 @@ const Support = () => {
             <View style={styles.contactInfo}>
               <Image
                 source={require('../../assets/faq.png')}
-                style={[styles.contactIcon,]}
+                style={[styles.contactIcon,{tintColor : COLORS.primary}]}
               />
               <View style={styles.contactTextContainer}>
                 <Text style={[styles.contactTitle, {color: theme.text}]}>FAQ</Text>
@@ -167,15 +167,15 @@ const Support = () => {
             </View>
             <Image
               source={require('../../assets/right-arrow.png')}
-              style={[styles.chevronIcon, ]}
+              style={[styles.chevronIcon,{tintColor : COLORS.primary} ]}
             />
           </TouchableOpacity>
         </View>
 
         {/* ===== Support Info ===== */}
         <View style={styles.supportInfo}>
-          <Text style={[styles.supportHours, {color: theme.textSecondary}]}>📞 Support Hours: 24/7</Text>
-          <Text style={[styles.responseTime, {color: theme.textSecondary}]}>
+          <Text style={[styles.supportHours, {color: COLORS.primary}]}>📞 Support Hours: 24/7</Text>
+          <Text style={[styles.responseTime, {color: COLORS.primary}]}>
             ⏰ Average Response Time: 2 hours
           </Text>
         </View>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
+import { ThemeContext } from '../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
@@ -19,6 +20,7 @@ const Favourite = () => {
   const navigation = useNavigation<any>();
   const [activeTab, setActiveTab] = useState<'Food' | 'Restaurant'>('Food');
   const [heartScales] = useState<{ [key: number]: Animated.Value }>({});
+  const { theme } = useContext(ThemeContext);
 
   const [restaurants, setRestaurants] = useState([
     { id: 1, name: 'Bistro Excellence', img: require('../../assets/r1.png') },
@@ -51,21 +53,21 @@ const Favourite = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../assets/back.png')} style={styles.backIcon} />
+          <Image source={require('../../assets/back.png')} style={[styles.backIcon, { tintColor: theme.text }]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Favourite</Text>
+        <Text style={[styles.headerTitle, { color: theme.text }]}>Favourite</Text>
         <View style={{ width: 22 }} />
       </View>
 
       {/* Tabs */}
       <View style={styles.tabRowOuter}>
-        <View style={styles.tabRow}>
+        <View style={[styles.tabRow, { backgroundColor: theme.cardBackground, borderColor: theme.cardBackground }]}>
           <TouchableOpacity
             style={[
               styles.tabBtn,
@@ -75,10 +77,14 @@ const Favourite = () => {
             onPress={() => setActiveTab('Food')}
             activeOpacity={0.9}
           >
-            <Text style={[
-              styles.tabText,
-              activeTab === 'Food' && styles.activeTabText,
-            ]}>
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === 'Food'
+                  ? { color: theme.background }
+                  : { color: theme.text }
+              ]}
+            >
               Food Items
             </Text>
           </TouchableOpacity>
@@ -91,10 +97,14 @@ const Favourite = () => {
             onPress={() => setActiveTab('Restaurant')}
             activeOpacity={0.9}
           >
-            <Text style={[
-              styles.tabText,
-              activeTab === 'Restaurant' && styles.activeTabText
-            ]}>
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === 'Restaurant'
+                  ? { color: theme.background }
+                  : { color: theme.text }
+              ]}
+            >
               Restaurants
             </Text>
           </TouchableOpacity>
@@ -109,7 +119,7 @@ const Favourite = () => {
               foodItems.map(f => (
                 <TouchableOpacity
                   key={f.id}
-                  style={styles.foodCard}
+                  style={[styles.foodCard,{backgroundColor : theme.cardBackground}]}
                   activeOpacity={0.9}
                   onPress={() => navigation.navigate('fooddetails')}
                 >
@@ -127,20 +137,20 @@ const Favourite = () => {
                   </Animated.View>
 
                   <View style={styles.foodInfo}>
-                    <Text style={styles.foodName}>{f.name}</Text>
+                    <Text style={[styles.foodName,{color : theme.text}]}>{f.name}</Text>
                     <View style={styles.priceRow}>
-                      <Text style={styles.price}>$ {f.price.toFixed(2)}</Text>
+                      <Text style={[styles.price,{color : theme.text}]}>$ {f.price.toFixed(2)}</Text>
                       <Text style={styles.oldPrice}>$ {f.oldPrice.toFixed(2)}</Text>
                     </View>
                     <View style={styles.timeRow}>
                       <Image source={require('../../assets/clock.png')} style={styles.clockIcon} />
-                      <Text style={styles.timeText}>{f.time}</Text>
+                      <Text style={[styles.timeText,{color : theme.text}]}>{f.time}</Text>
                     </View>
                   </View>
                 </TouchableOpacity>
               ))
             ) : (
-              <Text style={styles.emptyText}>No favourite food items.</Text>
+              <Text style={[styles.emptyText,{color : theme.text}]}>No favourite food items.</Text>
             )}
           </View>
         ) : (
@@ -149,7 +159,7 @@ const Favourite = () => {
               restaurants.map(r => (
                 <TouchableOpacity
                   key={r.id}
-                  style={styles.card}
+                  style={[styles.card,{backgroundColor : theme.cardBackground}]}
                   activeOpacity={0.9}
                   onPress={() => navigation.navigate('restaurentDetails')}
                 >
@@ -159,10 +169,10 @@ const Favourite = () => {
                       <Image source={require('../../assets/star.png')} style={styles.starIcon} />
                       <Text style={styles.ratingText}>4.4</Text>
                     </View>
-                    <Text style={styles.title}>{r.name}</Text>
+                    <Text style={[styles.title,{color : theme.text}]}>{r.name}</Text>
                     <View style={styles.locationRow}>
                       <Image source={require('../../assets/location1.png')} style={styles.locIcon} />
-                      <Text style={styles.location}>Near MC College, Barpeta Town</Text>
+                      <Text style={[styles.location,{color : theme.textSecondary}]}>Near MC College, Barpeta Town</Text>
                       <Animated.View style={{ transform: [{ scale: heartScales[r.id] || 1 }] }}>
                         <TouchableOpacity
                           style={styles.heartBtn}
@@ -174,17 +184,17 @@ const Favourite = () => {
                       </Animated.View>
                     </View>
                     <View style={styles.infoRow}>
-                      <Text style={styles.subInfo}>FAST FOOD</Text>
+                      <Text style={[styles.subInfo,{color : theme.textSecondary}]}>FAST FOOD</Text>
                       <Image source={require('../../assets/meter.png')} style={styles.metaIcon} />
-                      <Text style={styles.metaText}>590.0 m</Text>
+                      <Text style={[styles.metaText,{color : theme.textSecondary}]}>590.0 m</Text>
                       <Image source={require('../../assets/clockk.png')} style={styles.metaIcon} />
-                      <Text style={styles.metaText}>25 min</Text>
+                      <Text style={[styles.metaText,{color : theme.textSecondary}]}>25 min</Text>
                     </View>
                   </View>
                 </TouchableOpacity>
               ))
             ) : (
-              <Text style={styles.emptyText}>No favourite restaurants.</Text>
+              <Text style={[styles.emptyText,{color : theme.text}]}>No favourite restaurants.</Text>
             )}
           </>
         )}

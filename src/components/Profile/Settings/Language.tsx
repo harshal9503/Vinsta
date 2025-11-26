@@ -32,15 +32,15 @@ const Language = () => {
 
       <View style={[styles.header,{backgroundColor  :theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : '#000000'}]} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color : '#616161'}]}>Language</Text>
+        <Text style={[styles.headerTitle,{color : theme.textSecondary}]}>Language</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <Text style={[styles.sectionTitle,{color : '#616161'}]}>Select Language</Text>
-        <Text style={[styles.sectionDescription,{color : '#616161'}]}>
+        <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>Select Language</Text>
+        <Text style={[styles.sectionDescription,{color : theme.textSecondary}]}>
           Choose your preferred language for the app
         </Text>
 
@@ -49,15 +49,15 @@ const Language = () => {
             key={language.id}
             style={[
               styles.languageOption,
-              selectedLanguage === language.code && styles.selectedLanguage,
+              selectedLanguage === language.code && styles.selectedLanguage,{ shadowColor: theme.text},
               {backgroundColor  :theme.background}
             ]}
             onPress={() => setSelectedLanguage(language.code)}
           >
             <View style={styles.languageLeft}>
               <View style={styles.languageInfo}>
-                <Text style={[styles.languageName,{color : '#616161'}]}>{language.name}</Text>
-                <Text style={[styles.languageNative,{color : '#616161'}]}>{language.nativeName}</Text>
+                <Text style={[styles.languageName,{color : theme.textSecondary}]}>{language.name}</Text>
+                <Text style={[styles.languageNative,{color : theme.textSecondary}]}>{language.nativeName}</Text>
               </View>
             </View>
             <View style={styles.radioContainer}>
@@ -137,7 +137,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     borderWidth: 2,
     borderColor: 'transparent',
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,

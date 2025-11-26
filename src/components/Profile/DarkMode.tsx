@@ -98,7 +98,7 @@ const DarkMode = () => {
             <View style={styles.settingInfo}>
               <Image
                 source={require('../../assets/light.png')}
-                style={[styles.settingIcon, { tintColor: COLORS.primary }]}
+                style={[styles.settingIcon, { tintColor: theme.text }]}
               />
               <View style={styles.settingTextContainer}>
                 <Text style={[styles.settingTitle, { color: theme.text }]}>Dark Mode</Text>
@@ -126,7 +126,7 @@ const DarkMode = () => {
             <View style={styles.settingInfo}>
               <Image
                 source={require('../../assets/notification.png')}
-                style={[styles.settingIcon, { tintColor: COLORS.primary }]}
+                style={[styles.settingIcon, { tintColor: theme.text }]}
               />
               <View style={styles.settingTextContainer}>
                 <Text style={[styles.settingTitle, { color: theme.text }]}>
@@ -156,7 +156,7 @@ const DarkMode = () => {
             <View style={styles.settingInfo}>
               <Image
                 source={require('../../assets/email.png')}
-                style={[styles.settingIcon, { tintColor: COLORS.primary }]}
+                style={[styles.settingIcon,{ tintColor: theme.text }]}
               />
               <View style={styles.settingTextContainer}>
                 <Text style={[styles.settingTitle, { color: theme.text }]}>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import font from '../../../assets/fonts';
+import { ThemeContext } from '../../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
@@ -130,9 +131,9 @@ const transactions = [
 const TransactionHistory = () => {
   const navigation = useNavigation<any>();
   const [selectedTx, setSelectedTx] = useState<any>(null);
-
+  const {theme} = useContext(ThemeContext);
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar
         barStyle="dark-content"
         translucent
@@ -144,10 +145,10 @@ const TransactionHistory = () => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
             source={require('../../../assets/back.png')}
-            style={styles.backIcon}
+            style={[styles.backIcon,{tintColor : theme.text}]}
           />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Transiction History</Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>Transiction History</Text>
         <View style={{ width: 25 }} />
       </View>
 
@@ -159,17 +160,17 @@ const TransactionHistory = () => {
         {transactions.map(item => (
           <TouchableOpacity
             key={item.id}
-            style={styles.row}
+            style={[styles.row,{borderColor : theme.cardBackground}]}
             onPress={() => setSelectedTx(item)}
           >
             <Image source={item.icon} style={styles.foodImg} />
             <View style={{ flex: 1 }}>
-              <Text style={styles.foodTitle}>{item.title}</Text>
+              <Text style={[styles.foodTitle,{color : theme.text}]}>{item.title}</Text>
               <Text style={styles.foodTime}>{item.time}</Text>
             </View>
 
             <View style={{ alignItems: 'flex-end' }}>
-              <Text style={styles.foodAmount}>{item.amount}</Text>
+              <Text style={[styles.foodAmount,{color : theme.text}]}>{item.amount}</Text>
               <View style={styles.typeRow}>
                 <Text style={styles.typeText}>{item.type}</Text>
                 <Image
@@ -195,16 +196,16 @@ const TransactionHistory = () => {
         onRequestClose={() => setSelectedTx(null)}
       >
         <View style={styles.modalBackdrop}>
-          <View style={styles.modalBox}>
+          <View style={[styles.modalBox,{backgroundColor : theme.background}]}>
             <Image source={selectedTx?.icon} style={styles.modalImg} />
-            <Text style={styles.modalTitle}>{selectedTx?.title}</Text>
+            <Text style={[styles.modalTitle,{color : theme.text}]}>{selectedTx?.title}</Text>
             <Text style={styles.modalTime}>{selectedTx?.time}</Text>
 
-            <View style={styles.modalDivider} />
+            <View style={[styles.modalDivider,{backgroundColor:theme.cardBackground}]} />
 
             <View style={styles.modalRow}>
               <Text style={styles.modalLabel}>Amount:</Text>
-              <Text style={styles.modalValue}>{selectedTx?.amount}</Text>
+              <Text style={[styles.modalValue,{color : theme.text}]}>{selectedTx?.amount}</Text>
             </View>
 
             <View style={styles.modalRow}>
@@ -226,7 +227,7 @@ const TransactionHistory = () => {
               style={styles.closeBtn}
               onPress={() => setSelectedTx(null)}
             >
-              <Text style={styles.closeBtnText}>Close</Text>
+              <Text style={[styles.closeBtnText,{color : theme.background}]}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>

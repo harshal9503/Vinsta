@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import { useNavigation } from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Share from 'react-native-share';
 import { COLORS } from '../../theme/colors';
+import { ThemeContext } from '../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
@@ -22,6 +23,7 @@ const Refer = () => {
   const navigation = useNavigation<any>();
   const [showPopup, setShowPopup] = useState(false);
   const [invitationCode] = useState('XYJLHG');
+  const {theme} = useContext(ThemeContext);
 
   const handleCopy = () => {
     Clipboard.setString(invitationCode);
@@ -43,16 +45,16 @@ const Refer = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
       {/* ===== Header ===== */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
             source={require('../../assets/back.png')}
-            style={[styles.backIcon, {tintColor: '#000000'}]}
+            style={[styles.backIcon, {tintColor: theme.text}]}
           />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, {color: '#616161'}]}>Refer to earn</Text>
+        <Text style={[styles.headerTitle, {color: theme.textSecondary}]}>Refer to earn</Text>
         <View style={{ width: 22 }} /> {/* Spacer for centering */}
       </View>
 
@@ -62,12 +64,12 @@ const Refer = () => {
         contentContainerStyle={{ paddingBottom: 60 }}
       >
         {/* ===== Invite Section ===== */}
-        <View style={styles.cardContainer}>
-          <Text style={[styles.label, {color: '#616161'}]}>Invitation Code</Text>
+        <View style={[styles.cardContainer,{backgroundColor : theme.cardBackground}]}>
+          <Text style={[styles.label, {color : theme.textSecondary}]}>Invitation Code</Text>
 
           {/* Code Box */}
           <View style={styles.codeBox}>
-            <Text style={[styles.codeText, {color: '#616161'}]}>{invitationCode}</Text>
+            <Text style={[styles.codeText, {color : theme.textSecondary}]}>{invitationCode}</Text>
             <TouchableOpacity onPress={handleCopy}>
               <Image
                 source={require('../../assets/copy.png')}
@@ -88,12 +90,12 @@ const Refer = () => {
               source={require('../../assets/whatsapp.png')}
               style={styles.whatsappIcon}
             />
-            <Text style={styles.inviteText}>Invite via whatsapp</Text>
+            <Text style={[styles.inviteText,{color : theme.background}]}>Invite via whatsapp</Text>
           </TouchableOpacity>
 
           {/* Info Row */}
           <View style={styles.infoRow}>
-            <Text style={[styles.infoText, {color: '#616161'}]}>
+            <Text style={[styles.infoText, {color : theme.textSecondary}]}>
               How to invite friend's and win award
             </Text>
             <TouchableOpacity onPress={() => setShowPopup(true)}>
@@ -107,20 +109,20 @@ const Refer = () => {
 
         {/* ===== Rewards Section ===== */}
         <View style={styles.rewardSection}>
-          <TouchableOpacity style={styles.rewardCard}>
+          <TouchableOpacity style={[styles.rewardCard,{backgroundColor : theme.cardBackground}]}>
             <Image
               source={require('../../assets/earned.png')}
               style={styles.rewardIcon}
             />
-            <Text style={[styles.rewardText, {color: '#616161'}]}>Earned Reward's</Text>
+            <Text style={[styles.rewardText, {color : theme.textSecondary}]}>Earned Reward's</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.rewardCard}>
+          <TouchableOpacity style={[styles.rewardCard,{backgroundColor : theme.cardBackground}]}>
             <Image
               source={require('../../assets/earned.png')}
               style={styles.rewardIcon}
             />
-            <Text style={[styles.rewardText, {color: '#616161'}]}>Track Referral's</Text>
+            <Text style={[styles.rewardText, {color : theme.textSecondary}]}>Track Referral's</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -128,9 +130,9 @@ const Refer = () => {
       {/* ===== Popup Modal ===== */}
       <Modal transparent visible={showPopup} animationType="fade">
         <View style={styles.popupOverlay}>
-          <View style={styles.popupBox}>
-            <Text style={[styles.popupTitle, {color: '#616161'}]}>How Referrals Work</Text>
-            <Text style={[styles.popupContent, {color: '#616161'}]}>
+          <View style={[styles.popupBox,{backgroundColor : theme.background}]}>
+            <Text style={[styles.popupTitle, {color : theme.textSecondary}]}>How Referrals Work</Text>
+            <Text style={[styles.popupContent, {color : theme.textSecondary}]}>
               {'1. Share your code with friends.\n'}
               {'2. They install the app using your code.\n'}
               {'3. You earn exciting rewards after their first purchase!\n\n'}
@@ -140,7 +142,7 @@ const Refer = () => {
               style={styles.popupButton}
               onPress={() => setShowPopup(false)}
             >
-              <Text style={styles.popupButtonText}>Got it</Text>
+              <Text style={[styles.popupButtonText,{color : theme.background}]}>Got it</Text>
             </TouchableOpacity>
           </View>
         </View>

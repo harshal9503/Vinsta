@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -14,6 +14,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
 import { getFontFamily, getFontWeight } from '../../utils/fontHelper';
+import { ThemeContext } from '../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
@@ -85,35 +86,37 @@ const TodayOfferView = () => {
     setModalVisible(false);
   };
 
+
+  const {theme} = useContext(ThemeContext);
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../assets/back.png')} style={styles.backIcon} />
+          <Image source={require('../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Today's Offers</Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>Today's Offers</Text>
         <View style={{ width: 22 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 80 }}>
         {offers.map((offer) => (
-          <View key={offer.id} style={styles.offerCard}>
+          <View key={offer.id} style={[styles.offerCard,{backgroundColor : theme.cardBackground}]}>
             <View style={[styles.discountBadge, { backgroundColor: offer.color }]}>
-              <Text style={styles.discountText}>{offer.discount}</Text>
+              <Text style={[styles.discountText,{color : theme.background}]}>{offer.discount}</Text>
             </View>
 
             <View style={styles.offerContent}>
               <View style={styles.offerText}>
-                <Text style={styles.offerTitle}>{offer.title}</Text>
-                <Text style={styles.offerSubtitle}>{offer.subtitle}</Text>
-                <Text style={styles.offerDescription}>{offer.description}</Text>
+                <Text style={[styles.offerTitle,{color : theme.text}]}>{offer.title}</Text>
+                <Text style={[styles.offerSubtitle,{color : theme.textSecondary}]}>{offer.subtitle}</Text>
+                <Text style={[styles.offerDescription,{color : theme.textSecondary}]}>{offer.description}</Text>
 
                 <View style={styles.validityRow}>
                   <Image source={require('../../assets/clockk.png')} style={styles.clockIcon} />
-                  <Text style={styles.validityText}>Valid till midnight</Text>
+                  <Text style={[styles.validityText,{color : theme.textSecondary}]}>Valid till midnight</Text>
                 </View>
 
                 <TouchableOpacity 
@@ -121,7 +124,7 @@ const TodayOfferView = () => {
                   activeOpacity={0.8}
                   onPress={() => handleClaimOffer(offer.couponCode)}
                 >
-                  <Text style={styles.claimBtnText}>Claim Offer</Text>
+                  <Text style={[styles.claimBtnText,{color : theme.background}]}>Claim Offer</Text>
                 </TouchableOpacity>
               </View>
 
@@ -133,9 +136,9 @@ const TodayOfferView = () => {
         ))}
 
         {/* Terms & Conditions */}
-        <View style={styles.termsCard}>
-          <Text style={styles.termsTitle}>Terms & Conditions</Text>
-          <Text style={styles.termsText}>
+        <View style={[styles.termsCard,{backgroundColor : theme.cardBackground}]}>
+          <Text style={[styles.termsTitle,{color : theme.text}]}>Terms & Conditions</Text>
+          <Text style={[styles.termsText,{color : theme.textSecondary}]}>
             • Offers are valid for today only{'\n'}
             • Cannot be combined with other offers{'\n'}
             • Minimum order value may apply{'\n'}

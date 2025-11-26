@@ -62,23 +62,23 @@ const SoundAndVoice = () => {
 
       <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : '#000000'}]} />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color : '#616161'}]}>Sound & Voice</Text>
+        <Text style={[styles.headerTitle,{color : theme.textSecondary}]}>Sound & Voice</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <Text style={[styles.sectionTitle,{color : '#616161'}]}>Audio Settings</Text>
-        <Text style={[styles.sectionDescription,{color : '#616161'}]}>
+        <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>Audio Settings</Text>
+        <Text style={[styles.sectionDescription,{color : theme.textSecondary}]}>
           Customize your app's sound and voice preferences
         </Text>
 
         {soundOptions.map((item) => (
           <View key={item.id} style={[styles.settingRow,{backgroundColor :theme.background}]}>
             <View style={styles.settingLeft}>
-              <Text style={[styles.settingTitle,{color : '#616161'}]}>{item.title}</Text>
-              <Text style={[styles.settingDescription,{color : '#616161'}]}>{item.description}</Text>
+              <Text style={[styles.settingTitle,{color : theme.textSecondary}]}>{item.title}</Text>
+              <Text style={[styles.settingDescription,{color : theme.textSecondary}]}>{item.description}</Text>
             </View>
             <Switch
               value={item.value}
