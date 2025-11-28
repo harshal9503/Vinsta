@@ -11,12 +11,12 @@ import {
   TextInput,
   Modal,
   Platform,
-  Vibration,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { getFontFamily, getFontWeight } from '../../utils/fontHelper';
+import { vibrate } from '../../utils/vibrationHelper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -36,6 +36,7 @@ const FeaturedRestaurants = () => {
       description: 'Authentic Italian cuisine with modern twist',
       category: 'Italian',
       priceRange: 'Medium',
+      isFavorite: false,
     },
     {
       id: 2,
@@ -49,6 +50,7 @@ const FeaturedRestaurants = () => {
       description: 'Fresh sushi and authentic Japanese dishes',
       category: 'Japanese',
       priceRange: 'High',
+      isFavorite: false,
     },
     {
       id: 3,
@@ -62,6 +64,7 @@ const FeaturedRestaurants = () => {
       description: 'Traditional Indian flavors with modern presentation',
       category: 'Indian',
       priceRange: 'Medium',
+      isFavorite: false,
     },
     {
       id: 4,
@@ -75,6 +78,7 @@ const FeaturedRestaurants = () => {
       description: 'Gourmet burgers and crispy fries',
       category: 'Fast Food',
       priceRange: 'Low',
+      isFavorite: false,
     },
     {
       id: 5,
@@ -88,6 +92,7 @@ const FeaturedRestaurants = () => {
       description: 'Authentic Chinese cuisine with Sichuan specialties',
       category: 'Asian',
       priceRange: 'Medium',
+      isFavorite: false,
     },
     {
       id: 6,
@@ -101,6 +106,7 @@ const FeaturedRestaurants = () => {
       description: 'Fresh Mediterranean dishes with olive oil and herbs',
       category: 'Mediterranean',
       priceRange: 'High',
+      isFavorite: false,
     },
   ];
 
@@ -113,7 +119,7 @@ const FeaturedRestaurants = () => {
     deliveryTime: 'All',
   });
 
-  const [likedIds, setLikedIds] = useState<number[]>([]);
+  const [restaurants, setRestaurants] = useState(allRestaurants);
 
   const filterOptions = {
     category: ['All', 'Italian', 'Asian', 'Indian', 'Fast Food', 'Japanese', 'Mediterranean'],
@@ -123,7 +129,7 @@ const FeaturedRestaurants = () => {
   };
 
   const getFilteredRestaurants = () => {
-    let filtered = allRestaurants;
+    let filtered = restaurants;
 
     if (searchQuery.trim() !== '') {
       filtered = filtered.filter(restaurant =>
@@ -189,9 +195,13 @@ const FeaturedRestaurants = () => {
   };
 
   const handleHeartPressWithVibration = (id: number) => {
-    Vibration.vibrate(50);
-    setLikedIds(prev =>
-      prev.includes(id) ? prev.filter(lid => lid !== id) : [...prev, id]
+    vibrate(40); // Use the vibration helper from utils
+    setRestaurants(prevRestaurants =>
+      prevRestaurants.map(restaurant =>
+        restaurant.id === id
+          ? { ...restaurant, isFavorite: !restaurant.isFavorite }
+          : restaurant
+      )
     );
   };
 
@@ -248,10 +258,15 @@ const FeaturedRestaurants = () => {
         )}
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        contentContainerStyle={[
+          styles.scrollContent,
+          filteredRestaurants.length === 0 && styles.emptyScrollContent
+        ]}
+      >
         {filteredRestaurants.length > 0 ? (
           filteredRestaurants.map(restaurant => {
-            const isLiked = likedIds.includes(restaurant.id);
             return (
               <TouchableOpacity
                 key={restaurant.id}
@@ -267,11 +282,11 @@ const FeaturedRestaurants = () => {
                     <Text style={styles.discountText}>{restaurant.discount}</Text>
                   </View>
 
-                  {/* Heart Icon */}
+                  {/* Heart Icon - Same style as previous components */}
                   <TouchableOpacity
                     style={[
-                      styles.heartBtn,
-                      isLiked ? styles.heartBtnFilled : styles.heartBtnBack,
+                      styles.productHeartWrapper,
+                      { backgroundColor: restaurant.isFavorite ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)' }
                     ]}
                     activeOpacity={0.7}
                     onPress={(e) => {
@@ -281,17 +296,23 @@ const FeaturedRestaurants = () => {
                   >
                     <Image
                       source={
-                        isLiked
+                        restaurant.isFavorite
                           ? require('../../assets/heartfill.png')
                           : require('../../assets/heart.png')
                       }
                       style={[
                         styles.heartIcon,
-                        !isLiked && styles.heartIconWhite,
+                        { tintColor: restaurant.isFavorite ? COLORS.primary : '#fff' }
                       ]}
                       resizeMode="contain"
                     />
                   </TouchableOpacity>
+
+                  {/* Rating Badge - Same style as previous components */}
+                  <View style={styles.productRatingBadge}>
+                    <Image source={require('../../assets/star.png')} style={styles.starIcon} resizeMode="contain" />
+                    <Text style={styles.ratingText}>{restaurant.rating}</Text>
+                  </View>
                 </View>
 
                 <View style={styles.restaurantInfo}>
@@ -338,6 +359,15 @@ const FeaturedRestaurants = () => {
             <Image source={require('../../assets/emptycart.png')} style={styles.noResultsImage} resizeMode="contain" />
             <Text style={styles.noResultsText}>No restaurants found</Text>
             <Text style={styles.noResultsSubtext}>Try adjusting your search or filters</Text>
+            <TouchableOpacity 
+              style={styles.tryAgainButton}
+              onPress={() => {
+                setSearchQuery('');
+                resetFilters();
+              }}
+            >
+              <Text style={styles.tryAgainText}>Show All Restaurants</Text>
+            </TouchableOpacity>
           </View>
         )}
       </ScrollView>
@@ -367,7 +397,7 @@ const FeaturedRestaurants = () => {
                     <TouchableOpacity
                       key={option}
                       style={[styles.filterOption, appliedFilters.category === option && styles.activeFilterOption]}
-                      onPress={() => setAppliedFilters({ ...appliedFilters, category: option })}
+                      onPress={() => setAppliedFilters(prev => ({ ...prev, category: option }))}
                     >
                       <Text style={[styles.filterOptionText, appliedFilters.category === option && styles.activeFilterOptionText]}>
                         {option}
@@ -385,7 +415,7 @@ const FeaturedRestaurants = () => {
                     <TouchableOpacity
                       key={option}
                       style={[styles.filterOption, appliedFilters.rating === option && styles.activeFilterOption]}
-                      onPress={() => setAppliedFilters({ ...appliedFilters, rating: option })}
+                      onPress={() => setAppliedFilters(prev => ({ ...prev, rating: option }))}
                     >
                       <Text style={[styles.filterOptionText, appliedFilters.rating === option && styles.activeFilterOptionText]}>
                         {option}
@@ -403,7 +433,7 @@ const FeaturedRestaurants = () => {
                     <TouchableOpacity
                       key={option}
                       style={[styles.filterOption, appliedFilters.priceRange === option && styles.activeFilterOption]}
-                      onPress={() => setAppliedFilters({ ...appliedFilters, priceRange: option })}
+                      onPress={() => setAppliedFilters(prev => ({ ...prev, priceRange: option }))}
                     >
                       <Text style={[styles.filterOptionText, appliedFilters.priceRange === option && styles.activeFilterOptionText]}>
                         {option}
@@ -421,7 +451,7 @@ const FeaturedRestaurants = () => {
                     <TouchableOpacity
                       key={option}
                       style={[styles.filterOption, appliedFilters.deliveryTime === option && styles.activeFilterOption]}
-                      onPress={() => setAppliedFilters({ ...appliedFilters, deliveryTime: option })}
+                      onPress={() => setAppliedFilters(prev => ({ ...prev, deliveryTime: option }))}
                     >
                       <Text style={[styles.filterOptionText, appliedFilters.deliveryTime === option && styles.activeFilterOptionText]}>
                         {option}
@@ -563,6 +593,10 @@ const styles = StyleSheet.create({
     paddingBottom: hp('10%'),
     paddingTop: hp('1%'),
   },
+  emptyScrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+  },
   restaurantCard: {
     backgroundColor: '#fff',
     marginHorizontal: wp('5%'),
@@ -598,33 +632,64 @@ const styles = StyleSheet.create({
     fontFamily: getFontFamily('Bold'),
     fontWeight: getFontWeight('Bold'),
   },
-  heartBtn: {
+  // Heart wrapper styles - Same as previous components
+  productHeartWrapper: {
     position: 'absolute',
     top: hp('1.5%'),
     right: wp('4%'),
-    width: wp('10%'),
-    height: wp('10%'),
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
     borderRadius: wp('5%'),
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-  },
-  heartBtnBack: {
-    backgroundColor: COLORS.primary,
-  },
-  heartBtnFilled: {
-    backgroundColor: '#fff',
+    padding: wp('2%'),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   heartIcon: {
-    width: wp('4.5%'),
-    height: wp('4.5%'),
+    width: wp('4%'),
+    height: wp('4%'),
   },
-  heartIconWhite: {
+  // Rating badge styles - Same as previous components
+  productRatingBadge: {
+    position: 'absolute',
+    bottom: hp('1.5%'),
+    left: wp('4%'),
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: wp('2.5%'),
+    paddingVertical: hp('0.5%'),
+    borderRadius: wp('2%'),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  starIcon: {
+    width: wp('3%'),
+    height: wp('3%'),
+    marginRight: wp('1%'),
     tintColor: '#fff',
+  },
+  ratingText: {
+    color: '#fff',
+    fontSize: wp('3%'),
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   restaurantInfo: {
     padding: wp('4%'),
@@ -651,18 +716,6 @@ const styles = StyleSheet.create({
     paddingVertical: hp('0.5%'),
     borderRadius: wp('2%'),
   },
-  starIcon: {
-    width: wp('3%'),
-    height: wp('3%'),
-    marginRight: wp('1%'),
-    tintColor: '#fff',
-  },
-  ratingText: {
-    color: '#fff',
-    fontSize: wp('3%'),
-    fontFamily: getFontFamily('SemiBold'),
-    fontWeight: getFontWeight('SemiBold'),
-  },
   description: {
     fontSize: wp('3.5%'),
     color: '#666',
@@ -685,6 +738,7 @@ const styles = StyleSheet.create({
     width: wp('3.5%'),
     height: wp('3.5%'),
     marginRight: wp('1%'),
+    tintColor: COLORS.primary,
   },
   infoText: {
     fontSize: wp('3%'),
@@ -734,8 +788,21 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
     lineHeight: hp('2.5%'),
+    marginBottom: hp('3%'),
     fontFamily: getFontFamily('Medium'),
     fontWeight: getFontWeight('Medium'),
+  },
+  tryAgainButton: {
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: wp('6%'),
+    paddingVertical: hp('1.5%'),
+    borderRadius: wp('3%'),
+  },
+  tryAgainText: {
+    color: '#fff',
+    fontSize: wp('3.8%'),
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   modalOverlay: {
     flex: 1,

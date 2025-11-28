@@ -9,12 +9,12 @@ import {
   Dimensions,
   StatusBar,
   Platform,
-  Vibration,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../../theme/colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { getFontFamily, getFontWeight } from '../../../../utils/fontHelper';
+import { vibrate } from '../../../../utils/vibrationHelper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -67,7 +67,7 @@ const AddMoreSubscription = () => {
   ];
 
   const handleHeartPressWithVibration = (id: number) => {
-    Vibration.vibrate(50);
+    vibrate(40); // Use vibrationHelper with consistent duration
     setLikedIds(prev =>
       prev.includes(id) ? prev.filter(lid => lid !== id) : [...prev, id],
     );
@@ -108,7 +108,7 @@ const AddMoreSubscription = () => {
           style={styles.locationIcon}
           resizeMode="contain"
         />
-        <Text style={styles.subtitle}>Nearby restaurant’s for subscription</Text>
+        <Text style={styles.subtitle}>Nearby restaurant's for subscription</Text>
       </View>
 
       <ScrollView
@@ -126,13 +126,13 @@ const AddMoreSubscription = () => {
                   resizeMode="cover"
                 />
 
-                {/* Heart Icon over image */}
+                {/* Heart Icon - Same style as previous components */}
                 <TouchableOpacity
                   style={[
-                    styles.heartBtn,
-                    isLiked ? styles.heartBtnFilled : styles.heartBtnBack,
+                    styles.productHeartWrapper,
+                    { backgroundColor: isLiked ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)' }
                   ]}
-                  activeOpacity={0.8}
+                  activeOpacity={0.7}
                   onPress={() => handleHeartPressWithVibration(item.id)}
                 >
                   <Image
@@ -143,7 +143,7 @@ const AddMoreSubscription = () => {
                     }
                     style={[
                       styles.heartIcon,
-                      !isLiked && styles.heartIconWhite,
+                      { tintColor: isLiked ? COLORS.primary : '#fff' }
                     ]}
                     resizeMode="contain"
                   />
@@ -155,7 +155,7 @@ const AddMoreSubscription = () => {
                   <Text style={styles.title}>{item.name}</Text>
 
                   {/* Rating positioned inside content */}
-                  <View style={styles.ratingContainer}>
+                  <View style={styles.productRatingBadge}>
                     <Image
                       source={require('../../../../assets/star.png')}
                       style={styles.starIcon}
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
     color: '#000',
     fontFamily: getFontFamily('Bold'),
     fontWeight: getFontWeight('Bold'),
-    marginTop: hp('0.5%'), // align top with back icon
+    marginTop: hp('0.5%'),
   },
 
   subtitleContainer: {
@@ -295,33 +295,29 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 
-  heartBtn: {
+  // Heart wrapper styles - Same as previous components
+  productHeartWrapper: {
     position: 'absolute',
     top: hp('1.5%'),
     right: wp('4%'),
-    width: wp('10%'),
-    height: wp('10%'),
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
     borderRadius: wp('5%'),
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-  },
-  heartBtnBack: {
-    backgroundColor: COLORS.primary,
-  },
-  heartBtnFilled: {
-    backgroundColor: '#FFFFFF',
+    padding: wp('2%'),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   heartIcon: {
-    width: wp('4.5%'),
-    height: wp('4.5%'),
-  },
-  heartIconWhite: {
-    tintColor: '#FFFFFF',
+    width: wp('4%'),
+    height: wp('4%'),
   },
 
   contentBox: {
@@ -346,13 +342,25 @@ const styles = StyleSheet.create({
     fontWeight: getFontWeight('Bold'),
   },
 
-  ratingContainer: {
+  // Rating badge styles - Same as previous components
+  productRatingBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: COLORS.primary,
     paddingHorizontal: wp('2.5%'),
     paddingVertical: hp('0.5%'),
     borderRadius: wp('3%'),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   starIcon: {
     width: wp('3%'),

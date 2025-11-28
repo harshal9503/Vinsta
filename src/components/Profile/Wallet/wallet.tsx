@@ -9,11 +9,13 @@ import {
   Dimensions,
   StatusBar,
   TextInput,
+  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
-import font from '../../../assets/fonts';
 import { ThemeContext } from '../../../theme/ThemeContext';
+import { getFontFamily, getFontWeight } from '../../../utils/fontHelper';
+
 const { width, height } = Dimensions.get('window');
 
 const transactions = [
@@ -116,8 +118,8 @@ const Wallet = () => {
     setFilteredTransactions(transactions);
   };
 
-
   const {theme} = useContext(ThemeContext);
+  
   return (
     <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
@@ -248,7 +250,10 @@ const Wallet = () => {
 export default Wallet;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#fff' 
+  },
 
   /** HEADER **/
   header: {
@@ -259,19 +264,41 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 10,
   },
-  backIcon: { width: 22, height: 22, resizeMode: 'contain' },
-  headerTitle: { fontSize: width * 0.045, fontWeight: '700', color: '#000',fontFamily : 'Figtree-Bold' },
-  headerIcons: { flexDirection: 'row', alignItems: 'center' },
-  icon: { width: 20, height: 20, tintColor: '#000', resizeMode: 'contain' },
+  backIcon: { 
+    width: 22, 
+    height: 22, 
+    resizeMode: 'contain' 
+  },
+  headerTitle: { 
+    fontSize: width * 0.045, 
+    color: '#000',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
+  headerIcons: { 
+    flexDirection: 'row', 
+    alignItems: 'center' 
+  },
+  icon: { 
+    width: 20, 
+    height: 20, 
+    tintColor: '#000', 
+    resizeMode: 'contain' 
+  },
 
   /** SEARCH **/
-  searchBar: { paddingHorizontal: 20, paddingBottom: 10 },
+  searchBar: { 
+    paddingHorizontal: 20, 
+    paddingBottom: 10 
+  },
   searchInput: {
     backgroundColor: '#f2f2f2',
     borderRadius: 10,
     paddingHorizontal: 12,
     height: 40,
     color: '#000',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
 
   /** DROPDOWN **/
@@ -298,9 +325,17 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderColor: '#eee',
   },
-  optionText: { color: '#000', fontWeight: '500', fontSize: 14, fontFamily : "Figtree-Medium",
-   },
-  optionIcon: { width: 14, height: 14, resizeMode: 'contain' },
+  optionText: { 
+    color: '#000', 
+    fontSize: 14, 
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
+  optionIcon: { 
+    width: 14, 
+    height: 14, 
+    resizeMode: 'contain' 
+  },
 
   /** CARD **/
   cardWrapper: {
@@ -311,7 +346,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     justifyContent: 'center',
   },
-  cardBase: { ...StyleSheet.absoluteFillObject, backgroundColor: '#8F3C09' },
+  cardBase: { 
+    ...StyleSheet.absoluteFillObject, 
+    backgroundColor: '#8F3C09' 
+  },
   cardOverlay: {
     position: 'absolute',
     right: -width * 0.15,
@@ -322,13 +360,32 @@ const styles = StyleSheet.create({
     opacity: 0.42,
     transform: [{ rotate: '-18deg' }],
   },
-  cardContent: { position: 'absolute', top: 20, left: 25, right: 25 },
-  cardName: { color: '#fff', fontSize: width * 0.045, fontWeight: '700', fontFamily : "Figtree-Bold",
-    },
-  cardNumber: { color: '#fff', opacity: 0.9, marginTop: 4, fontFamily : "Figtree-Regular",
-    fontWeight : '400' },
-  balanceLabel: { color: '#fff', opacity: 0.9, marginTop: 18, fontFamily : "Figtree-Medium",
-    fontWeight : '500' },
+  cardContent: { 
+    position: 'absolute', 
+    top: 20, 
+    left: 25, 
+    right: 25 
+  },
+  cardName: { 
+    color: '#fff', 
+    fontSize: width * 0.045, 
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
+  cardNumber: { 
+    color: '#fff', 
+    opacity: 0.9, 
+    marginTop: 4, 
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
+  },
+  balanceLabel: { 
+    color: '#fff', 
+    opacity: 0.9, 
+    marginTop: 18, 
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
   balanceRow: { 
     flexDirection: 'row', 
     alignItems: 'center', 
@@ -338,8 +395,8 @@ const styles = StyleSheet.create({
   balanceAmount: {
     color: '#fff',
     fontSize: width * 0.08,
-    fontWeight: '700',
-     fontFamily : "Figtree-Bold",
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   topUpBtn: {
     flexDirection: 'row',
@@ -350,10 +407,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     marginRight: 0,
   },
-  bagIcon: { width: 16, height: 16, resizeMode: 'contain', marginRight: 6 },
-  topUpText: { color: '#000', fontWeight: '600', fontSize: width * 0.035, fontFamily : "Figtree-SemiBold",},
-  cardLogos: { position: 'absolute', top: 18, right: 25, flexDirection: 'row', alignItems: 'center' },
-  cardLogo: { width: 50, height: 50, resizeMode: 'contain' },
+  bagIcon: { 
+    width: 16, 
+    height: 16, 
+    resizeMode: 'contain', 
+    marginRight: 6 
+  },
+  topUpText: { 
+    color: '#000', 
+    fontSize: width * 0.035, 
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
+  },
+  cardLogos: { 
+    position: 'absolute', 
+    top: 18, 
+    right: 25, 
+    flexDirection: 'row', 
+    alignItems: 'center' 
+  },
+  cardLogo: { 
+    width: 50, 
+    height: 50, 
+    resizeMode: 'contain' 
+  },
 
   /** FILTER INDICATOR **/
   filterIndicator: {
@@ -368,21 +445,42 @@ const styles = StyleSheet.create({
     borderLeftWidth: 4,
     borderLeftColor: COLORS.primary,
   },
-  filterText: { color: '#000', fontWeight: '600', fontSize: 14, fontFamily : "Figtree-SemiBold",},
-  clearFilterText: { color: COLORS.primary, fontSize: 14, fontFamily : "Figtree-Medium",
-    fontWeight : '500' },
+  filterText: { 
+    color: '#000', 
+    fontSize: 14, 
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
+  },
+  clearFilterText: { 
+    color: COLORS.primary, 
+    fontSize: 14, 
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
 
   /** TRANSACTION SECTION **/
-  transactionSection: { marginTop: 25, paddingHorizontal: 20 },
+  transactionSection: { 
+    marginTop: 25, 
+    paddingHorizontal: 20 
+  },
   transactionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 10,
   },
-  transactionTitle: { fontWeight: '700', fontSize: width * 0.042, color: '#000' , fontFamily : "Figtree-Bold",},
-  seeAll: { color: COLORS.primary, fontSize: width * 0.037, fontFamily : "Figtree-Medium",
-    fontWeight : '500' },
+  transactionTitle: { 
+    fontSize: width * 0.042, 
+    color: '#000',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
+  seeAll: { 
+    color: COLORS.primary, 
+    fontSize: width * 0.037, 
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
   transactionRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -390,13 +488,46 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.6,
     borderColor: '#eee',
   },
-  foodImg: { width: 45, height: 45, borderRadius: 22.5, marginRight: 12 },
-  foodTitle: { fontWeight: '600', fontSize: width * 0.038, color: '#000', fontFamily : "Figtree-SemiBold"},
-  foodTime: { color: '#888', fontSize: width * 0.032, marginTop: 2 , fontFamily : "Figtree-Medium",
-    fontWeight : '500'},
-  foodAmount: { fontWeight: '700', fontSize: width * 0.038, color: '#000',fontFamily : 'Figtree-Bold' },
-  typeRow: { flexDirection: 'row', alignItems: 'center', marginTop: 2 },
-  typeText: { color: '#888', fontSize: width * 0.032, marginRight: 4 , fontFamily : "Figtree-Medium",
-    fontWeight : '500'},
-  arrowIcon: { width: 12, height: 12, resizeMode: 'contain' },
+  foodImg: { 
+    width: 45, 
+    height: 45, 
+    borderRadius: 22.5, 
+    marginRight: 12 
+  },
+  foodTitle: { 
+    fontSize: width * 0.038, 
+    color: '#000', 
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
+  },
+  foodTime: { 
+    color: '#888', 
+    fontSize: width * 0.032, 
+    marginTop: 2,
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
+  foodAmount: { 
+    fontSize: width * 0.038, 
+    color: '#000',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
+  typeRow: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    marginTop: 2 
+  },
+  typeText: { 
+    color: '#888', 
+    fontSize: width * 0.032, 
+    marginRight: 4,
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
+  arrowIcon: { 
+    width: 12, 
+    height: 12, 
+    resizeMode: 'contain' 
+  },
 });

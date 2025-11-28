@@ -11,3 +11,5 @@
 18 NOV 2025 -> 2:31 PUSH from MAC Harshal-MAC -> latest push 4:40 PM
 19 NOV 2025 -> Push from MAC 11:47 AM -> Dark Mode
 24 Nov 2025 -> Push on main from windows beacuse MAc code have error 
+24 NOV 2025 -> update and wroking code push from MAC 4:20 PM (icons fix color heart)
+26 Nov 2025 -> Client fixes fonts issue in Cart,Wallet,Wishlist,Refer these screen - Fixed (2 static screens due in Subscription ) push from MAC 10:46 AM

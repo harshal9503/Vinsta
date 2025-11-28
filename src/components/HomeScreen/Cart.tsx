@@ -9,10 +9,11 @@ import {
   Dimensions,
   StatusBar,
   TextInput,
+  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
-import font from '../../assets/fonts';
+import { getFontFamily, getFontWeight } from '../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -222,7 +223,10 @@ const CartScreen = () => {
 export default CartScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#fff' 
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -231,8 +235,17 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingHorizontal: 20,
   },
-  backIcon: { width: 22, height: 22, tintColor: '#000' },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: '#000', fontFamily: 'Figtree-Bold' },
+  backIcon: { 
+    width: 22, 
+    height: 22, 
+    tintColor: '#000' 
+  },
+  headerTitle: { 
+    fontSize: 18, 
+    color: '#000', 
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
 
   cartCard: {
     flexDirection: 'row',
@@ -247,10 +260,31 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     padding: 12,
   },
-  foodImg: { width: 80, height: 80, borderRadius: 10, resizeMode: 'cover' },
-  foodName: { fontSize: 16, fontWeight: '700', color: '#000', fontFamily: 'Figtree-Bold' },
-  foodSub: { fontSize: 13, color: '#777', marginBottom: 5, fontFamily: 'Figtree-SemiBold', fontWeight: '600' },
-  foodPrice: { fontSize: 15, fontWeight: '700', color: '#000', fontFamily: 'Figtree-Bold' },
+  foodImg: { 
+    width: 80, 
+    height: 80, 
+    borderRadius: 10, 
+    resizeMode: 'cover' 
+  },
+  foodName: { 
+    fontSize: 18, 
+    color: '#000', 
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
+  foodSub: { 
+    fontSize: 13, 
+    color: '#777', 
+    marginBottom: 5, 
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
+  },
+  foodPrice: { 
+    fontSize: 15, 
+    color: '#000', 
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
   qtyContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -263,15 +297,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  qtyText: { fontSize: 16, fontWeight: '700', textAlign: 'center', textAlignVertical: 'center' },
+  qtyText: { 
+    fontSize: 16, 
+    textAlign: 'center', 
+    textAlignVertical: 'center',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
   qtyNumber: {
     marginHorizontal: 10,
     fontSize: 14,
-    fontWeight: '600',
     color: '#000',
-    fontFamily: 'Figtree-SemiBold',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
-  deleteIcon: { width: 20, height: 20, tintColor: '#FF6B6B' },
+  deleteIcon: { 
+    width: 20, 
+    height: 20, 
+    tintColor: '#FF6B6B' 
+  },
 
   deliveryCard: {
     backgroundColor: '#fff',
@@ -298,33 +342,64 @@ const styles = StyleSheet.create({
   },
   deliveryTitle: {
     fontSize: 15,
-    fontWeight: '700',
     color: COLORS.primary,
     flex: 1,
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   changeButton: {
     marginLeft: 'auto',
   },
   changeText: {
     color: COLORS.primary,
-    fontWeight: '700',
     fontSize: 14,
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
-  addressText: { fontSize: 13, color: '#555', marginTop: 4, lineHeight: 18, fontFamily: 'Figtree-Medium', fontWeight: '500' },
+  addressText: { 
+    fontSize: 13, 
+    color: '#555', 
+    marginTop: 4, 
+    lineHeight: 18, 
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
 
   priceRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 8,
   },
-  priceLabel: { fontSize: 14, color: '#000', fontFamily: 'Figtree-SemiBold', fontWeight: '600' },
-  priceValue: { fontSize: 14, fontWeight: '600', color: '#000', fontFamily: 'Figtree-SemiBold' },
-  divider: { height: 1, backgroundColor: '#E0E0E0', marginVertical: 10 },
+  priceLabel: { 
+    fontSize: 14, 
+    color: '#000', 
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
+  },
+  priceValue: { 
+    fontSize: 14, 
+    color: '#000', 
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
+  },
+  divider: { 
+    height: 1, 
+    backgroundColor: '#E0E0E0', 
+    marginVertical: 10 
+  },
 
-  subtotalLabel: { fontSize: 16, fontWeight: '700', color: '#000', fontFamily: 'Figtree-Bold' },
-  subtotalValue: { fontSize: 16, fontWeight: '700', color: COLORS.primary, fontFamily: 'Figtree-Bold' },
+  subtotalLabel: { 
+    fontSize: 16, 
+    color: '#000', 
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
+  subtotalValue: { 
+    fontSize: 16, 
+    color: COLORS.primary, 
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
 
   input: {
     borderWidth: 1,
@@ -335,8 +410,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 10,
     color: '#000',
-    fontFamily: 'Figtree-Regular',
-    fontWeight: '400',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
   couponBtn: {
     marginTop: 10,
@@ -347,9 +422,9 @@ const styles = StyleSheet.create({
   couponText: {
     color: COLORS.primary,
     textAlign: 'center',
-    fontWeight: '600',
     fontSize: 14,
-    fontFamily: 'Figtree-SemiBold',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   checkoutBtn: {
     backgroundColor: COLORS.primary,
@@ -361,7 +436,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
     fontSize: 16,
-    fontWeight: '700',
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
 });

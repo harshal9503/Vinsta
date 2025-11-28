@@ -11,7 +11,6 @@ import {
   StatusBar,
   Animated,
   Platform,
-  Vibration,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS } from '../../../../theme/colors';
@@ -20,6 +19,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { getFontFamily, getFontWeight } from '../../../../utils/fontHelper';
+import { vibrate } from '../../../../utils/vibrationHelper';
 import RecommendedFood from './RecommendedFood';
 import BestInBurger from './BestInBurger';
 import FilterModal from './FilterModal';
@@ -299,7 +299,7 @@ const RestaurentDetails: React.FC = () => {
 
   // Heart press handler for header back button heart with scale animation, color switch, and vibration
   const onHeaderHeartPress = () => {
-    Vibration.vibrate(50);
+    vibrate(40); // Use vibrationHelper with consistent duration
     Animated.sequence([
       Animated.timing(headerHeartScale, {
         toValue: 1.3,
@@ -369,13 +369,14 @@ const RestaurentDetails: React.FC = () => {
 
             <Text style={styles.headerTitle}>Bistro Excellence</Text>
 
+            {/* Heart Button - Same style as previous components */}
             <TouchableOpacity
               style={[
-                styles.headerHeartBtn,
-                headerLiked && styles.headerHeartBtnLiked,
+                styles.productHeartWrapper,
+                { backgroundColor: headerLiked ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)' }
               ]}
               onPress={onHeaderHeartPress}
-              activeOpacity={0.8}
+              activeOpacity={0.7}
             >
               <Animated.Image
                 source={
@@ -385,6 +386,7 @@ const RestaurentDetails: React.FC = () => {
                 }
                 style={[
                   styles.heartIcon,
+                  { tintColor: headerLiked ? COLORS.primary : '#fff' },
                   { transform: [{ scale: headerHeartScale }] },
                 ]}
                 resizeMode="contain"
@@ -603,21 +605,26 @@ const styles = StyleSheet.create({
     height: wp('5.5%'),
     tintColor: '#fff',
   },
-  headerHeartBtn: {
-    backgroundColor: COLORS.primary,
-    borderRadius: wp('6%'),
+  // Heart wrapper styles - Same as previous components
+  productHeartWrapper: {
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: wp('5%'),
     padding: wp('2%'),
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.09,
-    shadowRadius: 8,
-  },
-  headerHeartBtnLiked: {
-    backgroundColor: '#fff',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   heartIcon: {
-    width: wp('4.3%'),
-    height: wp('4.3%'),
+    width: wp('4%'),
+    height: wp('4%'),
   },
   searchWrapper: {
     flexDirection: 'row',

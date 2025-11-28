@@ -12,6 +12,7 @@ import {
   TextInput,
   Platform,
   Vibration,
+  Animated,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
@@ -161,7 +162,31 @@ const BestBurgers = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [likedIds, setLikedIds] = useState<number[]>([]);
+  const [heartScales] = useState<Record<number, Animated.Value>>(() => {
+    const scales: Record<number, Animated.Value> = {};
+    allBurgers.forEach(burger => {
+      scales[burger.id] = new Animated.Value(1);
+    });
+    return scales;
+  });
+  
   const filters = ['All', 'Veg', 'Non-Veg', 'Under $40', 'Rating 4+', 'Fast Delivery'];
+
+  // Heart animation function
+  const animateHeart = (id: number) => {
+    Animated.sequence([
+      Animated.timing(heartScales[id], {
+        toValue: 1.2,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+      Animated.timing(heartScales[id], {
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
 
   const getFilteredBurgers = () => {
     let filtered = allBurgers;
@@ -209,9 +234,10 @@ const BestBurgers = () => {
     setSearchQuery('');
   };
 
-  // Heart press toggles liked state with vibration
+  // Heart press toggles liked state with vibration and animation
   const handleHeartPressWithVibration = (id: number) => {
-    Vibration.vibrate(50);
+    Vibration.vibrate(40);
+    animateHeart(id);
     setLikedIds(prev =>
       prev.includes(id) ? prev.filter(lid => lid !== id) : [...prev, id]
     );
@@ -236,11 +262,11 @@ const BestBurgers = () => {
             <View style={styles.vegDot} />
           </View>
 
-          {/* Heart Button */}
+          {/* Heart Button - Updated to match RecommendedFood style */}
           <TouchableOpacity
             style={[
               styles.heartBtn,
-              isLiked ? styles.heartBtnFilled : styles.heartBtnBack,
+              { backgroundColor: isLiked ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)' }
             ]}
             activeOpacity={0.7}
             onPress={(e) => {
@@ -248,7 +274,7 @@ const BestBurgers = () => {
               handleHeartPressWithVibration(item.id);
             }}
           >
-            <Image
+            <Animated.Image
               source={
                 isLiked
                   ? require('../../assets/heartfill.png')
@@ -256,7 +282,8 @@ const BestBurgers = () => {
               }
               style={[
                 styles.heartIcon,
-                !isLiked && styles.heartIconWhite,
+                { tintColor: isLiked ? COLORS.primary : '#fff' },
+                { transform: [{ scale: heartScales[item.id] }] },
               ]}
               resizeMode="contain"
             />
@@ -563,19 +590,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 5,
-  },
-  heartBtnBack: {
-    backgroundColor: COLORS.primary,
-  },
-  heartBtnFilled: {
-    backgroundColor: '#fff',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   heartIcon: {
     width: 14,
     height: 14,
-  },
-  heartIconWhite: {
-    tintColor: '#fff',
   },
   ratingBadge: {
     position: 'absolute',

@@ -30,6 +30,7 @@ import FeaturedRestaurant from './FeaturedRestaurant';
 import BesRatedBurger from './BesRatedBurger';
 import SearchModal from './SearchModal';
 import { ThemeContext } from '../../../theme/ThemeContext';
+import { vibrate } from '../../../utils/vibrationHelper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -136,6 +137,7 @@ const vegProducts = [
     oldPrice: '$50.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
+    isFavorite: false,
   },
   {
     id: 2,
@@ -145,6 +147,7 @@ const vegProducts = [
     oldPrice: '$50.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
+    isFavorite: false,
   },
   {
     id: 3,
@@ -154,6 +157,7 @@ const vegProducts = [
     oldPrice: '$50.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
+    isFavorite: false,
   },
   {
     id: 4,
@@ -163,6 +167,7 @@ const vegProducts = [
     oldPrice: '$50.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
+    isFavorite: false,
   },
 ];
 
@@ -175,6 +180,7 @@ const nonVegProducts = [
     oldPrice: '$60.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
+    isFavorite: false,
   },
   {
     id: 2,
@@ -184,6 +190,7 @@ const nonVegProducts = [
     oldPrice: '$70.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
+    isFavorite: false,
   },
   {
     id: 3,
@@ -193,6 +200,7 @@ const nonVegProducts = [
     oldPrice: '$80.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
+    isFavorite: false,
   },
   {
     id: 4,
@@ -202,6 +210,7 @@ const nonVegProducts = [
     oldPrice: '$90.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
+    isFavorite: false,
   },
 ];
 
@@ -213,10 +222,99 @@ const HomeScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isVegMode, setIsVegMode] = useState(true);
   const {theme} = useContext(ThemeContext);
+  const [vegProductsState, setVegProductsState] = useState(vegProducts);
+  const [nonVegProductsState, setNonVegProductsState] = useState(nonVegProducts);
+  const [vegRestaurantsState, setVegRestaurantsState] = useState([
+    {
+      id: 1,
+      name: 'Bistro Excellence',
+      img: require('../../../assets/featuredrestaurant.png'),
+      rating: 4.4,
+      deliveryTime: '10-15 mins',
+      tags: ['Burger', 'Chicken', 'FastFood'],
+      isFavorite: false,
+    },
+    {
+      id: 2,
+      name: 'Elite-Ember',
+      img: require('../../../assets/featuredrestaurant.png'),
+      rating: 4.4,
+      deliveryTime: '10-15 mins',
+      tags: ['Burger', 'Chicken', 'FastFood'],
+      isFavorite: false,
+    },
+  ]);
+  const [nonVegRestaurantsState, setNonVegRestaurantsState] = useState([
+    {
+      id: 2,
+      name: 'Elite-Ember',
+      img: require('../../../assets/featuredrestaurant.png'),
+      rating: 4.4,
+      deliveryTime: '10-15 mins',
+      tags: ['Chicken', 'Mutton', 'Seafood'],
+      isFavorite: false,
+    },
+    {
+      id: 1,
+      name: 'Bistro Excellence',
+      img: require('../../../assets/featuredrestaurant.png'),
+      rating: 4.4,
+      deliveryTime: '10-15 mins',
+      tags: ['Chicken', 'Mutton', 'Seafood'],
+      isFavorite: false,
+    },
+  ]);
 
   const toggleVegMode = () => {
     setIsVegMode(prev => !prev);
   };
+
+  // Toggle favorite status for products with vibration
+  const toggleFavoriteProduct = (productId: number, isVeg: boolean) => {
+    vibrate(40); // Use the vibration helper
+    
+    if (isVeg) {
+      setVegProductsState(prevProducts =>
+        prevProducts.map(product =>
+          product.id === productId
+            ? { ...product, isFavorite: !product.isFavorite }
+            : product
+        )
+      );
+    } else {
+      setNonVegProductsState(prevProducts =>
+        prevProducts.map(product =>
+          product.id === productId
+            ? { ...product, isFavorite: !product.isFavorite }
+            : product
+        )
+      );
+    }
+  };
+
+  // Toggle favorite status for restaurants with vibration
+  const toggleFavoriteRestaurant = (restaurantId: number, isVeg: boolean) => {
+    vibrate(40); // Use the vibration helper
+    
+    if (isVeg) {
+      setVegRestaurantsState(prevRestaurants =>
+        prevRestaurants.map(restaurant =>
+          restaurant.id === restaurantId
+            ? { ...restaurant, isFavorite: !restaurant.isFavorite }
+            : restaurant
+        )
+      );
+    } else {
+      setNonVegRestaurantsState(prevRestaurants =>
+        prevRestaurants.map(restaurant =>
+          restaurant.id === restaurantId
+            ? { ...restaurant, isFavorite: !restaurant.isFavorite }
+            : restaurant
+        )
+      );
+    }
+  };
+
   // Navigation handlers
   const handleTodayOfferViewAll = () => {
     navigation.navigate('todayOfferView');
@@ -274,11 +372,11 @@ const HomeScreen = () => {
 
   // Get current restaurants and products based on mode
   const getCurrentRestaurants = () => {
-    return isVegMode ? vegRestaurants : nonVegRestaurants;
+    return isVegMode ? vegRestaurantsState : nonVegRestaurantsState;
   };
 
   const getCurrentProducts = () => {
-    return isVegMode ? vegProducts : nonVegProducts;
+    return isVegMode ? vegProductsState : nonVegProductsState;
   };
 
   const [appliedFilters, setAppliedFilters] = useState({
@@ -299,43 +397,6 @@ const HomeScreen = () => {
     return Object.values(appliedFilters).some(filter => filter !== 'All');
   };
 
-  const vegRestaurants = [
-    {
-      id: 1,
-      name: 'Bistro Excellence',
-      img: require('../../../assets/featuredrestaurant.png'),
-      rating: 4.4,
-      deliveryTime: '10-15 mins',
-      tags: ['Burger', 'Chicken', 'FastFood'],
-    },
-    {
-      id: 2,
-      name: 'Elite-Ember',
-      img: require('../../../assets/featuredrestaurant.png'),
-      rating: 4.4,
-      deliveryTime: '10-15 mins',
-      tags: ['Burger', 'Chicken', 'FastFood'],
-    },
-  ];
-
-  const nonVegRestaurants = [
-    {
-      id: 2,
-      name: 'Elite-Ember',
-      img: require('../../../assets/featuredrestaurant.png'),
-      rating: 4.4,
-      deliveryTime: '10-15 mins',
-      tags: ['Chicken', 'Mutton', 'Seafood'],
-    },
-    {
-      id: 1,
-      name: 'Bistro Excellence',
-      img: require('../../../assets/featuredrestaurant.png'),
-      rating: 4.4,
-      deliveryTime: '10-15 mins',
-      tags: ['Chicken', 'Mutton', 'Seafood'],
-    },
-  ];
   return (
     <View style={[styles.container,{backgroundColor : theme.background}]}>
       <StatusBar
@@ -395,7 +456,6 @@ const HomeScreen = () => {
           {/* Title Row */}
           <TitleRow isVegMode={isVegMode} toggleVegMode={toggleVegMode} />
 
-
           {/* Search Items */}
           <SearchItem
             onOpenFilter={() => setShowFilterModal(true)}
@@ -437,6 +497,8 @@ const HomeScreen = () => {
           <FeaturedRestaurant
             getCurrentRestaurants={getCurrentRestaurants}
             handleRestaurantPress={handleRestaurantPress}
+            toggleFavorite={toggleFavoriteRestaurant}
+            isVegMode={isVegMode}
           />
 
           {/* Best-Rated Burgers */}
@@ -462,6 +524,8 @@ const HomeScreen = () => {
           <BesRatedBurger
             getCurrentProducts={getCurrentProducts}
             handleProductPress={handleProductPress}
+            toggleFavorite={toggleFavoriteProduct}
+            isVegMode={isVegMode}
           />
 
           {/* Bottom info */}

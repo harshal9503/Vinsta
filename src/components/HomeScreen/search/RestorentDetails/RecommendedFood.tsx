@@ -4,7 +4,7 @@ import React from 'react'
 import { COLORS } from '../../../../theme/colors'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { getFontFamily, getFontWeight } from '../../../../utils/fontHelper'
-import { vibrate } from '../../../../utils/vibrationHelper'  // <-- IMPORT HERE
+import { vibrate } from '../../../../utils/vibrationHelper'
 
 const RecommendedFood = ({
   foodItems,
@@ -17,12 +17,12 @@ const RecommendedFood = ({
 }) => {
   
   const handleHeartPressWithVibration = (id: number) => {
-    vibrate(50);  // <--- ADDED VIBRATION
+    vibrate(40);  // Consistent vibration duration
     handleHeartPress(id);
   };
 
   const handlePlusPressWithVibration = (id: number) => {
-    vibrate(30);  // <--- ADDED VIBRATION
+    vibrate(30);
     handlePlusPress(id);
   };
 
@@ -33,13 +33,14 @@ const RecommendedFood = ({
         return (
           <View key={f.id} style={styles.foodCard}>
 
-            {/* Heart Icon */}
+            {/* Heart Icon - Same style as previous components */}
             <TouchableOpacity
               style={[
-                styles.heartWrapper,
-                isLiked ? styles.heartWrapperFilled : styles.heartWrapperBack
+                styles.productHeartWrapper,
+                { backgroundColor: isLiked ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)' }
               ]}
               onPress={() => handleHeartPressWithVibration(f.id)}
+              activeOpacity={0.7}
             >
               <Animated.Image
                 source={
@@ -48,8 +49,8 @@ const RecommendedFood = ({
                     : require('../../../../assets/heart.png')
                 }
                 style={[
-                  styles.heartIconSmall,
-                  isLiked && styles.heartIconFilled,
+                  styles.heartIcon,
+                  { tintColor: isLiked ? COLORS.primary : '#fff' },
                   { transform: [{ scale: heartScales[f.id] || 1 }] },
                 ]}
                 resizeMode="contain"
@@ -66,7 +67,9 @@ const RecommendedFood = ({
                 style={styles.foodImg}
                 resizeMode="cover"
               />
-              <View style={styles.foodRatingBadge}>
+              
+              {/* Rating Badge - Same style as previous components */}
+              <View style={styles.productRatingBadge}>
                 <Image
                   source={require('../../../../assets/star.png')}
                   style={styles.starIcon}
@@ -176,31 +179,30 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     position: 'relative',
   },
-  heartWrapper: {
+  // Heart wrapper styles - Same as previous components
+  productHeartWrapper: {
     position: 'absolute',
     right: wp('3%'),
     top: hp('1.2%'),
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
     borderRadius: wp('5%'),
-    padding: wp('1.8%'),
+    padding: wp('2%'),
     zIndex: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.09,
-    shadowRadius: 5,
-    elevation: 2,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
-  heartWrapperBack: {
-    backgroundColor: 'rgba(0,0,0,0.25)',
-  },
-  heartWrapperFilled: {
-    backgroundColor: '#fff',
-  },
-  heartIconSmall: {
-    width: wp('4.5%'),
-    height: wp('4.5%'),
-    tintColor: '#fff',
-  },
-  heartIconFilled: {
-    tintColor: undefined,
+  heartIcon: {
+    width: wp('4%'),
+    height: wp('4%'),
   },
   foodImg: {
     width: '100%',
@@ -208,28 +210,40 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: wp('4.5%'),
     borderTopRightRadius: wp('4.5%'),
   },
-  foodRatingBadge: {
+  // Rating badge styles - Same as previous components
+  productRatingBadge: {
     position: 'absolute',
     bottom: hp('1%'),
     right: wp('3%'),
-    backgroundColor: COLORS.primary,
-    borderRadius: wp('2.5%'),
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: wp('1.5%'),
-    paddingVertical: hp('0.4%'),
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: wp('2.5%'),
+    paddingVertical: hp('0.5%'),
+    borderRadius: wp('2%'),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   starIcon: {
     width: wp('3%'),
     height: wp('3%'),
-    tintColor: '#fff',
     marginRight: wp('1%'),
+    tintColor: '#fff',
   },
   ratingText: {
     color: '#fff',
     fontSize: hp('1.3%'),
-    fontFamily: Platform.OS === 'android' ? 'Figtree-SemiBold' : 'Figtree',
-    fontWeight: Platform.OS === 'android' ? undefined : '600',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
 
   foodInfo: {
