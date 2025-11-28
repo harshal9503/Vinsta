@@ -90,7 +90,7 @@ const SearchScreen = () => {
   ];
 
   const handleHeartPress = (id: number) => {
-    // Vibration effect using vibrationHelper
+    // Vibration effect using vibrationHelper - same as FoodDetails
     vibrate(40);
 
     if (!heartScales[id]) heartScales[id] = new Animated.Value(1);
@@ -112,6 +112,9 @@ const SearchScreen = () => {
   };
 
   const handlePlusPress = (id: number) => {
+    // Vibration effect for plus button as well
+    vibrate(40);
+    
     if (!plusScales[id]) plusScales[id] = new Animated.Value(1);
     Animated.sequence([
       Animated.timing(plusScales[id], {
@@ -224,17 +227,56 @@ const SearchScreen = () => {
               activeOpacity={0.9}
               onPress={() => navigation.navigate('restaurentDetails')}
             >
-              <Image source={r.img} style={styles.cardImg} />
+              <View style={styles.cardImageContainer}>
+                <Image source={r.img} style={styles.cardImg} />
+                
+                {/* Heart Button for Restaurant - Same exact style as FoodDetails */}
+                <TouchableOpacity
+                  style={[
+                    styles.productHeartWrapper,
+                    { 
+                      backgroundColor: likedItems.includes(r.id) 
+                        ? 'rgba(255, 255, 255, 0.9)' 
+                        : 'rgba(255, 255, 255, 0.3)',
+                      position: 'absolute',
+                      top: 10,
+                      right: 10,
+                    }
+                  ]}
+                  onPress={() => handleHeartPress(r.id)}
+                  activeOpacity={0.7}
+                >
+                  <Animated.Image
+                    source={
+                      likedItems.includes(r.id)
+                        ? require('../../../assets/heartfill.png')
+                        : require('../../../assets/heart.png')
+                    }
+                    style={[
+                      styles.heartIcon,
+                      { 
+                        tintColor: likedItems.includes(r.id) 
+                          ? COLORS.primary 
+                          : '#fff' 
+                      },
+                      { transform: [{ scale: heartScales[r.id] || 1 }] },
+                    ]}
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
 
-              <View style={styles.cardContent}>
-                <View style={styles.ratingBadge}>
+                {/* Rating Badge */}
+                <View style={styles.productRatingBadge}>
                   <Image
                     source={require('../../../assets/star.png')}
                     style={styles.starIcon}
+                    resizeMode="contain"
                   />
                   <Text style={styles.ratingText}>4.4</Text>
                 </View>
+              </View>
 
+              <View style={styles.cardContent}>
                 <Text style={styles.title}>{r.name}</Text>
 
                 <View style={styles.locationRow}>
@@ -245,29 +287,6 @@ const SearchScreen = () => {
                   <Text style={styles.location}>
                     Near MC College, Barpeta Town
                   </Text>
-                  
-                  {/* Heart Button - Same style as previous components */}
-                  <TouchableOpacity
-                    style={[
-                      styles.productHeartWrapper,
-                      { backgroundColor: likedItems.includes(r.id) ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)' }
-                    ]}
-                    onPress={() => handleHeartPress(r.id)}
-                    activeOpacity={0.7}
-                  >
-                    <Animated.Image
-                      source={
-                        likedItems.includes(r.id)
-                          ? require('../../../assets/heartfill.png')
-                          : require('../../../assets/heart.png')
-                      }
-                      style={[
-                        styles.heartIcon,
-                        { tintColor: likedItems.includes(r.id) ? COLORS.primary : '#fff' },
-                        { transform: [{ scale: heartScales[r.id] || 1 }] },
-                      ]}
-                    />
-                  </TouchableOpacity>
                 </View>
 
                 <View style={styles.infoRow}>
@@ -295,47 +314,65 @@ const SearchScreen = () => {
                 activeOpacity={0.9}
                 onPress={() => navigation.navigate('fooddetails')}
               >
-                <Image source={f.img} style={styles.foodImg} />
-                
-                {/* Heart Button - Same style as previous components */}
-                <TouchableOpacity
-                  style={[
-                    styles.productHeartWrapper,
-                    { backgroundColor: likedItems.includes(f.id) ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)' }
-                  ]}
-                  onPress={() => handleHeartPress(f.id)}
-                  activeOpacity={0.7}
-                >
-                  <Animated.Image
-                    source={
-                      likedItems.includes(f.id)
-                        ? require('../../../assets/heartfill.png')
-                        : require('../../../assets/heart.png')
-                    }
+                <View style={styles.foodImageContainer}>
+                  <Image source={f.img} style={styles.foodImg} />
+                  
+                  {/* Heart Button for Food - Same exact style as FoodDetails */}
+                  <TouchableOpacity
                     style={[
-                      styles.heartIcon,
-                      { tintColor: likedItems.includes(f.id) ? COLORS.primary : '#fff' },
-                      { transform: [{ scale: heartScales[f.id] || 1 }] },
+                      styles.productHeartWrapper,
+                      { 
+                        backgroundColor: likedItems.includes(f.id) 
+                          ? 'rgba(255, 255, 255, 0.9)' 
+                          : 'rgba(255, 255, 255, 0.3)',
+                        position: 'absolute',
+                        top: 10,
+                        right: 10,
+                      }
                     ]}
-                  />
-                </TouchableOpacity>
+                    onPress={() => handleHeartPress(f.id)}
+                    activeOpacity={0.7}
+                  >
+                    <Animated.Image
+                      source={
+                        likedItems.includes(f.id)
+                          ? require('../../../assets/heartfill.png')
+                          : require('../../../assets/heart.png')
+                      }
+                      style={[
+                        styles.heartIcon,
+                        { 
+                          tintColor: likedItems.includes(f.id) 
+                            ? COLORS.primary 
+                            : '#fff' 
+                        },
+                        { transform: [{ scale: heartScales[f.id] || 1 }] },
+                      ]}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
 
-                <View style={styles.foodInfo}>
-                  <View style={styles.ratingBadge}>
+                  {/* Rating Badge */}
+                  <View style={styles.productRatingBadge}>
                     <Image
                       source={require('../../../assets/star.png')}
                       style={styles.starIcon}
+                      resizeMode="contain"
                     />
                     <Text style={styles.ratingText}>4.4</Text>
                   </View>
+                </View>
 
+                <View style={styles.foodInfo}>
                   <Text style={styles.foodName}>{f.name}</Text>
 
                   <View style={styles.priceRow}>
-                    <Text style={styles.price}>₹ {f.price.toFixed(2)}</Text>
-                    <Text style={styles.oldPrice}>
-                      ₹ {f.oldPrice.toFixed(2)}
-                    </Text>
+                    <View style={styles.priceContainer}>
+                      <Text style={styles.price}>₹ {f.price.toFixed(2)}</Text>
+                      <Text style={styles.oldPrice}>
+                        ₹ {f.oldPrice.toFixed(2)}
+                      </Text>
+                    </View>
                     <TouchableOpacity
                       onPress={() => handlePlusPress(f.id)}
                       activeOpacity={0.8}
@@ -347,6 +384,7 @@ const SearchScreen = () => {
                           styles.plusIcon,
                           { transform: [{ scale: plusScales[f.id] || 1 }] },
                         ]}
+                        resizeMode="contain"
                       />
                     </TouchableOpacity>
                   </View>
@@ -480,45 +518,18 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     elevation: 3,
   },
-  cardImg: { width: '100%', height: 180, resizeMode: 'cover' },
-  cardContent: { padding: 14 },
-  ratingBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.primary,
-    alignSelf: 'flex-start',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
-    marginBottom: 6,
+  cardImageContainer: {
+    position: 'relative',
   },
-  starIcon: { width: 12, height: 12, tintColor: '#fff', marginRight: 6 },
-  ratingText: { 
-    color: '#fff', 
-    fontSize: 12, 
-    fontWeight: '700', 
-    fontFamily: 'Figtree-Bold' 
+  cardImg: { 
+    width: '100%', 
+    height: 180, 
+    resizeMode: 'cover' 
   },
-  title: { 
-    fontSize: 16, 
-    fontWeight: '700', 
-    color: '#000',
-    fontFamily: 'Figtree-Bold' 
+  cardContent: { 
+    padding: 14 
   },
-  locationRow: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    marginTop: 6 
-  },
-  locIcon: { width: 12, height: 12, marginRight: 6, resizeMode: 'contain' },
-  location: { 
-    fontSize: 13, 
-    color: '#555', 
-    flex: 1,
-    fontFamily: 'Figtree-Medium', 
-    fontWeight: '500' 
-  },
-  // Heart wrapper styles - Same as previous components
+  // Heart wrapper styles - Exact same as FoodDetails component
   productHeartWrapper: {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     borderRadius: 15,
@@ -538,12 +549,71 @@ const styles = StyleSheet.create({
   heartIcon: { 
     width: 14, 
     height: 14, 
-    resizeMode: 'contain' 
+  },
+  // Rating badge styles - Same as FoodDetails
+  productRatingBadge: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  starIcon: { 
+    width: 12, 
+    height: 12, 
+    tintColor: '#fff', 
+    marginRight: 4 
+  },
+  ratingText: { 
+    color: '#fff', 
+    fontSize: 12, 
+    fontWeight: '700', 
+    fontFamily: 'Figtree-Bold' 
+  },
+  title: { 
+    fontSize: 16, 
+    fontWeight: '700', 
+    color: '#000',
+    fontFamily: 'Figtree-Bold',
+    marginBottom: 4,
+  },
+  locationRow: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    marginBottom: 8,
+  },
+  locIcon: { 
+    width: 12, 
+    height: 12, 
+    marginRight: 6, 
+    resizeMode: 'contain',
+    tintColor: '#555',
+  },
+  location: { 
+    fontSize: 13, 
+    color: '#555', 
+    flex: 1,
+    fontFamily: 'Figtree-Medium', 
+    fontWeight: '500' 
   },
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
     gap: 6,
   },
   subInfo: { 
@@ -555,14 +625,16 @@ const styles = StyleSheet.create({
   metaIcon: {
     width: 13,
     height: 13,
-    marginHorizontal: 4,
+    marginHorizontal: 2,
     resizeMode: 'contain',
+    tintColor: '#555',
   },
   metaText: { 
     color: '#555', 
     fontSize: 12,
     fontFamily: 'Figtree-Medium',
-    fontWeight: '500' 
+    fontWeight: '500',
+    marginRight: 6,
   },
 
   /** FOOD GRID **/
@@ -581,30 +653,40 @@ const styles = StyleSheet.create({
     elevation: 3,
     position: 'relative',
   },
-  foodImg: { width: '100%', height: 140, resizeMode: 'cover' },
-  foodHeartWrapper: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
+  foodImageContainer: {
+    position: 'relative',
   },
-  foodInfo: { padding: 10 },
+  foodImg: { 
+    width: '100%', 
+    height: 140, 
+    resizeMode: 'cover' 
+  },
+  foodInfo: { 
+    padding: 10 
+  },
   foodName: {
     fontSize: 15,
     fontWeight: '700',
     color: '#000',
-    marginVertical: 4,
+    marginBottom: 4,
     fontFamily: 'Figtree-Bold'
   },
   priceRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginBottom: 4,
+  },
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   price: { 
     fontSize: 14, 
     fontWeight: '600', 
     color: '#000',
-    fontFamily: 'Figtree-SemiBold' 
+    fontFamily: 'Figtree-SemiBold',
+    marginRight: 6,
   },
   oldPrice: {
     fontSize: 13,
@@ -619,10 +701,34 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
-  plusIcon: { width: 14, height: 14, tintColor: '#fff', resizeMode: 'contain' },
-  timeRow: { flexDirection: 'row', alignItems: 'center', marginTop: 4 },
-  clockIcon: { width: 12, height: 12, marginRight: 6, resizeMode: 'contain' },
+  plusIcon: { 
+    width: 14, 
+    height: 14, 
+    tintColor: '#fff' 
+  },
+  timeRow: { 
+    flexDirection: 'row', 
+    alignItems: 'center' 
+  },
+  clockIcon: { 
+    width: 12, 
+    height: 12, 
+    marginRight: 6, 
+    resizeMode: 'contain',
+    tintColor: '#555',
+  },
   timeText: { 
     fontSize: 12, 
     color: '#555',

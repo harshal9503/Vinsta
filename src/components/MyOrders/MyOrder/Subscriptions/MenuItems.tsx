@@ -7,6 +7,9 @@ import {
   ScrollView,
   StyleSheet,
   Dimensions,
+  Modal,
+  Animated,
+  TextInput,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../../theme/colors';
@@ -16,7 +19,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 // Static Data
 const breakfastData = [
@@ -44,9 +47,20 @@ const dinnerData = [
 
 const daysList = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
+const checklistItems = [
+  { id: 1, name: 'Paneer Masala' },
+  { id: 2, name: 'Tandoori Roti (5 pcs)' },
+  { id: 3, name: 'Steamed Rice' },
+  { id: 4, name: 'Dal (Tadka/Yellow Dal)' },
+  { id: 5, name: 'Fresh Salad' },
+  { id: 6, name: 'Butter' },
+];
 // Main Component
 const MenuItems = () => {
   const navigation = useNavigation();
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [slideAnim] = useState(new Animated.Value(0));
 
   const [tab, setTab] = useState('Breakfast');
 
@@ -93,6 +107,32 @@ const MenuItems = () => {
     });
   };
 
+  const openModal = (item) => {
+    setSelectedItem(item);
+    setShowFilterModal(true);
+    Animated.timing(slideAnim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const closeModal = () => {
+    Animated.timing(slideAnim, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      setShowFilterModal(false);
+      setSelectedItem(null);
+    });
+  };
+
+  const modalTranslateY = slideAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [height, 0],
+  });
+
   const activeList = items[tab];
 
   return (
@@ -136,7 +176,11 @@ const MenuItems = () => {
       {/* List */}
       <ScrollView showsVerticalScrollIndicator={false}>
         {activeList.map(item => (
-          <View key={item.id} style={styles.card}>
+          <TouchableOpacity
+            key={item.id}
+            style={styles.card}
+            onPress={() => openModal(item)}
+          >
             <View style={styles.row}>
               <Image
                 source={require('../../../../assets/poha.png')}
@@ -200,10 +244,143 @@ const MenuItems = () => {
                 </TouchableOpacity>
               ))}
             </ScrollView>
-          </View>
+          </TouchableOpacity>
         ))}
         <View style={{ height: 100 }} />
       </ScrollView>
+
+      {/* Bottom Modal */}
+      <Modal
+        visible={showFilterModal}
+        transparent={true}
+        animationType="none"
+        onRequestClose={closeModal}
+      >
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity
+            style={styles.modalBackground}
+            activeOpacity={1}
+            onPress={closeModal}
+          />
+          <Animated.View
+            style={[
+              styles.modalContainer,
+              {
+                transform: [{ translateY: modalTranslateY }],
+              },
+            ]}
+          >
+            {/* Modal Header */}
+
+            <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+              <Text style={styles.closeText}>✕</Text>
+            </TouchableOpacity>
+            {selectedItem && (
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: hp('2%') }}
+              >
+                <View style={styles.modalContent}>
+
+                  <View style={styles.imageWrapper}>
+                    <Image
+                      source={require('../../../../assets/poha.png')}
+                      style={styles.modalFoodImg}
+                    />
+
+                    <View style={styles.productRatingBadge}>
+                      <Image
+                        source={require('../../../../assets/star.png')}
+                        style={styles.starIcon}
+                        resizeMode="contain"
+                      />
+                      <Text style={styles.ratingText}>4.4</Text>
+                    </View>
+                  </View>
+
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'baseline',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                    }}
+                  >
+                    <Text style={styles.modalFoodName}>{selectedItem.name}</Text>
+                    <Text style={styles.modalPrice}>{selectedItem.price}</Text>
+                  </View>
+
+                  <Text style={styles.mustOrdered}>(Must Ordered)</Text>
+
+                  <Text style={styles.descriptionText}>
+                    Tired of figuring out what to eat every day? We’ve got you covered!
+                    Introducing our Combo Meal Subscription — a wholesome, flavorful meal’s.
+                  </Text>
+
+                  <View style={styles.separator}></View>
+
+                  {/* Customize Options */}
+                  <Text style={styles.customizeTitle}>Ingredient’s</Text>
+                  <Text
+                    style={[
+                      styles.customizeTitle,
+                      { fontWeight: '400', fontSize: wp('3%') },
+                    ]}
+                  >
+                    More than upto 5 ingredients
+                  </Text>
+
+                  {/* Remove height from this container */}
+                  <View style={{ marginVertical: hp('1%') }}>
+                    {checklistItems.map((item) => (
+                      <TouchableOpacity key={item.id} style={styles.checklistItem}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'flex-start',
+                          }}
+                        >
+                          <View style={styles.checkboxContainer}>
+                            <View style={styles.checkbox}>
+                              <Image
+                                source={require('../../../../assets/checkCircle.png')}
+                                style={{ height: wp('5%'), width: wp('5%') }}
+                              />
+                            </View>
+                          </View>
+                          <Text style={styles.itemText}>{item.name}</Text>
+                        </View>
+                        <Image
+                          source={require('../../../../assets/checkbox.png')}
+                          style={{
+                            width: wp('5%'),
+                            height: wp('5%'),
+                            tintColor: '#259E29',
+                          }}
+                        />
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                  <View style={styles.separator}></View>
+                  <Text style={styles.customizeTitle}>
+                    Add a cooking request (optional)
+                  </Text>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder='e.g. don"t make it too spicy'
+                    placeholderTextColor='#999'
+                    multiline={true}
+                    textAlignVertical="top"
+                    numberOfLines={7}
+                  />
+                </View>
+              </ScrollView>
+            )}
+
+          </Animated.View>
+        </View>
+      </Modal>
 
       {/* NEXT BUTTON */}
       <TouchableOpacity
@@ -391,5 +568,203 @@ const styles = StyleSheet.create({
     fontSize: wp('3.8%'),
     fontFamily: getFontFamily('Bold'),
     fontWeight: getFontWeight('Bold'),
+  },
+  // Modal Styles
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  modalBackground: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContainer: {
+    backgroundColor: '#fff',
+    borderTopLeftRadius: wp('5%'),
+    borderTopRightRadius: wp('5%'),
+    paddingBottom: hp('2%'),
+    maxHeight: height * 0.8,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: wp('5%'),
+    paddingVertical: hp('2%'),
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  modalTitle: {
+    fontSize: wp('4.5%'),
+    fontWeight: '700',
+    color: '#000',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
+  closeButton: {
+    position: 'absolute',
+    alignSelf: 'center',   // now alignSelf works horizontally
+    top: 0,                // anchor at top
+    transform: [
+      { translateY: -wp('5%') }, // float half outside WITHOUT top change
+    ],
+    backgroundColor: '#fff',
+    width: wp('10%'),
+    height: wp('10%'),
+    borderRadius: wp('5%'),
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5
+  },
+  closeText: {
+    fontSize: wp('5%'),
+    color: '#000',
+  },
+  modalContent: {
+    paddingHorizontal: wp('5%'),
+    paddingTop: hp('4%'),
+    alignItems: 'center',
+  },
+  imageWrapper: {
+    position: 'relative',   // IMPORTANT
+    width: '100%',
+  },
+  modalFoodImg: {
+    width: '100%',
+    height: wp('40%'),
+    borderRadius: wp('2%'),
+  },
+
+  productRatingBadge: {
+    position: 'absolute',
+    bottom: wp('0%'),
+    left: wp('0%'),
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: wp('2.5%'),
+    paddingVertical: hp('0.5%'),
+    borderRadius: wp('2%'),
+  },
+  starIcon: {
+    width: wp('2.5%'),
+    height: wp('2.5%'),
+    marginRight: wp('1%'),
+    tintColor: '#fff',
+  },
+  ratingText: {
+    fontWeight: '400',
+    fontSize: wp('3%'),
+    color: '#fff',
+  },
+  modalFoodName: {
+    fontSize: wp('5%'),
+    fontWeight: '700',
+    color: '#000',
+    marginBottom: hp('0.5%'),
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
+  modalCafeName: {
+    fontSize: wp('4%'),
+    color: '#777',
+    marginBottom: hp('1%'),
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
+  },
+  modalPrice: {
+    fontSize: wp('5%'),
+    fontWeight: '700',
+    color: '#111',
+    marginBottom: hp('1%'),
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
+  mustOrdered: {
+    fontSize: wp('3.5%'),
+    fontWeight: '500',
+    color: COLORS.primary,
+    marginBottom: hp('2%'),
+    fontFamily: getFontFamily('Bold'),
+    alignSelf: 'flex-start'
+  },
+  descriptionText: {
+    fontSize: wp('3.3%'),
+    color: '#666',
+    lineHeight: hp('2.5%'),
+    marginBottom: hp('2%'),
+    textAlign: 'left',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: '400',
+  },
+  separator: {
+    backgroundColor: '#F4F4F4',
+    height: 4,
+    width: '110%',
+    marginBottom: hp('2%')
+  },
+  customizeTitle: {
+    fontSize: wp('4%'),
+    fontWeight: '600',
+    color: '#000',
+    alignSelf: 'flex-start',
+    marginBottom: hp('1%'),
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
+  },
+  customizeOptions: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: hp('3%'),
+  },
+  checklistItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingVertical: 5,
+  },
+  checkboxContainer: {
+    paddingHorizontal: wp('1%')
+  },
+  itemText: {
+    fontSize: wp('3.3%'),
+    color: '#111719',
+    textAlign: 'left',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: '400',
+  },
+  textInput: {
+    width: '100%',
+    backgroundColor: '#F8F8F8',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: wp('2%'),
+    paddingHorizontal: wp('2%'),
+    paddingVertical: hp('1%'),
+    fontSize: wp('3.8%'),
+    color: '#000',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
+    minHeight: hp('14%'),
+    textAlignVertical: 'top',
+    marginBottom: hp('5%')
+  },
+  addToCartButton: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: hp('2%'),
+    paddingHorizontal: wp('10%'),
+    borderRadius: wp('3%'),
+    width: '100%',
+  },
+  addToCartText: {
+    color: '#fff',
+    fontSize: wp('4%'),
+    fontWeight: '600',
+    textAlign: 'center',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
 });
