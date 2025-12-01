@@ -586,7 +586,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Figtree-Bold' 
   },
   title: { 
-    fontSize: 16, 
+    fontSize: 20, 
     fontWeight: '700', 
     color: '#000',
     fontFamily: 'Figtree-Bold',
@@ -602,7 +602,7 @@ const styles = StyleSheet.create({
     height: 12, 
     marginRight: 6, 
     resizeMode: 'contain',
-    tintColor: '#555',
+    tintColor: COLORS.primary,
   },
   location: { 
     fontSize: 13, 
@@ -627,7 +627,7 @@ const styles = StyleSheet.create({
     height: 13,
     marginHorizontal: 2,
     resizeMode: 'contain',
-    tintColor: '#555',
+    tintColor: COLORS.primary,
   },
   metaText: { 
     color: '#555', 
@@ -665,7 +665,7 @@ const styles = StyleSheet.create({
     padding: 10 
   },
   foodName: {
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: '700',
     color: '#000',
     marginBottom: 4,
@@ -727,7 +727,7 @@ const styles = StyleSheet.create({
     height: 12, 
     marginRight: 6, 
     resizeMode: 'contain',
-    tintColor: '#555',
+    tintColor: COLORS.primary,
   },
   timeText: { 
     fontSize: 12, 

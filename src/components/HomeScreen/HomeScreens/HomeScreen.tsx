@@ -132,9 +132,9 @@ const vegProducts = [
   {
     id: 1,
     name: 'Veg Cheese Burger',
-    price: '$45.50',
+    price: '₹45.50',
     img: require('../../../assets/b1.png'),
-    oldPrice: '$50.50',
+    oldPrice: '₹50.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
     isFavorite: false,
@@ -142,9 +142,9 @@ const vegProducts = [
   {
     id: 2,
     name: 'Veg Delight Burger',
-    price: '$45.50',
+    price: '₹45.50',
     img: require('../../../assets/b2.png'),
-    oldPrice: '$50.50',
+    oldPrice: '₹50.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
     isFavorite: false,
@@ -152,9 +152,9 @@ const vegProducts = [
   {
     id: 3,
     name: 'Garden Fresh Burger',
-    price: '$45.50',
+    price: '₹45.50',
     img: require('../../../assets/b1.png'),
-    oldPrice: '$50.50',
+    oldPrice: '₹50.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
     isFavorite: false,
@@ -162,9 +162,9 @@ const vegProducts = [
   {
     id: 4,
     name: 'Veggie Supreme',
-    price: '$45.50',
+    price: '₹45.50',
     img: require('../../../assets/b3.png'),
-    oldPrice: '$50.50',
+    oldPrice: '₹50.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
     isFavorite: false,
@@ -175,9 +175,9 @@ const nonVegProducts = [
   {
     id: 1,
     name: 'Chicken Deluxe',
-    price: '$55.50',
+    price: '₹55.50',
     img: require('../../../assets/non1.png'),
-    oldPrice: '$60.50',
+    oldPrice: '₹60.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
     isFavorite: false,
@@ -185,9 +185,9 @@ const nonVegProducts = [
   {
     id: 2,
     name: 'Beef Special',
-    price: '$65.50',
+    price: '₹65.50',
     img: require('../../../assets/non2.png'),
-    oldPrice: '$70.50',
+    oldPrice: '₹70.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
     isFavorite: false,
@@ -195,9 +195,9 @@ const nonVegProducts = [
   {
     id: 3,
     name: 'Mutton Classic',
-    price: '$75.50',
+    price: '₹75.50',
     img: require('../../../assets/non3.png'),
-    oldPrice: '$80.50',
+    oldPrice: '₹80.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
     isFavorite: false,
@@ -205,9 +205,9 @@ const nonVegProducts = [
   {
     id: 4,
     name: 'Seafood Combo',
-    price: '$85.50',
+    price: '₹85.50',
     img: require('../../../assets/non1.png'),
-    oldPrice: '$90.50',
+    oldPrice: '₹90.50',
     rating: 4.4,
     deliveryTime: '10-15 mins',
     isFavorite: false,
@@ -540,7 +540,7 @@ const HomeScreen = () => {
               <View style={styles.deliveryTimeContainer}>
                 <Image
                   source={require('../../../assets/clock.png')}
-                  style={[styles.deliveryClockIcon,{tintColor : theme.text}]}
+                  style={[styles.deliveryClockIcon,{tintColor : COLORS.primary}]}
                   resizeMode="contain"
                 />
                 <Text style={[styles.getDeliveredTxt,{color : theme.text}]}>
@@ -733,7 +733,7 @@ const styles = StyleSheet.create({
   deliveryClockIcon: {
     width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
     height: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
-    tintColor: COLORS.textLight,
+    tintColor: COLORS.primary,
   },
   getDeliveredTxt: {
     ...getTextStyle('Regular'),

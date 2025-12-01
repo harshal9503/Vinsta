@@ -9,11 +9,12 @@ import {
   StatusBar,
   Dimensions,
   Modal,
+  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
-import font from '../../../assets/fonts';
 import { ThemeContext } from '../../../theme/ThemeContext';
+import { getFontFamily, getFontWeight } from '../../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -54,32 +55,32 @@ const AccountManagement = () => {
 
   return (
     <View style={[styles.container,{backgroundColor : theme.background}]}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+      <StatusBar barStyle={theme.isDarkMode ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
       <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color : theme.textSecondary}]}>Account Management</Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>Account Management</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>Manage Your Account</Text>
-        <Text style={[styles.sectionDescription,{color : theme.textSecondary}]}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>Manage Your Account</Text>
+        <Text style={[styles.sectionDescription,{color : theme.text}]}>
           Control your data and account settings
         </Text>
 
         {managementOptions.map((item) => (
           <TouchableOpacity
             key={item.id}
-            style={[styles.managementCard,{backgroundColor : theme.background}]}
+            style={[styles.managementCard,{backgroundColor : theme.cardBackground}]}
             onPress={item.action}
           >
             <View style={styles.managementLeft}>
               <Image source={item.icon} style={[styles.managementIcon,{tintColor : theme.text}]} />
               <View style={styles.managementText}>
-                <Text style={[styles.managementTitle,{color : theme.textSecondary}]}>{item.title}</Text>
+                <Text style={[styles.managementTitle,{color : theme.text}]}>{item.title}</Text>
                 <Text style={[styles.managementDescription,{color : theme.textSecondary}]}>{item.description}</Text>
               </View>
             </View>
@@ -88,9 +89,9 @@ const AccountManagement = () => {
         ))}
 
         {/* Delete Account Section */}
-        <View style={styles.deleteSection}>
-          <Text style={styles.deleteTitle}>Delete Account</Text>
-          <Text style={[styles.deleteDescription,{color : '#616161'}]}>
+        <View style={[styles.deleteSection, { backgroundColor: theme.cardBackground, borderLeftColor: '#f44336' }]}>
+          <Text style={[styles.deleteTitle, { color: '#d32f2f' }]}>Delete Account</Text>
+          <Text style={[styles.deleteDescription,{color : theme.text}]}>
             Permanently delete your account and all associated data. This action cannot be undone.
           </Text>
           <TouchableOpacity
@@ -114,26 +115,26 @@ const AccountManagement = () => {
         onRequestClose={() => setShowDeletePopup(false)}
       >
         <View style={styles.popupOverlay}>
-          <View style={styles.popupBox}>
+          <View style={[styles.popupBox, { backgroundColor: theme.cardBackground }]}>
             <Image 
               source={require('../../../assets/b1.png')} 
               style={styles.warningIcon} 
             />
-            <Text style={[styles.popupTitle,{color : '#616161'}]}>Delete Account</Text>
-            <Text style={[styles.popupText,{color : '#616161'}]}>
+            <Text style={[styles.popupTitle,{color : theme.text}]}>Delete Account</Text>
+            <Text style={[styles.popupText,{color : theme.text}]}>
               Are you sure you want to delete your account? This action is permanent and cannot be undone. All your data will be lost.
             </Text>
             
             <View style={styles.popupButtonsRow}>
               <TouchableOpacity
-                style={[styles.popupButton, styles.cancelButton]}
+                style={[styles.popupButton, styles.cancelButton, { backgroundColor: theme.borderColor }]}
                 onPress={() => setShowDeletePopup(false)}
               >
-                <Text style={styles.cancelButtonText}>Cancel</Text>
+                <Text style={[styles.cancelButtonText, { color: theme.text }]}>Cancel</Text>
               </TouchableOpacity>
               
               <TouchableOpacity
-                style={[styles.popupButton, styles.deleteConfirmButton]}
+                style={[styles.popupButton, styles.deleteConfirmButton, { backgroundColor: '#d32f2f' }]}
                 onPress={handleDeleteAccount}
               >
                 <Text style={styles.deleteButtonText}>Delete</Text>
@@ -149,59 +150,58 @@ const AccountManagement = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.secondary,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: height * 0.07,
-    paddingBottom: 10,
+    paddingTop: Platform.OS === 'ios' ? height * 0.07 : height * 0.07,
+    paddingBottom: 15,
     paddingHorizontal: 20,
-    backgroundColor: COLORS.secondary,
+    borderBottomWidth: 1,
+    borderBottomColor: 'transparent',
   },
   backIcon: {
     width: 22,
     height: 22,
     resizeMode: 'contain',
-    tintColor: '#000000',
   },
   headerTitle: {
     fontSize: width * 0.045,
-    fontWeight: '700',
-    color: '#616161',
-    fontFamily : 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   content: {
     padding: 20,
   },
   sectionTitle: {
     fontSize: width * 0.05,
-    fontWeight: '700',
-    color: '#616161',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     marginBottom: 8,
-    fontFamily : 'Figtree-Bold',
   },
   sectionDescription: {
     fontSize: width * 0.035,
-    color: '#616161',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
     marginBottom: 25,
-    fontFamily : 'Figtree-Medium',
-    fontWeight  :'500'
   },
   managementCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
     padding: 16,
     borderRadius: 12,
     marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: { elevation: 3 },
+    }),
   },
   managementLeft: {
     flexDirection: 'row',
@@ -213,51 +213,44 @@ const styles = StyleSheet.create({
     height: 24,
     resizeMode: 'contain',
     marginRight: 12,
-    tintColor: COLORS.text,
   },
   managementText: {
     flex: 1,
   },
   managementTitle: {
     fontSize: width * 0.038,
-    color: '#616161',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     marginBottom: 4,
-    fontFamily : 'Figtree-SemiBold',
-    fontWeight  :'600'
   },
   managementDescription: {
     fontSize: width * 0.03,
-    color: '#616161',
-    fontFamily : 'Figtree-Medium',
-    fontWeight  :'500'
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   arrowIcon: {
     width: 16,
     height: 16,
     resizeMode: 'contain',
-    tintColor: COLORS.text,
   },
   deleteSection: {
-    backgroundColor: '#ffebee',
     padding: 20,
     borderRadius: 12,
     marginTop: 20,
     borderLeftWidth: 4,
-    borderLeftColor: '#f44336',
   },
   deleteTitle: {
     fontSize: width * 0.04,
-    fontWeight: '700',
-    color: '#d32f2f',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     marginBottom: 8,
-    fontFamily : 'Figtree-Bold',
   },
   deleteDescription: {
     fontSize: width * 0.033,
     marginBottom: 16,
     lineHeight: 18,
-    fontFamily : 'Figtree-Medium',
-    fontWeight  :'500'
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   deleteButton: {
     flexDirection: 'row',
@@ -277,8 +270,8 @@ const styles = StyleSheet.create({
   deleteButtonText: {
     color: '#fff',
     fontSize: width * 0.036,
-    fontWeight: '700',
-    fontFamily : 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   popupOverlay: {
     flex: 1,
@@ -289,7 +282,6 @@ const styles = StyleSheet.create({
   },
   popupBox: {
     width: '100%',
-    backgroundColor: COLORS.secondary,
     borderRadius: 16,
     padding: 24,
     alignItems: 'center',
@@ -303,20 +295,18 @@ const styles = StyleSheet.create({
   },
   popupTitle: {
     fontSize: width * 0.045,
-    fontWeight: '700',
-    color: '#616161',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     marginBottom: 12,
     textAlign: 'center',
-    fontFamily : 'Figtree-Bold',
   },
   popupText: {
     fontSize: width * 0.035,
-    color: '#616161',
     textAlign: 'center',
     marginBottom: 24,
     lineHeight: 20,
-    fontFamily : 'Figtree-SemiBold',
-    fontWeight  :'600'
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   popupButtonsRow: {
     flexDirection: 'row',
@@ -337,10 +327,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#d32f2f',
   },
   cancelButtonText: {
-    color: '#000',
     fontSize: width * 0.036,
-    fontFamily : 'Figtree-SemiBold',
-    fontWeight  :'600'
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
 });
 

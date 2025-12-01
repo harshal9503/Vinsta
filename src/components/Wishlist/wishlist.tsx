@@ -126,8 +126,8 @@ const Wishlist = () => {
                   <View style={styles.foodInfo}>
                     <Text style={styles.foodName}>{f.name}</Text>
                     <View style={styles.priceRow}>
-                      <Text style={styles.price}>$ {f.price.toFixed(2)}</Text>
-                      <Text style={styles.oldPrice}>$ {f.oldPrice.toFixed(2)}</Text>
+                      <Text style={styles.price}>₹ {f.price.toFixed(2)}</Text>
+                      <Text style={styles.oldPrice}>₹ {f.oldPrice.toFixed(2)}</Text>
                     </View>
                     <View style={styles.timeRow}>
                       <Image source={require('../../assets/clock.png')} style={styles.clockIcon} />

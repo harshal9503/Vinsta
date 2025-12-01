@@ -13,3 +13,4 @@
 24 Nov 2025 -> Push on main from windows beacuse MAc code have error 
 24 NOV 2025 -> update and wroking code push from MAC 4:20 PM (icons fix color heart)
 26 Nov 2025 -> Client fixes fonts issue in Cart,Wallet,Wishlist,Refer these screen - Fixed (2 static screens due in Subscription ) push from MAC 10:46 AM
+01 Dec 2025 -> Fonts issues , icons fixes , cureency changes all done 12:36 PM by Harshal-MAC latest

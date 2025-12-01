@@ -13,8 +13,8 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
-import font from '../../../assets/fonts';
 import { ThemeContext } from '../../../theme/ThemeContext';
+import { getFontFamily, getFontWeight } from '../../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -45,14 +45,14 @@ const Settings = () => {
 
   return (
     <View style={[styles.container,{backgroundColor : theme.background}]}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+      <StatusBar barStyle={theme.isDarkMode ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
       {/* ===== HEADER ===== */}
       <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color : theme.textSecondary }]}>Settings</Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>Settings</Text>
         <View style={{ width: 24 }} />
       </View>
 
@@ -62,7 +62,7 @@ const Settings = () => {
           {settingsOptions.map(item => (
             <TouchableOpacity
               key={item.id}
-              style={styles.optionRow}
+              style={[styles.optionRow, { borderBottomColor: theme.borderColor }]}
               activeOpacity={0.7}
               onPress={() => navigation.navigate(item.route)}
             >
@@ -76,7 +76,7 @@ const Settings = () => {
 
           {/* ===== LOG OUT ===== */}
           <TouchableOpacity
-            style={styles.optionRow}
+            style={[styles.optionRow, { borderBottomColor: theme.borderColor }]}
             activeOpacity={0.7}
             onPress={() =>
               openPopup('Are you sure you want to logout?', () => navigation.navigate('SignIn'))
@@ -112,16 +112,16 @@ const Settings = () => {
         onRequestClose={() => setShowPopup(false)}
       >
         <View style={styles.popupOverlay}>
-          <View style={[styles.popupBox,{backgroundColor  : theme.background}]}>
+          <View style={[styles.popupBox,{backgroundColor  : theme.cardBackground}]}>
             <Text style={[styles.popupText,{color : theme.text}]}>{popupMessage}</Text>
 
             <View style={styles.popupButtonsRow}>
               {/* CANCEL */}
               <TouchableOpacity
-                style={[styles.popupButton, { backgroundColor: '#ccc' }]}
+                style={[styles.popupButton, { backgroundColor: theme.borderColor }]}
                 onPress={() => setShowPopup(false)}
               >
-                <Text style={[styles.popupButtonText, { color: '#000' }]}>Cancel</Text>
+                <Text style={[styles.popupButtonText, { color: theme.text }]}>Cancel</Text>
               </TouchableOpacity>
 
               {/* CONFIRM */}
@@ -148,7 +148,6 @@ export default Settings;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.secondary,
   },
 
   /** HEADER **/
@@ -156,22 +155,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: height * 0.07,
-    paddingBottom: 10,
+    paddingTop: Platform.OS === 'ios' ? height * 0.07 : height * 0.07,
+    paddingBottom: 15,
     paddingHorizontal: 20,
-    backgroundColor: COLORS.secondary,
+    borderBottomWidth: 1,
+    borderBottomColor: 'transparent',
   },
   backIcon: {
     width: 22,
     height: 22,
     resizeMode: 'contain',
-    tintColor: COLORS.text,
   },
   headerTitle: {
     fontSize: width * 0.045,
-    fontWeight: '700',
-    color: '#616161',
-    fontFamily : 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
 
   /** OPTION LIST **/
@@ -185,7 +183,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 14,
     borderBottomWidth: 0.5,
-    borderBottomColor: '#eee',
   },
   optionLeft: {
     flexDirection: 'row',
@@ -196,19 +193,16 @@ const styles = StyleSheet.create({
     height: 22,
     resizeMode: 'contain',
     marginRight: 15,
-    tintColor: COLORS.text,
   },
   optionLabel: {
     fontSize: width * 0.037,
-    color: '#616161',
-    fontWeight: '600',
-    fontFamily : 'Figtree-SemiBold',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   arrowIcon: {
     width: 14,
     height: 14,
     resizeMode: 'contain',
-    tintColor: COLORS.text,
   },
 
   /** POPUP **/
@@ -220,7 +214,6 @@ const styles = StyleSheet.create({
   },
   popupBox: {
     width: width * 0.8,
-    backgroundColor: COLORS.secondary,
     borderRadius: 12,
     padding: 20,
     alignItems: 'center',
@@ -236,11 +229,10 @@ const styles = StyleSheet.create({
   },
   popupText: {
     fontSize: width * 0.04,
-    color: '#616161',
     textAlign: 'center',
     marginBottom: 20,
-    fontFamily : 'Figtree-Medium',
-    fontWeight  :'500'
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   popupButtonsRow: {
     flexDirection: 'row',
@@ -255,9 +247,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   popupButtonText: {
-    color: COLORS.secondary,
-    fontWeight: '700',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     fontSize: width * 0.04,
-    fontFamily : 'Figtree-Bold',
   },
 });

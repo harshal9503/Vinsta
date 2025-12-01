@@ -14,6 +14,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { ThemeContext } from '../../theme/ThemeContext';
 import { COLORS } from '../../theme/colors';
+import { getFontFamily, getFontWeight } from '../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -187,7 +188,7 @@ const DarkMode = () => {
         </TouchableOpacity>
 
         {/* App Info */}
-        <View style={styles.appInfoSection}>
+        <View style={[styles.appInfoSection, { borderTopColor: theme.borderColor }]}>
           <Text style={[styles.appInfoTitle, { color: theme.text }]}>Vinsta App</Text>
           <Text style={[styles.appInfoVersion, { color: theme.text }]}>
             Version 1.0.0
@@ -202,30 +203,37 @@ const DarkMode = () => {
             <TouchableOpacity style={styles.closeIconWrapper} onPress={closePopup}>
               <Image
                 source={require('../../assets/close.png')}
-                style={[styles.closeIcon, { tintColor: COLORS.text }]}
+                style={[styles.closeIcon, { tintColor: theme.text }]}
               />
             </TouchableOpacity>
 
-            <Text style={[styles.popupText, { color: '#616161' }]}>{popupMessage}</Text>
+            <Text style={[styles.popupText, { color: theme.text }]}>{popupMessage}</Text>
 
             <View style={styles.popupButtonsRow}>
               {popupMessage ===
               'Are you sure you want to reset all preferences to default?' ? (
                 <>
                   <TouchableOpacity
-                    style={[styles.popupButton, styles.popupCancelButton]}
+                    style={[styles.popupButton, styles.popupCancelButton, 
+                      { backgroundColor: theme.borderColor }]}
                     onPress={closePopup}
                   >
-                    <Text style={[styles.popupButtonText, { color: '#333' }]}>Cancel</Text>
+                    <Text style={[styles.popupButtonText, { color: theme.text }]}>Cancel</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={styles.popupButton} onPress={onPopupButtonPress}>
-                    <Text style={[styles.popupButtonText]}>Reset</Text>
+                  <TouchableOpacity 
+                    style={[styles.popupButton, { backgroundColor: COLORS.primary }]} 
+                    onPress={onPopupButtonPress}
+                  >
+                    <Text style={[styles.popupButtonText, { color: theme.background }]}>Reset</Text>
                   </TouchableOpacity>
                 </>
               ) : (
-                <TouchableOpacity style={styles.popupButton} onPress={onPopupButtonPress}>
-                  <Text style={styles.popupButtonText}>OK</Text>
+                <TouchableOpacity 
+                  style={[styles.popupButton, { backgroundColor: COLORS.primary }]} 
+                  onPress={onPopupButtonPress}
+                >
+                  <Text style={[styles.popupButtonText, { color: theme.background }]}>OK</Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -249,7 +257,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: Platform.OS === 'ios' ? height * 0.07 : height * 0.05,
+    paddingTop: Platform.OS === 'ios' ? height * 0.07 : height * 0.07,
     paddingBottom: 15,
     paddingHorizontal: 20,
     borderBottomWidth: 1,
@@ -264,8 +272,8 @@ const styles = StyleSheet.create({
   headerTitle: {
     textAlign: 'center',
     fontSize: width * 0.045,
-    fontWeight: '700',
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
 
   scrollContent: {
@@ -279,10 +287,10 @@ const styles = StyleSheet.create({
 
   sectionTitle: {
     fontSize: width * 0.04,
-    fontWeight: '600',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     marginBottom: 15,
     marginLeft: 5,
-    fontFamily: 'Figtree-SemiBold',
   },
 
   settingItem: {
@@ -313,21 +321,24 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     marginRight: 12,
+    resizeMode: 'contain',
   },
 
-  settingTextContainer: { flex: 1 },
+  settingTextContainer: { 
+    flex: 1 
+  },
 
   settingTitle: {
     fontSize: width * 0.038,
-    fontWeight: '600',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     marginBottom: 4,
-    fontFamily: 'Figtree-SemiBold',
   },
 
   settingDescription: {
     fontSize: width * 0.032,
-    fontFamily: 'Figtree-Regular',
-    fontWeight: '400',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
 
   resetBtn: {
@@ -341,8 +352,8 @@ const styles = StyleSheet.create({
 
   resetText: {
     fontSize: width * 0.038,
-    fontFamily: 'Figtree-Medium',
-    fontWeight: '500',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
 
   appInfoSection: {
@@ -350,17 +361,18 @@ const styles = StyleSheet.create({
     marginTop: 30,
     paddingTop: 20,
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
   },
 
   appInfoTitle: {
     fontSize: width * 0.038,
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
 
   appInfoVersion: {
     fontSize: width * 0.032,
-    fontFamily: 'Figtree-Regular',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
     marginBottom: 8,
   },
 
@@ -384,11 +396,11 @@ const styles = StyleSheet.create({
     fontSize: width * 0.04,
     textAlign: 'center',
     marginBottom: 16,
-    fontFamily: 'Figtree-Regular',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
 
   popupButton: {
-    backgroundColor: COLORS.primary,
     borderRadius: 8,
     paddingVertical: 8,
     paddingHorizontal: 20,
@@ -398,9 +410,9 @@ const styles = StyleSheet.create({
   },
 
   popupButtonText: {
-    color: COLORS.secondary,
     fontSize: width * 0.04,
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
 
   closeIconWrapper: {
@@ -412,6 +424,7 @@ const styles = StyleSheet.create({
   closeIcon: {
     width: 18,
     height: 18,
+    resizeMode: 'contain',
   },
 
   popupButtonsRow: {

@@ -50,7 +50,7 @@ const SignInScreen = ({ navigation }: any) => {
           />
 
           <Text style={styles.welcomeText}>
-            “Welcome to{' '}
+            "Welcome to{' '}
             <Text
               style={{
                 color: COLORS.primary,
@@ -60,7 +60,7 @@ const SignInScreen = ({ navigation }: any) => {
             >
               Vinsta
             </Text>{' '}
-            freshly brewed food delivered at anywhere anytime home instantly”
+            freshly brewed food delivered at anywhere anytime home instantly"
           </Text>
 
           <Text style={styles.label}>Please Enter Your Mobile Number</Text>
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 16,
     fontFamily: getFontFamily('Medium'),
-    fontWeight: getFontWeight('Regular'),
+    fontWeight: getFontWeight('Medium'),
   },
   popupButton: {
     backgroundColor: COLORS.primary,
