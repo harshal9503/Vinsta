@@ -8,11 +8,12 @@ import {
   ScrollView,
   StatusBar,
   Dimensions,
+  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
-import font from '../../../assets/fonts';
 import { ThemeContext } from '../../../theme/ThemeContext';
+import { getFontFamily, getFontWeight } from '../../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -39,33 +40,33 @@ const AccountSetting = () => {
 
   return (
     <View style={[styles.container,{backgroundColor : theme.background}]}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+      <StatusBar barStyle={theme.isDarkMode ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
       {/* Header */}
       <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor :theme.text}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color : theme.textSecondary}]}>Account Setting</Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>Account Setting</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>Account Management</Text>
-        <Text style={[styles.sectionDescription,{color : theme.textSecondary}]}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>Account Management</Text>
+        <Text style={[styles.sectionDescription,{color : theme.text}]}>
           Manage your account settings and preferences
         </Text>
 
         {accountOptions.map((item) => (
           <TouchableOpacity
             key={item.id}
-            style={[styles.optionCard,{backgroundColor : theme.background,borderLeftColor : theme.text}]}
+            style={[styles.optionCard,{backgroundColor : theme.cardBackground,borderLeftColor : COLORS.primary}]}
             onPress={() => navigation.navigate(item.route)}
           >
             <View style={styles.optionLeft}>
               <Image source={item.icon} style={[styles.optionIcon,{tintColor : theme.text}]} />
               <View style={styles.optionText}>
-                <Text style={[styles.optionTitle,{color : theme.textSecondary}]}>{item.title}</Text>
+                <Text style={[styles.optionTitle,{color : theme.text}]}>{item.title}</Text>
                 <Text style={[styles.optionDescription,{color : theme.textSecondary}]}>{item.description}</Text>
               </View>
             </View>
@@ -75,7 +76,7 @@ const AccountSetting = () => {
 
         {/* Delete Account Option */}
         <TouchableOpacity
-          style={[styles.optionCard, { borderLeftColor: '#E53935',backgroundColor : theme.background }]}
+          style={[styles.optionCard, { borderLeftColor: '#E53935',backgroundColor : theme.cardBackground }]}
           onPress={() => navigation.navigate('AccountManagement')}
         >
           <View style={styles.optionLeft}>
@@ -102,61 +103,59 @@ const AccountSetting = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.secondary,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: height * 0.07,
-    paddingBottom: 10,
+    paddingTop: Platform.OS === 'ios' ? height * 0.07 : height * 0.07,
+    paddingBottom: 15,
     paddingHorizontal: 20,
-    backgroundColor: COLORS.secondary,
+    borderBottomWidth: 1,
+    borderBottomColor: 'transparent',
   },
   backIcon: {
     width: 22,
     height: 22,
     resizeMode: 'contain',
-    tintColor: '#000000',
   },
   headerTitle: {
     fontSize: width * 0.045,
-    fontWeight: '700',
-    color: '#616161',
-    fontFamily : 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   content: {
     padding: 20,
   },
   sectionTitle: {
     fontSize: width * 0.05,
-    fontWeight: '700',
-    color: '#616161',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     marginBottom: 8,
-    fontFamily : 'Figtree-Bold',
   },
   sectionDescription: {
     fontSize: width * 0.035,
-    color: '#616161',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     marginBottom: 25,
-    fontFamily : 'Figtree-SemiBold',
-    fontWeight  :'600'
   },
   optionCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
     padding: 16,
     borderRadius: 12,
     marginBottom: 12,
     borderLeftWidth: 4,
-    borderLeftColor: COLORS.primary,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: { elevation: 3 },
+    }),
   },
   optionLeft: {
     flexDirection: 'row',
@@ -168,29 +167,25 @@ const styles = StyleSheet.create({
     height: 24,
     resizeMode: 'contain',
     marginRight: 12,
-    tintColor: COLORS.text,
   },
   optionText: {
     flex: 1,
   },
   optionTitle: {
     fontSize: width * 0.038,
-    fontWeight: '600',
-    color: '#616161',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     marginBottom: 4,
-    fontFamily : 'Figtree-SemiBold',
   },
   optionDescription: {
     fontSize: width * 0.03,
-    color: '#616161',
-    fontFamily : 'Figtree-Regular',
-    fontWeight  :'400'
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
   arrowIcon: {
     width: 16,
     height: 16,
     resizeMode: 'contain',
-    tintColor: COLORS.text,
   },
 });
 

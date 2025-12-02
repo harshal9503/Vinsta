@@ -10,11 +10,12 @@ import {
   Dimensions,
   Share,
   Alert,
+  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
-import font from '../../../assets/fonts';
 import { ThemeContext } from '../../../theme/ThemeContext';
+import { getFontFamily, getFontWeight } from '../../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -164,9 +165,9 @@ const ShareApp = () => {
             <View style={styles.benefitItem}>
               <Image source={require('../../../assets/tick.png')} style={[styles.benefitIcon,{tintColor:COLORS.primary}]} />
               <View style={styles.benefitText}>
-                <Text style={[styles.benefitTitle,{color : theme.textSecondary}]}>Get $10 Credit</Text>
+                <Text style={[styles.benefitTitle,{color : theme.textSecondary}]}>Get ₹100 Credit</Text>
                 <Text style={[styles.benefitDescription,{color : theme.textSecondary}]}>
-                  Receive $10 credit when your friend signs up
+                  Receive ₹10 credit when your friend signs up
                 </Text>
               </View>
             </View>
@@ -198,7 +199,7 @@ const ShareApp = () => {
             <Text style={[styles.statLabel,{color : theme.textSecondary}]}>Friends Joined</Text>
           </View>
           <View style={styles.statItem}>
-            <Text style={styles.statNumber}>$50</Text>
+            <Text style={styles.statNumber}>₹500</Text>
             <Text style={[styles.statLabel,{color : theme.textSecondary}]}>Total Credit Earned</Text>
           </View>
           <View style={styles.statItem}>
@@ -214,7 +215,6 @@ const ShareApp = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.secondary,
   },
   header: {
     flexDirection: 'row',
@@ -223,19 +223,16 @@ const styles = StyleSheet.create({
     paddingTop: height * 0.07,
     paddingBottom: 10,
     paddingHorizontal: 20,
-    backgroundColor: COLORS.secondary,
   },
   backIcon: {
     width: 22,
     height: 22,
     resizeMode: 'contain',
-    tintColor: '#000000',
   },
   headerTitle: {
     fontSize: width * 0.045,
-    fontWeight: '700',
-    color: '#616161',
-    fontFamily : 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   content: {
     padding: 20,
@@ -251,38 +248,39 @@ const styles = StyleSheet.create({
   },
   heroTitle: {
     fontSize: width * 0.05,
-    fontWeight: '700',
-    color: '#616161',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     marginBottom: 8,
     textAlign: 'center',
-    fontFamily : 'Figtree-Bold',
   },
   heroDescription: {
     fontSize: width * 0.035,
-    color: '#616161',
     textAlign: 'center',
     lineHeight: 20,
-    fontFamily : 'Figtree-Medium',
-    fontWeight  :'500'
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   referralSection: {
     backgroundColor: '#fff',
     padding: 20,
     borderRadius: 16,
     marginBottom: 25,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, header: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: { elevation: 3 },
+    }),
   },
   referralTitle: {
     fontSize: width * 0.038,
-    color: '#616161',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     marginBottom: 12,
     textAlign: 'center',
-    fontFamily : 'Figtree-SemiBold',
-    fontWeight  :'600'
   },
   referralCodeBox: {
     flexDirection: 'row',
@@ -297,7 +295,8 @@ const styles = StyleSheet.create({
   },
   referralCode: {
     fontSize: width * 0.04,
-    fontWeight: '700',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     color: COLORS.primary,
     letterSpacing: 2,
   },
@@ -305,24 +304,21 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     resizeMode: 'contain',
-    tintColor: COLORS.text,
   },
   referralNote: {
     fontSize: width * 0.032,
-    color: '#616161',
     textAlign: 'center',
-    fontFamily : 'Figtree-Medium',
-    fontWeight  :'500'
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   shareSection: {
     marginBottom: 25,
   },
   shareTitle: {
     fontSize: width * 0.04,
-    fontWeight: '700',
-    color: '#616161',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     marginBottom: 16,
-    fontFamily : 'Figtree-Bold',
   },
   shareRow: {
     flexDirection: 'row',
@@ -348,30 +344,32 @@ const styles = StyleSheet.create({
   },
   shareOptionText: {
     fontSize: width * 0.032,
-    color: '#616161',
-    fontWeight: '500',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
     textAlign: 'center',
-    fontFamily : 'Figtree-Medium',
   },
   benefitsSection: {
     marginBottom: 25,
   },
   benefitsTitle: {
     fontSize: width * 0.04,
-    fontWeight: '700',
-    color: '#616161',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     marginBottom: 16,
-    fontFamily : 'Figtree-Bold',
   },
   benefitsList: {
     backgroundColor: '#fff',
     borderRadius: 16,
     padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: { elevation: 3 },
+    }),
   },
   benefitItem: {
     flexDirection: 'row',
@@ -383,23 +381,20 @@ const styles = StyleSheet.create({
     height: 24,
     resizeMode: 'contain',
     marginRight: 12,
-    tintColor: COLORS.text,
   },
   benefitText: {
     flex: 1,
   },
   benefitTitle: {
     fontSize: width * 0.035,
-    color: '#616161',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     marginBottom: 4,
-    fontFamily : 'Figtree-SemiBold',
-    fontWeight  :'600'
   },
   benefitDescription: {
     fontSize: width * 0.032,
-    color: '#616161',
-    fontFamily : 'Figtree-Regular',
-    fontWeight  :'400'
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
   statsSection: {
     flexDirection: 'row',
@@ -407,11 +402,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 20,
     borderRadius: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: { elevation: 3 },
+    }),
   },
   statItem: {
     alignItems: 'center',
@@ -419,17 +418,16 @@ const styles = StyleSheet.create({
   },
   statNumber: {
     fontSize: width * 0.05,
-    fontWeight: '700',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     color: COLORS.primary,
     marginBottom: 4,
-    fontFamily : 'Figtree-Bold',
   },
   statLabel: {
     fontSize: width * 0.028,
-    color: '#616161',
     textAlign: 'center',
-    fontFamily : 'Figtree-Medium',
-    fontWeight  :'500'
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
 });
 

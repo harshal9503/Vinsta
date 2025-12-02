@@ -234,7 +234,9 @@ const WelcomeScreen = () => {
               placeholder="Please enter your mobile number"
               placeholderTextColor="#A0A0A0"
               value={mobile}
-              editable={false}
+              onChangeText={setMobile}
+              keyboardType="phone-pad"
+              maxLength={10}
             />
           </View>
 
@@ -382,14 +384,16 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   label: {
-    fontFamily: getFontFamily('Bold'),
-    fontWeight: getFontWeight('Bold'),
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     fontSize: 14,
     color: COLORS.textDark,
     marginBottom: 6,
   },
   required: {
     color: 'red',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   inputSection: {
     marginBottom: 18,
@@ -399,9 +403,9 @@ const styles = StyleSheet.create({
     borderColor: COLORS.primary,
     borderRadius: 10,
     paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontFamily: getFontFamily('Regular'),
-    fontWeight: getFontWeight('Regular'),
+    paddingVertical: 16,
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
     fontSize: 14,
     color: COLORS.textDark,
     backgroundColor: COLORS.secondary,
@@ -435,7 +439,8 @@ const styles = StyleSheet.create({
   },
   cameraBadgeText: {
     fontSize: 12,
-    color: '#fff',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
   avatarTextContainer: {
     flex: 1,
@@ -507,8 +512,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   popupText: {
-    fontFamily: getFontFamily('Regular'),
-    fontWeight: getFontWeight('Regular'),
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
     fontSize: 14,
     color: COLORS.textDark,
     textAlign: 'center',

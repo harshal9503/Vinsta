@@ -170,7 +170,7 @@ const BestBurgers = () => {
     return scales;
   });
   
-  const filters = ['All', 'Veg', 'Non-Veg', 'Under $40', 'Rating 4+', 'Fast Delivery'];
+  const filters = ['All', 'Veg', 'Non-Veg', 'Under ₹40', 'Rating 4+', 'Fast Delivery'];
 
   // Heart animation function
   const animateHeart = (id: number) => {
@@ -207,7 +207,7 @@ const BestBurgers = () => {
       case 'Non-Veg':
         filtered = filtered.filter(burger => !burger.isVeg);
         break;
-      case 'Under $40':
+      case 'Under ₹40':
         filtered = filtered.filter(burger => burger.price < 40);
         break;
       case 'Rating 4+':
@@ -308,8 +308,8 @@ const BestBurgers = () => {
 
           <View style={styles.priceRow}>
             <View style={styles.priceContainer}>
-              <Text style={styles.price}>${item.price.toFixed(2)}</Text>
-              <Text style={styles.oldPrice}>${item.oldPrice.toFixed(2)}</Text>
+              <Text style={styles.price}>₹{item.price.toFixed(2)}</Text>
+              <Text style={styles.oldPrice}>₹{item.oldPrice.toFixed(2)}</Text>
             </View>
 
             <TouchableOpacity style={styles.addBtn} activeOpacity={0.7}>
@@ -707,7 +707,7 @@ const styles = StyleSheet.create({
   clockIcon: {
     width: 13,
     height: 15,
-    tintColor: '#999',
+    tintColor:  COLORS.primary,
     marginRight: 4,
   },
   deliveryTime: {

@@ -9,11 +9,12 @@ import {
   StatusBar,
   Dimensions,
   Switch,
+  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
-import font from '../../../assets/fonts';
 import { ThemeContext } from '../../../theme/ThemeContext';
+import { getFontFamily, getFontWeight } from '../../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -58,26 +59,26 @@ const SoundAndVoice = () => {
 
   return (
     <View style={[styles.container,{backgroundColor : theme.background}]}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+      <StatusBar barStyle={theme.isDarkMode ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
       <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color : theme.textSecondary}]}>Sound & Voice</Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>Sound & Voice</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>Audio Settings</Text>
-        <Text style={[styles.sectionDescription,{color : theme.textSecondary}]}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>Audio Settings</Text>
+        <Text style={[styles.sectionDescription,{color : theme.text}]}>
           Customize your app's sound and voice preferences
         </Text>
 
         {soundOptions.map((item) => (
-          <View key={item.id} style={[styles.settingRow,{backgroundColor :theme.background}]}>
+          <View key={item.id} style={[styles.settingRow,{backgroundColor :theme.cardBackground}]}>
             <View style={styles.settingLeft}>
-              <Text style={[styles.settingTitle,{color : theme.textSecondary}]}>{item.title}</Text>
+              <Text style={[styles.settingTitle,{color : theme.text}]}>{item.title}</Text>
               <Text style={[styles.settingDescription,{color : theme.textSecondary}]}>{item.description}</Text>
             </View>
             <Switch
@@ -96,75 +97,72 @@ const SoundAndVoice = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.secondary,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: height * 0.07,
-    paddingBottom: 10,
+    paddingTop: Platform.OS === 'ios' ? height * 0.07 : height * 0.07,
+    paddingBottom: 15,
     paddingHorizontal: 20,
-    backgroundColor: COLORS.secondary,
+    borderBottomWidth: 1,
+    borderBottomColor: 'transparent',
   },
   backIcon: {
     width: 22,
     height: 22,
     resizeMode: 'contain',
-    tintColor: '#000000',
   },
   headerTitle: {
     fontSize: width * 0.045,
-    fontWeight: '700',
-    color: '#616161',
-    fontFamily : 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   content: {
     padding: 20,
   },
   sectionTitle: {
     fontSize: width * 0.05,
-    fontWeight: '700',
-    color: '#616161',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     marginBottom: 8,
-    fontFamily : 'Figtree-Bold',
   },
   sectionDescription: {
     fontSize: width * 0.035,
-    color: '#616161',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
     marginBottom: 25,
-    fontFamily : 'Figtree-Medium',
-    fontWeight  :'500'
   },
   settingRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
     padding: 16,
     borderRadius: 12,
     marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: { elevation: 3 },
+    }),
   },
   settingLeft: {
     flex: 1,
   },
   settingTitle: {
     fontSize: width * 0.038,
-    fontWeight: '600',
-    color: '#616161',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     marginBottom: 4,
-    fontFamily : 'Figtree-SemiBold',
   },
   settingDescription: {
     fontSize: width * 0.03,
-    color: '#616161',
-    fontFamily : 'Figtree-Regular',
-    fontWeight  :'400'
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
 });
 

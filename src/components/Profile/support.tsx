@@ -14,6 +14,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {ThemeContext} from '../../theme/ThemeContext';
 import {COLORS} from '../../theme/colors';
+import {getFontFamily, getFontWeight} from '../../utils/fontHelper';
 
 const {width, height} = Dimensions.get('window');
 
@@ -70,7 +71,7 @@ const Support = () => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
             source={require('../../assets/back.png')}
-            style={[styles.backIcon,{tintColor : theme.text}]}
+            style={[styles.backIcon, {tintColor: theme.text}]}
           />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, {color: theme.text}]}>Support</Text>
@@ -90,7 +91,7 @@ const Support = () => {
             <View style={styles.contactInfo}>
               <Image
                 source={require('../../assets/email.png')}
-                style={[styles.contactIcon,{tintColor : COLORS.primary}]}
+                style={[styles.contactIcon, {tintColor: theme.text}]}
               />
               <View style={styles.contactTextContainer}>
                 <Text style={[styles.contactTitle, {color: theme.text}]}>Email Support</Text>
@@ -101,7 +102,7 @@ const Support = () => {
             </View>
             <Image
               source={require('../../assets/right-arrow.png')}
-              style={[styles.chevronIcon,{tintColor : COLORS.primary}]}
+              style={[styles.chevronIcon, {tintColor: theme.text}]}
             />
           </TouchableOpacity>
 
@@ -112,7 +113,7 @@ const Support = () => {
             <View style={styles.contactInfo}>
               <Image
                 source={require('../../assets/phone.png')}
-                style={[styles.contactIcon,{tintColor : COLORS.primary} ]}
+                style={[styles.contactIcon, {tintColor: theme.text}]}
               />
               <View style={styles.contactTextContainer}>
                 <Text style={[styles.contactTitle, {color: theme.text}]}>Phone Support</Text>
@@ -123,7 +124,7 @@ const Support = () => {
             </View>
             <Image
               source={require('../../assets/right-arrow.png')}
-              style={[styles.chevronIcon,{tintColor : COLORS.primary}]}
+              style={[styles.chevronIcon, {tintColor: theme.text}]}
             />
           </TouchableOpacity>
 
@@ -134,7 +135,7 @@ const Support = () => {
             <View style={styles.contactInfo}>
               <Image
                 source={require('../../assets/website.png')}
-                style={[styles.contactIcon,{tintColor : COLORS.primary} ]}
+                style={[styles.contactIcon, {tintColor: theme.text}]}
               />
               <View style={styles.contactTextContainer}>
                 <Text style={[styles.contactTitle, {color: theme.text}]}>Help Center</Text>
@@ -145,7 +146,7 @@ const Support = () => {
             </View>
             <Image
               source={require('../../assets/right-arrow.png')}
-              style={[styles.chevronIcon, {tintColor : COLORS.primary}]}
+              style={[styles.chevronIcon, {tintColor: theme.text}]}
             />
           </TouchableOpacity>
 
@@ -156,7 +157,7 @@ const Support = () => {
             <View style={styles.contactInfo}>
               <Image
                 source={require('../../assets/faq.png')}
-                style={[styles.contactIcon,{tintColor : COLORS.primary}]}
+                style={[styles.contactIcon, {tintColor: theme.text}]}
               />
               <View style={styles.contactTextContainer}>
                 <Text style={[styles.contactTitle, {color: theme.text}]}>FAQ</Text>
@@ -167,15 +168,15 @@ const Support = () => {
             </View>
             <Image
               source={require('../../assets/right-arrow.png')}
-              style={[styles.chevronIcon,{tintColor : COLORS.primary} ]}
+              style={[styles.chevronIcon, {tintColor: theme.text}]}
             />
           </TouchableOpacity>
         </View>
 
         {/* ===== Support Info ===== */}
-        <View style={styles.supportInfo}>
-          <Text style={[styles.supportHours, {color: COLORS.primary}]}>📞 Support Hours: 24/7</Text>
-          <Text style={[styles.responseTime, {color: COLORS.primary}]}>
+        <View style={[styles.supportInfo, {borderTopColor: theme.borderColor}]}>
+          <Text style={[styles.supportHours, {color: theme.text}]}>📞 Support Hours: 24/7</Text>
+          <Text style={[styles.responseTime, {color: theme.text}]}>
             ⏰ Average Response Time: 2 hours
           </Text>
         </View>
@@ -197,7 +198,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: Platform.OS === 'ios' ? height * 0.07 : height * 0.05,
+    paddingTop: Platform.OS === 'ios' ? height * 0.07 : height * 0.07,
     paddingBottom: 15,
     paddingHorizontal: 20,
     borderBottomWidth: 1,
@@ -210,8 +211,8 @@ const styles = StyleSheet.create({
   headerTitle: {
     textAlign: 'center',
     fontSize: width * 0.045,
-    fontWeight: '700',
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
 
   /** SCROLL CONTENT **/
@@ -226,10 +227,10 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: width * 0.04,
-    fontWeight: '600',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     marginBottom: 15,
     marginLeft: 5,
-    fontFamily: 'Figtree-SemiBold',
   },
 
   /** CONTACT ITEMS **/
@@ -266,14 +267,14 @@ const styles = StyleSheet.create({
   },
   contactTitle: {
     fontSize: width * 0.038,
-    fontWeight: '600',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     marginBottom: 4,
-    fontFamily: 'Figtree-Medium',
   },
   contactDescription: {
     fontSize: width * 0.032,
-    fontWeight: '400',
-    fontFamily: 'Figtree-Regular',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
   chevronIcon: {
     width: 16,
@@ -287,17 +288,16 @@ const styles = StyleSheet.create({
     marginTop: 30,
     paddingTop: 20,
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
   },
   supportHours: {
     fontSize: width * 0.034,
-    fontWeight: '500',
-    fontFamily: 'Figtree-Medium',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
     marginBottom: 8,
   },
   responseTime: {
     fontSize: width * 0.034,
-    fontWeight: '500',
-    fontFamily: 'Figtree-Medium',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
 });

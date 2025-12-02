@@ -8,11 +8,12 @@ import {
   ScrollView,
   StatusBar,
   Dimensions,
+  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
-import font from '../../../assets/fonts'
 import { ThemeContext } from '../../../theme/ThemeContext';
+import { getFontFamily, getFontWeight } from '../../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -28,19 +29,19 @@ const Language = () => {
 
   return (
     <View style={[styles.container,{backgroundColor : theme.background}]}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+      <StatusBar barStyle={theme.isDarkMode ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
       <View style={[styles.header,{backgroundColor  :theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color : theme.textSecondary}]}>Language</Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>Language</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>Select Language</Text>
-        <Text style={[styles.sectionDescription,{color : theme.textSecondary}]}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>Select Language</Text>
+        <Text style={[styles.sectionDescription,{color : theme.text}]}>
           Choose your preferred language for the app
         </Text>
 
@@ -49,14 +50,14 @@ const Language = () => {
             key={language.id}
             style={[
               styles.languageOption,
-              selectedLanguage === language.code && styles.selectedLanguage,{ shadowColor: theme.text},
-              {backgroundColor  :theme.background}
+              selectedLanguage === language.code && styles.selectedLanguage,
+              {backgroundColor  :theme.cardBackground}
             ]}
             onPress={() => setSelectedLanguage(language.code)}
           >
             <View style={styles.languageLeft}>
               <View style={styles.languageInfo}>
-                <Text style={[styles.languageName,{color : theme.textSecondary}]}>{language.name}</Text>
+                <Text style={[styles.languageName,{color : theme.text}]}>{language.name}</Text>
                 <Text style={[styles.languageNative,{color : theme.textSecondary}]}>{language.nativeName}</Text>
               </View>
             </View>
@@ -73,9 +74,9 @@ const Language = () => {
           </TouchableOpacity>
         ))}
 
-        <View style={styles.noteContainer}>
-          <Text style={[styles.noteTitle,{color : '#616161'}]}>Note:</Text>
-          <Text style={[styles.noteText,{color : '#616161'}]}>
+        <View style={[styles.noteContainer, { backgroundColor: theme.cardBackground, borderLeftColor: COLORS.primary }]}>
+          <Text style={[styles.noteTitle,{color : theme.text}]}>Note:</Text>
+          <Text style={[styles.noteText,{color : theme.text}]}>
             Changing the language will affect all text within the app. Some features may require restarting the app to fully apply the language changes.
           </Text>
         </View>
@@ -87,64 +88,63 @@ const Language = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.secondary,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: height * 0.07,
-    paddingBottom: 10,
+    paddingTop: Platform.OS === 'ios' ? height * 0.07 : height * 0.07,
+    paddingBottom: 15,
     paddingHorizontal: 20,
-    backgroundColor: COLORS.secondary,
+    borderBottomWidth: 1,
+    borderBottomColor: 'transparent',
   },
   backIcon: {
     width: 22,
     height: 22,
     resizeMode: 'contain',
-    tintColor: '#000000',
   },
   headerTitle: {
     fontSize: width * 0.045,
-    fontWeight: '700',
-    color: '#616161',
-    fontFamily : 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   content: {
     padding: 20,
   },
   sectionTitle: {
     fontSize: width * 0.05,
-    fontWeight: '700',
-    color: '#616161',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     marginBottom: 8,
-    fontFamily : 'Figtree-Bold',
   },
   sectionDescription: {
     fontSize: width * 0.035,
-    color: '#616161',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     marginBottom: 25,
-    fontFamily : 'Figtree-SemiBold',
-    fontWeight  :'600'
   },
   languageOption: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
     padding: 16,
     borderRadius: 12,
     marginBottom: 8,
     borderWidth: 2,
     borderColor: 'transparent',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    ...Platform.select({
+      ios: {
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: { elevation: 3 },
+    }),
   },
   selectedLanguage: {
     borderColor: COLORS.primary,
-    backgroundColor: '#f0f7ff',
+    backgroundColor: theme => theme.isDarkMode ? '#2a3b5c' : '#f0f7ff',
   },
   languageLeft: {
     flexDirection: 'row',
@@ -156,14 +156,14 @@ const styles = StyleSheet.create({
   },
   languageName: {
     fontSize: width * 0.038,
-    fontWeight: '600',
-    color: '#616161',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     marginBottom: 4,
-    fontFamily : 'Figtree-SemiBold',
   },
   languageNative: {
     fontSize: width * 0.032,
-    color: '#616161',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
   radioContainer: {
     marginLeft: 10,
@@ -187,26 +187,22 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   noteContainer: {
-    backgroundColor: '#fff8e1',
     padding: 16,
     borderRadius: 12,
     marginTop: 20,
     borderLeftWidth: 4,
-    borderLeftColor: '#ffb300',
   },
   noteTitle: {
     fontSize: width * 0.035,
-    fontWeight: '700',
-    color: '#616161',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     marginBottom: 8,
-    fontFamily : 'Figtree-Bold',
   },
   noteText: {
     fontSize: width * 0.032,
-    color: '#616161',
     lineHeight: 18,
-    fontFamily : 'Figtree-Regular',
-    fontWeight  :'400'
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
 });
 
