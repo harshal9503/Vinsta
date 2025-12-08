@@ -38,7 +38,9 @@ const FilterModal = ({
           {/* HEADER */}
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Filtering & Sorting</Text>
-            <View style={{ height: 3, width: '100%', backgroundColor: '#dadada' }} />
+            <View
+              style={{ height: 3, width: '100%', backgroundColor: '#dadada' }}
+            />
 
             {/* Close Button */}
             <TouchableOpacity
@@ -53,7 +55,10 @@ const FilterModal = ({
             </TouchableOpacity>
           </View>
 
-          <ScrollView showsVerticalScrollIndicator={false} style={styles.modalScroll}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={styles.modalScroll}
+          >
             {/* Sort By */}
             <View style={styles.filterSection}>
               <Text style={styles.filterSectionTitle}>Sort By</Text>
@@ -61,7 +66,7 @@ const FilterModal = ({
               <FlatList
                 data={filterOptions.sortBy}
                 horizontal
-                keyExtractor={(item) => item}
+                keyExtractor={item => item}
                 renderItem={({ item }) => {
                   const isActive = appliedFilters.sortBy === item;
                   return (
@@ -71,7 +76,9 @@ const FilterModal = ({
                         isActive && styles.activeFilterOption,
                         { marginRight: 10 },
                       ]}
-                      onPress={() => setAppliedFilters({ ...appliedFilters, sortBy: item })}
+                      onPress={() =>
+                        setAppliedFilters({ ...appliedFilters, sortBy: item })
+                      }
                     >
                       <Text
                         style={[
@@ -92,23 +99,44 @@ const FilterModal = ({
               <Text style={styles.filterSectionTitle}>Top Pick's</Text>
               <View style={styles.filterOptions}>
                 <View
-                  style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
                 >
-                  <Image source={require('../../../../assets/leaf.png')} style={styles.statIcon} />
+                  <Image
+                    source={require('../../../../assets/leaf.png')}
+                    style={styles.statIcon}
+                  />
                   <Text style={[styles.infoText, { marginBottom: 0 }]}>
                     This restaurant is pure veg.
                   </Text>
                 </View>
 
-                {filterOptions.TopPicks.map((option) => {
+                {filterOptions.TopPicks.map(option => {
                   const isActive = appliedFilters.TopPicks === option;
                   return (
                     <TouchableOpacity
                       key={option}
-                      style={[styles.filterOption, isActive && styles.activeFilterOption]}
-                      onPress={() => setAppliedFilters({ ...appliedFilters, TopPicks: option })}
+                      style={[
+                        styles.filterOption,
+                        isActive && styles.activeFilterOption,
+                      ]}
+                      onPress={() =>
+                        setAppliedFilters({
+                          ...appliedFilters,
+                          TopPicks: option,
+                        })
+                      }
                     >
-                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          gap: 6,
+                        }}
+                      >
                         <Image
                           source={require('../../../../assets/clockk.png')}
                           style={[
@@ -136,17 +164,29 @@ const FilterModal = ({
             <View style={styles.filterSection}>
               <Text style={styles.filterSectionTitle}>Dietary Preference</Text>
               <View style={styles.filterOptions}>
-                {filterOptions.DietaryPrefrence.map((option) => {
+                {filterOptions.DietaryPrefrence.map(option => {
                   const isActive = appliedFilters.DietaryPrefrence === option;
                   return (
                     <TouchableOpacity
                       key={option}
-                      style={[styles.filterOption, isActive && styles.activeFilterOption]}
+                      style={[
+                        styles.filterOption,
+                        isActive && styles.activeFilterOption,
+                      ]}
                       onPress={() =>
-                        setAppliedFilters({ ...appliedFilters, DietaryPrefrence: option })
+                        setAppliedFilters({
+                          ...appliedFilters,
+                          DietaryPrefrence: option,
+                        })
                       }
                     >
-                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          gap: 6,
+                        }}
+                      >
                         <Image
                           source={require('../../../../assets/spicy.png')}
                           style={[

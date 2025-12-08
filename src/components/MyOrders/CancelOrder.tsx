@@ -16,7 +16,8 @@ import font from '../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 const MAP_HEIGHT = height * 0.32;
-const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 44 : StatusBar.currentHeight || 24;
+const STATUS_BAR_HEIGHT =
+  Platform.OS === 'ios' ? 44 : StatusBar.currentHeight || 24;
 const CIRCLE_SIZE = Math.min(74, width * 0.18); // scale circle size for smaller screens
 const PRIMARY_COLOR = '#FF8303';
 
@@ -43,7 +44,7 @@ const CancelOrder = () => {
 
   useEffect(() => {
     timerRef.current = setInterval(() => {
-      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+      setTimeLeft(prev => (prev > 0 ? prev - 1 : 0));
     }, 1000);
     return () => clearInterval(timerRef.current);
   }, []);
@@ -82,7 +83,11 @@ const CancelOrder = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="transparent" barStyle="dark-content" translucent />
+      <StatusBar
+        backgroundColor="transparent"
+        barStyle="dark-content"
+        translucent
+      />
       <View style={[styles.fixedMapArea, { height: MAP_HEIGHT }]}>
         <Image source={IMAGES.mapbg} style={styles.mapBg} />
         <View style={[styles.header, { top: STATUS_BAR_HEIGHT + 6 }]}>
@@ -187,58 +192,181 @@ const CancelOrder = () => {
       </View>
 
       <View style={styles.timerCircleWrap}>
-        <View style={[styles.circleBorder, { width: CIRCLE_SIZE, height: CIRCLE_SIZE, borderRadius: CIRCLE_SIZE / 2 }]}>
-          <Image source={IMAGES.c1} style={[styles.clockIcon, { width: CIRCLE_SIZE * 0.52, height: CIRCLE_SIZE * 0.52 }]} />
+        <View
+          style={[
+            styles.circleBorder,
+            {
+              width: CIRCLE_SIZE,
+              height: CIRCLE_SIZE,
+              borderRadius: CIRCLE_SIZE / 2,
+            },
+          ]}
+        >
+          <Image
+            source={IMAGES.c1}
+            style={[
+              styles.clockIcon,
+              { width: CIRCLE_SIZE * 0.52, height: CIRCLE_SIZE * 0.52 },
+            ]}
+          />
         </View>
-        <Text style={[styles.timeLeftText, { fontSize: Math.min(20, width * 0.055) }]}>{renderTime()}</Text>
-        <Text style={[styles.timeSubtext, { fontSize: Math.min(13, width * 0.035) }]}>Time left</Text>
+        <Text
+          style={[
+            styles.timeLeftText,
+            { fontSize: Math.min(20, width * 0.055) },
+          ]}
+        >
+          {renderTime()}
+        </Text>
+        <Text
+          style={[
+            styles.timeSubtext,
+            { fontSize: Math.min(13, width * 0.035) },
+          ]}
+        >
+          Time left
+        </Text>
       </View>
 
       <View style={styles.horizontalLine} />
 
-      <ScrollView style={styles.scrollArea} contentContainerStyle={{ paddingBottom: 50 }}>
+      <ScrollView
+        style={styles.scrollArea}
+        contentContainerStyle={{ paddingBottom: 50 }}
+      >
         {/* Centered Your order preparing */}
         <View style={styles.orderPreparingSimple}>
-          <Image source={IMAGES.bikee} style={[styles.bikeImg, { width: Math.min(38, width * 0.1), height: Math.min(38, width * 0.1) }]} />
-          <Text style={[styles.orderPrepText, { fontSize: Math.min(16, width * 0.045) }]}>Your order is preparing</Text>
+          <Image
+            source={IMAGES.bikee}
+            style={[
+              styles.bikeImg,
+              {
+                width: Math.min(38, width * 0.1),
+                height: Math.min(38, width * 0.1),
+              },
+            ]}
+          />
+          <Text
+            style={[
+              styles.orderPrepText,
+              { fontSize: Math.min(16, width * 0.045) },
+            ]}
+          >
+            Your order is preparing
+          </Text>
         </View>
 
         <View style={styles.blockCardFullWidth}>
           <View style={[styles.row, styles.timingRow]}>
             <View style={styles.o1Box}>
-              <Image source={IMAGES.o1} style={[styles.o1Img, { width: Math.min(36, width * 0.09), height: Math.min(36, width * 0.09) }]} />
+              <Image
+                source={IMAGES.o1}
+                style={[
+                  styles.o1Img,
+                  {
+                    width: Math.min(36, width * 0.09),
+                    height: Math.min(36, width * 0.09),
+                  },
+                ]}
+              />
             </View>
             <View style={{ marginLeft: 10, flexShrink: 1 }}>
-              <Text style={[styles.timeText, { fontSize: Math.min(17, width * 0.045) }]}>5.52 p.m.</Text>
-              <Text style={[styles.timingLabel, { fontSize: Math.min(12, width * 0.032) }]}>Order timing</Text>
+              <Text
+                style={[
+                  styles.timeText,
+                  { fontSize: Math.min(17, width * 0.045) },
+                ]}
+              >
+                5.52 p.m.
+              </Text>
+              <Text
+                style={[
+                  styles.timingLabel,
+                  { fontSize: Math.min(12, width * 0.032) },
+                ]}
+              >
+                Order timing
+              </Text>
             </View>
           </View>
         </View>
 
-        <Text style={[styles.cancelNote, { fontSize: Math.min(13, width * 0.035) }]}>
-          Please note: This order can only be cancelled within 5 minutes of placement.
+        <Text
+          style={[styles.cancelNote, { fontSize: Math.min(13, width * 0.035) }]}
+        >
+          Please note: This order can only be cancelled within 5 minutes of
+          placement.
         </Text>
         <View style={styles.addressWrap}>
           <View style={styles.row}>
-            <Image source={IMAGES.h1} style={[styles.addressIcon, { width: Math.min(20, width * 0.05), height: Math.min(20, width * 0.05) }]} />
-            <Text style={[styles.addressLabel, { fontSize: Math.min(14, width * 0.037) }]}>
-              From :- <Text style={styles.addressValue}>Rahat baker’s , f5 sector</Text>
+            <Image
+              source={IMAGES.h1}
+              style={[
+                styles.addressIcon,
+                {
+                  width: Math.min(20, width * 0.05),
+                  height: Math.min(20, width * 0.05),
+                },
+              ]}
+            />
+            <Text
+              style={[
+                styles.addressLabel,
+                { fontSize: Math.min(14, width * 0.037) },
+              ]}
+            >
+              From :-{' '}
+              <Text style={styles.addressValue}>Rahat baker’s , f5 sector</Text>
             </Text>
           </View>
           <View style={[styles.row, { marginTop: 15 }]}>
-            <Image source={IMAGES.h2} style={[styles.addressIcon, { width: Math.min(20, width * 0.05), height: Math.min(20, width * 0.05) }]} />
-            <Text style={[styles.addressLabel, { fontSize: Math.min(14, width * 0.037) }]}>
-              To :- <Text style={styles.addressValue}>Behria sector 8, building 6,B Apart 37 D</Text>
+            <Image
+              source={IMAGES.h2}
+              style={[
+                styles.addressIcon,
+                {
+                  width: Math.min(20, width * 0.05),
+                  height: Math.min(20, width * 0.05),
+                },
+              ]}
+            />
+            <Text
+              style={[
+                styles.addressLabel,
+                { fontSize: Math.min(14, width * 0.037) },
+              ]}
+            >
+              To :-{' '}
+              <Text style={styles.addressValue}>
+                Behria sector 8, building 6,B Apart 37 D
+              </Text>
             </Text>
           </View>
         </View>
 
         <View style={styles.btnRow}>
-          <TouchableOpacity style={styles.cancelBtn} onPress={handlePressCancel}>
-            <Text style={[styles.cancelBtnText, { fontSize: Math.min(16, width * 0.04) }]}>Cancel</Text>
+          <TouchableOpacity
+            style={styles.cancelBtn}
+            onPress={handlePressCancel}
+          >
+            <Text
+              style={[
+                styles.cancelBtnText,
+                { fontSize: Math.min(16, width * 0.04) },
+              ]}
+            >
+              Cancel
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.keepBtn} onPress={handleKeepOrder}>
-            <Text style={[styles.keepBtnText, { fontSize: Math.min(16, width * 0.04) }]}>Keep Order</Text>
+            <Text
+              style={[
+                styles.keepBtnText,
+                { fontSize: Math.min(16, width * 0.04) },
+              ]}
+            >
+              Keep Order
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -249,10 +377,16 @@ const CancelOrder = () => {
           <View style={styles.popupBox}>
             <Text style={styles.popupTitle}>Are you sure want to cancel?</Text>
             <View style={styles.popupBtnRow}>
-              <TouchableOpacity style={styles.popupBtn} onPress={handleConfirmCancel}>
+              <TouchableOpacity
+                style={styles.popupBtn}
+                onPress={handleConfirmCancel}
+              >
                 <Text style={styles.popupBtnText}>OK</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.popupBtn} onPress={() => setShowCancelPopup(false)}>
+              <TouchableOpacity
+                style={styles.popupBtn}
+                onPress={() => setShowCancelPopup(false)}
+              >
                 <Text style={styles.popupBtnText}>No</Text>
               </TouchableOpacity>
             </View>
@@ -299,7 +433,13 @@ const styles = StyleSheet.create({
   },
   backBtn: { padding: 8, borderRadius: 100 },
   backIcon: { width: 26, height: 26, tintColor: '#000' },
-  headerTitle: { fontSize: 20, fontWeight: '700', color: '#222', letterSpacing: 0.1, fontFamily : 'Figtree-Bold' },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#222',
+    letterSpacing: 0.1,
+    fontFamily: 'Figtree-Bold',
+  },
   absFill: { ...StyleSheet.absoluteFillObject },
   markerIcon: { resizeMode: 'contain' },
   boyIcon: {
@@ -333,9 +473,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#222',
     marginTop: -2,
-    fontFamily : 'Figtree-Bold'
+    fontFamily: 'Figtree-Bold',
   },
-  timeSubtext: { color: '#aaa', fontWeight: '600', marginTop: 0,fontFamily : 'Figtree-Medium' },
+  timeSubtext: {
+    color: '#aaa',
+    fontWeight: '600',
+    marginTop: 0,
+    fontFamily: 'Figtree-Medium',
+  },
   horizontalLine: {
     borderBottomColor: '#e3e3e3',
     borderBottomWidth: 1,
@@ -357,7 +502,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   bikeImg: { resizeMode: 'contain', marginRight: 10 },
-  orderPrepText: { fontWeight: '700', color: '#333',fontFamily : 'Figtree-Bold' },
+  orderPrepText: {
+    fontWeight: '700',
+    color: '#333',
+    fontFamily: 'Figtree-Bold',
+  },
   timingRow: {
     alignItems: 'center',
   },
@@ -380,19 +529,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   o1Img: { resizeMode: 'contain' },
-  timeText: { fontWeight: '600', color: '#333',fontFamily : 'Figtree-SemiBold' },
-  timingLabel: { color: '#888', marginTop: 1,fontFamily : 'Figtree-Medium',fontWeight : '500' },
+  timeText: {
+    fontWeight: '600',
+    color: '#333',
+    fontFamily: 'Figtree-SemiBold',
+  },
+  timingLabel: {
+    color: '#888',
+    marginTop: 1,
+    fontFamily: 'Figtree-Medium',
+    fontWeight: '500',
+  },
   cancelNote: {
     marginHorizontal: 25,
     marginVertical: 13,
     color: '#F44336',
     fontWeight: '500',
-    fontFamily : 'Figtree-Medium'
+    fontFamily: 'Figtree-Medium',
   },
   addressWrap: { marginHorizontal: 20, marginTop: 8 },
   addressIcon: { resizeMode: 'contain', marginRight: 5 },
-  addressLabel: { color: '#666', fontWeight: '500',fontFamily : 'Figtree-Medium' },
-  addressValue: { color: '#222',  fontWeight: '500',fontFamily : 'Figtree-Medium'},
+  addressLabel: {
+    color: '#666',
+    fontWeight: '500',
+    fontFamily: 'Figtree-Medium',
+  },
+  addressValue: {
+    color: '#222',
+    fontWeight: '500',
+    fontFamily: 'Figtree-Medium',
+  },
   row: { flexDirection: 'row', alignItems: 'center' },
   btnRow: {
     flexDirection: 'row',
@@ -409,7 +575,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: 9,
   },
-  cancelBtnText: { color: '#000', fontWeight: '600', fontFamily : 'Figtree-SemiBold'},
+  cancelBtnText: {
+    color: '#000',
+    fontWeight: '600',
+    fontFamily: 'Figtree-SemiBold',
+  },
   keepBtn: {
     flex: 1,
     backgroundColor: PRIMARY_COLOR,
@@ -418,7 +588,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginLeft: 9,
   },
-  keepBtnText: { color: '#fff', fontWeight: '600', fontFamily : 'Figtree-SemiBold' },
+  keepBtnText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontFamily: 'Figtree-SemiBold',
+  },
   popupOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.22)',
@@ -433,7 +607,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 5,
   },
-  popupTitle: { fontWeight: '700', fontSize: 17, color: '#222', marginBottom: 15,fontFamily : 'Figtree-Bold' },
+  popupTitle: {
+    fontWeight: '700',
+    fontSize: 17,
+    color: '#222',
+    marginBottom: 15,
+    fontFamily: 'Figtree-Bold',
+  },
   popupBtnRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -447,6 +627,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 9,
   },
-  popupBtnText: { color: '#fff', fontWeight: '700', fontSize: 16,fontFamily : 'Figtree-Bold' },
-  tickIconLarge: { width: 40, height: 40, resizeMode: 'contain', marginBottom: 12 },
+  popupBtnText: {
+    color: '#fff',
+    fontWeight: '700',
+    fontSize: 16,
+    fontFamily: 'Figtree-Bold',
+  },
+  tickIconLarge: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+    marginBottom: 12,
+  },
 });

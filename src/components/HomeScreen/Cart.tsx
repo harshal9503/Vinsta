@@ -118,7 +118,9 @@ const CartScreen = () => {
                     },
                   ]}
                 >
-                  <Text style={[styles.qtyText, { color: COLORS.primary }]}>-</Text>
+                  <Text style={[styles.qtyText, { color: COLORS.primary }]}>
+                    -
+                  </Text>
                 </TouchableOpacity>
 
                 <Text style={styles.qtyNumber}>
@@ -130,13 +132,13 @@ const CartScreen = () => {
                   style={[
                     styles.qtyBtn,
                     {
-                      backgroundColor: '#fff',
+                      backgroundColor: COLORS.primary,
                       borderWidth: 1,
                       borderColor: COLORS.primary,
                     },
                   ]}
                 >
-                  <Text style={[styles.qtyText, { color: COLORS.primary }]}>+</Text>
+                  <Text style={[styles.qtyText, { color: '#fff' }]}>+</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -223,9 +225,9 @@ const CartScreen = () => {
 export default CartScreen;
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: '#fff' 
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
   },
   header: {
     flexDirection: 'row',
@@ -235,14 +237,14 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingHorizontal: 20,
   },
-  backIcon: { 
-    width: 22, 
-    height: 22, 
-    tintColor: '#000' 
+  backIcon: {
+    width: 22,
+    height: 22,
+    tintColor: '#000',
   },
-  headerTitle: { 
-    fontSize: 18, 
-    color: '#000', 
+  headerTitle: {
+    fontSize: 18,
+    color: '#000',
     fontFamily: getFontFamily('Bold'),
     fontWeight: getFontWeight('Bold'),
   },
@@ -260,28 +262,28 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     padding: 12,
   },
-  foodImg: { 
-    width: 80, 
-    height: 80, 
-    borderRadius: 10, 
-    resizeMode: 'cover' 
+  foodImg: {
+    width: 80,
+    height: 80,
+    borderRadius: 10,
+    resizeMode: 'cover',
   },
-  foodName: { 
-    fontSize: 18, 
-    color: '#000', 
+  foodName: {
+    fontSize: 18,
+    color: '#000',
     fontFamily: getFontFamily('Bold'),
     fontWeight: getFontWeight('Bold'),
   },
-  foodSub: { 
-    fontSize: 13, 
-    color: '#777', 
-    marginBottom: 5, 
+  foodSub: {
+    fontSize: 13,
+    color: '#777',
+    marginBottom: 5,
     fontFamily: getFontFamily('SemiBold'),
     fontWeight: getFontWeight('SemiBold'),
   },
-  foodPrice: { 
-    fontSize: 15, 
-    color: '#000', 
+  foodPrice: {
+    fontSize: 15,
+    color: '#000',
     fontFamily: getFontFamily('Bold'),
     fontWeight: getFontWeight('Bold'),
   },
@@ -297,9 +299,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  qtyText: { 
-    fontSize: 16, 
-    textAlign: 'center', 
+  qtyText: {
+    fontSize: 16,
+    textAlign: 'center',
     textAlignVertical: 'center',
     fontFamily: getFontFamily('Bold'),
     fontWeight: getFontWeight('Bold'),
@@ -311,10 +313,10 @@ const styles = StyleSheet.create({
     fontFamily: getFontFamily('SemiBold'),
     fontWeight: getFontWeight('SemiBold'),
   },
-  deleteIcon: { 
-    width: 20, 
-    height: 20, 
-    tintColor: '#FF6B6B' 
+  deleteIcon: {
+    width: 20,
+    height: 20,
+    tintColor: '#FF6B6B',
   },
 
   deliveryCard: {
@@ -356,11 +358,11 @@ const styles = StyleSheet.create({
     fontFamily: getFontFamily('Bold'),
     fontWeight: getFontWeight('Bold'),
   },
-  addressText: { 
-    fontSize: 13, 
-    color: '#555', 
-    marginTop: 4, 
-    lineHeight: 18, 
+  addressText: {
+    fontSize: 13,
+    color: '#555',
+    marginTop: 4,
+    lineHeight: 18,
     fontFamily: getFontFamily('Medium'),
     fontWeight: getFontWeight('Medium'),
   },
@@ -370,33 +372,33 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 8,
   },
-  priceLabel: { 
-    fontSize: 14, 
-    color: '#000', 
+  priceLabel: {
+    fontSize: 14,
+    color: '#000',
     fontFamily: getFontFamily('SemiBold'),
     fontWeight: getFontWeight('SemiBold'),
   },
-  priceValue: { 
-    fontSize: 14, 
-    color: '#000', 
+  priceValue: {
+    fontSize: 14,
+    color: '#000',
     fontFamily: getFontFamily('SemiBold'),
     fontWeight: getFontWeight('SemiBold'),
   },
-  divider: { 
-    height: 1, 
-    backgroundColor: '#E0E0E0', 
-    marginVertical: 10 
+  divider: {
+    height: 1,
+    backgroundColor: '#E0E0E0',
+    marginVertical: 10,
   },
 
-  subtotalLabel: { 
-    fontSize: 16, 
-    color: '#000', 
+  subtotalLabel: {
+    fontSize: 16,
+    color: '#000',
     fontFamily: getFontFamily('Bold'),
     fontWeight: getFontWeight('Bold'),
   },
-  subtotalValue: { 
-    fontSize: 16, 
-    color: COLORS.primary, 
+  subtotalValue: {
+    fontSize: 16,
+    color: COLORS.primary,
     fontFamily: getFontFamily('Bold'),
     fontWeight: getFontWeight('Bold'),
   },

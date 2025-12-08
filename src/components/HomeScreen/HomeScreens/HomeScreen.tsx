@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,8 @@ import {
   Animated,
   FlatList,
   Modal,
+  PanResponder,
+  Alert,
 } from 'react-native';
 import { COLORS, FONT_STYLES } from '../../../theme/colors';
 import { useNavigation } from '@react-navigation/native';
@@ -31,6 +33,7 @@ import BesRatedBurger from './BesRatedBurger';
 import SearchModal from './SearchModal';
 import { ThemeContext } from '../../../theme/ThemeContext';
 import { vibrate } from '../../../utils/vibrationHelper';
+import ViewCartCard from './ViewCartCard'; // Import the ViewCartCard component
 
 const { width, height } = Dimensions.get('window');
 
@@ -73,15 +76,15 @@ const getFontFamily = (weight = 'Regular') => {
       '700': 'Figtree-Bold',
       '800': 'Figtree-ExtraBold',
       '900': 'Figtree-Black',
-      'Thin': 'Figtree-Thin',
-      'ExtraLight': 'Figtree-ExtraLight',
-      'Light': 'Figtree-Light',
-      'Regular': 'Figtree-Regular',
-      'Medium': 'Figtree-Medium',
-      'SemiBold': 'Figtree-SemiBold',
-      'Bold': 'Figtree-Bold',
-      'ExtraBold': 'Figtree-ExtraBold',
-      'Black': 'Figtree-Black',
+      Thin: 'Figtree-Thin',
+      ExtraLight: 'Figtree-ExtraLight',
+      Light: 'Figtree-Light',
+      Regular: 'Figtree-Regular',
+      Medium: 'Figtree-Medium',
+      SemiBold: 'Figtree-SemiBold',
+      Bold: 'Figtree-Bold',
+      ExtraBold: 'Figtree-ExtraBold',
+      Black: 'Figtree-Black',
     };
     return fontMap[weight] || 'Figtree-Regular';
   }
@@ -95,15 +98,15 @@ const getFontWeight = (weight = 'Regular') => {
 
   // iOS fontWeight mapping
   const weightMap = {
-    'Thin': '100',
-    'ExtraLight': '200',
-    'Light': '300',
-    'Regular': '400',
-    'Medium': '500',
-    'SemiBold': '600',
-    'Bold': '700',
-    'ExtraBold': '800',
-    'Black': '900',
+    Thin: '100',
+    ExtraLight: '200',
+    Light: '300',
+    Regular: '400',
+    Medium: '500',
+    SemiBold: '600',
+    Bold: '700',
+    ExtraBold: '800',
+    Black: '900',
     '100': '100',
     '200': '200',
     '300': '300',
@@ -221,9 +224,10 @@ const HomeScreen = () => {
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isVegMode, setIsVegMode] = useState(true);
-  const {theme} = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const [vegProductsState, setVegProductsState] = useState(vegProducts);
-  const [nonVegProductsState, setNonVegProductsState] = useState(nonVegProducts);
+  const [nonVegProductsState, setNonVegProductsState] =
+    useState(nonVegProducts);
   const [vegRestaurantsState, setVegRestaurantsState] = useState([
     {
       id: 1,
@@ -265,6 +269,10 @@ const HomeScreen = () => {
     },
   ]);
 
+  // Cart states
+  const [cartItemsCount, setCartItemsCount] = useState(4);
+  const [cartTotal, setCartTotal] = useState(234.5);
+
   const toggleVegMode = () => {
     setIsVegMode(prev => !prev);
   };
@@ -272,22 +280,22 @@ const HomeScreen = () => {
   // Toggle favorite status for products with vibration
   const toggleFavoriteProduct = (productId: number, isVeg: boolean) => {
     vibrate(40); // Use the vibration helper
-    
+
     if (isVeg) {
       setVegProductsState(prevProducts =>
         prevProducts.map(product =>
           product.id === productId
             ? { ...product, isFavorite: !product.isFavorite }
-            : product
-        )
+            : product,
+        ),
       );
     } else {
       setNonVegProductsState(prevProducts =>
         prevProducts.map(product =>
           product.id === productId
             ? { ...product, isFavorite: !product.isFavorite }
-            : product
-        )
+            : product,
+        ),
       );
     }
   };
@@ -295,22 +303,22 @@ const HomeScreen = () => {
   // Toggle favorite status for restaurants with vibration
   const toggleFavoriteRestaurant = (restaurantId: number, isVeg: boolean) => {
     vibrate(40); // Use the vibration helper
-    
+
     if (isVeg) {
       setVegRestaurantsState(prevRestaurants =>
         prevRestaurants.map(restaurant =>
           restaurant.id === restaurantId
             ? { ...restaurant, isFavorite: !restaurant.isFavorite }
-            : restaurant
-        )
+            : restaurant,
+        ),
       );
     } else {
       setNonVegRestaurantsState(prevRestaurants =>
         prevRestaurants.map(restaurant =>
           restaurant.id === restaurantId
             ? { ...restaurant, isFavorite: !restaurant.isFavorite }
-            : restaurant
-        )
+            : restaurant,
+        ),
       );
     }
   };
@@ -398,7 +406,7 @@ const HomeScreen = () => {
   };
 
   return (
-    <View style={[styles.container,{backgroundColor : theme.background}]}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <StatusBar
         backgroundColor={COLORS.primary}
         barStyle="light-content"
@@ -419,19 +427,28 @@ const HomeScreen = () => {
               <View style={styles.locationRow}>
                 <Image
                   source={require('../../../assets/location.png')}
-                  style={[styles.icon,{tintColor : theme.background}]}
+                  style={[styles.icon, { tintColor: theme.background }]}
                 />
-                <Text style={[styles.locationText,{color :  theme.background}]}>Location</Text>
+                <Text
+                  style={[styles.locationText, { color: theme.background }]}
+                >
+                  Location
+                </Text>
                 <Image
                   source={require('../../../assets/dropdown.png')}
-                  style={[styles.dropdownIcon,{tintColor : theme.background}]}
+                  style={[styles.dropdownIcon, { tintColor: theme.background }]}
                 />
               </View>
-              <Text style={[styles.addressText,{color :  theme.background}]}>4102 Pretty View Lane</Text>
+              <Text style={[styles.addressText, { color: theme.background }]}>
+                4102 Pretty View Lane
+              </Text>
             </View>
             <View style={styles.walletBagRow}>
               <TouchableOpacity
-                style={[styles.walletBtn,{backgroundColor :  theme.background}]}
+                style={[
+                  styles.walletBtn,
+                  { backgroundColor: theme.background },
+                ]}
                 activeOpacity={0.7}
                 onPress={handleWalletPress}
               >
@@ -441,7 +458,7 @@ const HomeScreen = () => {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.bagBtn,{backgroundColor : theme.background}]}
+                style={[styles.bagBtn, { backgroundColor: theme.background }]}
                 activeOpacity={0.7}
                 onPress={handleCartPress}
               >
@@ -464,10 +481,14 @@ const HomeScreen = () => {
         </View>
 
         {/* Main Content */}
-        <View style={[styles.mainContent,{backgroundColor :  theme.background}]}>
+        <View
+          style={[styles.mainContent, { backgroundColor: theme.background }]}
+        >
           {/* Today's Offers */}
           <View style={styles.sectionRowBetween}>
-            <Text style={[styles.sectionTitle,{color : theme.text}]}>Today's Offer's</Text>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>
+              Today's Offer's
+            </Text>
             <TouchableOpacity
               onPress={handleTodayOfferViewAll}
               activeOpacity={0.7}
@@ -485,7 +506,9 @@ const HomeScreen = () => {
           {/* Featured Restaurants */}
           <View style={styles.sectionRowBetween}>
             <View style={styles.sectionTitleRow}>
-              <Text style={[styles.sectionTitle,{color : theme.text}]}>Featured restaurants</Text>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>
+                Featured restaurants
+              </Text>
             </View>
             <TouchableOpacity
               onPress={handleFeaturedRestaurantViewAll}
@@ -509,7 +532,7 @@ const HomeScreen = () => {
                 style={styles.sectionIcon}
                 resizeMode="contain"
               />
-              <Text style={[styles.sectionTitle,{color : theme.text}]}>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>
                 {isVegMode ? 'Best-Rated Burgers' : 'Best-Rated Non-Veg'}
               </Text>
             </View>
@@ -536,14 +559,19 @@ const HomeScreen = () => {
               resizeMode="contain"
             />
             <View style={styles.bottomTextContainer}>
-              <Text style={[styles.reachingTxt]}>Reaching at your doorstep</Text>
+              <Text style={[styles.reachingTxt]}>
+                Reaching at your doorstep
+              </Text>
               <View style={styles.deliveryTimeContainer}>
                 <Image
                   source={require('../../../assets/clock.png')}
-                  style={[styles.deliveryClockIcon,{tintColor : COLORS.primary}]}
+                  style={[
+                    styles.deliveryClockIcon,
+                    { tintColor: COLORS.primary },
+                  ]}
                   resizeMode="contain"
                 />
-                <Text style={[styles.getDeliveredTxt,{color : theme.text}]}>
+                <Text style={[styles.getDeliveredTxt, { color: theme.text }]}>
                   Get delivered in 15 minutes
                 </Text>
               </View>
@@ -551,6 +579,10 @@ const HomeScreen = () => {
           </View>
         </View>
       </ScrollView>
+
+      {/* View Cart Card Component */}
+      <ViewCartCard cartItemsCount={cartItemsCount} cartTotal={cartTotal} />
+
       <SearchModal
         showFilterModal={showFilterModal}
         setShowFilterModal={setShowFilterModal}
@@ -574,7 +606,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: isIOS ? hp('4%') : hp('3%'),
+    paddingBottom: isIOS ? hp('15%') : hp('13%'), // Increased padding for cart card
   },
   headerContainer: {
     backgroundColor: COLORS.primary,

@@ -15,13 +15,12 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import { ThemeContext } from '../../../theme/ThemeContext';
-import { getFontFamily, getFontWeight } from '../../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 
 const ShareApp = () => {
   const navigation = useNavigation<any>();
-  const {theme} = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
 
   const shareOptions = [
     {
@@ -79,55 +78,81 @@ const ShareApp = () => {
   const secondRowOptions = shareOptions.slice(3);
 
   return (
-    <View style={[styles.container,{backgroundColor : theme.background}]}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent
+      />
 
-      <View style={[styles.header,{backgroundColor : theme.background}]}>
+      <View style={[styles.header, { backgroundColor: theme.background }]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
+          <Image
+            source={require('../../../assets/back.png')}
+            style={[styles.backIcon, { tintColor: theme.text }]}
+          />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color : theme.textSecondary}]}>Share App</Text>
+        <Text style={[styles.headerTitle, { color: theme.textSecondary }]}>
+          Share App
+        </Text>
         <View style={{ width: 24 }} />
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.content}
+      >
         {/* Hero Section */}
         <View style={styles.heroSection}>
-          <Image 
-            source={require('../../../assets/Splash.png')} 
-            style={styles.heroImage} 
+          <Image
+            source={require('../../../assets/Splash.png')}
+            style={styles.heroImage}
           />
-          <Text style={[styles.heroTitle,{color : theme.textSecondary}]}>Share the Love!</Text>
-          <Text style={[styles.heroDescription,{color : theme.textSecondary}]}>
-            Share this app with your friends and family and help them discover amazing food delivery service.
+          <Text style={[styles.heroTitle, { color: theme.textSecondary }]}>
+            Share the Love!
+          </Text>
+          <Text
+            style={[styles.heroDescription, { color: theme.textSecondary }]}
+          >
+            Share this app with your friends and family and help them discover
+            amazing food delivery service.
           </Text>
         </View>
 
         {/* Referral Code */}
-        <View style={[styles.referralSection,{backgroundColor  :theme.background}]}>
-          <Text style={[styles.referralTitle,{color : theme.textSecondary}]}>Your Referral Code</Text>
-          <TouchableOpacity 
+        <View
+          style={[
+            styles.referralSection,
+            { backgroundColor: theme.background },
+          ]}
+        >
+          <Text style={[styles.referralTitle, { color: theme.textSecondary }]}>
+            Your Referral Code
+          </Text>
+          <TouchableOpacity
             style={styles.referralCodeBox}
             onPress={() => copyToClipboard(referralCode)}
           >
             <Text style={styles.referralCode}>{referralCode}</Text>
-            <Image 
-              source={require('../../../assets/copy.png')} 
-              style={[styles.copyIcon,{tintColor:COLORS.text}]} 
+            <Image
+              source={require('../../../assets/copy.png')}
+              style={[styles.copyIcon, { tintColor: COLORS.text }]}
             />
           </TouchableOpacity>
-          <Text style={[styles.referralNote,{color : theme.textSecondary}]}>
+          <Text style={[styles.referralNote, { color: theme.textSecondary }]}>
             Share this code with your friends for special rewards!
           </Text>
         </View>
 
         {/* Share Options */}
         <View style={styles.shareSection}>
-          <Text style={[styles.shareTitle,{color : theme.textSecondary}]}>Share Via</Text>
-          
+          <Text style={[styles.shareTitle, { color: theme.textSecondary }]}>
+            Share Via
+          </Text>
+
           {/* First Row - 3 icons */}
           <View style={styles.shareRow}>
-            {firstRowOptions.map((item) => (
+            {firstRowOptions.map(item => (
               <TouchableOpacity
                 key={item.id}
                 style={styles.shareOption}
@@ -136,14 +161,21 @@ const ShareApp = () => {
                 <View style={styles.shareIconContainer}>
                   <Image source={item.icon} style={styles.shareIcon} />
                 </View>
-                <Text style={[styles.shareOptionText,{color : theme.textSecondary}]}>{item.name}</Text>
+                <Text
+                  style={[
+                    styles.shareOptionText,
+                    { color: theme.textSecondary },
+                  ]}
+                >
+                  {item.name}
+                </Text>
               </TouchableOpacity>
             ))}
           </View>
 
           {/* Second Row - 2 icons centered */}
           <View style={styles.shareRow}>
-            {secondRowOptions.map((item) => (
+            {secondRowOptions.map(item => (
               <TouchableOpacity
                 key={item.id}
                 style={styles.shareOption}
@@ -152,39 +184,91 @@ const ShareApp = () => {
                 <View style={styles.shareIconContainer}>
                   <Image source={item.icon} style={styles.shareIcon} />
                 </View>
-                <Text style={[styles.shareOptionText,{color : theme.textSecondary}]}>{item.name}</Text>
+                <Text
+                  style={[
+                    styles.shareOptionText,
+                    { color: theme.textSecondary },
+                  ]}
+                >
+                  {item.name}
+                </Text>
               </TouchableOpacity>
             ))}
           </View>
         </View>
 
         {/* Benefits */}
-        <View style={[styles.benefitsSection,{backgroundColor  :theme.background}]}>
-          <Text style={[styles.benefitsTitle,{color : theme.textSecondary}]}>Referral Benefits</Text>
-          <View style={[styles.benefitsList,{backgroundColor  :theme.background}]}>
+        <View
+          style={[
+            styles.benefitsSection,
+            { backgroundColor: theme.background },
+          ]}
+        >
+          <Text style={[styles.benefitsTitle, { color: theme.textSecondary }]}>
+            Referral Benefits
+          </Text>
+          <View
+            style={[styles.benefitsList, { backgroundColor: theme.background }]}
+          >
             <View style={styles.benefitItem}>
-              <Image source={require('../../../assets/tick.png')} style={[styles.benefitIcon,{tintColor:COLORS.primary}]} />
+              <Image
+                source={require('../../../assets/tick.png')}
+                style={[styles.benefitIcon, { tintColor: COLORS.primary }]}
+              />
               <View style={styles.benefitText}>
-                <Text style={[styles.benefitTitle,{color : theme.textSecondary}]}>Get ₹100 Credit</Text>
-                <Text style={[styles.benefitDescription,{color : theme.textSecondary}]}>
+                <Text
+                  style={[styles.benefitTitle, { color: theme.textSecondary }]}
+                >
+                  Get ₹100 Credit
+                </Text>
+                <Text
+                  style={[
+                    styles.benefitDescription,
+                    { color: theme.textSecondary },
+                  ]}
+                >
                   Receive ₹10 credit when your friend signs up
                 </Text>
               </View>
             </View>
             <View style={styles.benefitItem}>
-              <Image source={require('../../../assets/tick.png')} style={[styles.benefitIcon,{tintColor:COLORS.primary}]} />
+              <Image
+                source={require('../../../assets/tick.png')}
+                style={[styles.benefitIcon, { tintColor: COLORS.primary }]}
+              />
               <View style={styles.benefitText}>
-                <Text style={[styles.benefitTitle,{color : theme.textSecondary}]}>Friend Gets 20% Off</Text>
-                <Text style={[styles.benefitDescription,{color : theme.textSecondary}]}>
+                <Text
+                  style={[styles.benefitTitle, { color: theme.textSecondary }]}
+                >
+                  Friend Gets 20% Off
+                </Text>
+                <Text
+                  style={[
+                    styles.benefitDescription,
+                    { color: theme.textSecondary },
+                  ]}
+                >
                   Your friend gets 20% off on their first order
                 </Text>
               </View>
             </View>
             <View style={styles.benefitItem}>
-              <Image source={require('../../../assets/tick.png')} style={[styles.benefitIcon,{tintColor:COLORS.primary}]} />
+              <Image
+                source={require('../../../assets/tick.png')}
+                style={[styles.benefitIcon, { tintColor: COLORS.primary }]}
+              />
               <View style={styles.benefitText}>
-                <Text style={[styles.benefitTitle,{color : theme.textSecondary}]}>Exclusive Rewards</Text>
-                <Text style={[styles.benefitDescription,{color : theme.textSecondary}]}>
+                <Text
+                  style={[styles.benefitTitle, { color: theme.textSecondary }]}
+                >
+                  Exclusive Rewards
+                </Text>
+                <Text
+                  style={[
+                    styles.benefitDescription,
+                    { color: theme.textSecondary },
+                  ]}
+                >
                   Unlock special rewards for multiple referrals
                 </Text>
               </View>
@@ -193,18 +277,26 @@ const ShareApp = () => {
         </View>
 
         {/* Stats */}
-        <View style={[styles.statsSection,{backgroundColor  :theme.background}]}>
+        <View
+          style={[styles.statsSection, { backgroundColor: theme.background }]}
+        >
           <View style={styles.statItem}>
             <Text style={styles.statNumber}>5</Text>
-            <Text style={[styles.statLabel,{color : theme.textSecondary}]}>Friends Joined</Text>
+            <Text style={[styles.statLabel, { color: theme.textSecondary }]}>
+              Friends Joined
+            </Text>
           </View>
           <View style={styles.statItem}>
             <Text style={styles.statNumber}>₹500</Text>
-            <Text style={[styles.statLabel,{color : theme.textSecondary}]}>Total Credit Earned</Text>
+            <Text style={[styles.statLabel, { color: theme.textSecondary }]}>
+              Total Credit Earned
+            </Text>
           </View>
           <View style={styles.statItem}>
             <Text style={styles.statNumber}>3</Text>
-            <Text style={[styles.statLabel,{color : theme.textSecondary}]}>Available Rewards</Text>
+            <Text style={[styles.statLabel, { color: theme.textSecondary }]}>
+              Available Rewards
+            </Text>
           </View>
         </View>
       </ScrollView>
@@ -231,8 +323,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: width * 0.045,
-    fontFamily: getFontFamily('Bold'),
-    fontWeight: getFontWeight('Bold'),
+    fontFamily: 'Figtree-Bold',
   },
   content: {
     padding: 20,
@@ -248,8 +339,7 @@ const styles = StyleSheet.create({
   },
   heroTitle: {
     fontSize: width * 0.05,
-    fontFamily: getFontFamily('Bold'),
-    fontWeight: getFontWeight('Bold'),
+    fontFamily: 'Figtree-Bold',
     marginBottom: 8,
     textAlign: 'center',
   },
@@ -257,8 +347,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.035,
     textAlign: 'center',
     lineHeight: 20,
-    fontFamily: getFontFamily('Medium'),
-    fontWeight: getFontWeight('Medium'),
+    fontFamily: 'Figtree-Medium',
   },
   referralSection: {
     backgroundColor: '#fff',
@@ -268,7 +357,7 @@ const styles = StyleSheet.create({
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, header: 2 },
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
       },
@@ -277,8 +366,7 @@ const styles = StyleSheet.create({
   },
   referralTitle: {
     fontSize: width * 0.038,
-    fontFamily: getFontFamily('SemiBold'),
-    fontWeight: getFontWeight('SemiBold'),
+    fontFamily: 'Figtree-SemiBold',
     marginBottom: 12,
     textAlign: 'center',
   },
@@ -295,8 +383,7 @@ const styles = StyleSheet.create({
   },
   referralCode: {
     fontSize: width * 0.04,
-    fontFamily: getFontFamily('Bold'),
-    fontWeight: getFontWeight('Bold'),
+    fontFamily: 'Figtree-Bold',
     color: COLORS.primary,
     letterSpacing: 2,
   },
@@ -308,16 +395,14 @@ const styles = StyleSheet.create({
   referralNote: {
     fontSize: width * 0.032,
     textAlign: 'center',
-    fontFamily: getFontFamily('Medium'),
-    fontWeight: getFontWeight('Medium'),
+    fontFamily: 'Figtree-Medium',
   },
   shareSection: {
     marginBottom: 25,
   },
   shareTitle: {
     fontSize: width * 0.04,
-    fontFamily: getFontFamily('Bold'),
-    fontWeight: getFontWeight('Bold'),
+    fontFamily: 'Figtree-Bold',
     marginBottom: 16,
   },
   shareRow: {
@@ -344,8 +429,7 @@ const styles = StyleSheet.create({
   },
   shareOptionText: {
     fontSize: width * 0.032,
-    fontFamily: getFontFamily('Medium'),
-    fontWeight: getFontWeight('Medium'),
+    fontFamily: 'Figtree-Medium',
     textAlign: 'center',
   },
   benefitsSection: {
@@ -353,8 +437,7 @@ const styles = StyleSheet.create({
   },
   benefitsTitle: {
     fontSize: width * 0.04,
-    fontFamily: getFontFamily('Bold'),
-    fontWeight: getFontWeight('Bold'),
+    fontFamily: 'Figtree-Bold',
     marginBottom: 16,
   },
   benefitsList: {
@@ -387,14 +470,12 @@ const styles = StyleSheet.create({
   },
   benefitTitle: {
     fontSize: width * 0.035,
-    fontFamily: getFontFamily('SemiBold'),
-    fontWeight: getFontWeight('SemiBold'),
+    fontFamily: 'Figtree-SemiBold',
     marginBottom: 4,
   },
   benefitDescription: {
     fontSize: width * 0.032,
-    fontFamily: getFontFamily('Regular'),
-    fontWeight: getFontWeight('Regular'),
+    fontFamily: 'Figtree-Regular',
   },
   statsSection: {
     flexDirection: 'row',
@@ -418,16 +499,14 @@ const styles = StyleSheet.create({
   },
   statNumber: {
     fontSize: width * 0.05,
-    fontFamily: getFontFamily('Bold'),
-    fontWeight: getFontWeight('Bold'),
+    fontFamily: 'Figtree-Bold',
     color: COLORS.primary,
     marginBottom: 4,
   },
   statLabel: {
     fontSize: width * 0.028,
     textAlign: 'center',
-    fontFamily: getFontFamily('Medium'),
-    fontWeight: getFontWeight('Medium'),
+    fontFamily: 'Figtree-Medium',
   },
 });
 
