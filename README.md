@@ -15,3 +15,4 @@
 26 Nov 2025 -> Client fixes fonts issue in Cart,Wallet,Wishlist,Refer these screen - Fixed (2 static screens due in Subscription ) push from MAC 10:46 AM
 01 Dec 2025 -> Fonts issues , icons fixes , cureency changes all done 12:36 PM by Harshal-MAC latest
 08 Dec 2025 -> Latest updated code from main Branch pushed 03:03 PM Win and takes pull on Harshal-MAC
+CHeck - 17:30
