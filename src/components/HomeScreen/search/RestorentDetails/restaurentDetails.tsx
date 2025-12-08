@@ -373,7 +373,11 @@ const RestaurentDetails: React.FC = () => {
             <TouchableOpacity
               style={[
                 styles.productHeartWrapper,
-                { backgroundColor: headerLiked ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)' }
+                {
+                  backgroundColor: headerLiked
+                    ? 'rgba(255, 255, 255, 0.9)'
+                    : 'rgba(255, 255, 255, 0.3)',
+                },
               ]}
               onPress={onHeaderHeartPress}
               activeOpacity={0.7}
@@ -427,7 +431,9 @@ const RestaurentDetails: React.FC = () => {
         {/* ===== CATEGORY BAR ===== */}
         <View style={styles.categoryHeader}>
           <Image source={currentIcon} style={styles.leafIcon} />
-          <Text style={styles.availText}>Available options for {selectedItem}</Text>
+          <Text style={styles.availText}>
+            Available options for {selectedItem}
+          </Text>
           <Image
             source={
               vegNonVegFilter === 'Veg'
@@ -447,10 +453,13 @@ const RestaurentDetails: React.FC = () => {
         {/* Show content only if items are available */}
         {foodItems.length > 0 ? (
           <>
+            {/* ===== UPDATED CATEGORY SLIDER ===== */}
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
               style={styles.categorySlider}
+              contentContainerStyle={styles.categorySliderContent}
+              bounces={false}
             >
               {categories.map(cat => {
                 const selected = activeCategory === cat.name;
@@ -462,6 +471,7 @@ const RestaurentDetails: React.FC = () => {
                       selected && styles.categoryBtnActive,
                     ]}
                     onPress={() => setActiveCategory(cat.name)}
+                    activeOpacity={0.8}
                   >
                     {selected ? (
                       <View style={styles.selectedIconCircle}>
@@ -497,7 +507,9 @@ const RestaurentDetails: React.FC = () => {
             {/* ===== RECOMMENDATION HEADER ===== */}
             <View style={styles.recommendHeaderRow}>
               <Image source={currentIcon} style={styles.recommendHeaderIcon} />
-              <Text style={styles.recommendHeaderText}>Recommendation for you.</Text>
+              <Text style={styles.recommendHeaderText}>
+                Recommendation for you.
+              </Text>
             </View>
 
             {/* FOOD GRID (Recommendation) */}
@@ -517,7 +529,9 @@ const RestaurentDetails: React.FC = () => {
                 source={require('../../../../assets/popular.png')}
                 style={styles.bestBurgerHeaderIcon}
               />
-              <Text style={styles.bestBurgerHeaderText}>Best In {activeCategory}.</Text>
+              <Text style={styles.bestBurgerHeaderText}>
+                Best In {activeCategory}.
+              </Text>
             </View>
             <BestInBurger
               foodItems={foodItems}
@@ -699,21 +713,37 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     tintColor: '#999',
   },
+  // ===== UPDATED CATEGORY SLIDER STYLES =====
   categorySlider: {
-    paddingVertical: hp('1.2%'),
-    marginVertical: hp('0.3%'),
+    paddingVertical: hp('1.5%'),
+    marginVertical: hp('0.5%'),
     marginLeft: wp('5.5%'),
+  },
+  categorySliderContent: {
+    paddingRight: wp('5.5%'),
   },
   categoryBtn: {
     backgroundColor: '#fff',
-    borderRadius: wp('50%'),
+    borderRadius: wp('20%'),
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     marginRight: wp('3%'),
-    paddingVertical: hp('0.3%'),
-    paddingHorizontal: wp('3%'),
+    paddingVertical: hp('1.2%'),
+    paddingHorizontal: wp('0%'),
     flexDirection: 'row',
-    minHeight: hp('5%'),
+    height: hp('6.5%'),
+    minWidth: wp('28%'),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   categoryBtnActive: {
     backgroundColor: COLORS.primary,
@@ -721,30 +751,48 @@ const styles = StyleSheet.create({
   selectedIconCircle: {
     backgroundColor: '#fff',
     borderRadius: wp('50%'),
-    width: wp('10%'),
-    height: wp('10%'),
+    width: wp('11%'),
+    height: wp('11%'),
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: wp('2%'),
+    marginLeft: wp('1.5%'),
+    marginRight: wp('2.5%'),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.15,
+        shadowRadius: 1.5,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   categoryIcon: {
-    width: wp('10%'),
-    height: wp('10%'),
-    marginRight: wp('2%'),
+    width: wp('11%'),
+    height: wp('11%'),
+    marginLeft: wp('4%'),
+    marginRight: wp('2.5%'),
   },
   categoryIconSelected: {
-    width: wp('8%'),
-    height: wp('8%'),
+    width: wp('9%'),
+    height: wp('9%'),
   },
   categoryTxt: {
     color: COLORS.primary,
-    fontSize: hp('1.7%'),
+    fontSize: hp('1.8%'),
     fontFamily: Platform.OS === 'android' ? 'Figtree-Bold' : 'Figtree',
     fontWeight: Platform.OS === 'android' ? undefined : '700',
+    letterSpacing: 0.2,
+    flex: 1,
+    textAlign: 'center',
+    marginRight: wp('3%'),
   },
   categoryTxtActive: {
     color: COLORS.secondary,
   },
+  // ===== END OF UPDATED CATEGORY SLIDER STYLES =====
   recommendHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',

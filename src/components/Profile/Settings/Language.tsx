@@ -13,14 +13,13 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import { ThemeContext } from '../../../theme/ThemeContext';
-import { getFontFamily, getFontWeight } from '../../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 
 const Language = () => {
   const navigation = useNavigation<any>();
   const [selectedLanguage, setSelectedLanguage] = useState('english');
-  const {theme} = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
 
   const languages = [
     { id: 1, code: 'english', name: 'English', nativeName: 'English' },
@@ -28,37 +27,60 @@ const Language = () => {
   ];
 
   return (
-    <View style={[styles.container,{backgroundColor : theme.background}]}>
-      <StatusBar barStyle={theme.isDarkMode ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar
+        barStyle={theme.isDarkMode ? 'light-content' : 'dark-content'}
+        backgroundColor="transparent"
+        translucent
+      />
 
-      <View style={[styles.header,{backgroundColor  :theme.background}]}>
+      <View style={[styles.header, { backgroundColor: theme.background }]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
+          <Image
+            source={require('../../../assets/back.png')}
+            style={[styles.backIcon, { tintColor: theme.text }]}
+          />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color : theme.text}]}>Language</Text>
+        <Text style={[styles.headerTitle, { color: theme.text }]}>
+          Language
+        </Text>
         <View style={{ width: 24 }} />
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <Text style={[styles.sectionTitle,{color : theme.text}]}>Select Language</Text>
-        <Text style={[styles.sectionDescription,{color : theme.text}]}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.content}
+      >
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>
+          Select Language
+        </Text>
+        <Text style={[styles.sectionDescription, { color: theme.text }]}>
           Choose your preferred language for the app
         </Text>
 
-        {languages.map((language) => (
+        {languages.map(language => (
           <TouchableOpacity
             key={language.id}
             style={[
               styles.languageOption,
               selectedLanguage === language.code && styles.selectedLanguage,
-              {backgroundColor  :theme.cardBackground}
+              { backgroundColor: theme.cardBackground },
             ]}
             onPress={() => setSelectedLanguage(language.code)}
           >
             <View style={styles.languageLeft}>
               <View style={styles.languageInfo}>
-                <Text style={[styles.languageName,{color : theme.text}]}>{language.name}</Text>
-                <Text style={[styles.languageNative,{color : theme.textSecondary}]}>{language.nativeName}</Text>
+                <Text style={[styles.languageName, { color: theme.text }]}>
+                  {language.name}
+                </Text>
+                <Text
+                  style={[
+                    styles.languageNative,
+                    { color: theme.textSecondary },
+                  ]}
+                >
+                  {language.nativeName}
+                </Text>
               </View>
             </View>
             <View style={styles.radioContainer}>
@@ -68,16 +90,28 @@ const Language = () => {
                   selectedLanguage === language.code && styles.radioSelected,
                 ]}
               >
-                {selectedLanguage === language.code && <View style={styles.radioInner} />}
+                {selectedLanguage === language.code && (
+                  <View style={styles.radioInner} />
+                )}
               </View>
             </View>
           </TouchableOpacity>
         ))}
 
-        <View style={[styles.noteContainer, { backgroundColor: theme.cardBackground, borderLeftColor: COLORS.primary }]}>
-          <Text style={[styles.noteTitle,{color : theme.text}]}>Note:</Text>
-          <Text style={[styles.noteText,{color : theme.text}]}>
-            Changing the language will affect all text within the app. Some features may require restarting the app to fully apply the language changes.
+        <View
+          style={[
+            styles.noteContainer,
+            {
+              backgroundColor: theme.cardBackground,
+              borderLeftColor: COLORS.primary,
+            },
+          ]}
+        >
+          <Text style={[styles.noteTitle, { color: theme.text }]}>Note:</Text>
+          <Text style={[styles.noteText, { color: theme.text }]}>
+            Changing the language will affect all text within the app. Some
+            features may require restarting the app to fully apply the language
+            changes.
           </Text>
         </View>
       </ScrollView>
@@ -106,22 +140,19 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: width * 0.045,
-    fontFamily: getFontFamily('Bold'),
-    fontWeight: getFontWeight('Bold'),
+    fontFamily: 'Figtree-Bold',
   },
   content: {
     padding: 20,
   },
   sectionTitle: {
     fontSize: width * 0.05,
-    fontFamily: getFontFamily('Bold'),
-    fontWeight: getFontWeight('Bold'),
+    fontFamily: 'Figtree-Bold',
     marginBottom: 8,
   },
   sectionDescription: {
     fontSize: width * 0.035,
-    fontFamily: getFontFamily('SemiBold'),
-    fontWeight: getFontWeight('SemiBold'),
+    fontFamily: 'Figtree-SemiBold',
     marginBottom: 25,
   },
   languageOption: {
@@ -144,7 +175,6 @@ const styles = StyleSheet.create({
   },
   selectedLanguage: {
     borderColor: COLORS.primary,
-    backgroundColor: theme => theme.isDarkMode ? '#2a3b5c' : '#f0f7ff',
   },
   languageLeft: {
     flexDirection: 'row',
@@ -156,14 +186,12 @@ const styles = StyleSheet.create({
   },
   languageName: {
     fontSize: width * 0.038,
-    fontFamily: getFontFamily('SemiBold'),
-    fontWeight: getFontWeight('SemiBold'),
+    fontFamily: 'Figtree-SemiBold',
     marginBottom: 4,
   },
   languageNative: {
     fontSize: width * 0.032,
-    fontFamily: getFontFamily('Regular'),
-    fontWeight: getFontWeight('Regular'),
+    fontFamily: 'Figtree-Regular',
   },
   radioContainer: {
     marginLeft: 10,
@@ -194,15 +222,13 @@ const styles = StyleSheet.create({
   },
   noteTitle: {
     fontSize: width * 0.035,
-    fontFamily: getFontFamily('Bold'),
-    fontWeight: getFontWeight('Bold'),
+    fontFamily: 'Figtree-Bold',
     marginBottom: 8,
   },
   noteText: {
     fontSize: width * 0.032,
     lineHeight: 18,
-    fontFamily: getFontFamily('Regular'),
-    fontWeight: getFontWeight('Regular'),
+    fontFamily: 'Figtree-Regular',
   },
 });
 

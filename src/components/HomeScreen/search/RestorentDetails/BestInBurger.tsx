@@ -1,8 +1,19 @@
 // components/BestInBurger/index.tsx
 import React from 'react';
-import { Animated, StyleSheet, Text, TouchableOpacity, View, Image, Platform } from 'react-native';
+import {
+  Animated,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+  Platform,
+} from 'react-native';
 import { COLORS } from '../../../../theme/colors';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import { getFontFamily, getFontWeight } from '../../../../utils/fontHelper';
 import { vibrate } from '../../../../utils/vibrationHelper';
 
@@ -15,7 +26,6 @@ const BestInBurger = ({
   handlePlusPress,
   handleFoodItemPress,
 }) => {
-
   const handleHeartPressWithVibration = (id: number) => {
     vibrate(40); // Consistent vibration duration
     handleHeartPress(id);
@@ -28,16 +38,19 @@ const BestInBurger = ({
 
   return (
     <View style={styles.grid}>
-      {foodItems.map((f) => {
+      {foodItems.map(f => {
         const isLiked = likedItems.includes(f.id);
         return (
           <View key={`best-${f.id}`} style={styles.foodCard}>
-
             {/* Heart Icon - Same style as previous components */}
             <TouchableOpacity
               style={[
                 styles.productHeartWrapper,
-                { backgroundColor: isLiked ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)' }
+                {
+                  backgroundColor: isLiked
+                    ? 'rgba(255, 255, 255, 0.9)'
+                    : 'rgba(255, 255, 255, 0.3)',
+                },
               ]}
               onPress={() => handleHeartPressWithVibration(f.id)}
               activeOpacity={0.7}
@@ -58,7 +71,10 @@ const BestInBurger = ({
             </TouchableOpacity>
 
             {/* Food Image */}
-            <TouchableOpacity activeOpacity={0.9} onPress={() => handleFoodItemPress(f)}>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => handleFoodItemPress(f)}
+            >
               <Image source={f.img} style={styles.foodImg} resizeMode="cover" />
 
               {/* Rating Badge */}
@@ -68,27 +84,19 @@ const BestInBurger = ({
                   style={styles.starIcon}
                   resizeMode="contain"
                 />
-                <Text style={styles.ratingText}>
-                  4.4
-                </Text>
+                <Text style={styles.ratingText}>4.4</Text>
               </View>
             </TouchableOpacity>
 
             {/* Food Info */}
             <View style={styles.foodInfo}>
-              <Text style={styles.foodName}>
-                {f.name}
-              </Text>
+              <Text style={styles.foodName}>{f.name}</Text>
 
               {/* Price Row */}
               <View style={styles.priceRow}>
-                <Text style={styles.price}>
-                  ₹ {f.price.toFixed(2)}
-                </Text>
+                <Text style={styles.price}>₹ {f.price.toFixed(2)}</Text>
 
-                <Text style={styles.oldPrice}>
-                  ₹ {f.oldPrice.toFixed(2)}
-                </Text>
+                <Text style={styles.oldPrice}>₹ {f.oldPrice.toFixed(2)}</Text>
 
                 <TouchableOpacity
                   onPress={() => handlePlusPressWithVibration(f.id)}
@@ -96,7 +104,10 @@ const BestInBurger = ({
                 >
                   <Animated.Image
                     source={require('../../../../assets/plus.png')}
-                    style={[styles.plusIcon, { transform: [{ scale: plusScales[f.id] || 1 }] }]}
+                    style={[
+                      styles.plusIcon,
+                      { transform: [{ scale: plusScales[f.id] || 1 }] },
+                    ]}
                     resizeMode="contain"
                   />
                 </TouchableOpacity>
@@ -104,14 +115,12 @@ const BestInBurger = ({
 
               {/* Time Row */}
               <View style={styles.timeRow}>
-                <Image 
-                  source={require('../../../../assets/clockk.png')} 
-                  style={styles.clockIcon} 
-                  resizeMode="contain" 
+                <Image
+                  source={require('../../../../assets/clockk.png')}
+                  style={styles.clockIcon}
+                  resizeMode="contain"
                 />
-                <Text style={styles.timeText}>
-                  {f.time}
-                </Text>
+                <Text style={styles.timeText}>{f.time}</Text>
               </View>
             </View>
           </View>

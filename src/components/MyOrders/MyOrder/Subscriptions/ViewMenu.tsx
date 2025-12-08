@@ -13,7 +13,10 @@ import CheckBox from '@react-native-community/checkbox';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../../theme/colors';
 import { getFontFamily, getFontWeight } from '../../../../utils/fontHelper';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 const { width, height } = Dimensions.get('window');
 
@@ -94,11 +97,17 @@ const ViewMenu = () => {
 
       {/* SUBTITLE */}
       <View style={styles.subtitleRow}>
-        <Image source={require('../../../../assets/check.png')} style={styles.greenCheck} />
+        <Image
+          source={require('../../../../assets/check.png')}
+          style={styles.greenCheck}
+        />
         <Text style={styles.subtitle}>Select your subscription plan for</Text>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
         {plans.map(item => {
           const isSelected = selected.includes(item.id);
           return (
@@ -117,13 +126,21 @@ const ViewMenu = () => {
               <Text style={styles.planTitle}>{item.title}</Text>
 
               {/* Smaller Native Checkbox */}
-              <CheckBox value={isSelected} onValueChange={() => togglePlan(item.id)} {...checkBoxProps} />
+              <CheckBox
+                value={isSelected}
+                onValueChange={() => togglePlan(item.id)}
+                {...checkBoxProps}
+              />
             </TouchableOpacity>
           );
         })}
 
         {/* NEXT BUTTON */}
-        <TouchableOpacity style={styles.menuButton} onPress={handleNext} activeOpacity={0.9}>
+        <TouchableOpacity
+          style={styles.menuButton}
+          onPress={handleNext}
+          activeOpacity={0.9}
+        >
           <Text style={styles.menuText}>Next</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -204,7 +221,7 @@ const styles = StyleSheet.create({
   iconWrapper: {
     backgroundColor: '#fff',
     padding: 12,
-    borderRadius: 50,
+    borderRadius: 10,
     elevation: 3,
   },
 
