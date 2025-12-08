@@ -14,19 +14,21 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import { ThemeContext } from '../../../theme/ThemeContext';
+import { getFontFamily, getFontWeight } from '../../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 
 const AccountManagement = () => {
   const navigation = useNavigation<any>();
   const [showDeletePopup, setShowDeletePopup] = useState(false);
-  const { theme } = useContext(ThemeContext);
+  const {theme} = useContext(ThemeContext);
 
   const managementOptions = [
     {
       id: 2,
       title: 'Clear Search History',
       description: 'Remove all your search queries',
+      
       icon: require('../../../assets/clear.png'),
       action: () => console.log('Clear history'),
     },
@@ -52,96 +54,53 @@ const AccountManagement = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <StatusBar
-        barStyle={theme.isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor="transparent"
-        translucent
-      />
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
+      <StatusBar barStyle={theme.isDarkMode ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
-      <View style={[styles.header, { backgroundColor: theme.background }]}>
+      <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={require('../../../assets/back.png')}
-            style={[styles.backIcon, { tintColor: theme.text }]}
-          />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.text }]}>
-          Account Management
-        </Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>Account Management</Text>
         <View style={{ width: 24 }} />
       </View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.content}
-      >
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>
-          Manage Your Account
-        </Text>
-        <Text style={[styles.sectionDescription, { color: theme.text }]}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>Manage Your Account</Text>
+        <Text style={[styles.sectionDescription,{color : theme.text}]}>
           Control your data and account settings
         </Text>
 
-        {managementOptions.map(item => (
+        {managementOptions.map((item) => (
           <TouchableOpacity
             key={item.id}
-            style={[
-              styles.managementCard,
-              { backgroundColor: theme.cardBackground },
-            ]}
+            style={[styles.managementCard,{backgroundColor : theme.cardBackground}]}
             onPress={item.action}
           >
             <View style={styles.managementLeft}>
-              <Image
-                source={item.icon}
-                style={[styles.managementIcon, { tintColor: theme.text }]}
-              />
+              <Image source={item.icon} style={[styles.managementIcon,{tintColor : theme.text}]} />
               <View style={styles.managementText}>
-                <Text style={[styles.managementTitle, { color: theme.text }]}>
-                  {item.title}
-                </Text>
-                <Text
-                  style={[
-                    styles.managementDescription,
-                    { color: theme.textSecondary },
-                  ]}
-                >
-                  {item.description}
-                </Text>
+                <Text style={[styles.managementTitle,{color : theme.text}]}>{item.title}</Text>
+                <Text style={[styles.managementDescription,{color : theme.textSecondary}]}>{item.description}</Text>
               </View>
             </View>
-            <Image
-              source={require('../../../assets/right-arrow.png')}
-              style={[styles.arrowIcon, { tintColor: theme.text }]}
-            />
+            <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor : theme.text}]} />
           </TouchableOpacity>
         ))}
 
         {/* Delete Account Section */}
-        <View
-          style={[
-            styles.deleteSection,
-            {
-              backgroundColor: theme.cardBackground,
-              borderLeftColor: '#f44336',
-            },
-          ]}
-        >
-          <Text style={[styles.deleteTitle, { color: '#d32f2f' }]}>
-            Delete Account
-          </Text>
-          <Text style={[styles.deleteDescription, { color: theme.text }]}>
-            Permanently delete your account and all associated data. This action
-            cannot be undone.
+        <View style={[styles.deleteSection, { backgroundColor: theme.cardBackground, borderLeftColor: '#f44336' }]}>
+          <Text style={[styles.deleteTitle, { color: '#d32f2f' }]}>Delete Account</Text>
+          <Text style={[styles.deleteDescription,{color : theme.text}]}>
+            Permanently delete your account and all associated data. This action cannot be undone.
           </Text>
           <TouchableOpacity
             style={styles.deleteButton}
             onPress={() => setShowDeletePopup(true)}
           >
-            <Image
-              source={require('../../../assets/delete.png')}
-              style={styles.deleteIcon}
+            <Image 
+              source={require('../../../assets/delete.png')} 
+              style={styles.deleteIcon} 
             />
             <Text style={styles.deleteButtonText}>Delete Account</Text>
           </TouchableOpacity>
@@ -156,41 +115,26 @@ const AccountManagement = () => {
         onRequestClose={() => setShowDeletePopup(false)}
       >
         <View style={styles.popupOverlay}>
-          <View
-            style={[styles.popupBox, { backgroundColor: theme.cardBackground }]}
-          >
-            <Image
-              source={require('../../../assets/b1.png')}
-              style={styles.warningIcon}
+          <View style={[styles.popupBox, { backgroundColor: theme.cardBackground }]}>
+            <Image 
+              source={require('../../../assets/b1.png')} 
+              style={styles.warningIcon} 
             />
-            <Text style={[styles.popupTitle, { color: theme.text }]}>
-              Delete Account
+            <Text style={[styles.popupTitle,{color : theme.text}]}>Delete Account</Text>
+            <Text style={[styles.popupText,{color : theme.text}]}>
+              Are you sure you want to delete your account? This action is permanent and cannot be undone. All your data will be lost.
             </Text>
-            <Text style={[styles.popupText, { color: theme.text }]}>
-              Are you sure you want to delete your account? This action is
-              permanent and cannot be undone. All your data will be lost.
-            </Text>
-
+            
             <View style={styles.popupButtonsRow}>
               <TouchableOpacity
-                style={[
-                  styles.popupButton,
-                  styles.cancelButton,
-                  { backgroundColor: theme.borderColor },
-                ]}
+                style={[styles.popupButton, styles.cancelButton, { backgroundColor: theme.borderColor }]}
                 onPress={() => setShowDeletePopup(false)}
               >
-                <Text style={[styles.cancelButtonText, { color: theme.text }]}>
-                  Cancel
-                </Text>
+                <Text style={[styles.cancelButtonText, { color: theme.text }]}>Cancel</Text>
               </TouchableOpacity>
-
+              
               <TouchableOpacity
-                style={[
-                  styles.popupButton,
-                  styles.deleteConfirmButton,
-                  { backgroundColor: '#d32f2f' },
-                ]}
+                style={[styles.popupButton, styles.deleteConfirmButton, { backgroundColor: '#d32f2f' }]}
                 onPress={handleDeleteAccount}
               >
                 <Text style={styles.deleteButtonText}>Delete</Text>
@@ -224,19 +168,22 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: width * 0.045,
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   content: {
     padding: 20,
   },
   sectionTitle: {
     fontSize: width * 0.05,
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     marginBottom: 8,
   },
   sectionDescription: {
     fontSize: width * 0.035,
-    fontFamily: 'Figtree-Medium',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
     marginBottom: 25,
   },
   managementCard: {
@@ -272,12 +219,14 @@ const styles = StyleSheet.create({
   },
   managementTitle: {
     fontSize: width * 0.038,
-    fontFamily: 'Figtree-SemiBold',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     marginBottom: 4,
   },
   managementDescription: {
     fontSize: width * 0.03,
-    fontFamily: 'Figtree-Medium',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   arrowIcon: {
     width: 16,
@@ -292,14 +241,16 @@ const styles = StyleSheet.create({
   },
   deleteTitle: {
     fontSize: width * 0.04,
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     marginBottom: 8,
   },
   deleteDescription: {
     fontSize: width * 0.033,
     marginBottom: 16,
     lineHeight: 18,
-    fontFamily: 'Figtree-Medium',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   deleteButton: {
     flexDirection: 'row',
@@ -319,7 +270,8 @@ const styles = StyleSheet.create({
   deleteButtonText: {
     color: '#fff',
     fontSize: width * 0.036,
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   popupOverlay: {
     flex: 1,
@@ -343,7 +295,8 @@ const styles = StyleSheet.create({
   },
   popupTitle: {
     fontSize: width * 0.045,
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     marginBottom: 12,
     textAlign: 'center',
   },
@@ -352,7 +305,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 24,
     lineHeight: 20,
-    fontFamily: 'Figtree-SemiBold',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   popupButtonsRow: {
     flexDirection: 'row',
@@ -374,7 +328,8 @@ const styles = StyleSheet.create({
   },
   cancelButtonText: {
     fontSize: width * 0.036,
-    fontFamily: 'Figtree-SemiBold',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
 });
 

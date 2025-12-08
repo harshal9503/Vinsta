@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   Animated,
   FlatList
 } from 'react-native';
+import { ThemeContext } from '../../../../theme/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
 import { getFontFamily, getFontWeight } from '../../../../utils/fontHelper';
 const { width, height } = Dimensions.get('window');
@@ -20,6 +21,7 @@ import {
 import { COLORS } from '../../../../theme/colors';
 
 const SelectPlan = () => {
+  const {theme}=useContext(ThemeContext);
   const navigation = useNavigation();
   const [selectedDate, setSelectedDate] = useState(26);
   const mealPlans = [
@@ -129,36 +131,67 @@ const SelectPlan = () => {
     [dates]
   );
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Image
-            source={require('../../../../assets/back.png')}
-            style={styles.backIcon}
-          />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Vinsta Plus</Text>
-        <View style={{ width: width * 0.06 }} />
-      </View>
+    <View
+  style={[
+    styles.container,
+    { backgroundColor: theme.background }, // DARK/LIGHT BG
+  ]}
+>
+  {/* Header */}
+  <View
+    style={[
+      styles.header,
+      { backgroundColor: theme.cardBackground }, // Card background theme
+    ]}
+  >
+    <TouchableOpacity
+      onPress={() => navigation.goBack()}
+      style={styles.backButton}
+    >
+      <Image
+        source={require('../../../../assets/back.png')}
+        style={[
+          styles.backIcon,
+          {
+            tintColor: theme.text, // back icon visible in dark mode
+          },
+        ]}
+      />
+    </TouchableOpacity>
+
+    <Text
+      style={[
+        styles.headerTitle,
+        { color: theme.text }, // Title color – white in dark mode
+      ]}
+    >
+      Vinsta Plus
+    </Text>
+
+    <View style={{ width: width * 0.06 }} />
+  </View>
 
       <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
         {/* Heading */}
         <View style={styles.mainContent}>
           <View style={styles.heading}>
             <Image source={require('../../../../assets/select.png')} style={styles.select} />
-            <Text style={styles.selectText}>Select Plan starting Date</Text>
+            <Text style={[styles.selectText,{ color: theme.text }, // white in dark mode, black in light
+      ]}
+    >
+      Select Plan starting Date
+    </Text>
           </View>
         </View>
 
         {/* Calendar Section */}
         <View style={styles.monthHeader}>
           <TouchableOpacity style={styles.navButton} onPress={goToPreviousMonth}>
-            <Text style={styles.navIcon}>‹</Text>
+            <Text style={[ styles.navIcon,{ color: theme.text }]}>‹</Text>
           </TouchableOpacity>
-          <Text style={styles.monthName}>{monthYear}</Text>
+         <Text style={[ styles.monthName,{ color: theme.text }]}>{monthYear}</Text>
           <TouchableOpacity style={styles.navButton} onPress={goToNextMonth}>
-            <Text style={styles.navIcon}>›</Text>
+         <Text style={[styles.navIcon,{ color: theme.text }]}>›</Text>
           </TouchableOpacity>
         </View>
 
@@ -223,11 +256,16 @@ const SelectPlan = () => {
                       ]}
                     >
                       <Text
-                        style={[
-                          styles.dateNumber,
-                          isSelected && styles.selectedDateNumber,
-                        ]}
-                      >
+  style={[
+    styles.dateNumber,
+    isSelected && styles.selectedDateNumber,
+    { 
+      color: isSelected
+        ? (theme.mode === "dark" ? "#000" : "#000")  
+        : theme.textSecondary
+    }
+  ]}
+>
                         {item}
                       </Text>
                     </View>
@@ -258,17 +296,33 @@ const SelectPlan = () => {
         <View style={styles.planSection}>
           <View style={[styles.heading, { marginBottom: hp('3%') }]}>
             <Image source={require('../../../../assets/select.png')} style={styles.select} />
-            <Text style={styles.selectText}>Select Plan</Text>
+           <Text style={[styles.selectText, { color: theme.text }]}>Select Plan</Text>
+
           </View>
           <View style={styles.planCardsWrapper}>
             {mealPlans.map((plan) => (
-              <View key={plan.id} style={styles.planCard}>
+            <View
+  key={plan.id}
+  style={[
+    styles.planCard,
+    { backgroundColor: theme.cardBackground } // Light: white | Dark: #1E1E1E
+  ]}
+>
+
 
                 <View style={styles.leftRightRow}>
 
                   {/* LEFT SIDE → Duration + Image */}
                   <View style={styles.leftSection}>
-                    <Text style={styles.planTitle}>{plan.durationLabel}</Text>
+                   <Text
+  style={[
+    styles.planTitle,
+    { color: theme.text } // Light = black, Dark = white
+  ]}
+>
+  {plan.durationLabel}
+</Text>
+
                     <View
                       style={styles.imgBorder}
                     >
@@ -281,9 +335,25 @@ const SelectPlan = () => {
 
                   {/* RIGHT SIDE → Plan Info */}
                   <View style={styles.planInfo}>
-                    <Text style={styles.planType}>{plan.planType}</Text>
+                  <Text
+  style={[
+    styles.planType,
+    { color: theme.text } // Light = black | Dark = white
+  ]}
+>
+  {plan.planType}
+</Text>
+
                     <Text style={styles.restaurantName}>{plan.vendor}</Text>
-                    <Text style={styles.priceText}>{plan.price}</Text>
+                   <Text
+  style={[
+    styles.priceText,
+    { color: theme.text}, // white for dark, black for light
+  ]}
+>
+  {plan.price}
+</Text>
+
                     <Text style={styles.greySmall}>Based on previous selection</Text>
                     <Text style={styles.greySmall}>{plan.dateRange}</Text>
                   </View>
@@ -293,19 +363,31 @@ const SelectPlan = () => {
                 <View style={styles.mealsSection}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: wp('2%') }}>
                     <Image source={require('../../../../assets/checkbox.png')} style={{ width: wp('4%'), height: wp('4%'), tintColor: '#259E29' }} />
-                    <Text style={styles.mealText}>BreakFast</Text>
+                    <Text  style={[
+    styles.mealText,
+    { color: theme.text}, // white for dark, black for light
+  ]}
+>BreakFast</Text>
                     <Image source={require('../../../../assets/Vector.png')} />
                   </View>
 
                   <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: wp('2%') }}>
                     <Image source={require('../../../../assets/checkbox.png')} style={{ width: wp('4%'), height: wp('4%'), tintColor: '#259E29' }} />
-                    <Text style={styles.mealText}>Lunch</Text>
+                   <Text  style={[
+    styles.mealText,
+    { color: theme.text}, // white for dark, black for light
+  ]}
+>Lunch</Text>
                     <Image source={require('../../../../assets/Vector.png')} />
                   </View>
 
                   <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: wp('2%') }}>
                     <Image source={require('../../../../assets/checkbox.png')} style={{ width: wp('4%'), height: wp('4%'), tintColor: '#259E29' }} />
-                    <Text style={styles.mealText}>Dinner</Text>
+                  <Text  style={[
+    styles.mealText,
+    { color: theme.text}, // white for dark, black for light
+  ]}
+>BreakFast</Text>
                     <Image source={require('../../../../assets/Vector.png')} />
                   </View>
                 </View>

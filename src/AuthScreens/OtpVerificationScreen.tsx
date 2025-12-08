@@ -135,7 +135,6 @@ const OtpVerificationScreen = ({ navigation, route }: any) => {
 
           <Text style={styles.timerText}>{formatTime()}</Text>
 
-          {/* OTP BOXES FIXED + CENTERED + SPACING ADDED */}
           <View style={styles.otpContainer}>
             {otp.map((digit, index) => (
               <TextInput
@@ -245,32 +244,24 @@ const styles = StyleSheet.create({
     fontFamily: getFontFamily('Bold'),
     fontWeight: getFontWeight('Bold'),
   },
-
-  /** ⭐ FIXED OTP STYLING: CENTERED + SPACE BETWEEN BOXES ⭐ */
   otpContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',      // center horizontally
-    alignItems: 'center',          // center vertically
-    width: '100%',
+    justifyContent: 'space-between',
+    width: '85%',
     marginVertical: 20,
-    gap: 14,                       // spacing between boxes (RN 0.71+)
-    // Alternative if gap not supported:
-    // justifyContent: 'space-between',
   },
-
   otpInput: {
-    width: width * 0.13,
+    width: width * 0.12,
     height: width * 0.15,
     borderWidth: 2,
     borderColor: '#E0E0E0',
-    borderRadius: 10,
+    borderRadius: 8,
     fontSize: width * 0.06,
     color: COLORS.text,
     textAlign: 'center',
     fontFamily: getFontFamily('SemiBold'),
     fontWeight: getFontWeight('SemiBold'),
   },
-
   button: {
     backgroundColor: COLORS.primary,
     width: '85%',
@@ -278,6 +269,10 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: COLORS.shadow,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
     elevation: 6,
     marginTop: 10,
   },

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   StatusBar,
   Animated,
 } from 'react-native';
+import { ThemeContext } from '../../theme/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
 import { getFontFamily, getFontWeight } from '../../utils/fontHelper';
@@ -18,6 +19,7 @@ const { width, height } = Dimensions.get('window');
 
 const Wishlist = () => {
   const navigation = useNavigation<any>();
+  const { theme } = useContext(ThemeContext);
   const [activeTab, setActiveTab] = useState<'Food' | 'Restaurant'>('Food');
   const [heartScales] = useState<{ [key: number]: Animated.Value }>({});
 
@@ -51,52 +53,107 @@ const Wishlist = () => {
     });
   };
 
+  // Colors for dark/light mode
+  const bgColor = theme.mode === 'dark' ? '#121212' : '#FFFFFF';
+  const cardBg = theme.mode === 'dark' ? '#1E1E1E' : '#F8F8F8';
+  const textColor = theme.mode === 'dark' ? '#FFFFFF' : '#000000';
+  const subTextColor = theme.mode === 'dark' ? '#AAAAAA' : '#555555';
+
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+    <View style={[styles.container, { backgroundColor: theme.background}]}>
+      <StatusBar barStyle={theme.mode === 'dark' ? 'light-content' : 'dark-content'} 
+      backgroundColor="transparent" translucent />
 
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../assets/back.png')} style={styles.backIcon} />
+          <Image source={require('../../assets/back.png')} style={[styles.backIcon, { tintColor: textColor }]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Favourite's</Text>
+        <Text style={[styles.headerTitle, { color: theme.text}]}>Favourite's</Text>
         <View style={{ width: 22 }} />
       </View>
 
       {/* Tabs */}
-      <View style={styles.tabRowOuter}>
-        <View style={styles.tabRow}>
-          <TouchableOpacity
-            style={[
-              styles.tabBtn,
-              activeTab === 'Food' && styles.activeTab,
-              activeTab === 'Food' && styles.activeTabShadow,
-            ]}
-            onPress={() => setActiveTab('Food')}
-            activeOpacity={0.9}
-          >
-            <Text style={[
-              styles.tabText,
-              activeTab === 'Food' && styles.activeTabText,
-            ]}>Food Item's</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.tabBtn,
-              activeTab === 'Restaurant' && styles.activeTab,
-              activeTab === 'Restaurant' && styles.activeTabShadow,
-            ]}
-            onPress={() => setActiveTab('Restaurant')}
-            activeOpacity={0.9}
-          >
-            <Text style={[
-              styles.tabText,
-              activeTab === 'Restaurant' && styles.activeTabText
-            ]}>Restaurant's</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      <View
+  style={[
+    styles.tabRowOuter,
+    {
+      backgroundColor: theme.card,
+      borderColor: theme.borderColor,
+      borderWidth: theme.mode === 'dark' ? 1.2 : 0,
+    },
+  ]}
+>
+  <View
+    style={[
+      styles.tabRow,
+         { 
+          backgroundColor: theme.card,
+        borderColor: theme.borderColor,
+        borderWidth: theme.mode === 'dark' ? 1 : 0,
+         }
+    
+    ]}
+  >
+    {/* FOOD TAB */}
+    <TouchableOpacity
+      style={[
+        styles.tabBtn,
+        {
+          backgroundColor:
+            activeTab === 'Food'
+              ? '#e48518ff'
+              : theme.cardBackground,
+
+         
+        },
+      ]}
+      onPress={() => setActiveTab('Food')}
+      activeOpacity={0.9}
+    >
+      <Text
+        style={[
+          styles.tabText,
+          {
+            color: activeTab === 'Food' ? '#FFF' : theme.text,
+          },
+        ]}
+      >
+        Food Item's
+      </Text>
+    </TouchableOpacity>
+
+    {/* RESTAURANT TAB */}
+    <TouchableOpacity
+      style={[
+        styles.tabBtn,
+        {
+          backgroundColor:
+            activeTab === 'Restaurant'
+              ? '#e57d06ff'
+              : theme.cardBackground,
+
+          // ⭐ Border only for inactive tabs in dark mode
+         
+        },
+      ]}
+      onPress={() => setActiveTab('Restaurant')}
+      activeOpacity={0.9}
+    >
+      <Text
+        style={[
+          styles.tabText,
+          {
+            color:
+              activeTab === 'Restaurant' ? '#FFFFFF' : theme.text,
+          },
+        ]}
+      >
+        Restaurant's
+      </Text>
+    </TouchableOpacity>
+  </View>
+</View>
 
       {/* Content */}
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 80 }}>
@@ -106,7 +163,7 @@ const Wishlist = () => {
               foodItems.map(f => (
                 <TouchableOpacity
                   key={f.id}
-                  style={styles.foodCard}
+                  style={[styles.foodCard, { backgroundColor: cardBg }]}
                   activeOpacity={0.9}
                   onPress={() => navigation.navigate('fooddetails')}
                 >
@@ -123,21 +180,30 @@ const Wishlist = () => {
                     </TouchableOpacity>
                   </Animated.View>
 
-                  <View style={styles.foodInfo}>
-                    <Text style={styles.foodName}>{f.name}</Text>
-                    <View style={styles.priceRow}>
-                      <Text style={styles.price}>₹ {f.price.toFixed(2)}</Text>
-                      <Text style={styles.oldPrice}>₹ {f.oldPrice.toFixed(2)}</Text>
-                    </View>
-                    <View style={styles.timeRow}>
-                      <Image source={require('../../assets/clock.png')} style={styles.clockIcon} />
-                      <Text style={styles.timeText}>{f.time}</Text>
-                    </View>
-                  </View>
+                 <View
+  style={[
+    styles.foodInfo,
+    { backgroundColor: theme.cardBackground }, // picks dark/light card color automatically
+  ]}
+>
+  <Text style={[styles.foodName, { color: theme.text }]}>{f.name}</Text>
+
+  <View style={styles.priceRow}>
+    <Text style={[styles.price, { color: theme.text }]}>{`₹ ${f.price.toFixed(2)}`}</Text>
+    <Text style={[styles.oldPrice, ]}>{`₹ ${f.oldPrice.toFixed(2)}`}</Text>
+  </View>
+
+  <View style={styles.timeRow}>
+    <Image source={require('../../assets/clock.png')} style={styles.clockIcon} />
+    <Text style={[styles.timeText, { color: theme.textSecondary }]}>{f.time}</Text>
+  </View>
+</View>
+
+                 
                 </TouchableOpacity>
               ))
             ) : (
-              <Text style={styles.emptyText}>No favourite food items.</Text>
+              <Text style={[styles.emptyText, { color: subTextColor }]}>No favourite food items.</Text>
             )}
           </View>
         ) : (
@@ -146,44 +212,51 @@ const Wishlist = () => {
               restaurants.map(r => (
                 <TouchableOpacity
                   key={r.id}
-                  style={styles.card}
+                  style={[styles.card, { backgroundColor: cardBg }]}
                   activeOpacity={0.9}
                   onPress={() => navigation.navigate('restaurentDetails')}
                 >
                   <Image source={r.img} style={styles.cardImg} />
-                  <View style={styles.cardContent}>
+                 <View
+  style={[
+    styles.cardContent,
+    { backgroundColor: theme.cardBackground } // dark/light card background
+  ]}
+>
                     <View style={styles.titleRow}>
-                      <Text style={styles.title}>{r.name}</Text>
+                      <Text style={[styles.title, { color: theme.text}]}>{r.name}</Text>
                       <View style={styles.ratingBadge}>
                         <Image source={require('../../assets/star.png')} style={styles.starIcon} />
-                        <Text style={styles.ratingText}>4.4</Text>
+                        <Text style={[styles.ratingText, ]}>4.4</Text>
                       </View>
                     </View>
                     <View style={styles.locationRow}>
                       <Image source={require('../../assets/location1.png')} style={styles.locIcon} />
-                      <Text style={styles.location}>Near MC College, Barpeta Town</Text>
+                      <Text style={[styles.location, { color:  theme.text }]}>Near MC College, Barpeta Town</Text>
                       <Animated.View style={{ transform: [{ scale: heartScales[r.id] || 1 }] }}>
+
                         <TouchableOpacity
-                          style={styles.heartBtn}
+                        
                           onPress={() => handleHeartPress(r.id, 'Restaurant')}
                           activeOpacity={0.7}
                         >
-                          <Image source={require('../../assets/heartfill.png')} style={styles.heartIcon} />
+                          <Image source={require('../../assets/heartfill.png')}
+                           style={styles.heartIcon} />
                         </TouchableOpacity>
                       </Animated.View>
                     </View>
                     <View style={styles.infoRow}>
-                      <Text style={styles.subInfo}>FAST FOOD</Text>
+                      <Text style={[styles.subInfo, { color: theme.text}]}>FAST FOOD</Text>
                       <Image source={require('../../assets/meter.png')} style={styles.metaIcon} />
-                      <Text style={styles.metaText}>590.0 m</Text>
+                      <Text style={[styles.metaText, { color: theme.text }]}>590.0 m</Text>
                       <Image source={require('../../assets/clockk.png')} style={styles.metaIcon} />
-                      <Text style={styles.metaText}>25 min</Text>
+                      <Text style={[styles.metaText, { color:  theme.text }]}>25 min</Text>
                     </View>
                   </View>
                 </TouchableOpacity>
               ))
             ) : (
-              <Text style={styles.emptyText}>No favourite restaurants.</Text>
+              <Text style={[styles.emptyText, { color: subTextColor }]}>No favourite restaurants.</Text>
             )}
           </>
         )}

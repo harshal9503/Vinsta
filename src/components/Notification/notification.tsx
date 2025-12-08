@@ -1,6 +1,5 @@
 // File: screens/Notification.tsx
-
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import {
   View,
@@ -13,6 +12,7 @@ import {
   Dimensions,
   StatusBar,
 } from 'react-native';
+import { ThemeContext } from '../../theme/ThemeContext';
 import { COLORS } from '../../theme/colors';
 import { getFontFamily, getFontWeight } from '../../utils/fontHelper';
 
@@ -20,11 +20,11 @@ const { width, height } = Dimensions.get('window');
 
 const Notification = () => {
   const navigation = useNavigation();
+  const { theme } = useContext(ThemeContext);
   const [activeTab, setActiveTab] = useState('Offer & Discount');
   const [showPopup, setShowPopup] = useState(false);
   const [popupData, setPopupData] = useState<any>(null);
 
-  // ===== DATA =====
   const data = {
     'Offer & Discount': [
       {
@@ -44,13 +44,13 @@ const Notification = () => {
       {
         id: 1,
         title: 'Your order is on the way!',
-        message: 'Delivery partner is arriving soon. Get ready to receive your order.',
+        message: 'Delivery partner arriving soon. Be ready!',
         icon: require('../../assets/bikee.png'),
       },
       {
         id: 2,
         title: 'Order Delivered Successfully',
-        message: 'Hope you enjoyed your meal! Rate your experience with Vinsta.',
+        message: 'Hope you enjoyed your meal!',
         icon: require('../../assets/noti.png'),
       },
     ],
@@ -58,21 +58,20 @@ const Notification = () => {
       {
         id: 1,
         title: 'Time for your evening tea!',
-        message: 'Don\'t forget your favorite masala chai — order now!',
+        message: "Don't miss your favorite masala chai.",
         icon: require('../../assets/noti.png'),
       },
       {
         id: 2,
         title: 'Weekend treat reminder',
-        message: 'Make your weekend cozy with our new hot chocolate blend.',
+        message: 'Try our new hot chocolate blend.',
         icon: require('../../assets/offers.png'),
       },
     ],
   };
-
-  // ===== STATE FOR UNREAD =====
-  const [notifications, setNotifications] = useState(() => {
-    return Object.fromEntries(
+  // Structured Notification State
+  const [notifications, setNotifications] = useState(() =>
+    Object.fromEntries(
       Object.keys(data).map((tab) => [
         tab,
         {
@@ -80,9 +79,8 @@ const Notification = () => {
           yesterday: data[tab].map((item) => ({ ...item, read: false })),
         },
       ])
-    );
-  });
-
+    )
+  );
   const getUnreadCount = (section: string) =>
     notifications[activeTab][section].filter((n) => !n.read).length;
 
@@ -99,120 +97,226 @@ const Notification = () => {
       item.id === itemId ? { ...item, read: true } : item
     );
     const item = updated[activeTab][section].find((i) => i.id === itemId);
+
     setNotifications(updated);
     setPopupData(item);
     setShowPopup(true);
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
-
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle={theme.mode === 'dark' ? 'light-content' : 'dark-content'}
+      />
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: theme.cardBackground }]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../assets/back.png')} style={styles.backIcon} />
+          <Image
+            source={require('../../assets/back.png')}
+            style={[styles.backIcon, { tintColor: theme.text }]}
+          />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Notification</Text>
+        <Text style={[styles.headerTitle, { color: theme.text }]}>
+          Notification
+        </Text>
         <View style={{ width: 22 }} />
       </View>
 
       {/* Tabs */}
-      <View style={styles.tabsRow}>
+      <View
+        style={[
+          styles.tabsRow,
+          {
+            backgroundColor: theme.cardBackground,
+            borderBottomColor: theme.mode === 'dark' ? '#444' : '#ddd',
+          },
+        ]}
+      >
         {Object.keys(data).map((tab) => (
-          <TouchableOpacity key={tab} onPress={() => setActiveTab(tab)} style={styles.tabButton}>
+          <TouchableOpacity
+            key={tab}
+            onPress={() => setActiveTab(tab)}
+            style={styles.tabButton}
+          >
             <Text
               style={[
                 styles.tabText,
-                activeTab === tab && styles.activeTabText,
-              ]}>
+                { color: theme.textSecondary },
+                activeTab === tab && { color: COLORS.primary },
+              ]}
+            >
               {tab}
             </Text>
             {activeTab === tab && <View style={styles.activeIndicator} />}
           </TouchableOpacity>
         ))}
       </View>
-
-      <ScrollView contentContainerStyle={{ paddingBottom: 60 }} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
         {/* Recent Section */}
         <View style={styles.sectionHeaderRow}>
           <View style={styles.sectionLeft}>
-            <Text style={styles.sectionHeader}>Recent</Text>
+            <Text style={[styles.sectionHeader, { color: theme.text }]}>
+              Recent
+            </Text>
+
             {getUnreadCount('recent') > 0 && (
-              <View style={styles.countBadge}>
-                <Text style={styles.countText}>{getUnreadCount('recent')}</Text>
+              <View style={[styles.countBadge]}>
+                <Text style={styles.countText}>
+                  {getUnreadCount('recent')}
+                </Text>
               </View>
             )}
           </View>
+
           <TouchableOpacity onPress={handleMarkAllRead}>
-            <Text style={styles.markRead}>Marks as read</Text>
+            <Text style={[styles.markRead, { color: COLORS.primary }]}>
+              Marks as read
+            </Text>
           </TouchableOpacity>
         </View>
+       {/* Recent Items */}
+{notifications[activeTab].recent.map((item) => (
+  <TouchableOpacity
+    key={item.id}
+    style={[
+      styles.notificationRow,
+      { backgroundColor: theme.cardBackground },
+      !item.read && {
+        backgroundColor: theme.mode === 'dark' ? '#333' : '#faeae1ff',
+        borderLeftColor: COLORS.primary,
+      },
+    ]}
+    onPress={() => openPopup('recent', item.id)}
+  >
+    <View
+      style={[
+        styles.iconCircle,
+        {
+          backgroundColor: theme.mode === 'dark' ? '#444' : '#fff',
+          borderColor: theme.textSecondary,
+        },
+      ]}
+    >
+      <Image source={item.icon} style={styles.icon} />
+    </View>
 
-        {notifications[activeTab].recent.map((item) => (
-          <TouchableOpacity
-            key={item.id}
-            style={[
-              styles.notificationRow,
-              !item.read && styles.unreadHighlight,
-            ]}
-            onPress={() => openPopup('recent', item.id)}>
-            <View style={styles.iconCircle}>
-              <Image source={item.icon} style={styles.icon} />
-            </View>
-            <View style={styles.notificationText}>
-              <Text style={styles.notificationTitle}>{item.title}</Text>
-              <Text style={styles.notificationMessage}>{item.message}</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
+    <View style={styles.notificationText}>
+      <Text
+        style={[
+          styles.notificationTitle,
+          { color: theme.mode === 'dark' ? '#fff' : '#000' },
+        ]}
+      >
+        {item.title}
+      </Text>
 
-        {/* Yesterday Section */}
+      <Text
+        style={[
+          styles.notificationMessage,
+          { color: theme.mode === 'dark' ? '#ccc' : '#444' },
+        ]}
+      >
+        {item.message}
+      </Text>
+    </View>
+  </TouchableOpacity>
+))}
+        {/* Yesterday */}
         <View style={[styles.sectionHeaderRow, { marginTop: 20 }]}>
           <View style={styles.sectionLeft}>
-            <Text style={styles.sectionHeader}>Yesterday</Text>
+            <Text style={[styles.sectionHeader, { color: theme.text }]}>
+              Yesterday
+            </Text>
             {getUnreadCount('yesterday') > 0 && (
               <View style={styles.countBadge}>
-                <Text style={styles.countText}>{getUnreadCount('yesterday')}</Text>
+                <Text style={styles.countText}>
+                  {getUnreadCount('yesterday')}
+                </Text>
               </View>
             )}
           </View>
         </View>
-
-        {notifications[activeTab].yesterday.map((item) => (
-          <TouchableOpacity
-            key={`y${item.id}`}
+         {/* Yesterday Items */}
+      {notifications[activeTab].yesterday.map((item) => (
+        <TouchableOpacity
+          key={item.id}
+          style={[
+            styles.notificationRow,
+            {
+              backgroundColor: theme.mode === 'dark' ? '#333' : '#faeae1ff',
+            },
+            !item.read && {
+              borderLeftColor: COLORS.primary,
+            },
+          ]}
+          onPress={() => openPopup('yesterday', item.id)}
+        >
+          <View
             style={[
-              styles.notificationRow,
-              !item.read && styles.unreadHighlight,
+              styles.iconCircle,
+              {
+                backgroundColor: theme.mode === 'dark' ? '#444' : '#fff',
+                borderColor: theme.textSecondary,
+              },
             ]}
-            onPress={() => openPopup('yesterday', item.id)}>
-            <View style={styles.iconCircle}>
-              <Image source={item.icon} style={styles.icon} />
-            </View>
-            <View style={styles.notificationText}>
-              <Text style={styles.notificationTitle}>{item.title}</Text>
-              <Text style={styles.notificationMessage}>{item.message}</Text>
-            </View>
-          </TouchableOpacity>
+          >
+            <Image source={item.icon} style={styles.icon} />
+          </View>
+
+          <View style={styles.notificationText}>
+            <Text
+              style={[
+                styles.notificationTitle,
+                { color: theme.mode === 'dark' ? '#fff' : '#000' },
+              ]}
+            >
+              {item.title}
+            </Text>
+
+            <Text
+              style={[
+                styles.notificationMessage,
+                { color: theme.mode === 'dark' ? '#ccc' : '#444' },
+              ]}
+            >
+              {item.message}
+            </Text>
+          </View>
+        </TouchableOpacity>
         ))}
       </ScrollView>
-
-      {/* Popup Modal */}
-      <Modal
-        transparent
-        visible={showPopup}
-        animationType="fade"
-        onRequestClose={() => setShowPopup(false)}>
+      {/* POPUP MODAL */}
+      <Modal transparent visible={showPopup} animationType="fade">
         <View style={styles.popupOverlay}>
-          <View style={styles.popupBox}>
+          <View
+            style={[
+              styles.popupBox,
+              { backgroundColor: theme.cardBackground },
+            ]}
+          >
             {popupData && (
               <>
-                <Text style={styles.popupTitle}>{popupData.title}</Text>
-                <Text style={styles.popupText}>{popupData.message}</Text>
+                <Text
+                  style={[styles.popupTitle, { color: theme.text }]}
+                >
+                  {popupData.title}
+                </Text>
+
+                <Text
+                  style={[styles.popupText, { color: theme.textSecondary }]}
+                >
+                  {popupData.message}
+                </Text>
+
                 <TouchableOpacity
-                  style={styles.popupButton}
-                  onPress={() => setShowPopup(false)}>
+                  style={[
+                    styles.popupButton,
+                    { backgroundColor: COLORS.primary },
+                  ]}
+                  onPress={() => setShowPopup(false)}
+                >
                   <Text style={styles.popupButtonText}>OK</Text>
                 </TouchableOpacity>
               </>
@@ -224,54 +328,47 @@ const Notification = () => {
   );
 };
 
-// ========================= STYLES =========================
+export default Notification;
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.secondary,
-  },
+  container: { flex: 1 },
+
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingTop: height * 0.07,
-    paddingBottom: 10,
+    paddingBottom: 12,
     paddingHorizontal: 20,
   },
+
   backIcon: {
     width: 22,
     height: 22,
     resizeMode: 'contain',
-    tintColor: '#000',
   },
+
   headerTitle: {
     fontSize: width * 0.045,
-    color: '#000',
     fontFamily: getFontFamily('Bold'),
-    fontWeight: getFontWeight('Bold'),
   },
+
   tabsRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    backgroundColor: '#fff',
   },
+
   tabButton: {
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 12,
   },
+
   tabText: {
     fontSize: 14,
-    color: '#777',
     fontFamily: getFontFamily('Medium'),
-    fontWeight: getFontWeight('Medium'),
   },
-  activeTabText: {
-    color: COLORS.primary,
-    fontFamily: getFontFamily('SemiBold'),
-    fontWeight: getFontWeight('SemiBold'),
-  },
+
   activeIndicator: {
     marginTop: 6,
     height: 3,
@@ -279,152 +376,106 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     borderRadius: 2,
   },
+
   sectionHeaderRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     alignItems: 'center',
     marginTop: 20,
-    marginBottom: 8,
+    marginBottom: 10,
   },
+
   sectionLeft: {
     flexDirection: 'row',
     alignItems: 'center',
   },
+
   sectionHeader: {
     fontSize: 16,
-    color: COLORS.text,
-    marginRight: 8,
     fontFamily: getFontFamily('SemiBold'),
-    fontWeight: getFontWeight('SemiBold'),
   },
+
   countBadge: {
-    borderWidth: 1.5,
-    borderColor: COLORS.primary,
     backgroundColor: COLORS.primary,
-    borderRadius: 10,
     paddingHorizontal: 6,
-    paddingVertical: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingVertical: 2,
+    borderRadius: 8,
+    marginLeft: 6,
   },
   countText: {
-    color: COLORS.secondary,
+    color: '#fff',
     fontSize: 12,
     fontFamily: getFontFamily('SemiBold'),
-    fontWeight: getFontWeight('SemiBold'),
   },
   markRead: {
     fontSize: 13,
-    color: COLORS.primary,
     fontFamily: getFontFamily('SemiBold'),
-    fontWeight: getFontWeight('SemiBold'),
   },
   notificationRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     paddingHorizontal: 20,
     paddingVertical: 14,
-    backgroundColor: '#fff',
     marginHorizontal: 20,
     marginBottom: 8,
     borderRadius: 12,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-  },
-  unreadHighlight: {
-    backgroundColor: '#FFF6F0',
     borderLeftWidth: 3,
-    borderLeftColor: COLORS.primary,
   },
   iconCircle: {
     width: 50,
     height: 50,
     borderRadius: 25,
-    borderWidth: 1,
-    borderColor: '#000',
+    borderWidth: 1.2,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
-    backgroundColor: '#fff',
   },
   icon: {
     width: 28,
     height: 28,
     resizeMode: 'contain',
   },
-  notificationText: {
-    flex: 1,
-  },
+  notificationText: { flex: 1 },
   notificationTitle: {
     fontSize: 14,
-    color: COLORS.text,
-    marginBottom: 4,
     fontFamily: getFontFamily('SemiBold'),
-    fontWeight: getFontWeight('SemiBold'),
   },
   notificationMessage: {
     fontSize: 13,
-    color: '#444',
     lineHeight: 18,
     fontFamily: getFontFamily('Regular'),
-    fontWeight: getFontWeight('Regular'),
   },
-
-  /** Popup styles **/
   popupOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
-    padding: 20,
+    alignItems: 'center',
   },
   popupBox: {
-    width: width * 0.85,
-    backgroundColor: COLORS.secondary,
-    borderRadius: 16,
+    width: '86%',
     padding: 24,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
+    borderRadius: 18,
   },
   popupTitle: {
-    fontSize: width * 0.045,
-    color: COLORS.text,
+    fontSize: 18,
     textAlign: 'center',
     marginBottom: 12,
     fontFamily: getFontFamily('Bold'),
-    fontWeight: getFontWeight('Bold'),
   },
   popupText: {
-    fontSize: width * 0.038,
-    color: '#444',
+    fontSize: 14,
     textAlign: 'center',
     marginBottom: 20,
-    lineHeight: 20,
-    fontFamily: getFontFamily('Medium'),
-    fontWeight: getFontWeight('Medium'),
   },
   popupButton: {
-    backgroundColor: COLORS.primary,
-    borderRadius: 12,
     paddingVertical: 12,
-    paddingHorizontal: 32,
-    minWidth: 120,
-    alignItems: 'center',
+    borderRadius: 10,
   },
   popupButtonText: {
-    color: COLORS.secondary,
-    fontSize: width * 0.038,
-    fontFamily: getFontFamily('Bold'),
-    fontWeight: getFontWeight('Bold'),
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 15,
+    fontFamily: getFontFamily('SemiBold'),
   },
 });
-
-export default Notification;

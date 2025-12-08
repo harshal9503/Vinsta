@@ -18,6 +18,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { ThemeContext } from '../../theme/ThemeContext';
 import { COLORS } from '../../theme/colors';
+import font from '../../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
 
@@ -29,10 +30,7 @@ const OrderDetail = () => {
   const [selectedStars, setSelectedStars] = useState(0);
   const [reviewText, setReviewText] = useState('');
   const [hasRated, setHasRated] = useState(false);
-  const [previousRating, setPreviousRating] = useState({
-    stars: 0,
-    review: '',
-  });
+  const [previousRating, setPreviousRating] = useState({ stars: 0, review: '' });
 
   const handleCall = () => {
     const phoneNumber =
@@ -40,7 +38,7 @@ const OrderDetail = () => {
         ? 'tel:+911234567890'
         : 'telprompt:+911234567890';
     Linking.openURL(phoneNumber).catch(() =>
-      Alert.alert('Error', 'Could not open phone dialer.'),
+      Alert.alert('Error', 'Could not open phone dialer.')
     );
   };
 
@@ -48,13 +46,8 @@ const OrderDetail = () => {
     navigation.navigate('Payment');
   };
 
-  const handleStarPress = (star: number) => {
-    // 🔥 NEW — Reset if same star pressed (matching reference)
-    if (selectedStars === star) {
-      setSelectedStars(0);
-    } else {
-      setSelectedStars(star);
-    }
+  const handleStarPress = (index: number) => {
+    setSelectedStars(index);
   };
 
   const handleSubmitReview = () => {
@@ -65,20 +58,25 @@ const OrderDetail = () => {
     setRatingModal(false);
     setHasRated(true);
     setPreviousRating({ stars: selectedStars, review: reviewText });
+    // Don't reset selectedStars and reviewText here to keep the values for future edits
   };
 
   const handleRatePress = () => {
     if (hasRated) {
+      // If already rated, open modal with previous rating pre-filled
       setSelectedStars(previousRating.stars);
       setReviewText(previousRating.review);
+      setRatingModal(true);
     } else {
+      // First time rating
       setSelectedStars(0);
       setReviewText('');
+      setRatingModal(true);
     }
-    setRatingModal(true);
   };
 
   const handleCancelRating = () => {
+    // Restore previous rating if user cancels after editing
     if (hasRated) {
       setSelectedStars(previousRating.stars);
       setReviewText(previousRating.review);
@@ -109,27 +107,24 @@ const OrderDetail = () => {
             setRatingModal(false);
           },
         },
-      ],
+      ]
     );
   };
 
+  function onSubmit(event: GestureResponderEvent): void {
+    throw new Error('Function not implemented.');
+  }
+
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: theme.background }]}
-    >
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.secondary} />
 
       {/* ===== Header ===== */}
       <View
         style={[
           styles.header,
-          {
-            backgroundColor: theme.background,
-            borderBottomColor: theme.borderColor,
-          },
-          Platform.OS === 'ios'
-            ? styles.headerIosMargin
-            : styles.headerAndroidMargin,
+          { backgroundColor: theme.background, borderBottomColor: theme.borderColor },
+          Platform.OS === 'ios' ? styles.headerIosMargin : styles.headerAndroidMargin,
         ]}
       >
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -139,10 +134,9 @@ const OrderDetail = () => {
           />
         </TouchableOpacity>
 
-        <Text style={[styles.headerTitle, { color: theme.text }]}>
-          Order Detail
-        </Text>
+        <Text style={[styles.headerTitle, { color: theme.text }]}>Order Detail</Text>
 
+        {/* Spacer to balance layout */}
         <View style={{ width: 22 }} />
       </View>
 
@@ -152,140 +146,78 @@ const OrderDetail = () => {
         contentContainerStyle={{ paddingBottom: 70, paddingHorizontal: 20 }}
       >
         {/* ===== MAIN ORDER CARD ===== */}
-        <View style={[styles.mainCard, { backgroundColor: '#FFFFFF' }]}>
-          <Image
-            source={require('../../assets/b1.png')}
-            style={styles.foodImage}
-          />
+        <View style={[styles.mainCard, { backgroundColor: theme.cardBackground }]}>
+          <Image source={require('../../assets/b1.png')} style={styles.foodImage} />
           <View style={{ flex: 1, marginLeft: 12 }}>
             <View style={styles.rowBetween}>
-              <Text style={[styles.orderId, { color: '#E63946' }]}>
-                #8256396
-              </Text>
+              <Text style={[styles.orderId, { color: '#E63946' }]}>#265896</Text>
+              <Text style={[styles.deliveredText, { color: '#28A745' }]}>Delivered</Text>
             </View>
-            <Text style={[styles.foodName, { color: theme.text }]}>
-              Masala Poha
-            </Text>
-            <View style={styles.rowBetween}>
-              <Text style={[styles.orderInfo, { color: theme.textSecondary }]}>
-                22 Sep. 9:00 - 3 Items
-              </Text>
-              <Text style={[styles.deliveredText, { color: '#28A745' }]}>
-                Delivered
-              </Text>
-            </View>
+            <Text style={[styles.foodName, { color: theme.text }]}>Masala Poha</Text>
+            <Text style={[styles.orderInfo, { color: theme.textSecondary }]}>22 Sep, 9.00 &bull; 3 Items</Text>
           </View>
         </View>
 
         {/* ===== DETAILS ===== */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>
-            Details
-          </Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Details</Text>
           <Text style={[styles.addressText, { color: theme.textSecondary }]}>
-            6591 Elgin St. Celina, Delaware 10299
+            6391 Elgin St. Celina, Delaware 10299
           </Text>
         </View>
 
         {/* ===== AGENT INFO ===== */}
-        <View
-          style={[
-            styles.agentSection,
-            { backgroundColor: '#FFFFFF', borderRadius: 12, padding: 16 },
-          ]}
-        >
-          <Image
-            source={require('../../assets/user.png')}
-            style={styles.agentImg}
-          />
+        <View style={styles.agentSection}>
+          <Image source={require('../../assets/user.png')} style={styles.agentImg} />
           <View style={{ flex: 1, marginLeft: 10 }}>
-            <Text style={[styles.agentId, { color: theme.textSecondary }]}>
-              ID: DKS-501F9
-            </Text>
-            <Text style={[styles.agentName, { color: theme.text }]}>
-              Mann Sharma
-            </Text>
+            <Text style={[styles.agentId, { color: theme.textSecondary }]}>ID: DKS-501F9</Text>
+            <Text style={[styles.agentName, { color: theme.text }]}>Mann Sharma</Text>
           </View>
-          <TouchableOpacity style={styles.callBtnWhite} onPress={handleCall}>
-            <View style={styles.callIconContainer}>
-              <Image
-                source={require('../../assets/call.png')}
-                style={[styles.callIconWhite, { tintColor: '#F97316' }]}
-              />
-            </View>
+          <TouchableOpacity style={styles.callBtn} onPress={handleCall}>
+            <Image
+              source={require('../../assets/call.png')}
+              style={styles.callIcon}
+            />
+            <Text style={styles.callText}>Call</Text>
           </TouchableOpacity>
         </View>
 
         {/* ===== ORDERED FOOD ===== */}
-        <Text
-          style={[styles.ordersFoodTitle, { color: theme.text, marginTop: 24 }]}
-        >
-          Orders Food
-        </Text>
+        <Text style={[styles.ordersFoodTitle, { color: theme.text }]}>Orders Food</Text>
 
         {[
           {
             img: require('../../assets/b2.png'),
             name: 'Spicy Paneer Burger',
-            cafe: 'Residuated Cafe',
-            qty: 2,
+            cafe: 'Foodicated Cafe',
+            qty: '02',
             price: '₹ 100.00',
           },
           {
             img: require('../../assets/b3.png'),
             name: 'Spicy Paneer Burger',
-            cafe: 'Residuated Cafe',
-            qty: 2,
+            cafe: 'Foodicated Cafe',
+            qty: '02',
             price: '₹ 100.00',
           },
         ].map((item, index) => (
           <View
             key={index}
-            style={[styles.foodCard, { backgroundColor: '#FFFFFF' }]}
+            style={[styles.foodCard, { backgroundColor: theme.cardBackground }]}
           >
             <Image source={item.img} style={styles.foodThumb} />
             <View style={{ flex: 1, marginLeft: 12 }}>
-              <Text style={[styles.foodTitle, { color: theme.text }]}>
-                {item.name}
-              </Text>
-              <Text style={[styles.cafeName, { color: theme.textSecondary }]}>
-                {item.cafe}
-              </Text>
+              <Text style={[styles.foodTitle, { color: theme.text }]}>{item.name}</Text>
+              <Text style={[styles.cafeName, { color: theme.textSecondary }]}>{item.cafe}</Text>
               <View style={styles.rowBetween}>
-                <Text style={[styles.foodPrice, { color: theme.text }]}>
-                  {item.price}
-                </Text>
-                <View style={styles.qtyContainer}>
-                  <TouchableOpacity
-                    style={[
-                      styles.qtyBtn,
-                      {
-                        backgroundColor: '#fff',
-                        borderWidth: 1,
-                        borderColor: COLORS.primary,
-                      },
-                    ]}
-                    onPress={() => {}}
-                  >
-                    <Text style={[styles.qtyText, { color: COLORS.primary }]}>
-                      -
-                    </Text>
+                <Text style={[styles.foodPrice, { color: theme.text }]}>{item.price}</Text>
+                <View style={styles.qtyBox}>
+                  <TouchableOpacity style={styles.qtyBtn}>
+                    <Text style={[styles.qtySign, { color: '#F97316' }]}>−</Text>
                   </TouchableOpacity>
-                  <Text style={styles.qtyNumber}>
-                    {item.qty < 10 ? `0${item.qty}` : item.qty}
-                  </Text>
-                  <TouchableOpacity
-                    style={[
-                      styles.qtyBtn,
-                      {
-                        backgroundColor: COLORS.primary,
-                        borderWidth: 1,
-                        borderColor: COLORS.primary,
-                      },
-                    ]}
-                    onPress={() => {}}
-                  >
-                    <Text style={[styles.qtyText, { color: '#fff' }]}>+</Text>
+                  <Text style={[styles.qtyText, { color: theme.text }]}>{item.qty}</Text>
+                  <TouchableOpacity style={styles.qtyBtn}>
+                    <Text style={[styles.qtySign, { color: '#F97316' }]}>+</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -294,38 +226,19 @@ const OrderDetail = () => {
         ))}
 
         {/* ===== TOTAL SECTION ===== */}
-        <View
-          style={[
-            styles.totalSection,
-            {
-              backgroundColor: '#FFFFFF',
-              borderRadius: 12,
-              padding: 16,
-              marginTop: 24,
-            },
-          ]}
-        >
+        <View style={styles.totalSection}>
           <View style={styles.rowBetween}>
-            <Text style={[styles.totalLabel, { color: theme.text }]}>
-              Total
-            </Text>
+            <Text style={[styles.totalLabel, { color: theme.text }]}>Total</Text>
             <View style={{ alignItems: 'flex-end' }}>
-              <Text style={[styles.totalItems, { color: theme.textSecondary }]}>
-                (3 items)
-              </Text>
-              <Text style={[styles.totalAmount, { color: theme.text }]}>
-                ₹ 200.00
-              </Text>
+              <Text style={[styles.totalItems, { color: theme.textSecondary }]}>(3 items)</Text>
+              <Text style={[styles.totalAmount, { color: theme.text }]}>₹ 580.00</Text>
             </View>
           </View>
 
           {/* ===== BUTTONS ===== */}
           <View style={styles.btnRow}>
             <TouchableOpacity
-              style={[
-                styles.rateBtn,
-                { borderColor: '#F97316', backgroundColor: '#fff' },
-              ]}
+              style={[styles.rateBtn, { borderColor: '#F97316', backgroundColor: '#fff' }]}
               onPress={handleRatePress}
             >
               <Text style={[styles.rateText, { color: '#F97316' }]}>
@@ -337,136 +250,152 @@ const OrderDetail = () => {
               style={[styles.reorderBtn, { backgroundColor: '#F97316' }]}
               onPress={handleReorder}
             >
-              <Text style={[styles.reorderText, { color: '#fff' }]}>
-                RE-ORDER
-              </Text>
+              <Text style={[styles.reorderText, { color: '#fff' }]}>RE-ORDER</Text>
             </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
 
-      {/* ===== RATING MODAL — 🔥 COMPLETELY UPDATED TO MATCH REFERENCE ===== */}
+      {/* ===== RATING MODAL ===== */}
       <Modal visible={ratingModal} transparent animationType="slide">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            {/* HEADER */}
-            <View style={styles.modalHeader}>
-              <TouchableOpacity
-                onPress={handleCancelRating}
-                style={{ padding: 6 }}
-              >
-                <Image
-                  source={require('../../assets/back.png')}
-                  style={styles.modalBackIcon}
-                />
-              </TouchableOpacity>
-              <Text style={styles.modalTitle}>
-                {hasRated ? 'Edit Review' : 'Leave a Review'}
-              </Text>
-            </View>
+  <View style={styles.modalOverlay}>
+    <View
+      style={[
+        styles.modalContainer,
+        { maxHeight: height * 0.9, backgroundColor: theme.background }, // dynamic modal background
+      ]}
+    >
+      {/* Header */}
+      <View style={[styles.modalHeader, { backgroundColor: theme.card }]}>
+        <TouchableOpacity onPress={handleCancelRating}>
+          <Image
+            source={require('../../assets/back.png')}
+            style={[styles.modalBackIcon, { tintColor: theme.text }]} // dynamic icon
+          />
+        </TouchableOpacity>
+        <Text style={[styles.modalTitle, { color: theme.text }]}>
+          {hasRated ? 'Edit Review' : 'Leave a Review'}
+        </Text>
+      </View>
 
-            {/* REVIEW CARD */}
-            <View style={styles.reviewCard}>
-              {/* IMAGE */}
-              <Image
-                source={require('../../assets/b1.png')}
-                style={styles.foodImg}
-              />
+      {/* Food/Order Card */}
+      <View
+  style={[
+    styles.reviewCard,
+    { backgroundColor: theme.card}, // black in dark, white in light
+  ]}
+>
 
-              {/* TEXT BLOCK */}
-              <View style={{ flex: 1, marginLeft: 14 }}>
-                <Text style={styles.orderId}>#8256396</Text>
-                <Text style={styles.orderTitle}>Masala Poha</Text>
-                <Text style={styles.orderMeta}>22 Sep, 9.00 • 3 Items</Text>
-
-                {/* DELIVERY STATUS LEFT */}
-                <View style={styles.statusRow}>
-                  <Text style={styles.deliveryLeft}>Delivery Status</Text>
-                </View>
-              </View>
-
-              {/* PRICE + DELIVERED RIGHT */}
-              <View style={styles.priceBlock}>
-                <Text style={styles.price}>₹ 200.00</Text>
-                <Text style={styles.deliveryRight}>Delivered</Text>
-              </View>
-            </View>
-
-            {/* TEXT */}
-            <Text style={styles.howText}>
-              {hasRated ? 'How was your order?' : 'How is your order?'}
-            </Text>
-            <Text style={styles.subHowText}>
-              {hasRated
-                ? 'Update your rating or review...'
-                : 'Please give your rating & also your review...'}
-            </Text>
-
-            {/* STARS */}
-            <View style={styles.starRow}>
-              {[1, 2, 3, 4, 5].map(star => (
-                <TouchableOpacity
-                  key={star}
-                  onPress={() => handleStarPress(star)}
-                  style={{ padding: 4 }}
-                >
-                  <Image
-                    source={
-                      selectedStars >= star
-                        ? require('../../assets/starfill.png')
-                        : require('../../assets/star1.png')
-                    }
-                    style={styles.starRatingIcon}
-                  />
-                </TouchableOpacity>
-              ))}
-            </View>
-
-            {/* INPUT */}
-            <TextInput
-              style={styles.inputBox}
-              placeholder="Write your review..."
-              placeholderTextColor="#999"
-              value={reviewText}
-              onChangeText={setReviewText}
-              multiline
-            />
-
-            {/* BUTTONS */}
-            <View style={styles.modalBtnRow}>
-              {hasRated && (
-                <TouchableOpacity
-                  style={styles.modalRemoveBtn}
-                  onPress={handleRemoveRating}
-                >
-                  <Text style={styles.removeText}>Remove Rating</Text>
-                </TouchableOpacity>
-              )}
-              <TouchableOpacity
-                style={styles.modalCancelBtn}
-                onPress={handleCancelRating}
-              >
-                <Text style={styles.cancelText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.modalSubmitBtn}
-                onPress={handleSubmitReview}
-                disabled={selectedStars === 0}
-              >
-                <Text
-                  style={[
-                    styles.trackText,
-                    { opacity: selectedStars === 0 ? 0.5 : 1 },
-                  ]}
-                >
-                  {hasRated ? 'Update' : 'Submit'}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+        <Image source={require('../../assets/b1.png')} style={styles.modalFoodImg} />
+        <View style={{ flex: 1, marginLeft: 10 }}>
+          <Text style={[styles.modalOrderId, { color: '#f01722ff' }]}>#265896</Text>
+          <Text style={[styles.modalOrderTitle, { color: theme.text }]}>Masala Poha</Text>
+          <Text
+            style={[
+              styles.modalOrderMeta,
+              { color: theme.mode === 'dark' ? '#CCCCCC' : '#6C6C6C' },
+            ]}
+          >
+            22 Sep, 9.00 • 3 Items{' '}
+            <Text style={{ color: '#00A651' }}>Delivered</Text>
+          </Text>
         </View>
-      </Modal>
-    </SafeAreaView>
+        <Text style={[styles.modalPrice, { color: theme.text }]}>₹ 580.00</Text>
+      </View>
+
+      {/* Rating Text */}
+      <Text style={[styles.howText, { color: theme.text }]}>
+        {hasRated ? 'How was your order?' : 'How is your order?'}
+      </Text>
+      <Text
+        style={[
+          styles.subHowText,
+          { color: theme.mode === 'dark' ? '#CCCCCC' : '#9e9c9c' },
+        ]}
+      >
+        {hasRated
+          ? 'Update your rating or review...'
+          : 'Please give your rating & also your review...'}
+      </Text>
+
+      {/* Stars */}
+      <View style={styles.starRow}>
+        {[1, 2, 3, 4, 5].map((star) => (
+          <TouchableOpacity key={star} onPress={() => handleStarPress(star)}>
+            <Image
+              source={
+                selectedStars >= star
+                  ? require('../../assets/starfill.png')
+                  : require('../../assets/star1.png')
+              }
+              style={[styles.starRatingIcon, { tintColor: theme.text }]} // dynamic star color
+            />
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {/* Review Input */}
+      <TextInput
+                  style={[
+                    styles.inputBox,
+                    {
+                      backgroundColor:
+                        theme.mode === 'dark' ? '#1E1E1E' : theme.card, 
+                      color:
+                        theme.mode === 'dark' ? '#FFFFFF' : theme.text,  
+                      borderColor:
+                        theme.mode === 'dark' ? '#FFFFFF55' : '#D0D0D0', 
+                    }
+                  ]}
+                  placeholder="Write your review..."
+                  placeholderTextColor={theme.mode === 'dark' ? '#AAAAAA' : '#888888'}
+                  value={reviewText}
+                  onChangeText={setReviewText}
+                  multiline
+                />
+      
+
+      {/* Buttons */}
+      <View style={styles.modalBtnRow}>
+        {hasRated && (
+          <TouchableOpacity
+            style={[
+              styles.modalRemoveBtn,
+              { backgroundColor: theme.mode === 'dark' ? '#800000' : '#FF4D4D' },
+            ]}
+            onPress={handleRemoveRating}
+          >
+            <Text style={styles.removeText}>Remove Rating</Text>
+          </TouchableOpacity>
+        )}
+
+        <TouchableOpacity
+          style={[
+            styles.modalCancelBtn,
+            {
+              backgroundColor: theme.card,
+              borderColor: '#808080', // fixed grey border
+            },
+          ]}
+          onPress={handleCancelRating}
+        >
+          <Text style={[styles.cancelText, { color: theme.text }]}>Cancel</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+                      style={[
+                        styles.modalSubmitBtn,
+                        { backgroundColor: COLORS.primary }
+                      ]}
+                      onPress={onSubmit}
+                    >
+                      <Text style={[styles.trackText]}>Submit</Text>
+                    </TouchableOpacity>
+      </View>
+    </View>
+  </View>
+</Modal>
+</SafeAreaView>
   );
 };
 
@@ -484,18 +413,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderBottomWidth: 1,
   },
+
+  // Specific marginTop for iOS (10), for Android calculated 0.7 * statusbar height (~25)
   headerIosMargin: {
     marginTop: 10,
   },
   headerAndroidMargin: {
     marginTop: StatusBar.currentHeight ? StatusBar.currentHeight + 10 : 50,
   },
+
   backIcon: { width: 22, height: 22, resizeMode: 'contain' },
+
   headerTitle: {
     fontSize: width * 0.045,
     fontWeight: '700',
     textAlign: 'center',
-    fontFamily: 'Figtree-Bold',
+    fontFamily : 'Figtree-Bold'
   },
 
   /** MAIN CARD **/
@@ -517,99 +450,44 @@ const styles = StyleSheet.create({
     }),
   },
   foodImage: { width: 70, height: 70, borderRadius: 12 },
-  rowBetween: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  orderId: {
-    fontSize: width * 0.035,
-    fontWeight: '500',
-    fontFamily: 'Figtree-Medium',
-  },
-  deliveredText: {
-    fontSize: width * 0.035,
-    fontWeight: '500',
-    fontFamily: 'Figtree-Medium',
-  },
-  foodName: {
-    fontSize: width * 0.04,
-    fontWeight: '600',
-    fontFamily: 'Figtree-SemiBold',
-    marginTop: 4,
-  },
-  orderInfo: {
-    fontSize: width * 0.033,
-    fontWeight: '500',
-    fontFamily: 'Figtree-Medium',
-  },
+  rowBetween: { flexDirection: 'row', justifyContent: 'space-between' },
+  orderId: { fontSize: width * 0.035, fontWeight: '500',fontFamily : 'Figtree-Medium'
+   },
+  deliveredText: { fontSize: width * 0.035, fontWeight: '500',fontFamily : 'Figtree-Medium' },
+  foodName: { fontSize: width * 0.04, fontWeight: '600',fontFamily : 'Figtree-SemiBold' },
+  orderInfo: { fontSize: width * 0.033, marginTop: 2 ,fontWeight: '500',fontFamily : 'Figtree-Medium'},
 
   /** DETAILS **/
   section: { marginTop: 20 },
-  sectionTitle: {
-    fontSize: width * 0.04,
-    fontWeight: '700',
-    fontFamily: 'Figtree-Bold',
-  },
-  addressText: {
-    fontSize: width * 0.033,
-    marginTop: 5,
-    lineHeight: 18,
-    fontFamily: 'Figtree-Medium',
-    fontWeight: '500',
-  },
+  sectionTitle: { fontSize: width * 0.04, fontWeight: '700',fontFamily : 'Figtree-Bold' },
+  addressText: { fontSize: width * 0.033, marginTop: 5, lineHeight: 18,fontFamily : 'Figtree-Medium',fontWeight : '500' },
 
   /** AGENT **/
   agentSection: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 20,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOpacity: 0.05,
-        shadowRadius: 3,
-        shadowOffset: { width: 0, height: 1 },
-      },
-      android: { elevation: 2 },
-    }),
   },
   agentImg: { width: 55, height: 55, borderRadius: 27.5 },
-  agentId: {
-    fontSize: width * 0.032,
-    fontFamily: 'Figtree-Regular',
-    fontWeight: '400',
-  },
-  agentName: {
-    fontSize: width * 0.038,
-    fontWeight: '600',
-    fontFamily: 'Figtree-SemiBold',
-    marginTop: 2,
-  },
-  callBtnWhite: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
+  agentId: { fontSize: width * 0.032 ,fontFamily : 'Figtree-Regular',fontWeight : '400'},
+  agentName: { fontSize: width * 0.038, fontWeight: '600',fontFamily : 'Figtree-SemiBold' },
+  callBtn: {
+    flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#F97316',
+    backgroundColor: '#F97316',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 10,
   },
-  callIconContainer: {
-    width: 24,
-    height: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  callIconWhite: { width: 18, height: 18, resizeMode: 'contain' },
+  callIcon: { width: 16, height: 16, tintColor: '#fff', marginRight: 5 },
+  callText: { color: '#fff', fontWeight: '600',fontFamily : 'Figtree-SemiBold', fontSize: width * 0.034 },
 
   /** FOOD LIST **/
   ordersFoodTitle: {
     fontSize: width * 0.04,
     fontWeight: '700',
     marginTop: 25,
-    fontFamily: 'Figtree-Bold',
+    fontFamily : 'Figtree-Bold'
   },
 
   foodCard: {
@@ -628,80 +506,27 @@ const styles = StyleSheet.create({
     }),
   },
   foodThumb: { width: 60, height: 60, borderRadius: 10 },
-  foodTitle: {
-    fontSize: width * 0.038,
-    fontWeight: '700',
-    fontFamily: 'Figtree-Bold',
-  },
-  cafeName: {
-    fontSize: width * 0.032,
-    marginBottom: 8,
-    fontFamily: 'Figtree-SemiBold',
-    fontWeight: '600',
-  },
-  foodPrice: {
-    fontSize: width * 0.038,
-    fontWeight: '700',
-    fontFamily: 'Figtree-Bold',
-  },
+  foodTitle: { fontSize: width * 0.038, fontWeight: '700',fontFamily : 'Figtree-Bold' },
+  cafeName: { fontSize: width * 0.032, marginBottom: 8 ,fontFamily : 'Figtree-SemiBold',fontWeight : '600'},
+  foodPrice: { fontSize: width * 0.038, fontWeight: '700',fontFamily : 'Figtree-Bold' },
 
-  /** Quantity Selector **/
-  qtyContainer: {
+  qtyBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 6,
+    backgroundColor: '#FFF3E0',
+    borderRadius: 20,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
   },
-  qtyBtn: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  qtyText: {
-    fontSize: 16,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontFamily: 'Figtree-Bold',
-    fontWeight: '700',
-  },
-  qtyNumber: {
-    marginHorizontal: 10,
-    fontSize: 14,
-    color: '#000',
-    fontFamily: 'Figtree-SemiBold',
-    fontWeight: '600',
-  },
+  qtyBtn: { width: 20, height: 20, alignItems: 'center', justifyContent: 'center' },
+  qtySign: { fontSize: 16, color: '#F97316', fontWeight: '700' },
+  qtyText: { fontSize: width * 0.034, fontWeight: '600', marginHorizontal: 5 ,fontFamily : 'Figtree-SemiBold'},
 
   /** TOTAL **/
-  totalSection: {
-    marginTop: 25,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOpacity: 0.05,
-        shadowRadius: 3,
-        shadowOffset: { width: 0, height: 1 },
-      },
-      android: { elevation: 2 },
-    }),
-  },
-  totalLabel: {
-    fontSize: width * 0.04,
-    fontWeight: '600',
-    fontFamily: 'Figtree-SemiBold',
-  },
-  totalItems: {
-    fontSize: width * 0.032,
-    color: '#777',
-    fontFamily: 'Figtree-Medium',
-    fontWeight: '500',
-  },
-  totalAmount: {
-    fontSize: width * 0.045,
-    fontWeight: '700',
-    fontFamily: 'Figtree-Bold',
-  },
+  totalSection: { marginHorizontal: 20, marginTop: 25 },
+  totalLabel: { fontSize: width * 0.04, fontWeight: '600',fontFamily : 'Figtree-SemiBold' },
+  totalItems: { fontSize: width * 0.032, color: '#777',fontFamily : 'Figtree-Medium',fontWeight : '500' },
+  totalAmount: { fontSize: width * 0.045, fontWeight: '700' ,fontFamily : 'Figtree-Bold'},
 
   /** BUTTONS **/
   btnRow: {
@@ -719,12 +544,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 10,
   },
-  rateText: {
-    color: '#F97316',
-    fontWeight: '600',
-    fontFamily: 'Figtree-SemiBold',
-    fontSize: width * 0.038,
-  },
+  rateText: { color: '#F97316', fontWeight: '600',fontFamily : 'Figtree-SemiBold', fontSize: width * 0.038 },
   reorderBtn: {
     flex: 1,
     backgroundColor: '#F97316',
@@ -732,30 +552,25 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     alignItems: 'center',
   },
-  reorderText: {
-    color: '#fff',
-    fontWeight: '700',
-    fontSize: width * 0.038,
-    fontFamily: 'Figtree-Bold',
-  },
+  reorderText: { color: '#fff', fontWeight: '700', fontSize: width * 0.038,fontFamily : 'Figtree-Bold' },
 
-  /** 🔥 MODAL STYLES — COMPLETELY UPDATED TO MATCH REFERENCE ***/
+  /** MODAL STYLES **/
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.40)',
+    backgroundColor: 'rgba(0,0,0,0.4)',
     justifyContent: 'flex-end',
   },
   modalContainer: {
     backgroundColor: '#fff',
-    borderTopLeftRadius: 22,
-    borderTopRightRadius: 22,
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 34,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    maxHeight: height * 0.9,
   },
   modalHeader: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 10,
   },
   modalBackIcon: {
     width: 20,
@@ -763,166 +578,140 @@ const styles = StyleSheet.create({
     tintColor: '#000',
   },
   modalTitle: {
-    flex: 1,
-    textAlign: 'center',
     fontSize: 18,
-    marginRight: 26,
-    color: '#000',
-    fontFamily: 'Figtree-Bold',
     fontWeight: '700',
+    color: '#000',
+    marginLeft: 12,
+    textAlign: 'center',
+    flex: 1,
+    fontFamily : 'Figtree-Bold'
   },
+
   reviewCard: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
-    padding: 14,
-    borderRadius: 12,
-    marginTop: 18,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOpacity: 0.08,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
-  },
-  foodImg: {
-    width: 55,
-    height: 55,
+    alignItems: 'center',
+    backgroundColor: '#f8f8f8',
+    marginTop: 10,
+    padding: 10,
     borderRadius: 10,
   },
-  orderId: {
-    color: COLORS.primary,
+  modalFoodImg: {
+    width: 50,
+    height: 50,
+    borderRadius: 8,
+  },
+  modalOrderId: {
+    color: '#E63946',
+    fontWeight: '600',
     fontSize: 13,
-    fontFamily: 'Figtree-SemiBold',
-    fontWeight: '600',
+    fontFamily : 'Figtree-SemiBold'
   },
-  orderTitle: {
+  modalOrderTitle: {
     fontSize: 15,
-    color: '#000',
-    marginTop: 2,
-    fontFamily: 'Figtree-Bold',
     fontWeight: '700',
-  },
-  orderMeta: {
-    color: '#666',
-    fontSize: 12,
-    marginTop: 4,
-    fontFamily: 'Figtree-Medium',
-    fontWeight: '500',
-  },
-  statusRow: {
-    marginTop: 6,
-  },
-  deliveryLeft: {
-    color: '#666',
-    fontSize: 12,
-    fontFamily: 'Figtree-Medium',
-    fontWeight: '500',
-  },
-  priceBlock: {
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-  },
-  price: {
+    fontFamily : 'Figtree-Bold',
     color: '#000',
+  },
+  modalOrderMeta: {
+    fontSize: 12,
+    color: '#666',
+    fontFamily : 'Figtree-Medium',
+    fontWeight : '500'
+  },
+  modalPrice: {
     fontSize: 15,
-    fontFamily: 'Figtree-Bold',
     fontWeight: '700',
+    color: '#000',
+    fontFamily : 'Figtree-Bold'
   },
-  deliveryRight: {
-    marginTop: 8,
-    color: 'green',
-    fontSize: 12,
-    fontFamily: 'Figtree-SemiBold',
-    fontWeight: '600',
-  },
+
   howText: {
     fontSize: 16,
-    marginTop: 22,
-    textAlign: 'center',
+    fontWeight: '700',
     color: '#000',
-    fontFamily: 'Figtree-SemiBold',
-    fontWeight: '600',
+    textAlign: 'center',
+    marginTop: 20,
+    fontFamily : 'Figtree-Bold'
   },
   subHowText: {
     fontSize: 13,
     color: '#666',
     textAlign: 'center',
     marginTop: 4,
-    fontFamily: 'Figtree-Medium',
-    fontWeight: '500',
+    fontFamily : 'Figtree-Medium',
+    fontWeight : '500'
   },
+
   starRow: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 14,
+    marginTop: 12,
     marginBottom: 10,
   },
   starRatingIcon: {
-    width: 32,
-    height: 32,
+    width: 30,
+    height: 30,
+    marginHorizontal: 6,
     resizeMode: 'contain',
   },
+
   inputBox: {
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 12,
-    padding: 14,
-    height: 90,
+    padding: 10,
     marginTop: 16,
+    height: 80,
     textAlignVertical: 'top',
-    fontFamily: 'Figtree-Medium',
-    fontWeight: '500',
+    fontFamily : 'Figtree-Medium',
+    fontWeight : '500'
   },
   modalBtnRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,
+    marginTop: 14,
+    flexWrap: 'wrap',
   },
   modalRemoveBtn: {
     width: '100%',
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#ff4444',
-    borderRadius: 10,
-    paddingVertical: 12,
+    borderRadius: 8,
+    paddingVertical: 10,
     alignItems: 'center',
     marginBottom: 10,
   },
   modalCancelBtn: {
     flex: 1,
-    marginRight: 8,
-    borderRadius: 10,
+    marginRight: 6,
+    backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#ddd',
-    paddingVertical: 12,
+    borderRadius: 8,
+    paddingVertical: 10,
     alignItems: 'center',
-    backgroundColor: '#fff',
   },
   modalSubmitBtn: {
     flex: 1,
-    marginLeft: 8,
-    borderRadius: 10,
-    paddingVertical: 12,
+    marginLeft: 6,
+    backgroundColor: '#F97316',
+    borderRadius: 8,
+    paddingVertical: 10,
     alignItems: 'center',
-    backgroundColor: COLORS.primary,
   },
   removeText: {
     color: '#ff4444',
     fontWeight: '600',
-    fontFamily: 'Figtree-Bold',
   },
   cancelText: {
     color: '#000',
-    fontFamily: 'Figtree-Bold',
-    fontWeight: '700',
+    fontWeight: '600',
+    fontFamily : 'Figtree-SemiBold'
   },
   trackText: {
     color: '#fff',
-    fontFamily: 'Figtree-Bold',
     fontWeight: '700',
+    fontFamily : 'Figtree-Bold'
   },
 });

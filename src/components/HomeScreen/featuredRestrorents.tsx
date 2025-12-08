@@ -13,6 +13,8 @@ import {
   Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useContext } from 'react';
+import { ThemeContext } from '../../theme/ThemeContext';
 import { COLORS } from '../../theme/colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { getFontFamily, getFontWeight } from '../../utils/fontHelper';
@@ -22,6 +24,8 @@ const { width, height } = Dimensions.get('window');
 
 const FeaturedRestaurants = () => {
   const navigation = useNavigation<any>();
+   const { theme } = useContext(ThemeContext);
+    const isDarkMode = theme.mode === "dark";
 
   const allRestaurants = [
     {
@@ -208,15 +212,31 @@ const FeaturedRestaurants = () => {
   const filteredRestaurants = getFilteredRestaurants();
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+    <View  style={[
+        styles.container,
+        { backgroundColor: theme.background },
+      ]}>
+      <StatusBar 
+        barStyle={theme.cardBackground === 'dark' ? 'light-content' : 'dark-content'}
+        translucent
+        backgroundColor="transparent" />
 
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[
+        styles.header,
+        { backgroundColor: theme.background },
+      ]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Image source={require('../../assets/back.png')} style={styles.backIcon} resizeMode="contain" />
+          <Image source={require('../../assets/back.png')} 
+          style={[
+              styles.backIcon,
+              { tintColor: theme.text }, // theme.text will be white in dark, black in light
+            ]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Featured Restaurants</Text>
+        <Text style={[
+        styles.headerTitle,
+        {color:theme.text},
+      ]}>Featured Restaurants</Text>
         <TouchableOpacity onPress={() => setShowFilterModal(true)} style={styles.filterButton}>
           <View style={styles.filterButtonContainer}>
             <Image source={require('../../assets/filter.png')} style={styles.filterIcon} resizeMode="contain" />
@@ -226,18 +246,36 @@ const FeaturedRestaurants = () => {
       </View>
 
       {/* Search Bar */}
-      <View style={styles.searchContainer}>
-        <View style={styles.searchInputContainer}>
-          <Image source={require('../../assets/search.png')} style={styles.searchIcon} resizeMode="contain" />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search restaurants, cuisines..."
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            placeholderTextColor="#999"
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
+      <View style={[
+        styles.searchContainer,
+        { backgroundColor: theme.background },
+      ]}>
+       <View
+  style={[
+    styles.searchInputContainer,
+    { backgroundColor: theme.cardBackground }, // dynamic background
+  ]}
+>
+  <Image
+    source={require('../../assets/search.png')}
+    style={[styles.searchIcon, { tintColor: theme.text }]} // icon color
+    resizeMode="contain"
+  />
+
+  <TextInput
+    style={[
+      styles.searchInput,
+      { color: theme.text }, // text color based on theme
+    ]}
+    placeholder="Search restaurants, cuisines..."
+    value={searchQuery}
+    onChangeText={setSearchQuery}
+    placeholderTextColor={theme.textSecondary} // dynamic placeholder color
+    autoCapitalize="none"
+    autoCorrect={false}
+  />
+
+
           {searchQuery.length > 0 && (
             <TouchableOpacity onPress={clearSearch} style={styles.clearButton}>
               <Image source={require('../../assets/close.png')} style={styles.clearIcon} resizeMode="contain" />
@@ -247,10 +285,19 @@ const FeaturedRestaurants = () => {
       </View>
 
       {/* Results Count */}
-      <View style={styles.resultsContainer}>
-        <Text style={styles.resultsText}>
-          {filteredRestaurants.length} restaurant{filteredRestaurants.length !== 1 ? 's' : ''} found
-        </Text>
+      <View style={[
+        styles.resultsContainer,
+        { backgroundColor: theme.background },
+      ]}>
+        <Text
+  style={[
+    styles.resultsText,
+    { color: theme.text }, // white in dark, black in light
+  ]}
+>
+  {filteredRestaurants.length} restaurant{filteredRestaurants.length !== 1 ? 's' : ''} found
+</Text>
+
         {hasActiveFilters() && (
           <TouchableOpacity onPress={resetFilters} style={styles.clearFiltersBtn}>
             <Text style={styles.clearFiltersText}>Clear Filters</Text>
@@ -315,9 +362,25 @@ const FeaturedRestaurants = () => {
                   </View>
                 </View>
 
-                <View style={styles.restaurantInfo}>
+                <View 
+                 style={[
+    styles.restaurantInfo,
+    {
+      backgroundColor: theme.cardBackground,           // dark/light card background
+      borderColor: theme.mode === 'dark' ? theme.borderColor : 'transparent',
+      borderWidth: theme.mode === 'dark' ? 1 : 0,
+    },
+  ]}>
                   <View style={styles.titleRow}>
-                    <Text style={styles.restaurantName}>{restaurant.name}</Text>
+                  <Text
+  style={[
+    styles.restaurantName,
+    { color: theme.text }, // white in dark, black in light
+  ]}
+>
+  {restaurant.name}
+</Text>
+
                     <View style={styles.ratingContainer}>
                       <Image source={require('../../assets/star.png')} style={styles.starIcon} resizeMode="contain" />
                       <Text style={styles.ratingText}>{restaurant.rating}</Text>
@@ -329,17 +392,27 @@ const FeaturedRestaurants = () => {
                   <View style={styles.infoRow}>
                     <View style={styles.infoItem}>
                       <Image source={require('../../assets/clock.png')} style={styles.infoIcon} resizeMode="contain" />
-                      <Text style={styles.infoText}>{restaurant.deliveryTime}</Text>
+                      <Text style={[
+    styles.infoText,
+    { color: theme.text }, // white in dark, black in light
+  ]}>
+                        {restaurant.deliveryTime}</Text>
                     </View>
 
                     <View style={styles.infoItem}>
                       <Image source={require('../../assets/location1.png')} style={styles.infoIcon} resizeMode="contain" />
-                      <Text style={styles.infoText}>{restaurant.distance}</Text>
+                      <Text style={[
+    styles.infoText,
+    { color: theme.text }, // white in dark, black in light
+  ]}>{restaurant.distance}</Text>
                     </View>
 
                     <View style={styles.infoItem}>
                       <Image source={require('../../assets/bike.png')} style={styles.infoIcon} resizeMode="contain" />
-                      <Text style={styles.infoText}>Free delivery</Text>
+                      <Text style={[
+    styles.infoText,
+    { color: theme.text }, // white in dark, black in light
+  ]}>Free delivery</Text>
                     </View>
                   </View>
 

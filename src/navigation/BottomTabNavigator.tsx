@@ -5,7 +5,7 @@
 import React, { useContext } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Image, Platform } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context'; 
 import HomeScreen from '../components/HomeScreen/HomeScreens/HomeScreen';
 import MyOrders from '../components/MyOrders/MyOrder/myorders';
 import Wishlist from '../components/Wishlist/wishlist';
@@ -42,9 +42,9 @@ const TabBarIcon = ({ routeName, color, size }) => {
     <Image
       source={iconSource}
       style={{
-        width: size * 1.1, // 🔥 larger icons
-        height: size * 1.1, // 🔥 larger icons
-        tintColor: color, // 🔥 Icons keep their tint color (same as before)
+        width: size * 1.1,   // 🔥 UPDATED — larger icons
+        height: size * 1.1,  // 🔥 UPDATED — larger icons
+        tintColor: color,
       }}
       resizeMode="contain"
     />
@@ -52,34 +52,31 @@ const TabBarIcon = ({ routeName, color, size }) => {
 };
 
 const BottomTabNavigator = () => {
-  const insets = useSafeAreaInsets();
-  const { theme } = useContext(ThemeContext);
+  const insets = useSafeAreaInsets(); // 🔥 UPDATED — fix for Android nav keys
+  const {theme} = useContext(ThemeContext);
 
   const getScreenOptions = ({ route }) => ({
     tabBarIcon: ({ color, size }) => (
       <TabBarIcon routeName={route.name} color={color} size={size} />
     ),
 
-    // 🔥 FIXED — Text colors updated
     tabBarLabelStyle: {
-      fontSize: 12,
-      marginBottom: 6,
+      fontSize: 12,                // 🔥 UPDATED — increased text size
+      marginBottom: 6,                // 🔥 UPDATED — better spacing
       fontFamily: 'Figtree-Bold',
       includeFontPadding: false,
       letterSpacing: 0.2,
       fontWeight: Platform.OS === 'ios' ? '600' : undefined,
     },
 
-    // 🔥 FIXED — Active text color = primary (same as before)
-    // 🔥 FIXED — Inactive text color = #999999 (NEW - gray color as requested)
     tabBarActiveTintColor: COLORS.primary,
-    tabBarInactiveTintColor: '#999999', // 🔥 CHANGED — Fixed gray color #999999 for unselected tabs
+    tabBarInactiveTintColor: theme.text,
 
     tabBarStyle: {
       backgroundColor: theme.background,
-      height: 80 + insets.bottom * 0.3,
-      paddingBottom: insets.bottom > 0 ? insets.bottom : 12,
-      paddingTop: 10,
+      height: 80 + insets.bottom * 0.3,   // 🔥 UPDATED — taller bar + safe-area support
+      paddingBottom: insets.bottom > 0 ? insets.bottom : 12, // 🔥 UPDATED — floats above nav keys
+      paddingTop: 10,                      // 🔥 UPDATED — better spacing
     },
 
     headerShown: false,

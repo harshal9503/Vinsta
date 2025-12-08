@@ -1,15 +1,31 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
+import { ThemeContext } from '../../../theme/ThemeContext';
+import { getFontFamily, getFontWeight } from '../../../utils/fontHelper';
 
 const ActiveBottom = () => {
+    const { theme } = useContext(ThemeContext);
+
     return (
         <View style={styles.bottomNoteRow}>
-            <Text style={styles.cancelNote}>
+            <Text
+                style={[
+                    styles.cancelNote,
+                    { color: theme.mode === 'dark' ? '#FF5555' : '#EA001B' }
+                ]}
+            >
                 Subscription plan cannot be cancelled
             </Text>
 
             <TouchableOpacity>
-                <Text style={styles.addText}>+ Add More</Text>
+                <Text
+                    style={[
+                        styles.addText,
+                        { color: theme.mode === 'dark' ? '#00D46E' : '#259E29' }
+                    ]}
+                >
+                    + Add More
+                </Text>
             </TouchableOpacity>
         </View>
     )
@@ -18,22 +34,20 @@ const ActiveBottom = () => {
 export default ActiveBottom
 
 const styles = StyleSheet.create({
-     bottomNoteRow: {
+    bottomNoteRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginHorizontal: 20,
         marginTop: 10,
-      },
-      cancelNote: {
-        color: '#EA001B',
+    },
+    cancelNote: {
         fontSize: 13,
         fontFamily: getFontFamily('Medium'),
         fontWeight: getFontWeight('Medium'),
-      },
-       addText: {
-    color: '#259E29',
-    fontSize: 13,
-    fontFamily: getFontFamily('Bold'),
-    fontWeight: getFontWeight('Bold'),
-  },
+    },
+    addText: {
+        fontSize: 13,
+        fontFamily: getFontFamily('Bold'),
+        fontWeight: getFontWeight('Bold'),
+    },
 })

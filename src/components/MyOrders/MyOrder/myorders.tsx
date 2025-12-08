@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -8,24 +8,24 @@ import {
   ScrollView,
   Dimensions,
   StatusBar,
-  Modal,
-  TextInput,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { getFontFamily, getFontWeight } from '../../../utils/fontHelper';
 import MyOrdersTab from './MyOrdersTab';
 import MySubscription from './MySubscription';
 import RatingModal from './RatingModal';
+import { ThemeContext } from '../../../theme/ThemeContext';   // ✅ ADD THIS
 
 const { width, height } = Dimensions.get('window');
+
 const COLORS = {
   primary: '#E67E22',
-  gray: '#999',
-  lightGray: '#eee',
 };
 
 const MyOrders = () => {
   const navigation = useNavigation<any>();
+  const { theme } = useContext(ThemeContext);   // ✅ DARK MODE THEME CONTEXT
+
   const [mainTab, setMainTab] = useState<'Orders' | 'Subscription'>('Orders');
   const [orderTab, setOrderTab] = useState<'Upcoming' | 'Past'>('Upcoming');
   const [subTab, setSubTab] = useState<'Active' | 'Previous'>('Active');
@@ -43,6 +43,7 @@ const MyOrders = () => {
       status: 'Food on the way',
       time: '25 min',
       img: require('../../../assets/poha.png'),
+     
     },
   ];
 
@@ -55,6 +56,7 @@ const MyOrders = () => {
       items: '3 Items',
       status: 'Delivered',
       img: require('../../../assets/poha.png'),
+     
     },
     {
       id: '#265897',
@@ -64,6 +66,8 @@ const MyOrders = () => {
       items: '3 Items',
       status: 'Delivered',
       img: require('../../../assets/poha.png'),
+    
+
     },
   ];
 
@@ -76,6 +80,7 @@ const MyOrders = () => {
       duration: '22 - 29 Sep 2025',
       daysLeft: "6 Day's left",
       img: require('../../../assets/thali.png'),
+      tintColor: theme.text,
     },
     {
       id: 2,
@@ -85,6 +90,7 @@ const MyOrders = () => {
       duration: '22 Sep - 21 Oct 2025',
       daysLeft: "21 Day's left",
       img: require('../../../assets/thali.png'),
+      tintColor: theme.text,
     },
   ];
 
@@ -97,6 +103,7 @@ const MyOrders = () => {
       duration: '22 - 29 Sep 2025',
       daysLeft: "0 Day's left",
       img: require('../../../assets/poha.png'),
+      tintColor: theme.text,
     },
   ];
 
@@ -107,7 +114,6 @@ const MyOrders = () => {
     setReviewText('');
   };
 
-  // Navigate to OrderDetail with order data
   const navigateToOrderDetail = (order: any) => {
     navigation.navigate('OrderDetail', {
       orderId: order.id,
@@ -121,41 +127,46 @@ const MyOrders = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
+    <View style={[styles.container, { backgroundColor: theme.background }]}>  {/* ✅ DARK BG */}
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle={theme.mode === 'dark' ? 'light-content' : 'dark-content'}   // ✅ DARK STATUS BAR
+      />
 
       {/* HEADER */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={styles.backIcon} />
+          <Image
+            source={require('../../../assets/back.png')}
+            style={[styles.backIcon, { tintColor: theme.text }]}    // ✅ DARK ICON
+          />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>My Orders</Text>
+
+        <Text style={[styles.headerTitle, { color: theme.text }]}>My Orders</Text>
+
         <View style={{ width: 25 }} />
       </View>
 
-      {/* MAIN TAB SWITCH */}
+      {/* MAIN TABS */}
       <View style={styles.mainTabs}>
-        <TouchableOpacity
-          style={styles.mainTab}
-          onPress={() => setMainTab('Orders')}
-        >
+        <TouchableOpacity style={styles.mainTab} onPress={() => setMainTab('Orders')}>
           <Text
             style={[
               styles.mainTabText,
-              mainTab === 'Orders' && styles.mainTabTextActive,
+              { color: mainTab === 'Orders' ? COLORS.primary : theme.text },
+               // ✅ DARK TEXT
             ]}
           >
             My Order's
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.mainTab}
-          onPress={() => setMainTab('Subscription')}
-        >
+
+        <TouchableOpacity style={styles.mainTab} onPress={() => setMainTab('Subscription')}>
           <Text
             style={[
               styles.mainTabText,
-              mainTab === 'Subscription' && styles.mainTabTextActive,
+              { color: mainTab === 'Subscription' ? COLORS.primary : theme.text },
             ]}
           >
             My Subscription's
@@ -163,13 +174,14 @@ const MyOrders = () => {
         </TouchableOpacity>
       </View>
 
-      {/* SLIDER BAR FULL WIDTH */}
-      <View style={styles.slider}>
+      {/* SLIDER */}
+      <View style={[styles.slider, { backgroundColor: theme.border }]}>
         <View
           style={[
             styles.sliderIndicator,
             {
               left: mainTab === 'Orders' ? 0 : width / 2,
+              backgroundColor: COLORS.primary,
             },
           ]}
         />
@@ -187,7 +199,6 @@ const MyOrders = () => {
             setRatingModal={setRatingModal}
           />
         ) : (
-
           <MySubscription
             subTab={subTab}
             setSubTab={setSubTab}
@@ -197,7 +208,7 @@ const MyOrders = () => {
           />
         )}
       </ScrollView>
-      {/* RATING MODAL */}
+
       <RatingModal
         visible={ratingModal}
         onClose={() => setRatingModal(false)}
@@ -214,7 +225,8 @@ const MyOrders = () => {
 export default MyOrders;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: { flex: 1 },
+
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -222,35 +234,40 @@ const styles = StyleSheet.create({
     paddingTop: height * 0.07,
     paddingHorizontal: 20,
   },
-  backIcon: { width: 22, height: 22, tintColor: '#000' },
+
+  backIcon: { width: 22, height: 22 },
+
   headerTitle: {
     fontSize: 18,
-    color: '#000',
     fontFamily: getFontFamily('Bold'),
     fontWeight: getFontWeight('Bold'),
   },
+
   mainTab: { flex: 1 },
-  mainTabs: { flexDirection: 'row', justifyContent: 'space-around', marginTop: 20 },
+
+  mainTabs: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 20,
+  },
+
   mainTabText: {
     fontSize: 16,
-    color: '#aaa',
     textAlign: 'center',
     fontFamily: getFontFamily('Bold'),
     fontWeight: getFontWeight('Bold'),
   },
-  mainTabTextActive: { color: COLORS.primary },
 
   slider: {
     height: 3,
     width: '100%',
-    backgroundColor: '#ccc',
     marginTop: 10,
   },
+
   sliderIndicator: {
     position: 'absolute',
     top: 0,
     width: width / 2,
     height: 3,
-    backgroundColor: COLORS.primary,
   },
 });

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
   Text,
@@ -14,6 +14,7 @@ import {
   Pressable,
   Platform,
 } from 'react-native';
+import { ThemeContext } from '../../../theme/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import {
@@ -26,6 +27,8 @@ const { width, height } = Dimensions.get('window');
 
 const FoodDetails = () => {
   const navigation = useNavigation();
+   const { theme } = useContext(ThemeContext);
+  const isDark = theme.mode === 'dark';
   const [liked, setLiked] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [selectedCheese, setSelectedCheese] = useState([]);
@@ -153,11 +156,11 @@ const FoodDetails = () => {
   };
 
   return (
-    <View style={styles.container}>
+   <View style={[styles.container, { backgroundColor: theme.background }]}>
       <StatusBar
         translucent
-        backgroundColor="transparent"
-        barStyle="dark-content"
+        backgroundColor={theme.background} // dynamic background
+        barStyle={theme.mode === 'dark' ? 'light-content' : 'dark-content'} // text/icons color
       />
 
       {/* Added to Cart Popup */}
@@ -177,7 +180,7 @@ const FoodDetails = () => {
               },
             ]}
           >
-            <View style={styles.popupContent}>
+            < View style={styles.popupContent}>
               <Image
                 source={require('../../../assets/sucess.png')}
                 style={styles.successIcon}
@@ -272,20 +275,36 @@ const FoodDetails = () => {
               style={styles.spicyIcon}
               resizeMode="contain"
             />
-            <Text style={styles.spicyText}>Spicy</Text>
+          <Text style={[styles.spicyText, { color: theme.mode === 'dark' ? '#FF6347' : '#FF4500' }]}>
+  Spicy
+</Text>
+
           </View>
         </View>
 
-        {/* Food Name */}
-        <Text style={styles.foodName}>{foodItem.name}</Text>
+      <Text style={[styles.foodName, { color: theme.text }]}>
+  {foodItem.name}
+</Text>
+
+
 
         {/* Restaurant Name */}
-        <Text style={styles.restaurantName}>{foodItem.restaurant}</Text>
+       <Text
+        style={[
+          styles.restaurantName,
+          { color: theme.mode === 'dark' ? '#161616ff' : '#6f6e6eff' },
+        ]}
+      >
+        {foodItem.restaurant}
+      </Text>
 
         {/* Price Row */}
         <View style={styles.priceRow}>
           <View style={styles.priceContainer}>
-            <Text style={styles.price}>₹{foodItem.price.toFixed(2)}</Text>
+          <Text style={[styles.price, { color: theme.text }]}>
+  ₹{foodItem.price.toFixed(2)}
+</Text>
+
             <Text style={styles.oldPrice}>₹{foodItem.oldPrice.toFixed(2)}</Text>
           </View>
           <View style={styles.timeRow}>
@@ -302,7 +321,7 @@ const FoodDetails = () => {
         <Text style={styles.description}>{foodItem.description}</Text>
 
         {/* Extra Cheese Section */}
-        <Text style={styles.sectionTitle}>Extra Cheese</Text>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>Extra Cheese</Text>
         <Text style={styles.sectionSubtitle}>Select up to 2 options</Text>
 
         {/* Cheese Options */}
@@ -317,7 +336,7 @@ const FoodDetails = () => {
               style={styles.optionVegIcon}
               resizeMode="contain"
             />
-            <Text style={styles.optionText}>Single Cheese Slice</Text>
+            <Text style={[styles.optionText, { color: theme.text }]} >Single Cheese Slice</Text>
           </View>
           <View style={styles.optionRight}>
             <Text style={styles.optionPrice}>₹25.00</Text>
@@ -344,7 +363,7 @@ const FoodDetails = () => {
               style={styles.optionVegIcon}
               resizeMode="contain"
             />
-            <Text style={styles.optionText}>Double Cheese Slice</Text>
+            <Text style={[styles.optionText, { color: theme.text }]}>Double Cheese Slice</Text>
           </View>
           <View style={styles.optionRight}>
             <Text style={styles.optionPrice}>₹39.00</Text>
@@ -365,22 +384,41 @@ const FoodDetails = () => {
           Add a cooking request (optional)
         </Text>
         <TextInput
-          style={styles.cookingInput}
-          placeholder="e.g. don't make it too spicy"
-          placeholderTextColor="#999"
-          value={cookingRequest}
-          onChangeText={setCookingRequest}
-          multiline
-          numberOfLines={3}
-          textAlignVertical="top"
-        />
+  style={[
+    styles.cookingInput,
+    {
+      backgroundColor: theme.mode === 'dark' 
+        ? theme.cardBackground       // dark → #1E1E1E
+        : theme.cardBackground,      // light → #FFFFFF
+
+      color: theme.text,             // dark → #ffffff, light → COLORS.text
+
+      borderColor: theme.borderColor // dark → #333333, light → #f0f0f0
+    }
+  ]}
+  placeholder="e.g. don't make it too spicy"
+  placeholderTextColor={
+    theme.mode === 'dark' ? theme.textSecondary : theme.textSecondary
+  } // dark → #a0a0a0 | light → #575757
+  value={cookingRequest}
+  onChangeText={setCookingRequest}
+  multiline
+  numberOfLines={3}
+  textAlignVertical="top"
+/>
+
 
         {/* Extra spacing for bottom bar */}
         <View style={styles.bottomSpacing} />
       </ScrollView>
 
       {/* Bottom Action Bar */}
-      <View style={styles.bottomBar}>
+      <View
+  style={[
+    styles.bottomBar,
+    { backgroundColor: theme.background } // dark: #1E1E1E | light: #fff
+  ]}
+>
         {/* Quantity Control */}
         <View style={styles.quantityControl}>
           <TouchableOpacity

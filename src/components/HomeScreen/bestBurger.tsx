@@ -15,6 +15,8 @@ import {
   Animated,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useContext } from 'react';
+import { ThemeContext } from '../../theme/ThemeContext';
 import { COLORS } from '../../theme/colors';
 
 // Map font weight to actual font family names on Android
@@ -59,6 +61,8 @@ function getFontWeight(weight: keyof typeof fontMap = 'Regular') {
 
 const BestBurgers = () => {
   const navigation = useNavigation<any>();
+   const { theme } = useContext(ThemeContext);
+    const isDarkMode = theme.mode === "dark";
 
   const allBurgers = [
     {
@@ -295,8 +299,14 @@ const BestBurgers = () => {
           </View>
         </View>
 
-        <View style={styles.burgerInfo}>
-          <Text style={styles.burgerName} numberOfLines={2} ellipsizeMode="tail">
+        <View style={[
+        styles.burgerInfo,
+        { backgroundColor: theme.cardBackground},
+      ]}>
+          <Text style={[
+        styles.burgerName,
+        {color:theme.text},
+      ]} numberOfLines={2} ellipsizeMode="tail">
             {item.name}
           </Text>
           <Text style={styles.restaurantName} numberOfLines={1} ellipsizeMode="tail">
@@ -308,7 +318,11 @@ const BestBurgers = () => {
 
           <View style={styles.priceRow}>
             <View style={styles.priceContainer}>
-              <Text style={styles.price}>₹{item.price.toFixed(2)}</Text>
+              <Text 
+              style={[
+        styles.price,
+        {color:theme.text},
+      ]}>₹{item.price.toFixed(2)}</Text>
               <Text style={styles.oldPrice}>₹{item.oldPrice.toFixed(2)}</Text>
             </View>
 
@@ -329,29 +343,62 @@ const BestBurgers = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View 
+     style={[
+        styles.container,
+        { backgroundColor: theme.background },
+      ]}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
-      <View style={styles.header}>
+      <View
+       style={[
+        styles.header,
+        { backgroundColor: theme.background },
+      ]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../assets/back.png')} style={styles.backIcon} />
+          <Image source={require('../../assets/back.png')} 
+         style={[
+              styles.backIcon,
+              { tintColor: theme.text }, // theme.text will be white in dark, black in light
+            ]} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Best Burgers</Text>
+        <Text 
+        style={[
+        styles.headerTitle,
+        {color:theme.text},
+      ]} >Best Burgers</Text>
         <View style={{ width: 22 }} />
       </View>
 
-      <View style={styles.searchContainer}>
-        <View style={styles.searchInputContainer}>
-          <Image source={require('../../assets/search.png')} style={styles.searchIcon} />
-          <TextInput
-            style={styles.searchInput}
+          <View style={[
+                  styles.searchContainer,
+                  { backgroundColor: theme.background },
+                ]}>
+                 <View
+            style={[
+              styles.searchInputContainer,
+              { backgroundColor: theme.cardBackground }, // dynamic background
+            ]}
+          >
+            <Image
+              source={require('../../assets/search.png')}
+              style={[styles.searchIcon, { tintColor: theme.text }]} // icon color
+              resizeMode="contain"
+            />
+          
+            <TextInput
+              style={[
+                styles.searchInput,
+                { color: theme.text }, // text color based on theme
+              ]}
+           
             placeholder="Search burgers, restaurants..."
             value={searchQuery}
             onChangeText={setSearchQuery}
             placeholderTextColor="#999"
             autoCapitalize="none"
             autoCorrect={false}
-          />
+            />
           {searchQuery.length > 0 && (
             <TouchableOpacity onPress={clearSearch} style={styles.clearButton}>
               <Image source={require('../../assets/close.png')} style={styles.clearIcon} />
@@ -360,27 +407,72 @@ const BestBurgers = () => {
         </View>
       </View>
 
-      <View style={styles.filterContainer}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterScroll}>
-          {filters.map(filter => (
-            <TouchableOpacity
-              key={filter}
-              style={[styles.filterBtn, selectedFilter === filter && styles.activeFilterBtn]}
-              onPress={() => setSelectedFilter(filter)}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.filterText, selectedFilter === filter && styles.activeFilterText]}>
-                {filter}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+      <View 
+       style={[
+        styles.filterContainer,
+        { backgroundColor: theme.background },
+      ]}>
+       <ScrollView
+  horizontal
+  showsHorizontalScrollIndicator={false}
+  contentContainerStyle={styles.filterScroll}
+>
+  {filters.map(filter => {
+    const isActive = selectedFilter === filter;
+
+    return (
+      <TouchableOpacity
+        key={filter}
+        style={[
+          styles.filterBtn,
+          isActive && styles.activeFilterBtn,
+
+          // IMPORTANT: theme override must be LAST
+          !isActive && {
+            backgroundColor: theme.cardBackground 
+     // backgroundColor: theme.mode === 'dark' ? '#555555' : '#FFFFFF', // inactive grey only in dark
+          },
+        ]}
+        onPress={() => setSelectedFilter(filter)}
+        activeOpacity={0.8}
+      >
+        <Text
+          style={[
+            styles.filterText,
+            isActive && styles.activeFilterText,
+
+            // IMPORTANT: override LAST
+            !isActive && {
+              color:
+                theme.text// text for inactive
+            },
+          ]}
+        >
+          {filter}
+        </Text>
+      </TouchableOpacity>
+    );
+  })}
+</ScrollView>
+
+
       </View>
 
-      <View style={styles.resultsContainer}>
-        <Text style={styles.resultsText}>
-          {filteredBurgers.length} burger{filteredBurgers.length !== 1 ? 's' : ''} found
-        </Text>
+      <View 
+       style={[
+        styles.resultsContainer,
+        { backgroundColor: theme.background },
+      ]}>
+        <Text
+  style={[
+    styles.resultsText,
+    { color: theme.text }, // dynamic text color
+  ]}
+>
+  {filteredBurgers.length} burger
+  {filteredBurgers.length !== 1 ? 's' : ''} found
+</Text>
+
         {(selectedFilter !== 'All' || searchQuery.trim() !== '') && (
           <TouchableOpacity
             onPress={() => {

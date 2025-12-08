@@ -4,6 +4,11 @@ import { COLORS } from '../theme/colors';
 
 // ----- Theme Interfaces -----
 interface Theme {
+  isDarkmode: string;
+  card: ColorValue | undefined;
+  backgroundColor: string;
+  primary: ColorValue | undefined;
+  mode: string;
   background: string;
   cardBackground: string;
   text: string;
@@ -50,23 +55,29 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   };
 
   // You can define your themes here or import as objects
+ 
+  
+  const theme = isDarkMode ? darkTheme : lightTheme;
   const darkTheme: Theme = {
     background: '#121212',
     cardBackground: '#1E1E1E',
     text: '#ffffff',
     textSecondary: '#a0a0a0',
     borderColor: '#333333',
+    primary: undefined,
+    mode: ''
   };
 
-  const lightTheme: Theme = {
-    background: COLORS.secondary,
-    cardBackground: '#ffffff',
-    text: COLORS.text,
-    textSecondary: '#575757ff',
-    borderColor: '#f0f0f0',
-  };
+const lightTheme: Theme = {
+  background: COLORS.secondary,
+  cardBackground: '#ffffff',
+  text: COLORS.text,
+  textSecondary: '#575757ff',
+  borderColor: '#f0f0f0',
+  primary: undefined,
+  mode: ''
+};
 
-  const theme = isDarkMode ? darkTheme : lightTheme;
 
   return (
     <ThemeContext.Provider value={{ isDarkMode, toggleDarkMode, theme }}>

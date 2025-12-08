@@ -1,11 +1,33 @@
-import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View, Platform } from 'react-native';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import React, { useContext } from 'react';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Platform,
+} from 'react-native';
+import { ThemeContext } from '../../../../theme/ThemeContext';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import { getFontFamily, getFontWeight } from '../../../../utils/fontHelper';
 
 const RestuarantBadge = () => {
+  const { theme } = useContext(ThemeContext);   // ✔ first define theme
+  const isDark = theme?.mode === 'dark';        // ✔ now you can use it
+
   return (
-    <View style={styles.curvedSection}>
+    <View
+      style={[
+        styles.curvedSection,
+        {
+          backgroundColor: isDark ? theme.card : theme.background,
+        },
+      ]}
+    >
+      {/* Logo Section */}
       <View style={styles.logoWrapper}>
         <View style={styles.logoCircle}>
           <Image
@@ -15,6 +37,7 @@ const RestuarantBadge = () => {
         </View>
       </View>
 
+      {/* Map Icon */}
       <TouchableOpacity style={styles.mapWrapper}>
         <Image
           source={require('../../../../assets/map.png')}
@@ -22,18 +45,21 @@ const RestuarantBadge = () => {
         />
       </TouchableOpacity>
 
+      {/* Restaurant Name */}
       <Text
         style={[
           styles.resName,
           {
             fontFamily: getFontFamily('Bold'),
             fontWeight: getFontWeight('Bold'),
+            color: theme.text,
           },
         ]}
       >
         Bistro Excellence
       </Text>
 
+      {/* Location */}
       <View style={styles.locationRow}>
         <Image
           source={require('../../../../assets/location1.png')}
@@ -45,6 +71,7 @@ const RestuarantBadge = () => {
             {
               fontFamily: getFontFamily('Medium'),
               fontWeight: getFontWeight('Medium'),
+              color: theme.text,
             },
           ]}
         >
@@ -52,6 +79,7 @@ const RestuarantBadge = () => {
         </Text>
       </View>
 
+      {/* Stats Row */}
       <View style={styles.statsRow}>
         <Image
           source={require('../../../../assets/leaf.png')}
@@ -63,6 +91,7 @@ const RestuarantBadge = () => {
             {
               fontFamily: getFontFamily('Medium'),
               fontWeight: getFontWeight('Medium'),
+              color: theme.textSecondary,   // ✔ better for stats
             },
           ]}
         >
@@ -79,6 +108,7 @@ const RestuarantBadge = () => {
             {
               fontFamily: getFontFamily('Medium'),
               fontWeight: getFontWeight('Medium'),
+              color: theme.textSecondary,
             },
           ]}
         >
@@ -95,6 +125,7 @@ const RestuarantBadge = () => {
             {
               fontFamily: getFontFamily('Medium'),
               fontWeight: getFontWeight('Medium'),
+              color: theme.textSecondary,
             },
           ]}
         >

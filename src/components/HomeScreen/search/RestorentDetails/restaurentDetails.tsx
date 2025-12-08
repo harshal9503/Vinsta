@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
   Text,
@@ -18,6 +18,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import { ThemeContext } from '../../../../theme/ThemeContext';
 import { getFontFamily, getFontWeight } from '../../../../utils/fontHelper';
 import { vibrate } from '../../../../utils/vibrationHelper';
 import RecommendedFood from './RecommendedFood';
@@ -27,6 +28,7 @@ import FoodDetailModal from './FoodDetailModal';
 import VegNonVegModal from './VegNonVegModal';
 import RestuarantBadge from './RestuarantBadge';
 import FilterTags from './FilterTags';
+import { darkTheme, lightTheme } from '../../../../theme/theme';
 
 const { width, height } = Dimensions.get('window');
 
@@ -50,6 +52,9 @@ interface FoodItem {
 
 const RestaurentDetails: React.FC = () => {
   const navigation = useNavigation<any>();
+ const { theme } = useContext(ThemeContext);
+const isDark = theme.mode === 'dark';
+
   const route = useRoute<any>();
 
   const selectedItem = route.params?.selectedItem || 'Burger';
@@ -316,11 +321,16 @@ const RestaurentDetails: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
+  <View
+      style={[
+        styles.container,
+        { backgroundColor: theme.background },  // <-- Correct
+      ]}
+    >
       <StatusBar
         translucent
         backgroundColor="transparent"
-        barStyle="dark-content"
+        barStyle={isDark ? 'light-content' : 'dark-content'}
       />
 
       {/* VEG/NON-VEG DROPDOWN MODAL */}
@@ -362,9 +372,9 @@ const RestaurentDetails: React.FC = () => {
               onPress={() => navigation.goBack()}
             >
               <Image
-                source={require('../../../../assets/back.png')}
-                style={styles.backIcon}
-              />
+  source={require('../../../../assets/back.png')}
+  style={[styles.backIcon, { tintColor: isDark ? '#fff' : '#000' }]}
+/>
             </TouchableOpacity>
 
             <Text style={styles.headerTitle}>Bistro Excellence</Text>
@@ -373,11 +383,7 @@ const RestaurentDetails: React.FC = () => {
             <TouchableOpacity
               style={[
                 styles.productHeartWrapper,
-                {
-                  backgroundColor: headerLiked
-                    ? 'rgba(255, 255, 255, 0.9)'
-                    : 'rgba(255, 255, 255, 0.3)',
-                },
+                { backgroundColor: headerLiked ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)' }
               ]}
               onPress={onHeaderHeartPress}
               activeOpacity={0.7}
@@ -403,20 +409,42 @@ const RestaurentDetails: React.FC = () => {
         <RestuarantBadge />
 
         {/* ===== SEARCH BAR ===== */}
-        <View style={styles.searchWrapper}>
-          <View style={styles.searchRow}>
-            <Image
-              source={require('../../../../assets/search.png')}
-              style={styles.searchIcon}
-            />
-            <TextInput
-              placeholder="search"
-              placeholderTextColor="#999"
-              style={styles.input}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-            />
-          </View>
+       <View style={styles.searchWrapper}>
+  <View
+    style={[
+      styles.searchRow,
+      {
+        backgroundColor: theme.cardBackground,     // Light: white, Dark: #1E1E1E
+        borderColor: theme.borderColor,           // Light: #f0f0f0, Dark: #333
+        borderWidth: 1,
+      },
+    ]}
+  >
+    <Image
+      source={require('../../../../assets/search.png')}
+      style={[
+        styles.searchIcon,
+        {
+          tintColor: theme.text,                 // Light: black, Dark: white
+        },
+      ]}
+    />
+
+    <TextInput
+      placeholder="Search"
+      placeholderTextColor={theme.textSecondary} // Light: grey, Dark: light grey
+      style={[
+        styles.input,
+        {
+          color: theme.text,                     // Light: black, Dark: white
+        },
+      ]}
+      value={searchQuery}
+      onChangeText={setSearchQuery}
+    />
+  </View>
+
+
           <TouchableOpacity
             style={styles.searchFilterContainer}
             onPress={() => navigation.navigate('MenuScreen')}
@@ -431,9 +459,9 @@ const RestaurentDetails: React.FC = () => {
         {/* ===== CATEGORY BAR ===== */}
         <View style={styles.categoryHeader}>
           <Image source={currentIcon} style={styles.leafIcon} />
-          <Text style={styles.availText}>
-            Available options for {selectedItem}
-          </Text>
+           <Text style={[styles.availText, { color: theme.text }]}>
+      Available options for {selectedItem}
+    </Text>
           <Image
             source={
               vegNonVegFilter === 'Veg'
@@ -451,50 +479,51 @@ const RestaurentDetails: React.FC = () => {
         </View>
 
         {/* Show content only if items are available */}
-        {foodItems.length > 0 ? (
-          <>
-            {/* ===== UPDATED CATEGORY SLIDER ===== */}
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              style={styles.categorySlider}
-              contentContainerStyle={styles.categorySliderContent}
-              bounces={false}
-            >
-              {categories.map(cat => {
-                const selected = activeCategory === cat.name;
-                return (
-                  <TouchableOpacity
-                    key={cat.name}
-                    style={[
-                      styles.categoryBtn,
-                      selected && styles.categoryBtnActive,
-                    ]}
-                    onPress={() => setActiveCategory(cat.name)}
-                    activeOpacity={0.8}
-                  >
-                    {selected ? (
-                      <View style={styles.selectedIconCircle}>
-                        <Image
-                          source={cat.img}
-                          style={styles.categoryIconSelected}
-                        />
-                      </View>
-                    ) : (
-                      <Image source={cat.img} style={styles.categoryIcon} />
-                    )}
-                    <Text
-                      style={[
-                        styles.categoryTxt,
-                        selected && styles.categoryTxtActive,
-                      ]}
-                    >
-                      {cat.name}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
+       {foodItems.length > 0 ? (
+  <>
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={styles.categorySlider}
+    >
+      {categories.map(cat => {
+        const selected = activeCategory === cat.name;
+
+        return (
+          <TouchableOpacity
+  key={cat.name}
+  style={[
+    styles.categoryBtn,
+    { backgroundColor: selected ? '#e97f05ff' : theme.cardBackground },
+  ]}
+  onPress={() => setActiveCategory(cat.name)}
+>
+  {/* CIRCLE WRAPPER - same for active + inactive */}
+  <View style={styles.iconCircle}>
+    <Image
+      source={cat.img}
+      style={styles.categoryIcon}
+      resizeMode="stretch"
+    />
+  </View>
+
+  <Text
+    style={[
+      styles.categoryTxt,
+      { color: selected ? '#ffff' : '#FF8A00' },
+    ]}
+  >
+    {cat.name}
+  </Text>
+</TouchableOpacity>
+
+
+        );
+      })}
+    </ScrollView>
+ 
+
+                 
 
             {/* ===== FILTER TAGS ===== */}
             <FilterTags
@@ -507,9 +536,9 @@ const RestaurentDetails: React.FC = () => {
             {/* ===== RECOMMENDATION HEADER ===== */}
             <View style={styles.recommendHeaderRow}>
               <Image source={currentIcon} style={styles.recommendHeaderIcon} />
-              <Text style={styles.recommendHeaderText}>
-                Recommendation for you.
-              </Text>
+             <Text style={[styles.recommendHeaderText, { color: theme.text }]}>
+      Recommendation for you
+    </Text>
             </View>
 
             {/* FOOD GRID (Recommendation) */}
@@ -524,24 +553,25 @@ const RestaurentDetails: React.FC = () => {
             />
 
             {/* ===== BEST IN CATEGORY ===== */}
-            <View style={styles.bestBurgerHeaderRow}>
-              <Image
-                source={require('../../../../assets/popular.png')}
-                style={styles.bestBurgerHeaderIcon}
-              />
-              <Text style={styles.bestBurgerHeaderText}>
-                Best In {activeCategory}.
-              </Text>
-            </View>
-            <BestInBurger
-              foodItems={foodItems}
-              likedItems={likedItems}
-              heartScales={heartScales}
-              plusScales={plusScales}
-              handleHeartPress={handleHeartPress}
-              handlePlusPress={handlePlusPress}
-              handleFoodItemPress={handleFoodItemPress}
-            />
+          <View style={styles.bestBurgerHeaderRow}>
+  <Image
+    source={require('../../../../assets/popular.png')}
+    style={styles.bestBurgerHeaderIcon}
+  />
+  <Text style={[styles.bestBurgerHeaderText, { color: theme.text }]}>
+    Best In {activeCategory}
+  </Text> {/* <-- Properly close the Text tag */}
+</View>
+<BestInBurger
+  foodItems={foodItems}
+  likedItems={likedItems}
+  heartScales={heartScales}
+  plusScales={plusScales}
+  handleHeartPress={handleHeartPress}
+  handlePlusPress={handlePlusPress}
+  handleFoodItemPress={handleFoodItemPress}
+/>
+
           </>
         ) : (
           <EmptyState />
@@ -651,11 +681,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FAFAFA',
     borderRadius: wp('3.5%'),
     paddingHorizontal: wp('3.5%'),
     height: hp('5.5%'),
-    elevation: 1,
+    elevation: 1, // shadow for Android
+    shadowColor: '#000', // shadow for iOS
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
   },
   searchIcon: {
     width: wp('4.5%'),
@@ -713,37 +746,21 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     tintColor: '#999',
   },
-  // ===== UPDATED CATEGORY SLIDER STYLES =====
   categorySlider: {
-    paddingVertical: hp('1.5%'),
-    marginVertical: hp('0.5%'),
+    paddingVertical: hp('1.2%'),
+    marginVertical: hp('0.3%'),
     marginLeft: wp('5.5%'),
-  },
-  categorySliderContent: {
-    paddingRight: wp('5.5%'),
   },
   categoryBtn: {
     backgroundColor: '#fff',
-    borderRadius: wp('20%'),
+    borderRadius: wp('50%'),
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     marginRight: wp('3%'),
-    paddingVertical: hp('1.2%'),
-    paddingHorizontal: wp('0%'),
+    paddingVertical: hp('0.3%'),
+    paddingHorizontal: wp('3%'),
     flexDirection: 'row',
-    height: hp('6.5%'),
-    minWidth: wp('28%'),
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
+    minHeight: hp('5%'),
   },
   categoryBtnActive: {
     backgroundColor: COLORS.primary,
@@ -751,48 +768,30 @@ const styles = StyleSheet.create({
   selectedIconCircle: {
     backgroundColor: '#fff',
     borderRadius: wp('50%'),
-    width: wp('11%'),
-    height: wp('11%'),
+    width: wp('10%'),
+    height: wp('10%'),
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: wp('1.5%'),
-    marginRight: wp('2.5%'),
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.15,
-        shadowRadius: 1.5,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
+    marginRight: wp('2%'),
   },
   categoryIcon: {
-    width: wp('11%'),
-    height: wp('11%'),
-    marginLeft: wp('4%'),
-    marginRight: wp('2.5%'),
+    width: wp('10%'),
+    height: wp('10%'),
+    marginRight: wp('2%'),
   },
   categoryIconSelected: {
-    width: wp('9%'),
-    height: wp('9%'),
+    width: wp('8%'),
+    height: wp('8%'),
   },
   categoryTxt: {
     color: COLORS.primary,
-    fontSize: hp('1.8%'),
+    fontSize: hp('1.7%'),
     fontFamily: Platform.OS === 'android' ? 'Figtree-Bold' : 'Figtree',
     fontWeight: Platform.OS === 'android' ? undefined : '700',
-    letterSpacing: 0.2,
-    flex: 1,
-    textAlign: 'center',
-    marginRight: wp('3%'),
   },
   categoryTxtActive: {
     color: COLORS.secondary,
   },
-  // ===== END OF UPDATED CATEGORY SLIDER STYLES =====
   recommendHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',

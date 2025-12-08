@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Text,
@@ -9,11 +9,12 @@ import {
   SafeAreaView,
   BackHandler,
 } from 'react-native';
+import { ThemeContext } from '../theme/ThemeContext';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 const PaymentSuccess = () => {
   const navigation = useNavigation<any>();
-
+const { theme } = useContext(ThemeContext);
   // Handle Android hardware back button
   useFocusEffect(
     React.useCallback(() => {

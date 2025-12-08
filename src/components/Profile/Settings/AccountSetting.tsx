@@ -13,12 +13,13 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import { ThemeContext } from '../../../theme/ThemeContext';
+import { getFontFamily, getFontWeight } from '../../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 
 const AccountSetting = () => {
   const navigation = useNavigation<any>();
-  const { theme } = useContext(ThemeContext);
+  const {theme} = useContext(ThemeContext);
 
   const accountOptions = [
     {
@@ -26,122 +27,73 @@ const AccountSetting = () => {
       title: 'Personal Information',
       description: 'Update your name, email, and phone number',
       icon: require('../../../assets/user1.png'),
-      route: 'ProfileEdit',
+      route: 'ProfileEdit'
     },
     {
       id: 3,
       title: 'Privacy Settings',
       description: 'Control your privacy and data sharing',
       icon: require('../../../assets/privacy.png'),
-      route: 'PrivacyPolicy',
+      route: 'PrivacyPolicy'
     },
   ];
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <StatusBar
-        barStyle={theme.isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor="transparent"
-        translucent
-      />
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
+      <StatusBar barStyle={theme.isDarkMode ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
       {/* Header */}
-      <View style={[styles.header, { backgroundColor: theme.background }]}>
+      <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={require('../../../assets/back.png')}
-            style={[styles.backIcon, { tintColor: theme.text }]}
-          />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor :theme.text}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.text }]}>
-          Account Setting
-        </Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>Account Setting</Text>
         <View style={{ width: 24 }} />
       </View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.content}
-      >
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>
-          Account Management
-        </Text>
-        <Text style={[styles.sectionDescription, { color: theme.text }]}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>Account Management</Text>
+        <Text style={[styles.sectionDescription,{color : theme.text}]}>
           Manage your account settings and preferences
         </Text>
 
-        {accountOptions.map(item => (
+        {accountOptions.map((item) => (
           <TouchableOpacity
             key={item.id}
-            style={[
-              styles.optionCard,
-              {
-                backgroundColor: theme.cardBackground,
-                borderLeftColor: COLORS.primary,
-              },
-            ]}
+            style={[styles.optionCard,{backgroundColor : theme.cardBackground,borderLeftColor : COLORS.primary}]}
             onPress={() => navigation.navigate(item.route)}
           >
             <View style={styles.optionLeft}>
-              <Image
-                source={item.icon}
-                style={[styles.optionIcon, { tintColor: theme.text }]}
-              />
+              <Image source={item.icon} style={[styles.optionIcon,{tintColor : theme.text}]} />
               <View style={styles.optionText}>
-                <Text style={[styles.optionTitle, { color: theme.text }]}>
-                  {item.title}
-                </Text>
-                <Text
-                  style={[
-                    styles.optionDescription,
-                    { color: theme.textSecondary },
-                  ]}
-                >
-                  {item.description}
-                </Text>
+                <Text style={[styles.optionTitle,{color : theme.text}]}>{item.title}</Text>
+                <Text style={[styles.optionDescription,{color : theme.textSecondary}]}>{item.description}</Text>
               </View>
             </View>
-            <Image
-              source={require('../../../assets/right-arrow.png')}
-              style={[styles.arrowIcon, { tintColor: theme.text }]}
-            />
+            <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor : theme.text}]} />
           </TouchableOpacity>
         ))}
 
         {/* Delete Account Option */}
         <TouchableOpacity
-          style={[
-            styles.optionCard,
-            {
-              borderLeftColor: '#E53935',
-              backgroundColor: theme.cardBackground,
-            },
-          ]}
+          style={[styles.optionCard, { borderLeftColor: '#E53935',backgroundColor : theme.cardBackground }]}
           onPress={() => navigation.navigate('AccountManagement')}
         >
           <View style={styles.optionLeft}>
-            <Image
-              source={require('../../../assets/delete.png')}
-              style={[styles.optionIcon, { tintColor: '#E53935' }]}
+            <Image 
+              source={require('../../../assets/delete.png')} 
+              style={[styles.optionIcon, { tintColor: '#E53935' }]} 
             />
             <View style={styles.optionText}>
               <Text style={[styles.optionTitle, { color: '#E53935' }]}>
                 Delete Account
               </Text>
-              <Text
-                style={[
-                  styles.optionDescription,
-                  { color: theme.textSecondary },
-                ]}
-              >
+              <Text style={[styles.optionDescription,{color : theme.textSecondary}]}>
                 Permanently delete your account and all data
               </Text>
             </View>
           </View>
-          <Image
-            source={require('../../../assets/right-arrow.png')}
-            style={[styles.arrowIcon, { tintColor: theme.text }]}
-          />
+          <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
       </ScrollView>
     </View>
@@ -169,19 +121,22 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: width * 0.045,
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   content: {
     padding: 20,
   },
   sectionTitle: {
     fontSize: width * 0.05,
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     marginBottom: 8,
   },
   sectionDescription: {
     fontSize: width * 0.035,
-    fontFamily: 'Figtree-SemiBold',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     marginBottom: 25,
   },
   optionCard: {
@@ -218,12 +173,14 @@ const styles = StyleSheet.create({
   },
   optionTitle: {
     fontSize: width * 0.038,
-    fontFamily: 'Figtree-SemiBold',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     marginBottom: 4,
   },
   optionDescription: {
     fontSize: width * 0.03,
-    fontFamily: 'Figtree-Regular',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
   arrowIcon: {
     width: 16,

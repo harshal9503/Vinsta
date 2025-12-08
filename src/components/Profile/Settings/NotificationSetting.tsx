@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
+import font from '../../../assets/fonts';
 import { ThemeContext } from '../../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
@@ -24,7 +25,7 @@ const NotificationSetting = () => {
   const [promotional, setPromotional] = useState(false);
   const [specialOffers, setSpecialOffers] = useState(true);
   const [newFeatures, setNewFeatures] = useState(true);
-  const { theme } = useContext(ThemeContext);
+  const {theme} = useContext(ThemeContext);
 
   const notificationOptions = [
     {
@@ -72,64 +73,28 @@ const NotificationSetting = () => {
   ];
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="transparent"
-        translucent
-      />
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
-      <View style={[styles.header, { backgroundColor: theme.background }]}>
+      <View style={[styles.header,{backgroundColor  :theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={require('../../../assets/back.png')}
-            style={[styles.backIcon, { tintColor: theme.text }]}
-          />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.textSecondary }]}>
-          Notification Settings
-        </Text>
+        <Text style={[styles.headerTitle,{color : theme.textSecondary}]}>Notification Settings</Text>
         <View style={{ width: 24 }} />
       </View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.content}
-      >
-        <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>
-          Notification Preferences
-        </Text>
-        <Text
-          style={[styles.sectionDescription, { color: theme.textSecondary }]}
-        >
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
+        <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>Notification Preferences</Text>
+        <Text style={[styles.sectionDescription,{color : theme.textSecondary}]}>
           Choose what type of notifications you want to receive
         </Text>
 
-        {notificationOptions.map(item => (
-          <View
-            key={item.id}
-            style={[
-              styles.notificationRow,
-              { backgroundColor: theme.background },
-            ]}
-          >
+        {notificationOptions.map((item) => (
+          <View key={item.id} style={[styles.notificationRow,{backgroundColor : theme.background}]}>
             <View style={styles.notificationLeft}>
-              <Text
-                style={[
-                  styles.notificationTitle,
-                  { color: theme.textSecondary },
-                ]}
-              >
-                {item.title}
-              </Text>
-              <Text
-                style={[
-                  styles.notificationDescription,
-                  { color: theme.textSecondary },
-                ]}
-              >
-                {item.description}
-              </Text>
+              <Text style={[styles.notificationTitle,{color : theme.textSecondary}]}>{item.title}</Text>
+              <Text style={[styles.notificationDescription,{color : theme.textSecondary}]}>{item.description}</Text>
             </View>
             <Switch
               value={item.value}
@@ -141,9 +106,8 @@ const NotificationSetting = () => {
         ))}
 
         <View style={styles.noteContainer}>
-          <Text style={[styles.noteText, { color: '#616161' }]}>
-            Some notifications are essential for app functionality and cannot be
-            disabled.
+          <Text style={[styles.noteText,{color : '#616161'}]}>
+            Some notifications are essential for app functionality and cannot be disabled.
           </Text>
         </View>
       </ScrollView>
@@ -173,23 +137,26 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: width * 0.045,
+    fontWeight: '700',
     color: '#616161',
-    fontFamily: 'Figtree-Bold',
+    fontFamily : 'Figtree-Bold',
   },
   content: {
     padding: 20,
   },
   sectionTitle: {
     fontSize: width * 0.05,
+    fontWeight: '700',
     color: '#616161',
     marginBottom: 8,
-    fontFamily: 'Figtree-Bold',
+    fontFamily : 'Figtree-Bold',
   },
   sectionDescription: {
     fontSize: width * 0.035,
     color: '#616161',
     marginBottom: 25,
-    fontFamily: 'Figtree-Medium',
+    fontFamily : 'Figtree-Medium',
+    fontWeight  :'500'
   },
   notificationRow: {
     flexDirection: 'row',
@@ -212,12 +179,14 @@ const styles = StyleSheet.create({
     fontSize: width * 0.038,
     color: '#616161',
     marginBottom: 4,
-    fontFamily: 'Figtree-SemiBold',
+    fontFamily : 'Figtree-SemiBold',
+    fontWeight  :'600'
   },
   notificationDescription: {
     fontSize: width * 0.03,
     color: '#616161',
-    fontFamily: 'Figtree-Regular',
+    fontFamily : 'Figtree-Regular',
+    fontWeight  :'400'
   },
   noteContainer: {
     backgroundColor: '#e3f2fd',
@@ -230,7 +199,8 @@ const styles = StyleSheet.create({
     fontSize: width * 0.03,
     color: '#616161',
     textAlign: 'center',
-    fontFamily: 'Figtree-Medium',
+    fontFamily : 'Figtree-Medium',
+    fontWeight  :'400'
   },
 });
 

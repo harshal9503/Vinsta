@@ -12,6 +12,9 @@ import {
   Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useContext } from 'react';
+import { ThemeContext } from '../../theme/ThemeContext';
+
 import { COLORS } from '../../theme/colors';
 import { getFontFamily, getFontWeight } from '../../utils/fontHelper';
 
@@ -19,6 +22,8 @@ const { width, height } = Dimensions.get('window');
 
 const CartScreen = () => {
   const navigation = useNavigation<any>();
+  const { theme } = useContext(ThemeContext);
+  const isDarkMode = theme.mode === "dark";
   const [cartItems, setCartItems] = useState([
     {
       id: 1,
@@ -49,11 +54,11 @@ const CartScreen = () => {
       prev.map(item =>
         item.id === id
           ? {
-              ...item,
-              quantity: increase
-                ? item.quantity + 1
-                : Math.max(1, item.quantity - 1),
-            }
+            ...item,
+            quantity: increase
+              ? item.quantity + 1
+              : Math.max(1, item.quantity - 1),
+          }
           : item,
       ),
     );
@@ -73,9 +78,14 @@ const CartScreen = () => {
   const total = productPrice + totalTax + deliveryCharge;
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: theme.background },
+      ]}
+    >
       <StatusBar
-        barStyle="dark-content"
+        barStyle={theme.cardBackground === 'dark' ? 'light-content' : 'dark-content'}
         translucent
         backgroundColor="transparent"
       />
@@ -85,10 +95,21 @@ const CartScreen = () => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
             source={require('../../assets/back.png')}
-            style={styles.backIcon}
+            style={[
+              styles.backIcon,
+              { tintColor: theme.text }, // theme.text will be white in dark, black in light
+            ]}
           />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>My Cart</Text>
+        <Text
+          style={[
+            styles.headerTitle,
+            { color: theme.text }, // auto white in dark, black in light
+          ]}
+        >
+          My Cart
+        </Text>
+
         <View style={{ width: 20 }} />
       </View>
 
@@ -98,13 +119,41 @@ const CartScreen = () => {
       >
         {/* CART ITEMS */}
         {cartItems.map(item => (
-          <View key={item.id} style={styles.cartCard}>
+          <View
+            key={item.id}
+            style={[
+              styles.cartCard,
+              {
+                backgroundColor: theme.background,
+                borderColor: theme.borderColor,
+                borderWidth: 1,   // REQUIRED
+              },
+            ]}
+          >
+
+
             <Image source={item.img} style={styles.foodImg} />
 
             <View style={{ flex: 1, marginHorizontal: 10 }}>
-              <Text style={styles.foodName}>{item.name}</Text>
+              <Text
+                style={[
+                  styles.foodName,
+                  { color: theme.text },   // auto white in dark, black in light
+                ]}
+              >
+                {item.name}
+              </Text>
+
               <Text style={styles.foodSub}>{item.subtext}</Text>
-              <Text style={styles.foodPrice}>₹ {item.price.toFixed(2)}</Text>
+              <Text
+                style={[
+                  styles.foodPrice,
+                  { color: theme.text },  // auto white in dark, black in light
+                ]}
+              >
+                ₹ {item.price.toFixed(2)}
+              </Text>
+
 
               <View style={styles.qtyContainer}>
                 <TouchableOpacity
@@ -118,27 +167,31 @@ const CartScreen = () => {
                     },
                   ]}
                 >
-                  <Text style={[styles.qtyText, { color: COLORS.primary }]}>
-                    -
-                  </Text>
+                  <Text style={[styles.qtyText, { color: COLORS.primary }]}>-</Text>
                 </TouchableOpacity>
 
-                <Text style={styles.qtyNumber}>
+                <Text
+                  style={[
+                    styles.qtyNumber,
+                    { color: theme.text }, // white in dark mode, black in light mode
+                  ]}
+                >
                   {item.quantity < 10 ? `0${item.quantity}` : item.quantity}
                 </Text>
+
 
                 <TouchableOpacity
                   onPress={() => updateQuantity(item.id, true)}
                   style={[
                     styles.qtyBtn,
                     {
-                      backgroundColor: COLORS.primary,
+                      backgroundColor: '#fff',
                       borderWidth: 1,
                       borderColor: COLORS.primary,
                     },
                   ]}
                 >
-                  <Text style={[styles.qtyText, { color: '#fff' }]}>+</Text>
+                  <Text style={[styles.qtyText, { color: COLORS.primary }]}>+</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -153,7 +206,17 @@ const CartScreen = () => {
         ))}
 
         {/* DELIVERY SECTION */}
-        <View style={styles.deliveryCard}>
+        <View
+          style={[
+            styles.deliveryCard,
+            {
+              backgroundColor: theme.background,
+              borderColor: theme.borderColor,
+              borderWidth: 1,
+            },
+          ]}
+        >
+
           <View style={styles.deliveryHeader}>
             <Image
               source={require('../../assets/location.png')}
@@ -178,16 +241,26 @@ const CartScreen = () => {
           {/* PRICING */}
           <View style={{ marginTop: 15 }}>
             <View style={styles.priceRow}>
-              <Text style={styles.priceLabel}>Product price</Text>
-              <Text style={styles.priceValue}>₹ {productPrice.toFixed(2)}</Text>
+              <Text style={[styles.priceLabel, { color: theme.text }]}>
+                Product price
+              </Text>
+              <Text style={[styles.priceValue, { color: theme.text }]}>
+                ₹ {productPrice.toFixed(2)}
+              </Text>
             </View>
             <View style={styles.priceRow}>
-              <Text style={styles.priceLabel}>Total Tax</Text>
-              <Text style={styles.priceValue}>₹ {totalTax.toFixed(2)}</Text>
+              <Text style={[styles.priceLabel, { color: theme.text }]}>
+                Total Tax
+              </Text>
+              <Text style={[styles.priceValue, { color: theme.text }]}>
+                ₹ {totalTax.toFixed(2)}
+              </Text>
             </View>
             <View style={styles.priceRow}>
-              <Text style={styles.priceLabel}>Delivery Charge's</Text>
-              <Text style={styles.priceValue}>
+              <Text style={[styles.priceLabel, { color: theme.text }]}>
+                Delivery Charge's
+              </Text>
+              <Text style={[styles.priceValue, { color: theme.text }]}>
                 ₹ {deliveryCharge.toFixed(2)}
               </Text>
             </View>
@@ -196,19 +269,47 @@ const CartScreen = () => {
           <View style={styles.divider} />
 
           <View style={styles.priceRow}>
-            <Text style={styles.subtotalLabel}>Subtotal</Text>
+            <Text style={[styles.subtotalLabel, { color: theme.text }]}>
+              Subtotal
+            </Text>
+
             <Text style={styles.subtotalValue}>₹ {total.toFixed(2)}</Text>
           </View>
 
           <TextInput
             placeholder="Promo code or voucher"
-            placeholderTextColor="#BDBDBD"
-            style={styles.input}
+            placeholderTextColor={theme.textSecondary}
+            style={[
+              styles.input,
+              {
+                color: theme.text,
+                backgroundColor: theme.card,
+                borderColor: theme.borderColor,
+                borderWidth: 1,
+              },
+            ]}
           />
 
-          <TouchableOpacity style={styles.couponBtn}>
-            <Text style={styles.couponText}>Apply Coupen Code</Text>
+          <TouchableOpacity
+            style={[
+              styles.couponBtn,
+              {
+                backgroundColor: theme.mode === 'dark' ? '#555555' : theme.primary, // grey in dark, orange in light
+                borderColor: theme.borderColor,
+                borderWidth: 1,
+              },
+            ]}
+          >
+            <Text
+              style={[
+                styles.couponText,
+                { color: theme.text }, // text white in both modes
+              ]}
+            >
+              Apply Coupon Code
+            </Text>
           </TouchableOpacity>
+
 
           <TouchableOpacity
             onPress={() => navigation.navigate('Payment')}
@@ -227,7 +328,7 @@ export default CartScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#fff'
   },
   header: {
     flexDirection: 'row',
@@ -240,7 +341,7 @@ const styles = StyleSheet.create({
   backIcon: {
     width: 22,
     height: 22,
-    tintColor: '#000',
+    tintColor: '#000'
   },
   headerTitle: {
     fontSize: 18,
@@ -266,7 +367,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 10,
-    resizeMode: 'cover',
+    resizeMode: 'cover'
   },
   foodName: {
     fontSize: 18,
@@ -316,7 +417,7 @@ const styles = StyleSheet.create({
   deleteIcon: {
     width: 20,
     height: 20,
-    tintColor: '#FF6B6B',
+    tintColor: '#FF6B6B'
   },
 
   deliveryCard: {
@@ -387,7 +488,7 @@ const styles = StyleSheet.create({
   divider: {
     height: 1,
     backgroundColor: '#E0E0E0',
-    marginVertical: 10,
+    marginVertical: 10
   },
 
   subtotalLabel: {

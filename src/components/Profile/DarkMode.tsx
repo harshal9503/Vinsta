@@ -1,7 +1,3 @@
-// ============================================================
-// DarkMode.tsx  — Fixed Version (Figtree font applied everywhere)
-// ============================================================
-
 import React, { useState, useContext, useCallback } from 'react';
 import {
   View,
@@ -18,7 +14,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { ThemeContext } from '../../theme/ThemeContext';
 import { COLORS } from '../../theme/colors';
-import { getFontFamily } from '../../utils/fontHelper';
+import { getFontFamily, getFontWeight } from '../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -29,6 +25,7 @@ const DarkMode = () => {
   const [notifications, setNotifications] = useState(true);
   const [marketingEmails, setMarketingEmails] = useState(false);
 
+  // Popup States
   const [popupVisible, setPopupVisible] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
 
@@ -45,24 +42,21 @@ const DarkMode = () => {
   };
 
   const handleResetPreferences = () => {
-    setPopupMessage(
-      'Are you sure you want to reset all preferences to default?',
-    );
+    setPopupMessage('Are you sure you want to reset all preferences to default?');
     setPopupVisible(true);
   };
 
   const confirmResetPreferences = () => {
     setNotifications(true);
     setMarketingEmails(false);
+
     if (isDarkMode) toggleDarkMode();
+
     showPopup('All preferences have been reset to default.');
   };
 
   const onPopupButtonPress = () => {
-    if (
-      popupMessage ===
-      'Are you sure you want to reset all preferences to default?'
-    ) {
+    if (popupMessage === 'Are you sure you want to reset all preferences to default?') {
       setPopupVisible(false);
       setTimeout(confirmResetPreferences, 200);
     } else {
@@ -72,14 +66,12 @@ const DarkMode = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
+      
       {/* Header */}
       <View
         style={[
           styles.header,
-          {
-            backgroundColor: theme.background,
-            borderBottomColor: theme.borderColor,
-          },
+          { backgroundColor: theme.background, borderBottomColor: theme.borderColor },
         ]}
       >
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -89,9 +81,7 @@ const DarkMode = () => {
           />
         </TouchableOpacity>
 
-        <Text style={[styles.headerTitle, { color: theme.text }]}>
-          Appearance
-        </Text>
+        <Text style={[styles.headerTitle, { color: theme.text }]}>Appearance</Text>
 
         <View style={{ width: 22 }} />
       </View>
@@ -103,28 +93,17 @@ const DarkMode = () => {
       >
         {/* Theme Section */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>
-            Theme
-          </Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Theme</Text>
 
-          <View
-            style={[
-              styles.settingItem,
-              { backgroundColor: theme.cardBackground },
-            ]}
-          >
+          <View style={[styles.settingItem, { backgroundColor: theme.cardBackground }]}>
             <View style={styles.settingInfo}>
               <Image
                 source={require('../../assets/light.png')}
                 style={[styles.settingIcon, { tintColor: theme.text }]}
               />
               <View style={styles.settingTextContainer}>
-                <Text style={[styles.settingTitle, { color: theme.text }]}>
-                  Dark Mode
-                </Text>
-                <Text
-                  style={[styles.settingDescription, { color: theme.text }]}
-                >
+                <Text style={[styles.settingTitle, { color: theme.text }]}>Dark Mode</Text>
+                <Text style={[styles.settingDescription, { color: theme.text }]}>
                   Switch between light and dark theme
                 </Text>
               </View>
@@ -142,16 +121,9 @@ const DarkMode = () => {
 
         {/* Notifications */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>
-            Notifications
-          </Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Notifications</Text>
 
-          <View
-            style={[
-              styles.settingItem,
-              { backgroundColor: theme.cardBackground },
-            ]}
-          >
+          <View style={[styles.settingItem, { backgroundColor: theme.cardBackground }]}>
             <View style={styles.settingInfo}>
               <Image
                 source={require('../../assets/notification.png')}
@@ -161,9 +133,7 @@ const DarkMode = () => {
                 <Text style={[styles.settingTitle, { color: theme.text }]}>
                   Push Notifications
                 </Text>
-                <Text
-                  style={[styles.settingDescription, { color: theme.text }]}
-                >
+                <Text style={[styles.settingDescription, { color: theme.text }]}>
                   Receive app notifications and updates
                 </Text>
               </View>
@@ -181,28 +151,19 @@ const DarkMode = () => {
 
         {/* Email Preferences */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>
-            Email Preferences
-          </Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Email Preferences</Text>
 
-          <View
-            style={[
-              styles.settingItem,
-              { backgroundColor: theme.cardBackground },
-            ]}
-          >
+          <View style={[styles.settingItem, { backgroundColor: theme.cardBackground }]}>
             <View style={styles.settingInfo}>
               <Image
                 source={require('../../assets/email.png')}
-                style={[styles.settingIcon, { tintColor: theme.text }]}
+                style={[styles.settingIcon,{ tintColor: theme.text }]}
               />
               <View style={styles.settingTextContainer}>
                 <Text style={[styles.settingTitle, { color: theme.text }]}>
                   Marketing Emails
                 </Text>
-                <Text
-                  style={[styles.settingDescription, { color: theme.text }]}
-                >
+                <Text style={[styles.settingDescription, { color: theme.text }]}>
                   Receive promotional emails and offers
                 </Text>
               </View>
@@ -223,18 +184,12 @@ const DarkMode = () => {
           style={[styles.resetBtn, { backgroundColor: theme.cardBackground }]}
           onPress={handleResetPreferences}
         >
-          <Text style={[styles.resetText, { color: '#FF3B30' }]}>
-            Reset to Default
-          </Text>
+          <Text style={[styles.resetText, { color: '#FF3B30' }]}>Reset to Default</Text>
         </TouchableOpacity>
 
         {/* App Info */}
-        <View
-          style={[styles.appInfoSection, { borderTopColor: theme.borderColor }]}
-        >
-          <Text style={[styles.appInfoTitle, { color: theme.text }]}>
-            Vinsta App
-          </Text>
+        <View style={[styles.appInfoSection, { borderTopColor: theme.borderColor }]}>
+          <Text style={[styles.appInfoTitle, { color: theme.text }]}>Vinsta App</Text>
           <Text style={[styles.appInfoVersion, { color: theme.text }]}>
             Version 1.0.0
           </Text>
@@ -244,75 +199,41 @@ const DarkMode = () => {
       {/* Popup Modal */}
       <Modal transparent visible={popupVisible} animationType="fade">
         <View style={styles.popupOverlay}>
-          <View
-            style={[styles.popupBox, { backgroundColor: theme.cardBackground }]}
-          >
-            <TouchableOpacity
-              style={styles.closeIconWrapper}
-              onPress={closePopup}
-            >
+          <View style={[styles.popupBox, { backgroundColor: theme.cardBackground }]}>
+            <TouchableOpacity style={styles.closeIconWrapper} onPress={closePopup}>
               <Image
                 source={require('../../assets/close.png')}
                 style={[styles.closeIcon, { tintColor: theme.text }]}
               />
             </TouchableOpacity>
 
-            <Text style={[styles.popupText, { color: theme.text }]}>
-              {popupMessage}
-            </Text>
+            <Text style={[styles.popupText, { color: theme.text }]}>{popupMessage}</Text>
 
             <View style={styles.popupButtonsRow}>
               {popupMessage ===
               'Are you sure you want to reset all preferences to default?' ? (
                 <>
                   <TouchableOpacity
-                    style={[
-                      styles.popupButton,
-                      styles.popupCancelButton,
-                      { backgroundColor: theme.borderColor },
-                    ]}
+                    style={[styles.popupButton, styles.popupCancelButton, 
+                      { backgroundColor: theme.borderColor }]}
                     onPress={closePopup}
                   >
-                    <Text
-                      style={[styles.popupButtonText, { color: theme.text }]}
-                    >
-                      Cancel
-                    </Text>
+                    <Text style={[styles.popupButtonText, { color: theme.text }]}>Cancel</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity
-                    style={[
-                      styles.popupButton,
-                      { backgroundColor: COLORS.primary },
-                    ]}
+                  <TouchableOpacity 
+                    style={[styles.popupButton, { backgroundColor: COLORS.primary }]} 
                     onPress={onPopupButtonPress}
                   >
-                    <Text
-                      style={[
-                        styles.popupButtonText,
-                        { color: theme.background },
-                      ]}
-                    >
-                      Reset
-                    </Text>
+                    <Text style={[styles.popupButtonText, { color: theme.background }]}>Reset</Text>
                   </TouchableOpacity>
                 </>
               ) : (
-                <TouchableOpacity
-                  style={[
-                    styles.popupButton,
-                    { backgroundColor: COLORS.primary },
-                  ]}
+                <TouchableOpacity 
+                  style={[styles.popupButton, { backgroundColor: COLORS.primary }]} 
                   onPress={onPopupButtonPress}
                 >
-                  <Text
-                    style={[
-                      styles.popupButtonText,
-                      { color: theme.background },
-                    ]}
-                  >
-                    OK
-                  </Text>
+                  <Text style={[styles.popupButtonText, { color: theme.background }]}>OK</Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -325,9 +246,7 @@ const DarkMode = () => {
 
 export default DarkMode;
 
-// ============================================================
-// STYLES (fontWeight REMOVED everywhere – Figtree works on all devices)
-// ============================================================
+/* ========================= STYLES ========================= */
 
 const styles = StyleSheet.create({
   container: {
@@ -354,6 +273,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: width * 0.045,
     fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
 
   scrollContent: {
@@ -368,6 +288,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: width * 0.04,
     fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     marginBottom: 15,
     marginLeft: 5,
   },
@@ -403,18 +324,21 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
 
-  settingTextContainer: {
-    flex: 1,
+  settingTextContainer: { 
+    flex: 1 
   },
 
   settingTitle: {
     fontSize: width * 0.038,
     fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
+    marginBottom: 4,
   },
 
   settingDescription: {
     fontSize: width * 0.032,
     fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
 
   resetBtn: {
@@ -429,6 +353,7 @@ const styles = StyleSheet.create({
   resetText: {
     fontSize: width * 0.038,
     fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
 
   appInfoSection: {
@@ -441,11 +366,13 @@ const styles = StyleSheet.create({
   appInfoTitle: {
     fontSize: width * 0.038,
     fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
 
   appInfoVersion: {
     fontSize: width * 0.032,
     fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
     marginBottom: 8,
   },
 
@@ -470,6 +397,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 16,
     fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
 
   popupButton: {
@@ -484,6 +412,7 @@ const styles = StyleSheet.create({
   popupButtonText: {
     fontSize: width * 0.04,
     fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
 
   closeIconWrapper: {

@@ -14,6 +14,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import { ThemeContext } from '../../../theme/ThemeContext';
+import { getFontFamily, getFontWeight } from '../../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -23,7 +24,7 @@ const SoundAndVoice = () => {
   const [voiceGuidance, setVoiceGuidance] = useState(false);
   const [notificationSound, setNotificationSound] = useState(true);
   const [hapticFeedback, setHapticFeedback] = useState(true);
-  const { theme } = useContext(ThemeContext);
+  const {theme} = useContext(ThemeContext);
 
   const soundOptions = [
     {
@@ -57,57 +58,28 @@ const SoundAndVoice = () => {
   ];
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <StatusBar
-        barStyle={theme.isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor="transparent"
-        translucent
-      />
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
+      <StatusBar barStyle={theme.isDarkMode ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
-      <View style={[styles.header, { backgroundColor: theme.background }]}>
+      <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={require('../../../assets/back.png')}
-            style={[styles.backIcon, { tintColor: theme.text }]}
-          />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.text }]}>
-          Sound & Voice
-        </Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>Sound & Voice</Text>
         <View style={{ width: 24 }} />
       </View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.content}
-      >
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>
-          Audio Settings
-        </Text>
-        <Text style={[styles.sectionDescription, { color: theme.text }]}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
+        <Text style={[styles.sectionTitle,{color : theme.text}]}>Audio Settings</Text>
+        <Text style={[styles.sectionDescription,{color : theme.text}]}>
           Customize your app's sound and voice preferences
         </Text>
 
-        {soundOptions.map(item => (
-          <View
-            key={item.id}
-            style={[
-              styles.settingRow,
-              { backgroundColor: theme.cardBackground },
-            ]}
-          >
+        {soundOptions.map((item) => (
+          <View key={item.id} style={[styles.settingRow,{backgroundColor :theme.cardBackground}]}>
             <View style={styles.settingLeft}>
-              <Text style={[styles.settingTitle, { color: theme.text }]}>
-                {item.title}
-              </Text>
-              <Text
-                style={[
-                  styles.settingDescription,
-                  { color: theme.textSecondary },
-                ]}
-              >
-                {item.description}
-              </Text>
+              <Text style={[styles.settingTitle,{color : theme.text}]}>{item.title}</Text>
+              <Text style={[styles.settingDescription,{color : theme.textSecondary}]}>{item.description}</Text>
             </View>
             <Switch
               value={item.value}
@@ -143,19 +115,22 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: width * 0.045,
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   content: {
     padding: 20,
   },
   sectionTitle: {
     fontSize: width * 0.05,
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     marginBottom: 8,
   },
   sectionDescription: {
     fontSize: width * 0.035,
-    fontFamily: 'Figtree-Medium',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
     marginBottom: 25,
   },
   settingRow: {
@@ -180,12 +155,14 @@ const styles = StyleSheet.create({
   },
   settingTitle: {
     fontSize: width * 0.038,
-    fontFamily: 'Figtree-SemiBold',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
     marginBottom: 4,
   },
   settingDescription: {
     fontSize: width * 0.03,
-    fontFamily: 'Figtree-Regular',
+    fontFamily: getFontFamily('Regular'),
+    fontWeight: getFontWeight('Regular'),
   },
 });
 

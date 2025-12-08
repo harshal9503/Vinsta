@@ -14,6 +14,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import { ThemeContext } from '../../../theme/ThemeContext';
+import { getFontFamily, getFontWeight } from '../../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -22,7 +23,7 @@ const Settings = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
   const [popupAction, setPopupAction] = useState<null | (() => void)>(null);
-  const { theme } = useContext(ThemeContext);
+  const {theme} = useContext(ThemeContext);
 
   /** ─── Function to open confirmation popup ─── **/
   const openPopup = (message: string, onConfirm: () => void) => {
@@ -33,101 +34,43 @@ const Settings = () => {
 
   /** ─── Settings options list ─── **/
   const settingsOptions = [
-    {
-      id: 1,
-      label: 'Account Setting',
-      icon: require('../../../assets/ac.png'),
-      route: 'AccountSetting',
-    },
-    {
-      id: 2,
-      label: "Sound's and voice",
-      icon: require('../../../assets/sound.png'),
-      route: 'SoundAndVoice',
-    },
-    {
-      id: 3,
-      label: 'Language',
-      icon: require('../../../assets/language.png'),
-      route: 'Language',
-    },
-    {
-      id: 4,
-      label: 'Notification Setting',
-      icon: require('../../../assets/notisetting.png'),
-      route: 'NotificationSetting',
-    },
-    {
-      id: 5,
-      label: 'Account management',
-      icon: require('../../../assets/acmanage.png'),
-      route: 'AccountManagement',
-    },
-    {
-      id: 6,
-      label: 'About us',
-      icon: require('../../../assets/aboutus.png'),
-      route: 'AboutUs',
-    },
-    {
-      id: 7,
-      label: 'Share app',
-      icon: require('../../../assets/share1.png'),
-      route: 'ShareApp',
-    },
+    { id: 1, label: 'Account Setting', icon: require('../../../assets/ac.png'), route: 'AccountSetting' },
+    { id: 2, label: "Sound's and voice", icon: require('../../../assets/sound.png'), route: 'SoundAndVoice' },
+    { id: 3, label: 'Language', icon: require('../../../assets/language.png'), route: 'Language' },
+    { id: 4, label: 'Notification Setting', icon: require('../../../assets/notisetting.png'), route: 'NotificationSetting' },
+    { id: 5, label: 'Account management', icon: require('../../../assets/acmanage.png'), route: 'AccountManagement' },
+    { id: 6, label: 'About us', icon: require('../../../assets/aboutus.png'), route: 'AboutUs' },
+    { id: 7, label: 'Share app', icon: require('../../../assets/share1.png'), route: 'ShareApp' },
   ];
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <StatusBar
-        barStyle={theme.isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor="transparent"
-        translucent
-      />
+    <View style={[styles.container,{backgroundColor : theme.background}]}>
+      <StatusBar barStyle={theme.isDarkMode ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
       {/* ===== HEADER ===== */}
-      <View style={[styles.header, { backgroundColor: theme.background }]}>
+      <View style={[styles.header,{backgroundColor : theme.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={require('../../../assets/back.png')}
-            style={[styles.backIcon, { tintColor: theme.text }]}
-          />
+          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.text }]}>
-          Settings
-        </Text>
+        <Text style={[styles.headerTitle,{color : theme.text}]}>Settings</Text>
         <View style={{ width: 24 }} />
       </View>
 
       {/* ===== OPTIONS LIST ===== */}
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 60 }}
-      >
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 60 }}>
         <View style={styles.optionContainer}>
           {settingsOptions.map(item => (
             <TouchableOpacity
               key={item.id}
-              style={[
-                styles.optionRow,
-                { borderBottomColor: theme.borderColor },
-              ]}
+              style={[styles.optionRow, { borderBottomColor: theme.borderColor }]}
               activeOpacity={0.7}
               onPress={() => navigation.navigate(item.route)}
             >
               <View style={styles.optionLeft}>
-                <Image
-                  source={item.icon}
-                  style={[styles.optionIcon, { tintColor: theme.text }]}
-                />
-                <Text style={[styles.optionLabel, { color: theme.text }]}>
-                  {item.label}
-                </Text>
+                <Image source={item.icon} style={[styles.optionIcon,{tintColor : theme.text}]} />
+                <Text style={[styles.optionLabel,{color : theme.text}]}>{item.label}</Text>
               </View>
-              <Image
-                source={require('../../../assets/right-arrow.png')}
-                style={[styles.arrowIcon, { tintColor: theme.text }]}
-              />
+              <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor : theme.text}]} />
             </TouchableOpacity>
           ))}
 
@@ -136,19 +79,12 @@ const Settings = () => {
             style={[styles.optionRow, { borderBottomColor: theme.borderColor }]}
             activeOpacity={0.7}
             onPress={() =>
-              openPopup('Are you sure you want to logout?', () =>
-                navigation.navigate('SignIn'),
-              )
+              openPopup('Are you sure you want to logout?', () => navigation.navigate('SignIn'))
             }
           >
             <View style={styles.optionLeft}>
-              <Image
-                source={require('../../../assets/logout.png')}
-                style={[styles.optionIcon, { tintColor: '#E53935' }]}
-              />
-              <Text style={[styles.optionLabel, { color: '#E53935' }]}>
-                Log out
-              </Text>
+              <Image source={require('../../../assets/logout.png')} style={[styles.optionIcon,{tintColor : '#E53935'}]} />
+              <Text style={[styles.optionLabel, { color: '#E53935' }]}>Log out</Text>
             </View>
           </TouchableOpacity>
 
@@ -176,43 +112,27 @@ const Settings = () => {
         onRequestClose={() => setShowPopup(false)}
       >
         <View style={styles.popupOverlay}>
-          <View
-            style={[styles.popupBox, { backgroundColor: theme.cardBackground }]}
-          >
-            <Text style={[styles.popupText, { color: theme.text }]}>
-              {popupMessage}
-            </Text>
+          <View style={[styles.popupBox,{backgroundColor  : theme.cardBackground}]}>
+            <Text style={[styles.popupText,{color : theme.text}]}>{popupMessage}</Text>
 
             <View style={styles.popupButtonsRow}>
               {/* CANCEL */}
               <TouchableOpacity
-                style={[
-                  styles.popupButton,
-                  { backgroundColor: theme.borderColor },
-                ]}
+                style={[styles.popupButton, { backgroundColor: theme.borderColor }]}
                 onPress={() => setShowPopup(false)}
               >
-                <Text style={[styles.popupButtonText, { color: theme.text }]}>
-                  Cancel
-                </Text>
+                <Text style={[styles.popupButtonText, { color: theme.text }]}>Cancel</Text>
               </TouchableOpacity>
 
               {/* CONFIRM */}
               <TouchableOpacity
-                style={[
-                  styles.popupButton,
-                  { backgroundColor: COLORS.primary },
-                ]}
+                style={[styles.popupButton, { backgroundColor: COLORS.primary }]}
                 onPress={() => {
                   setShowPopup(false);
                   popupAction && popupAction();
                 }}
               >
-                <Text
-                  style={[styles.popupButtonText, { color: theme.background }]}
-                >
-                  OK
-                </Text>
+                <Text style={[styles.popupButtonText,{color : theme.background}]}>OK</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -248,7 +168,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: width * 0.045,
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
 
   /** OPTION LIST **/
@@ -275,7 +196,8 @@ const styles = StyleSheet.create({
   },
   optionLabel: {
     fontSize: width * 0.037,
-    fontFamily: 'Figtree-SemiBold',
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   arrowIcon: {
     width: 14,
@@ -309,7 +231,8 @@ const styles = StyleSheet.create({
     fontSize: width * 0.04,
     textAlign: 'center',
     marginBottom: 20,
-    fontFamily: 'Figtree-Medium',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   popupButtonsRow: {
     flexDirection: 'row',
@@ -324,7 +247,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   popupButtonText: {
-    fontFamily: 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
     fontSize: width * 0.04,
   },
 });

@@ -1,13 +1,18 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
-import { COLORS } from '../../../theme/colors'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useContext } from 'react';
+import { COLORS } from '../../../theme/colors';
 import { getFontFamily, getFontWeight } from '../../../utils/fontHelper';
-
+import { ThemeContext } from '../../../theme/ThemeContext';
 
 const PastOrders = ({ order, navigateToOrderDetail, openRatingModal }) => {
+  const { theme, isDarkMode } = useContext(ThemeContext);
+
   return (
     <TouchableOpacity
-      style={styles.orderCard}
+      style={[
+        styles.orderCard,
+        { backgroundColor: theme.cardBackground }
+      ]}
       onPress={() => navigateToOrderDetail(order)}
       activeOpacity={0.7}
     >
@@ -15,30 +20,50 @@ const PastOrders = ({ order, navigateToOrderDetail, openRatingModal }) => {
         <Image source={order.img} style={styles.foodImg} />
 
         <View style={{ flex: 1, marginLeft: 10 }}>
-          <Text style={styles.orderId}>{order.id}</Text>
-          <Text style={styles.orderTitle}>{order.title}</Text>
-          <Text style={styles.orderMeta}>
+          <Text style={[styles.orderId, { color: COLORS.primary }]}>
+            {order.id}
+          </Text>
+
+          <Text style={[styles.orderTitle, { color: theme.text }]}>
+            {order.title}
+          </Text>
+
+          <Text style={[styles.orderMeta, { color: theme.textSecondary }]}>
             {order.date} • {order.items}{' '}
             <Text style={{ color: 'green' }}>• Delivered</Text>
           </Text>
         </View>
 
-        <Text style={styles.price}>₹ {order.price.toFixed(2)}</Text>
+        <Text style={[styles.price, { color: theme.text }]}>
+          ₹ {order.price.toFixed(2)}
+        </Text>
       </View>
 
+      {/* BUTTONS */}
       <View style={styles.buttonRow}>
         <TouchableOpacity
-          style={styles.cancelBtn}
+          style={[
+            styles.cancelBtn,
+            {
+              backgroundColor: theme.cardBackground,
+              borderColor: isDarkMode ? '#444' : '#ddd'
+            }
+          ]}
           onPress={(e) => {
             e.stopPropagation();
             openRatingModal();
           }}
         >
-          <Text style={styles.cancelText}>Rate</Text>
+          <Text style={[styles.cancelText, { color: theme.text }]}>
+            Rate
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.trackBtn}
+          style={[
+            styles.trackBtn,
+            { backgroundColor: COLORS.primary }
+          ]}
           onPress={(e) => {
             e.stopPropagation();
             navigateToOrderDetail(order);
@@ -48,111 +73,72 @@ const PastOrders = ({ order, navigateToOrderDetail, openRatingModal }) => {
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
-  )
-}
+  );
+};
 
-
-export default PastOrders
+export default PastOrders;
 
 const styles = StyleSheet.create({
-     orderCard: {
-        backgroundColor: '#fff',
-        marginHorizontal: 20,
-        marginBottom: 16,
-        borderRadius: 14,
-        elevation: 3,
-        padding: 14,
-    },
-    foodImg: { width: 50, height: 50, borderRadius: 8 },
-    orderTopRow: { flexDirection: 'row', alignItems: 'center' },
-    orderId: {
-        color: COLORS.primary,
-        fontSize: 13,
-        fontFamily: getFontFamily('SemiBold'),
-        fontWeight: getFontWeight('SemiBold'),
-    },
-    orderTitle: {
-        fontSize: 15,
-        color: '#000',
-        fontFamily: getFontFamily('Bold'),
-        fontWeight: getFontWeight('Bold'),
-    },
-    orderMeta: {
-        color: '#666',
-        fontSize: 12,
-        fontFamily: getFontFamily('Medium'),
-        fontWeight: getFontWeight('Medium'),
-    },
-    price: {
-        fontSize: 15,
-        color: '#000',
-        fontFamily: getFontFamily('Bold'),
-        fontWeight: getFontWeight('Bold'),
-    },
+  orderCard: {
+    marginHorizontal: 20,
+    marginBottom: 16,
+    borderRadius: 14,
+    elevation: 3,
+    padding: 14,
+  },
+  foodImg: { width: 50, height: 50, borderRadius: 8 },
+  orderTopRow: { flexDirection: 'row', alignItems: 'center' },
 
-    orderBottomRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 10,
-    },
-    estimateText: {
-        fontSize: 12,
-        color: '#666',
-        fontFamily: getFontFamily('Medium'),
-        fontWeight: getFontWeight('Medium'),
-    },
-    nowText: {
-        fontSize: 12,
-        color: '#666',
-        textAlign: 'right',
-        fontFamily: getFontFamily('Medium'),
-        fontWeight: getFontWeight('Medium'),
-    },
-    time: {
-        fontSize: 14,
-        color: '#000',
-        fontFamily: getFontFamily('Medium'),
-        fontWeight: getFontWeight('Medium'),
-    },
-    statusText: {
-        color: '#000',
-        fontSize: 13,
-        textAlign: 'right',
-        fontFamily: getFontFamily('Medium'),
-        fontWeight: getFontWeight('Medium'),
-    },
+  orderId: {
+    fontSize: 13,
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
+  },
+  orderTitle: {
+    fontSize: 15,
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
+  orderMeta: {
+    fontSize: 12,
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+  },
+  price: {
+    fontSize: 15,
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
 
-    buttonRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 10,
-    },
-    cancelBtn: {
-        flex: 1,
-        marginRight: 6,
-        backgroundColor: '#fff',
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        paddingVertical: 10,
-        alignItems: 'center',
-    },
-    trackBtn: {
-        flex: 1,
-        marginLeft: 6,
-        backgroundColor: COLORS.primary,
-        borderRadius: 8,
-        paddingVertical: 10,
-        alignItems: 'center',
-    },
-    cancelText: {
-        color: '#000',
-        fontFamily: getFontFamily('Bold'),
-        fontWeight: getFontWeight('Bold'),
-    },
-    trackText: {
-        color: '#fff',
-        fontFamily: getFontFamily('Bold'),
-        fontWeight: getFontWeight('Bold'),
-    },
-})
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+
+  cancelBtn: {
+    flex: 1,
+    marginRight: 6,
+    borderRadius: 8,
+    borderWidth: 1,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  trackBtn: {
+    flex: 1,
+    marginLeft: 6,
+    borderRadius: 8,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+
+  cancelText: {
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
+  trackText: {
+    color: '#fff',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
+});
