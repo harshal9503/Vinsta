@@ -1,195 +1,198 @@
-import { Dimensions, Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext, useState } from 'react'
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import {
+  Dimensions,
+  Image,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, { useContext, useState } from 'react';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import { COLORS } from '../../../theme/colors';
 import { ThemeContext } from '../../../theme/ThemeContext';
-const { width, height } = Dimensions.get('window');
 
- const isTablet = width >= 768;
-    const isSmallScreen = width < 380;
-    const screenRatio = width / height;
-    const isIOS = Platform.OS === 'ios';
+const { width } = Dimensions.get('window');
+const isTablet = width >= 768;
 
-    const categories = [
-        { name: 'Burger', img: require('../../../assets/burger.png') },
-        { name: 'Mexican', img: require('../../../assets/burger.png') },
-        { name: 'Asian', img: require('../../../assets/burger.png') },
-        { name: 'Donut', img: require('../../../assets/donut.png') },
-    ];    
-    // Calculate responsive dimensions with iOS optimizations
-   
-    // iOS-specific font scaling
-    const fontScale = size => {
-      if (isIOS) {
-        return isTablet ? size * 0.85 : size * 0.95;
-      }
-      return isTablet ? size * 0.85 : size;
-    };
-    
-    // iOS-specific dimension scaling
-    const scaleSize = size => {
-      if (isIOS) {
-        return isTablet ? size * 0.9 : size * 1.02;
-      }
-      return size;
-    };
-    
-    // ✅ UNIVERSAL Font family helper with proper iOS and Android support
-    const getFontFamily = (weight = 'Regular') => {
-      if (Platform.OS === 'ios') {
-        // iOS uses base font family name + fontWeight property
-        return 'Figtree';
-      } else {
-        // Android needs specific font file names
-        const fontMap = {
-          '100': 'Figtree-Thin',
-          '200': 'Figtree-ExtraLight',
-          '300': 'Figtree-Light',
-          '400': 'Figtree-Regular',
-          '500': 'Figtree-Medium',
-          '600': 'Figtree-SemiBold',
-          '700': 'Figtree-Bold',
-          '800': 'Figtree-ExtraBold',
-          '900': 'Figtree-Black',
-          'Thin': 'Figtree-Thin',
-          'ExtraLight': 'Figtree-ExtraLight',
-          'Light': 'Figtree-Light',
-          'Regular': 'Figtree-Regular',
-          'Medium': 'Figtree-Medium',
-          'SemiBold': 'Figtree-SemiBold',
-          'Bold': 'Figtree-Bold',
-          'ExtraBold': 'Figtree-ExtraBold',
-          'Black': 'Figtree-Black',
-        };
-        return fontMap[weight] || 'Figtree-Regular';
-      }
-    };
-    
-    // ✅ Get fontWeight for iOS (Android ignores this)
-    const getFontWeight = (weight = 'Regular') => {
-      if (Platform.OS === 'android') {
-        return undefined; // Android doesn't use fontWeight with custom fonts
-      }
-      
-      // iOS fontWeight mapping
-      const weightMap = {
-        'Thin': '100',
-        'ExtraLight': '200',
-        'Light': '300',
-        'Regular': '400',
-        'Medium': '500',
-        'SemiBold': '600',
-        'Bold': '700',
-        'ExtraBold': '800',
-        'Black': '900',
-        '100': '100',
-        '200': '200',
-        '300': '300',
-        '400': '400',
-        '500': '500',
-        '600': '600',
-        '700': '700',
-        '800': '800',
-        '900': '900',
-      };
-      return weightMap[weight] || '400';
-    };
-    
-    // ✅ Complete font style helper
-    const getTextStyle = (weight = 'Regular') => {
-      return {
-        fontFamily: getFontFamily(weight),
-        ...(Platform.OS === 'ios' && { fontWeight: getFontWeight(weight) }),
-        includeFontPadding: false,
-        textAlignVertical: 'center',
-      };
-    };
-    
+const categories = [
+  { name: 'Burger', img: require('../../../assets/burger.png') },
+  { name: 'Mexican', img: require('../../../assets/mexican1.png') },
+  { name: 'Asian', img: require('../../../assets/asian.png') },
+  { name: 'Burgerr', img: require('../../../assets/burger.png') },
+];
+
 const Categories = () => {
-      const [selectedCategory, setSelectedCategory] = useState('Burger');
-      const {theme} = useContext(ThemeContext);
-    
-    return (
-        <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.categorySliderContent}
-            bounces={false}
-        >
-            {categories.map(cat => (
-                <TouchableOpacity
-                    key={cat.name}
-                    style={[
-                        styles.categoryBtn,
-                        {backgroundColor : theme.cardBackground},
-                        selectedCategory === cat.name && styles.categoryBtnActive,
-                    ]}
-                    onPress={() => setSelectedCategory(cat.name)}
-                    activeOpacity={0.8}
-                >
-                    <Image
-                        source={cat.img}
-                        style={styles.categoryIcon}
-                        resizeMode="contain"
-                    />
-                    <Text
-                        style={[
-                            styles.categoryTxt,
-                            selectedCategory === cat.name && styles.categoryTxtActive,
-                        ]}
-                    >
-                        {cat.name}
-                    </Text>
-                </TouchableOpacity>
-            ))}
-        </ScrollView>
-    )
-}
+  const [selectedCategory, setSelectedCategory] = useState('Burger');
+  const { theme, isDarkMode } = useContext(ThemeContext);
 
-export default Categories
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={styles.categorySlider}
+      contentContainerStyle={styles.categorySliderContent}
+      bounces={false}
+    >
+      {categories.map(cat => {
+        const selected = selectedCategory === cat.name;
+
+        return (
+          <TouchableOpacity
+            key={cat.name}
+            style={[
+              styles.categoryBtn,
+
+              // 🔶 Selected button (active)
+              selected && styles.categoryBtnActive,
+
+              // 🌙 Dark + Light Mode for UNSELECTED buttons
+              !selected
+                ? (isDarkMode || theme.mode === 'dark'
+                    ? {
+                        backgroundColor: theme.cardBackground ?? '#1E1E1E',
+                        borderColor: theme.borderColor ?? 'rgba(255,255,255,0.06)',
+                        borderWidth: 1,
+                      }
+                    : {
+                        backgroundColor: '#FFFFFF',
+                        borderWidth: 0,
+                      })
+                : null,
+            ]}
+            onPress={() => setSelectedCategory(cat.name)}
+            activeOpacity={0.8}
+          >
+            {selected ? (
+              <View style={styles.selectedIconCircle}>
+                <Image
+                  source={cat.img}
+                  style={[
+                    styles.categoryIconSelected,
+                    cat.name === 'Donut' && styles.donutIcon,
+                  ]}
+                />
+              </View>
+            ) : (
+              <Image
+                source={cat.img}
+                style={[
+                  styles.categoryIcon,
+                  cat.name === 'Donut' && styles.donutIcon,
+                ]}
+              />
+            )}
+
+            <Text
+              style={[
+                styles.categoryTxt,
+                selected
+                  ? { color: '#FFF' } // active text
+                  : { color: COLORS.primary }, // normal text
+              ]}
+            >
+              {cat.name}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </ScrollView>
+  );
+};
+
+export default Categories;
 
 const styles = StyleSheet.create({
-     categorySliderContent: {
-        paddingVertical: hp('1%'),
-        paddingHorizontal: wp('1%'),
+  categorySlider: {
+    paddingVertical: hp('0.5%'),
+    marginVertical: hp('0.5%'),
+    marginLeft: wp('1%'),
+  },
+  categorySliderContent: {
+    paddingRight: wp('5.5%'),
+  },
+  categoryBtn: {
+    backgroundColor: '#fff',
+    borderRadius: wp('20%'),
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginRight: wp('3%'),
+    paddingVertical: hp('1.2%'),
+    paddingHorizontal: wp('0%'),
+    flexDirection: 'row',
+    height: hp('6.5%'),
+    minWidth: wp('28%'),
+
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
       },
-      categoryBtn: {
-        backgroundColor: '#fff',
-        borderRadius: wp('50%'),
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginRight: wp('3%'),
-        paddingVertical: isIOS ? hp('1.3%') : hp('1.1%'),
-        paddingHorizontal: wp('4%'),
-        flexDirection: 'row',
-        minWidth: isTablet ? scaleSize(wp('18%')) : scaleSize(wp('22%')),
-        ...Platform.select({
-          ios: {
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 1 },
-            shadowOpacity: 0.1,
-            shadowRadius: 2,
-          },
-          android: {
-            elevation: 2,
-          },
-        }),
+      android: {
+        elevation: 3,
       },
-      categoryBtnActive: {
-        backgroundColor: COLORS.primary,
+    }),
+  },
+
+  // 🔶 ACTIVE button style
+  categoryBtnActive: {
+    backgroundColor: COLORS.primary,
+    borderWidth: 0,
+  },
+
+  selectedIconCircle: {
+    backgroundColor: '#fff',
+    borderRadius: wp('50%'),
+    width: wp('11%'),
+    height: wp('11%'),
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: wp('1.5%'),
+    marginRight: wp('2.5%'),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.15,
+        shadowRadius: 1.5,
       },
-      categoryIcon: {
-        width: isTablet ? scaleSize(wp('4.5%')) : scaleSize(wp('5.5%')),
-        height: isTablet ? scaleSize(wp('4.5%')) : scaleSize(wp('5.5%')),
-        marginRight: wp('2%'),
+      android: {
+        elevation: 2,
       },
-      categoryTxt: {
-        ...getTextStyle('Medium'),
-        fontSize: fontScale(14),
-        color: COLORS.primary,
-      },
-      categoryTxtActive: {
-        ...getTextStyle('SemiBold'),
-        color: COLORS.secondary,
-      },
-})
+    }),
+  },
+
+  categoryIcon: {
+    width: wp('11%'),
+    height: wp('11%'),
+    marginLeft: wp('4%'),
+    marginRight: wp('2.5%'),
+  },
+  categoryIconSelected: {
+    width: wp('9%'),
+    height: wp('9%'),
+  },
+
+  categoryTxt: {
+    color: COLORS.primary,
+    fontSize: hp('1.8%'),
+    fontFamily: Platform.OS === 'android' ? 'Figtree-Bold' : 'Figtree',
+    fontWeight: Platform.OS === 'android' ? undefined : '700',
+    letterSpacing: 0.2,
+    flex: 1,
+    textAlign: 'center',
+    marginRight: wp('3%'),
+  },
+
+  donutIcon: {
+    width: wp('10%'),
+    height: wp('10%'),
+    marginLeft: wp('4.2%'),
+  },
+});

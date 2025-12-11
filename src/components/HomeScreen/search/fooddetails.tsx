@@ -27,7 +27,7 @@ const { width, height } = Dimensions.get('window');
 
 const FoodDetails = () => {
   const navigation = useNavigation();
-   const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const isDark = theme.mode === 'dark';
   const [liked, setLiked] = useState(false);
   const [quantity, setQuantity] = useState(1);
@@ -71,7 +71,7 @@ const FoodDetails = () => {
         useNativeDriver: true,
       }),
     ]).start();
-    
+
     setLiked(!liked);
   };
 
@@ -156,7 +156,7 @@ const FoodDetails = () => {
   };
 
   return (
-   <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <StatusBar
         translucent
         backgroundColor={theme.background} // dynamic background
@@ -275,35 +275,35 @@ const FoodDetails = () => {
               style={styles.spicyIcon}
               resizeMode="contain"
             />
-          <Text style={[styles.spicyText, { color: theme.mode === 'dark' ? '#FF6347' : '#FF4500' }]}>
-  Spicy
-</Text>
+            <Text style={[styles.spicyText, { color: theme.mode === 'dark' ? '#FF6347' : '#FF4500' }]}>
+              Spicy
+            </Text>
 
           </View>
         </View>
 
-      <Text style={[styles.foodName, { color: theme.text }]}>
-  {foodItem.name}
-</Text>
+        <Text style={[styles.foodName, { color: theme.text }]}>
+          {foodItem.name}
+        </Text>
 
 
 
         {/* Restaurant Name */}
-       <Text
-        style={[
-          styles.restaurantName,
-          { color: theme.mode === 'dark' ? '#161616ff' : '#6f6e6eff' },
-        ]}
-      >
-        {foodItem.restaurant}
-      </Text>
+        <Text
+          style={[
+            styles.restaurantName,
+            { color: theme.mode === 'dark' ? '#161616ff' : '#6f6e6eff' },
+          ]}
+        >
+          {foodItem.restaurant}
+        </Text>
 
         {/* Price Row */}
         <View style={styles.priceRow}>
           <View style={styles.priceContainer}>
-          <Text style={[styles.price, { color: theme.text }]}>
-  ₹{foodItem.price.toFixed(2)}
-</Text>
+            <Text style={[styles.price, { color: theme.text }]}>
+              ₹{foodItem.price.toFixed(2)}
+            </Text>
 
             <Text style={styles.oldPrice}>₹{foodItem.oldPrice.toFixed(2)}</Text>
           </View>
@@ -384,28 +384,28 @@ const FoodDetails = () => {
           Add a cooking request (optional)
         </Text>
         <TextInput
-  style={[
-    styles.cookingInput,
-    {
-      backgroundColor: theme.mode === 'dark' 
-        ? theme.cardBackground       // dark → #1E1E1E
-        : theme.cardBackground,      // light → #FFFFFF
+          style={[
+            styles.cookingInput,
+            {
+              backgroundColor: theme.mode === 'dark'
+                ? theme.cardBackground       // dark → #1E1E1E
+                : theme.cardBackground,      // light → #FFFFFF
 
-      color: theme.text,             // dark → #ffffff, light → COLORS.text
+              color: theme.text,             // dark → #ffffff, light → COLORS.text
 
-      borderColor: theme.borderColor // dark → #333333, light → #f0f0f0
-    }
-  ]}
-  placeholder="e.g. don't make it too spicy"
-  placeholderTextColor={
-    theme.mode === 'dark' ? theme.textSecondary : theme.textSecondary
-  } // dark → #a0a0a0 | light → #575757
-  value={cookingRequest}
-  onChangeText={setCookingRequest}
-  multiline
-  numberOfLines={3}
-  textAlignVertical="top"
-/>
+              borderColor: theme.borderColor // dark → #333333, light → #f0f0f0
+            }
+          ]}
+          placeholder="e.g. don't make it too spicy"
+          placeholderTextColor={
+            theme.mode === 'dark' ? theme.textSecondary : theme.textSecondary
+          } // dark → #a0a0a0 | light → #575757
+          value={cookingRequest}
+          onChangeText={setCookingRequest}
+          multiline
+          numberOfLines={3}
+          textAlignVertical="top"
+        />
 
 
         {/* Extra spacing for bottom bar */}
@@ -414,11 +414,11 @@ const FoodDetails = () => {
 
       {/* Bottom Action Bar */}
       <View
-  style={[
-    styles.bottomBar,
-    { backgroundColor: theme.background } // dark: #1E1E1E | light: #fff
-  ]}
->
+        style={[
+          styles.bottomBar,
+          { backgroundColor: theme.background } // dark: #1E1E1E | light: #fff
+        ]}
+      >
         {/* Quantity Control */}
         <View style={styles.quantityControl}>
           <TouchableOpacity

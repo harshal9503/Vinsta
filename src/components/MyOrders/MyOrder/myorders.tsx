@@ -43,7 +43,7 @@ const MyOrders = () => {
       status: 'Food on the way',
       time: '25 min',
       img: require('../../../assets/poha.png'),
-     
+
     },
   ];
 
@@ -56,7 +56,7 @@ const MyOrders = () => {
       items: '3 Items',
       status: 'Delivered',
       img: require('../../../assets/poha.png'),
-     
+
     },
     {
       id: '#265897',
@@ -66,7 +66,7 @@ const MyOrders = () => {
       items: '3 Items',
       status: 'Delivered',
       img: require('../../../assets/poha.png'),
-    
+
 
     },
   ];
@@ -155,7 +155,7 @@ const MyOrders = () => {
             style={[
               styles.mainTabText,
               { color: mainTab === 'Orders' ? COLORS.primary : theme.text },
-               // ✅ DARK TEXT
+              // ✅ DARK TEXT
             ]}
           >
             My Order's

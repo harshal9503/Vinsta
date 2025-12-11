@@ -39,26 +39,26 @@ const ViewMenu = () => {
   };
 
   const handleNext = () => {
-    navigation.navigate('MenuItems'); 
+    navigation.navigate('MenuItems');
   };
 
   const checkBoxSize = 20;
   const checkBoxProps =
     Platform.OS === 'ios'
       ? {
-          onCheckColor: COLORS.secondary,
-          onFillColor: COLORS.primary,
-          onTintColor: COLORS.primary,
-          tintColor: COLORS.primary,
-          boxType: 'square',
-          lineWidth: 1.2,
-          animationDuration: 0.1,
-          style: { width: checkBoxSize, height: checkBoxSize },
-        }
+        onCheckColor: COLORS.secondary,
+        onFillColor: COLORS.primary,
+        onTintColor: COLORS.primary,
+        tintColor: COLORS.primary,
+        boxType: 'square',
+        lineWidth: 1.2,
+        animationDuration: 0.1,
+        style: { width: checkBoxSize, height: checkBoxSize },
+      }
       : {
-          tintColors: { true: COLORS.primary, false: COLORS.primary },
-          style: { width: checkBoxSize, height: checkBoxSize },
-        };
+        tintColors: { true: COLORS.primary, false: COLORS.primary },
+        style: { width: checkBoxSize, height: checkBoxSize },
+      };
 
   return (
     <View style={[styles.container, { backgroundColor: isDarkMode ? '#000000' : '#FFFFFF' }]}>
@@ -91,7 +91,7 @@ const ViewMenu = () => {
                 styles.planCard,
                 {
                   backgroundColor: isDarkMode ? '#303030ff' : '#FFFFFF',
-                   // card bg dark/light
+                  // card bg dark/light
                   shadowColor: isDarkMode ? 'transparent' : '#000',
                 },
               ]}

@@ -82,7 +82,7 @@ const PaymentScreen = () => {
   };
 
   return (
-    
+
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <StatusBar
         backgroundColor={COLORS.primary}
@@ -103,9 +103,9 @@ const PaymentScreen = () => {
       </View>
 
       <ScrollView
-  showsVerticalScrollIndicator={false}
-  contentContainerStyle={{ paddingBottom: 50 }} // IMPORTANT
->
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 50 }} // IMPORTANT
+      >
 
         {/* SHIPPING SECTION */}
         <View style={[styles.section, { backgroundColor: theme.cardBackground, borderBottomColor: theme.borderColor }]}>
@@ -243,7 +243,7 @@ const PaymentScreen = () => {
         </View>
       </Modal>
     </View>
-    
+
   );
 };
 

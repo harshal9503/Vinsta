@@ -22,7 +22,7 @@ const { width, height } = Dimensions.get('window');
 
 const ProfileEdit = () => {
   const navigation = useNavigation<any>();
-  const {theme} = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const [name, setName] = useState('Harshal');
   const [phone, setPhone] = useState('+910202388848');
   const [email, setEmail] = useState('h@gmail.com');
@@ -43,7 +43,10 @@ const ProfileEdit = () => {
   };
 
   const handleSave = () => {
-    Alert.alert('Profile Updated', 'Your details have been saved successfully!');
+    Alert.alert(
+      'Profile Updated',
+      'Your details have been saved successfully!',
+    );
     setEditableField(null);
   };
 
@@ -87,26 +90,59 @@ const ProfileEdit = () => {
   };
 
   return (
-    <View style={[styles.container,{backgroundColor : theme.background}]}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header */}
-      <View style={[styles.header,{backgroundColor : theme.background, borderBottomColor : theme.cardBackground}]}>
+      <View
+        style={[
+          styles.header,
+          {
+            backgroundColor: theme.background,
+            borderBottomColor: theme.cardBackground,
+          },
+        ]}
+      >
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../assets/back.png')} style={[styles.backIcon, {tintColor: theme.text}]} />
+          <Image
+            source={require('../../assets/back.png')}
+            style={[styles.backIcon, { tintColor: theme.text }]}
+          />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, {color : theme.textSecondary}]}>My Profile</Text>
+        <Text style={[styles.headerTitle, { color: theme.textSecondary }]}>
+          My Profile
+        </Text>
         <View style={{ width: 22 }} />
       </View>
 
       {/* Scrollable Content */}
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
         {/* Profile Avatar */}
         <View style={styles.profileSection}>
-          <TouchableOpacity activeOpacity={0.8} onPress={openPicker} style={styles.profileWrapper}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={openPicker}
+            style={styles.profileWrapper}
+          >
             <Image
-              source={profileImage?.uri ? { uri: profileImage.uri } : defaultUserImage}
-              style={[styles.profileImage,{borderColor : theme.cardBackground}]}
+              source={
+                profileImage?.uri ? { uri: profileImage.uri } : defaultUserImage
+              }
+              style={[
+                styles.profileImage,
+                { borderColor: theme.cardBackground },
+              ]}
             />
-            <View style={[styles.cameraBadge,{backgroundColor : theme.background, borderColor : theme.cardBackground}]}>
+            <View
+              style={[
+                styles.cameraBadge,
+                {
+                  backgroundColor: theme.background,
+                  borderColor: theme.cardBackground,
+                },
+              ]}
+            >
               <Text style={styles.cameraIcon}>📷</Text>
             </View>
           </TouchableOpacity>
@@ -115,10 +151,20 @@ const ProfileEdit = () => {
         {/* Input Fields */}
         <View style={styles.formContainer}>
           {/* Name */}
-          <Text style={[styles.label, {color : theme.textSecondary}]}>Name</Text>
-          <View style={[styles.inputBox,{backgroundColor  :theme.cardBackground,borderColor : theme.cardBackground}]}>
+          <Text style={[styles.label, { color: theme.textSecondary }]}>
+            Name
+          </Text>
+          <View
+            style={[
+              styles.inputBox,
+              {
+                backgroundColor: theme.cardBackground,
+                borderColor: theme.cardBackground,
+              },
+            ]}
+          >
             <TextInput
-              style={[styles.input, {color : theme.textSecondary}]}
+              style={[styles.input, { color: theme.textSecondary }]}
               value={name}
               onChangeText={setName}
               editable={editableField === 'name'}
@@ -128,20 +174,42 @@ const ProfileEdit = () => {
             />
             {editableField === 'name' ? (
               <TouchableOpacity onPress={() => clearField('name')}>
-                <Image source={closeIcon} style={[styles.closeIcon, { opacity: 0.3, tintColor: theme.text }]} />
+                <Image
+                  source={closeIcon}
+                  style={[
+                    styles.closeIcon,
+                    { opacity: 0.3, tintColor: theme.text },
+                  ]}
+                />
               </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={() => setFieldEditable('name')}>
-                <Image source={closeIcon} style={[styles.closeIcon, { opacity: 0.3, tintColor: theme.text }]} />
+                <Image
+                  source={closeIcon}
+                  style={[
+                    styles.closeIcon,
+                    { opacity: 0.3, tintColor: theme.text },
+                  ]}
+                />
               </TouchableOpacity>
             )}
           </View>
 
           {/* Phone Number */}
-          <Text style={[styles.label, {color : theme.textSecondary}]}>Phone Number</Text>
-          <View style={[styles.inputBox,{backgroundColor  :theme.cardBackground,borderColor : theme.cardBackground}]}>
+          <Text style={[styles.label, { color: theme.textSecondary }]}>
+            Phone Number
+          </Text>
+          <View
+            style={[
+              styles.inputBox,
+              {
+                backgroundColor: theme.cardBackground,
+                borderColor: theme.cardBackground,
+              },
+            ]}
+          >
             <TextInput
-              style={[styles.input, {color : theme.textSecondary}]}
+              style={[styles.input, { color: theme.textSecondary }]}
               value={phone}
               onChangeText={setPhone}
               editable={editableField === 'phone'}
@@ -152,20 +220,42 @@ const ProfileEdit = () => {
             />
             {editableField === 'phone' ? (
               <TouchableOpacity onPress={() => clearField('phone')}>
-                <Image source={closeIcon} style={[styles.closeIcon, { opacity: 0.3, tintColor: theme.text }]} />
+                <Image
+                  source={closeIcon}
+                  style={[
+                    styles.closeIcon,
+                    { opacity: 0.3, tintColor: theme.text },
+                  ]}
+                />
               </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={() => setFieldEditable('phone')}>
-                <Image source={closeIcon} style={[styles.closeIcon, { opacity: 0.3, tintColor: theme.text }]} />
+                <Image
+                  source={closeIcon}
+                  style={[
+                    styles.closeIcon,
+                    { opacity: 0.3, tintColor: theme.text },
+                  ]}
+                />
               </TouchableOpacity>
             )}
           </View>
 
           {/* Email */}
-          <Text style={[styles.label, {color : theme.textSecondary}]}>Gmail</Text>
-          <View style={[styles.inputBox,{backgroundColor  :theme.cardBackground,borderColor : theme.cardBackground}]}>
+          <Text style={[styles.label, { color: theme.textSecondary }]}>
+            Gmail
+          </Text>
+          <View
+            style={[
+              styles.inputBox,
+              {
+                backgroundColor: theme.cardBackground,
+                borderColor: theme.cardBackground,
+              },
+            ]}
+          >
             <TextInput
-              style={[styles.input, {color : theme.textSecondary}]}
+              style={[styles.input, { color: theme.textSecondary }]}
               value={email}
               onChangeText={setEmail}
               editable={editableField === 'email'}
@@ -176,20 +266,42 @@ const ProfileEdit = () => {
             />
             {editableField === 'email' ? (
               <TouchableOpacity onPress={() => clearField('email')}>
-                <Image source={closeIcon} style={[styles.closeIcon, { opacity: 0.3, tintColor: theme.text }]} />
+                <Image
+                  source={closeIcon}
+                  style={[
+                    styles.closeIcon,
+                    { opacity: 0.3, tintColor: theme.text },
+                  ]}
+                />
               </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={() => setFieldEditable('email')}>
-                <Image source={closeIcon} style={[styles.closeIcon, { opacity: 0.3, tintColor: theme.text }]} />
+                <Image
+                  source={closeIcon}
+                  style={[
+                    styles.closeIcon,
+                    { opacity: 0.3, tintColor: theme.text },
+                  ]}
+                />
               </TouchableOpacity>
             )}
           </View>
 
           {/* Address */}
-          <Text style={[styles.label, {color : theme.textSecondary}]}>Delivery Address</Text>
-          <View style={[styles.inputBox,{backgroundColor  :theme.cardBackground,borderColor : theme.cardBackground}]}>
+          <Text style={[styles.label, { color: theme.textSecondary }]}>
+            Delivery Address
+          </Text>
+          <View
+            style={[
+              styles.inputBox,
+              {
+                backgroundColor: theme.cardBackground,
+                borderColor: theme.cardBackground,
+              },
+            ]}
+          >
             <TextInput
-              style={[styles.input, {color : theme.textSecondary}]}
+              style={[styles.input, { color: theme.textSecondary }]}
               value={address}
               onChangeText={setAddress}
               editable={editableField === 'address'}
@@ -200,11 +312,23 @@ const ProfileEdit = () => {
             />
             {editableField === 'address' ? (
               <TouchableOpacity onPress={() => clearField('address')}>
-                <Image source={closeIcon} style={[styles.closeIcon, { opacity: 0.3, tintColor: theme.text }]} />
+                <Image
+                  source={closeIcon}
+                  style={[
+                    styles.closeIcon,
+                    { opacity: 0.3, tintColor: theme.text },
+                  ]}
+                />
               </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={() => setFieldEditable('address')}>
-                <Image source={closeIcon} style={[styles.closeIcon, { opacity: 0.3, tintColor: theme.text }]} />
+                <Image
+                  source={closeIcon}
+                  style={[
+                    styles.closeIcon,
+                    { opacity: 0.3, tintColor: theme.text },
+                  ]}
+                />
               </TouchableOpacity>
             )}
           </View>
@@ -220,19 +344,53 @@ const ProfileEdit = () => {
       <Modal visible={pickerVisible} transparent animationType="fade">
         <View style={styles.popupOverlay}>
           <View style={styles.popupBox}>
-            <TouchableOpacity style={styles.closeIconWrapper} onPress={closePicker}>
-              <Image source={closeIcon} style={[styles.closeIcon, {tintColor: COLORS.text}]} resizeMode="contain" />
+            <TouchableOpacity
+              style={styles.closeIconWrapper}
+              onPress={closePicker}
+            >
+              <Image
+                source={closeIcon}
+                style={[styles.closeIcon, { tintColor: COLORS.text }]}
+                resizeMode="contain"
+              />
             </TouchableOpacity>
-            <Text style={[styles.popupTitle, {color : theme.textSecondary}]}>Change your Profile pic</Text>
-            <TouchableOpacity style={styles.pickerButton} onPress={handleTakePhoto}>
-              <Text style={[styles.pickerButtonText, {color : theme.textSecondary}]}>Take photo</Text>
+            <Text style={[styles.popupTitle, { color: theme.textSecondary }]}>
+              Change your Profile pic
+            </Text>
+            <TouchableOpacity
+              style={styles.pickerButton}
+              onPress={handleTakePhoto}
+            >
+              <Text
+                style={[
+                  styles.pickerButtonText,
+                  { color: theme.textSecondary },
+                ]}
+              >
+                Take photo
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.pickerButton} onPress={handleChooseFromGallery}>
-              <Text style={[styles.pickerButtonText, {color : theme.textSecondary}]}>Choose from Gallery</Text>
+            <TouchableOpacity
+              style={styles.pickerButton}
+              onPress={handleChooseFromGallery}
+            >
+              <Text
+                style={[
+                  styles.pickerButtonText,
+                  { color: theme.textSecondary },
+                ]}
+              >
+                Choose from Gallery
+              </Text>
             </TouchableOpacity>
             {profileImage && (
-              <TouchableOpacity style={styles.pickerButton} onPress={removeProfileImage}>
-                <Text style={[styles.pickerButtonText, { color: '#FF3B30' }]}>Remove Profile Photo</Text>
+              <TouchableOpacity
+                style={styles.pickerButton}
+                onPress={removeProfileImage}
+              >
+                <Text style={[styles.pickerButtonText, { color: '#FF3B30' }]}>
+                  Remove Profile Photo
+                </Text>
               </TouchableOpacity>
             )}
           </View>
@@ -271,7 +429,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     textAlign: 'center',
     fontSize: width * 0.045,
-    fontWeight: '700',
     fontFamily: 'Figtree-Bold',
   },
 
@@ -331,7 +488,6 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: width * 0.038,
-    fontWeight: '600',
     marginBottom: 8,
     marginTop: 15,
     fontFamily: 'Figtree-SemiBold',
@@ -392,7 +548,6 @@ const styles = StyleSheet.create({
   saveText: {
     color: COLORS.secondary,
     fontSize: width * 0.042,
-    fontWeight: '700',
     fontFamily: 'Figtree-Bold',
   },
 
@@ -423,7 +578,6 @@ const styles = StyleSheet.create({
   },
   popupTitle: {
     fontSize: 18,
-    fontWeight: '600',
     marginBottom: 20,
     textAlign: 'center',
     fontFamily: 'Figtree-SemiBold',
@@ -437,7 +591,6 @@ const styles = StyleSheet.create({
   },
   pickerButtonText: {
     fontSize: 16,
-    fontWeight: '500',
     fontFamily: 'Figtree-Medium',
   },
   closeIconWrapper: {

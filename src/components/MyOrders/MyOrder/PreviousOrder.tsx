@@ -1,40 +1,21 @@
 
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext } from 'react'
+import React from 'react'
 import { COLORS } from '../../../theme/colors'
-import { ThemeContext } from '../../../theme/ThemeContext'
 import { getFontFamily, getFontWeight } from '../../../utils/fontHelper'
 
 const PreviousOrder = ({ onRatePress, onResubscribePress }) => {
-    const { theme } = useContext(ThemeContext)
-
     return (
         <View style={styles.buttonRow}>
             <TouchableOpacity
-                style={[
-                    styles.cancelBtn,
-                    { 
-                        backgroundColor: theme.mode === 'dark' ? '#1E1E1E' : '#fff',
-                        borderColor: theme.mode === 'dark' ? '#555' : '#ddd'
-                    }
-                ]}
+                style={styles.cancelBtn}
                 onPress={onRatePress}
             >
-                <Text
-                    style={[
-                        styles.cancelText,
-                        { color: theme.mode === 'dark' ? '#fff' : '#000' }
-                    ]}
-                >
-                    Rate
-                </Text>
+                <Text style={styles.cancelText}>Rate</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
-                style={[
-                    styles.trackBtn,
-                    { backgroundColor: theme.mode === 'dark' ? COLORS.primary : COLORS.primary }
-                ]}
+            <TouchableOpacity
+                style={styles.trackBtn}
                 onPress={onResubscribePress}
             >
                 <Text style={styles.trackText}>Re subscribe</Text>
@@ -45,6 +26,7 @@ const PreviousOrder = ({ onRatePress, onResubscribePress }) => {
 
 export default PreviousOrder
 
+
 const styles = StyleSheet.create({
     buttonRow: {
         flexDirection: 'row',
@@ -54,19 +36,23 @@ const styles = StyleSheet.create({
     cancelBtn: {
         flex: 1,
         marginRight: 6,
+        backgroundColor: '#fff',
         borderRadius: 8,
         borderWidth: 1,
+        borderColor: '#ddd',
         paddingVertical: 10,
         alignItems: 'center',
     },
     trackBtn: {
         flex: 1,
         marginLeft: 6,
+        backgroundColor: COLORS.primary,
         borderRadius: 8,
         paddingVertical: 10,
         alignItems: 'center',
     },
     cancelText: {
+        color: '#000',
         fontFamily: getFontFamily('Bold'),
         fontWeight: getFontWeight('Bold'),
     },

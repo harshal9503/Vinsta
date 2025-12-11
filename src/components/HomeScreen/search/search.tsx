@@ -114,7 +114,7 @@ const SearchScreen = () => {
   const handlePlusPress = (id: number) => {
     // Vibration effect for plus button as well
     vibrate(40);
-    
+
     if (!plusScales[id]) plusScales[id] = new Animated.Value(1);
     Animated.sequence([
       Animated.timing(plusScales[id], {
@@ -229,14 +229,14 @@ const SearchScreen = () => {
             >
               <View style={styles.cardImageContainer}>
                 <Image source={r.img} style={styles.cardImg} />
-                
+
                 {/* Heart Button for Restaurant - Same exact style as FoodDetails */}
                 <TouchableOpacity
                   style={[
                     styles.productHeartWrapper,
-                    { 
-                      backgroundColor: likedItems.includes(r.id) 
-                        ? 'rgba(255, 255, 255, 0.9)' 
+                    {
+                      backgroundColor: likedItems.includes(r.id)
+                        ? 'rgba(255, 255, 255, 0.9)'
                         : 'rgba(255, 255, 255, 0.3)',
                       position: 'absolute',
                       top: 10,
@@ -254,10 +254,10 @@ const SearchScreen = () => {
                     }
                     style={[
                       styles.heartIcon,
-                      { 
-                        tintColor: likedItems.includes(r.id) 
-                          ? COLORS.primary 
-                          : '#fff' 
+                      {
+                        tintColor: likedItems.includes(r.id)
+                          ? COLORS.primary
+                          : '#fff'
                       },
                       { transform: [{ scale: heartScales[r.id] || 1 }] },
                     ]}
@@ -316,14 +316,14 @@ const SearchScreen = () => {
               >
                 <View style={styles.foodImageContainer}>
                   <Image source={f.img} style={styles.foodImg} />
-                  
+
                   {/* Heart Button for Food - Same exact style as FoodDetails */}
                   <TouchableOpacity
                     style={[
                       styles.productHeartWrapper,
-                      { 
-                        backgroundColor: likedItems.includes(f.id) 
-                          ? 'rgba(255, 255, 255, 0.9)' 
+                      {
+                        backgroundColor: likedItems.includes(f.id)
+                          ? 'rgba(255, 255, 255, 0.9)'
                           : 'rgba(255, 255, 255, 0.3)',
                         position: 'absolute',
                         top: 10,
@@ -341,10 +341,10 @@ const SearchScreen = () => {
                       }
                       style={[
                         styles.heartIcon,
-                        { 
-                          tintColor: likedItems.includes(f.id) 
-                            ? COLORS.primary 
-                            : '#fff' 
+                        {
+                          tintColor: likedItems.includes(f.id)
+                            ? COLORS.primary
+                            : '#fff'
                         },
                         { transform: [{ scale: heartScales[f.id] || 1 }] },
                       ]}
@@ -422,11 +422,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   backIcon: { width: 22, height: 22, tintColor: '#000' },
-  headerTitle: { 
-    fontSize: width * 0.045, 
-    fontWeight: '700', 
+  headerTitle: {
+    fontSize: width * 0.045,
+    fontWeight: '700',
     color: '#000',
-    fontFamily: 'Figtree-Bold' 
+    fontFamily: 'Figtree-Bold'
   },
 
   /** SEARCH **/
@@ -452,13 +452,13 @@ const styles = StyleSheet.create({
     marginRight: 8,
     resizeMode: 'contain',
   },
-  input: { 
-    flex: 1, 
-    paddingVertical: 12, 
-    fontSize: 14, 
+  input: {
+    flex: 1,
+    paddingVertical: 12,
+    fontSize: 14,
     color: '#000',
-    fontFamily: "Figtree-Medium", 
-    fontWeight: '500' 
+    fontFamily: "Figtree-Medium",
+    fontWeight: '500'
   },
   filterContainer: {
     width: 48,
@@ -502,11 +502,11 @@ const styles = StyleSheet.create({
   activeTabSides: {
     borderRadius: 10,
   },
-  tabText: { 
-    fontSize: 14, 
-    fontWeight: '700', 
-    color: '#000', 
-    fontFamily: 'Figtree-Bold' 
+  tabText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#000',
+    fontFamily: 'Figtree-Bold'
   },
 
   /** RESTAURANT CARD **/
@@ -521,13 +521,13 @@ const styles = StyleSheet.create({
   cardImageContainer: {
     position: 'relative',
   },
-  cardImg: { 
-    width: '100%', 
-    height: 180, 
-    resizeMode: 'cover' 
+  cardImg: {
+    width: '100%',
+    height: 180,
+    resizeMode: 'cover'
   },
-  cardContent: { 
-    padding: 14 
+  cardContent: {
+    padding: 14
   },
   // Heart wrapper styles - Exact same as FoodDetails component
   productHeartWrapper: {
@@ -546,9 +546,9 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  heartIcon: { 
-    width: 14, 
-    height: 14, 
+  heartIcon: {
+    width: 14,
+    height: 14,
   },
   // Rating badge styles - Same as FoodDetails
   productRatingBadge: {
@@ -573,54 +573,54 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  starIcon: { 
-    width: 12, 
-    height: 12, 
-    tintColor: '#fff', 
-    marginRight: 4 
+  starIcon: {
+    width: 12,
+    height: 12,
+    tintColor: '#fff',
+    marginRight: 4
   },
-  ratingText: { 
-    color: '#fff', 
-    fontSize: 12, 
-    fontWeight: '700', 
-    fontFamily: 'Figtree-Bold' 
+  ratingText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '700',
+    fontFamily: 'Figtree-Bold'
   },
-  title: { 
-    fontSize: 20, 
-    fontWeight: '700', 
+  title: {
+    fontSize: 20,
+    fontWeight: '700',
     color: '#000',
     fontFamily: 'Figtree-Bold',
     marginBottom: 4,
   },
-  locationRow: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 8,
   },
-  locIcon: { 
-    width: 12, 
-    height: 12, 
-    marginRight: 6, 
+  locIcon: {
+    width: 12,
+    height: 12,
+    marginRight: 6,
     resizeMode: 'contain',
     tintColor: COLORS.primary,
   },
-  location: { 
-    fontSize: 13, 
-    color: '#555', 
+  location: {
+    fontSize: 13,
+    color: '#555',
     flex: 1,
-    fontFamily: 'Figtree-Medium', 
-    fontWeight: '500' 
+    fontFamily: 'Figtree-Medium',
+    fontWeight: '500'
   },
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
   },
-  subInfo: { 
-    color: '#777', 
+  subInfo: {
+    color: '#777',
     fontSize: 13,
     fontFamily: 'Figtree-Medium',
-    fontWeight: '500' 
+    fontWeight: '500'
   },
   metaIcon: {
     width: 13,
@@ -629,8 +629,8 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     tintColor: COLORS.primary,
   },
-  metaText: { 
-    color: '#555', 
+  metaText: {
+    color: '#555',
     fontSize: 12,
     fontFamily: 'Figtree-Medium',
     fontWeight: '500',
@@ -656,13 +656,13 @@ const styles = StyleSheet.create({
   foodImageContainer: {
     position: 'relative',
   },
-  foodImg: { 
-    width: '100%', 
-    height: 140, 
-    resizeMode: 'cover' 
+  foodImg: {
+    width: '100%',
+    height: 140,
+    resizeMode: 'cover'
   },
-  foodInfo: { 
-    padding: 10 
+  foodInfo: {
+    padding: 10
   },
   foodName: {
     fontSize: 18,
@@ -681,9 +681,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  price: { 
-    fontSize: 14, 
-    fontWeight: '600', 
+  price: {
+    fontSize: 14,
+    fontWeight: '600',
     color: '#000',
     fontFamily: 'Figtree-SemiBold',
     marginRight: 6,
@@ -713,25 +713,25 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  plusIcon: { 
-    width: 14, 
-    height: 14, 
-    tintColor: '#fff' 
+  plusIcon: {
+    width: 14,
+    height: 14,
+    tintColor: '#fff'
   },
-  timeRow: { 
-    flexDirection: 'row', 
-    alignItems: 'center' 
+  timeRow: {
+    flexDirection: 'row',
+    alignItems: 'center'
   },
-  clockIcon: { 
-    width: 12, 
-    height: 12, 
-    marginRight: 6, 
+  clockIcon: {
+    width: 12,
+    height: 12,
+    marginRight: 6,
     resizeMode: 'contain',
     tintColor: COLORS.primary,
   },
-  timeText: { 
-    fontSize: 12, 
+  timeText: {
+    fontSize: 12,
     color: '#555',
-    fontFamily: 'Figtree-Regular' 
+    fontFamily: 'Figtree-Regular'
   },
 });

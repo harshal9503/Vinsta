@@ -32,7 +32,8 @@ const TodayOfferView = () => {
       id: 1,
       title: 'Free Delivery',
       subtitle: 'On orders above $50',
-      description: 'Enjoy free delivery on all orders above $50. Valid for today only!',
+      description:
+        'Enjoy free delivery on all orders above $50. Valid for today only!',
       discount: 'FREE',
       couponCode: 'FREESHIP50',
       img: require('../../assets/b1.png'),
@@ -62,7 +63,8 @@ const TodayOfferView = () => {
       id: 4,
       title: '30% Off',
       subtitle: 'First order discount',
-      description: 'New users get 30% off on their first order. Use code: WELCOME30',
+      description:
+        'New users get 30% off on their first order. Use code: WELCOME30',
       discount: '30% OFF',
       couponCode: 'WELCOME30',
       img: require('../../assets/r1.png'),
@@ -72,7 +74,8 @@ const TodayOfferView = () => {
       id: 5,
       title: 'Combo Deal',
       subtitle: 'Burger + Fries + Drink',
-      description: 'Get our special combo at just $15.99. Save $8 on this deal!',
+      description:
+        'Get our special combo at just $15.99. Save $8 on this deal!',
       discount: '$8 OFF',
       couponCode: 'COMBO8',
       img: require('../../assets/r2.png'),
@@ -86,7 +89,10 @@ const TodayOfferView = () => {
   };
 
   const copyToClipboard = () => {
-    Alert.alert('Copied!', `Coupon code "${selectedCoupon}" copied to clipboard`);
+    Alert.alert(
+      'Copied!',
+      `Coupon code "${selectedCoupon}" copied to clipboard`,
+    );
     setModalVisible(false);
   };
 
@@ -95,7 +101,7 @@ const TodayOfferView = () => {
       <StatusBar
         translucent
         backgroundColor="transparent"
-        barStyle={theme.mode === "dark" ? "light-content" : "dark-content"}
+        barStyle={theme.mode === 'dark' ? 'light-content' : 'dark-content'}
       />
 
       {/* Header */}
@@ -114,35 +120,59 @@ const TodayOfferView = () => {
         <View style={{ width: 22 }} />
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 80 }}>
-
-        {offers.map((offer) => (
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 80 }}
+      >
+        {offers.map(offer => (
           <View
             key={offer.id}
             style={[
               styles.offerCard,
               {
                 backgroundColor: theme.cardBackground,
-                shadowColor: theme.mode === "dark" ? 'transparent' : '#000',
+                shadowColor: theme.mode === 'dark' ? 'transparent' : '#000',
               },
             ]}
           >
-            <View style={[styles.discountBadge, { backgroundColor: offer.color }]}>
+            <View
+              style={[styles.discountBadge, { backgroundColor: offer.color }]}
+            >
               <Text style={styles.discountText}>{offer.discount}</Text>
             </View>
 
             <View style={styles.offerContent}>
               <View style={styles.offerText}>
-                <Text style={[styles.offerTitle, { color: theme.text }]}>{offer.title}</Text>
-                <Text style={[styles.offerSubtitle, { color: theme.textSecondary }]}>{offer.subtitle}</Text>
-                <Text style={[styles.offerDescription, { color: theme.textSecondary }]}>{offer.description}</Text>
+                <Text style={[styles.offerTitle, { color: theme.text }]}>
+                  {offer.title}
+                </Text>
+                <Text
+                  style={[styles.offerSubtitle, { color: theme.textSecondary }]}
+                >
+                  {offer.subtitle}
+                </Text>
+                <Text
+                  style={[
+                    styles.offerDescription,
+                    { color: theme.textSecondary },
+                  ]}
+                >
+                  {offer.description}
+                </Text>
 
                 <View style={styles.validityRow}>
                   <Image
                     source={require('../../assets/clockk.png')}
                     style={[styles.clockIcon, { tintColor: COLORS.primary }]}
                   />
-                  <Text style={[styles.validityText, { color: theme.textSecondary }]}>Valid till midnight</Text>
+                  <Text
+                    style={[
+                      styles.validityText,
+                      { color: theme.textSecondary },
+                    ]}
+                  >
+                    Valid till midnight
+                  </Text>
                 </View>
 
                 <TouchableOpacity
@@ -162,17 +192,19 @@ const TodayOfferView = () => {
         ))}
 
         {/* Terms */}
-        <View style={[styles.termsCard, { backgroundColor: theme.cardBackground }]}>
-          <Text style={[styles.termsTitle, { color: theme.text }]}>Terms & Conditions</Text>
+        <View
+          style={[styles.termsCard, { backgroundColor: theme.cardBackground }]}
+        >
+          <Text style={[styles.termsTitle, { color: theme.text }]}>
+            Terms & Conditions
+          </Text>
           <Text style={[styles.termsText, { color: theme.textSecondary }]}>
-            • Offers are valid for today only{'\n'}
-            • Cannot be combined with other offers{'\n'}
-            • Minimum order value may apply{'\n'}
-            • Valid for dine-in and delivery orders{'\n'}
-            • Restaurant reserves the right to modify offers
+            • Offers are valid for today only{'\n'}• Cannot be combined with
+            other offers{'\n'}• Minimum order value may apply{'\n'}• Valid for
+            dine-in and delivery orders{'\n'}• Restaurant reserves the right to
+            modify offers
           </Text>
         </View>
-
       </ScrollView>
 
       {/* Modal */}
@@ -183,25 +215,33 @@ const TodayOfferView = () => {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={[
-            styles.modalContent,
-            { backgroundColor: theme.cardBackground }
-          ]}>
-            <Text style={[styles.modalTitle, { color: COLORS.primary }]}>Your Coupon Code</Text>
+          <View
+            style={[
+              styles.modalContent,
+              { backgroundColor: theme.cardBackground },
+            ]}
+          >
+            <Text style={[styles.modalTitle, { color: COLORS.primary }]}>
+              Your Coupon Code
+            </Text>
 
-            <View style={[
-              styles.couponContainer,
-              {
-                backgroundColor: theme.mode === "dark" ? '#333' : '#f8f9fa',
-                borderColor: COLORS.primary,
-              }
-            ]}>
+            <View
+              style={[
+                styles.couponContainer,
+                {
+                  backgroundColor: theme.mode === 'dark' ? '#333' : '#f8f9fa',
+                  borderColor: COLORS.primary,
+                },
+              ]}
+            >
               <Text style={[styles.couponCode, { color: COLORS.primary }]}>
                 {selectedCoupon}
               </Text>
             </View>
 
-            <Text style={[styles.modalDescription, { color: theme.textSecondary }]}>
+            <Text
+              style={[styles.modalDescription, { color: theme.textSecondary }]}
+            >
               Use this code at checkout to apply your discount
             </Text>
 
@@ -209,7 +249,10 @@ const TodayOfferView = () => {
               style={styles.copyButton}
               onPress={copyToClipboard}
             >
-              <Image source={require('../../assets/copy.png')} style={styles.copyIcon} />
+              <Image
+                source={require('../../assets/copy.png')}
+                style={styles.copyIcon}
+              />
               <Text style={styles.copyButtonText}>Copy Code</Text>
             </TouchableOpacity>
 
@@ -217,15 +260,15 @@ const TodayOfferView = () => {
               style={[styles.closeButton, { borderColor: theme.textSecondary }]}
               onPress={() => setModalVisible(false)}
             >
-              <Text style={[styles.closeButtonText, { color: theme.textSecondary }]}>
+              <Text
+                style={[styles.closeButtonText, { color: theme.textSecondary }]}
+              >
                 Close
               </Text>
             </TouchableOpacity>
-
           </View>
         </View>
       </Modal>
-
     </View>
   );
 };
@@ -243,9 +286,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 12,
   },
-  backIcon: { width: 22,
-     height: 22
-     },
+  backIcon: { width: 22, height: 22 },
   headerTitle: {
     fontSize: width * 0.045,
     fontFamily: getFontFamily('Bold'),

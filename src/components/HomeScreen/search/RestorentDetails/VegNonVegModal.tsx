@@ -1,5 +1,6 @@
-import { Image, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View, Platform } from 'react-native'
-import React from 'react'
+import { Image, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useContext } from 'react';
+import { ThemeContext } from '../../../../theme/ThemeContext';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { getFontFamily, getFontWeight } from '../../../../utils/fontHelper';
 
@@ -9,6 +10,8 @@ const VegNonVegModal = ({
     vegNonVegFilter,
     setVegNonVegFilter,
 }) => {
+    const { theme } = useContext(ThemeContext);  // ✅ Correct theme use
+
     return (
         <Modal
             visible={visible}
@@ -16,9 +19,16 @@ const VegNonVegModal = ({
             transparent
             onRequestClose={onClose}
         >
-            <Pressable style={styles.modalOverlay} onPress={onClose}>
-                <View style={styles.vegDropdownMenu}>
-
+            <Pressable
+                style={[styles.modalOverlay, { backgroundColor: theme.mode === 'dark' ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0.2)' }]}
+                onPress={onClose}
+            >
+                <View
+                    style={[
+                        styles.vegDropdownMenu,
+                        { backgroundColor: theme.cardBackground } // ✅ Dark/light card
+                    ]}
+                >
                     {/* Veg */}
                     <TouchableOpacity
                         style={styles.vegDropdownItem}
@@ -31,17 +41,15 @@ const VegNonVegModal = ({
                             source={require('../../../../assets/veg.png')}
                             style={styles.vegDropdownIcon}
                         />
+
                         <Text
                             style={[
                                 styles.vegDropdownText,
-                                vegNonVegFilter === 'Veg' && { 
+                                { color: theme.text }, // ⭐ text theme
+                                vegNonVegFilter === 'Veg' && {
                                     color: '#259E29',
                                     fontFamily: getFontFamily('Bold'),
                                     fontWeight: getFontWeight('Bold'),
-                                },
-                                vegNonVegFilter !== 'Veg' && {
-                                    fontFamily: getFontFamily('Medium'),
-                                    fontWeight: getFontWeight('Medium'),
                                 }
                             ]}
                         >
@@ -61,17 +69,15 @@ const VegNonVegModal = ({
                             source={require('../../../../assets/nonveg.png')}
                             style={styles.vegDropdownIcon}
                         />
+
                         <Text
                             style={[
                                 styles.vegDropdownText,
-                                vegNonVegFilter === 'NonVeg' && { 
+                                { color: theme.text },
+                                vegNonVegFilter === 'NonVeg' && {
                                     color: '#FE0505',
                                     fontFamily: getFontFamily('Bold'),
                                     fontWeight: getFontWeight('Bold'),
-                                },
-                                vegNonVegFilter !== 'NonVeg' && {
-                                    fontFamily: getFontFamily('Medium'),
-                                    fontWeight: getFontWeight('Medium'),
                                 }
                             ]}
                         >
@@ -85,7 +91,8 @@ const VegNonVegModal = ({
     );
 };
 
-export default VegNonVegModal
+export default VegNonVegModal;
+
 
 const styles = StyleSheet.create({
     modalOverlay: {

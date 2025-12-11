@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import {
   View,
   Text,
@@ -15,18 +15,21 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
-import font from '../../assets/fonts';
+import { ThemeContext } from '../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
+const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 44 : StatusBar.currentHeight;
 
 const ChatScreen = () => {
   const navigation = useNavigation();
+  const { theme, isDarkMode } = useContext(ThemeContext);
   const scrollViewRef = useRef();
   const [message, setMessage] = useState('');
+
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: 'Hello! I\'m on my way with your order. I\'ll reach in about 10 minutes.',
+      text: "Hello! I'm on my way with your order. I'll reach in about 10 minutes.",
       time: '10:55 AM',
       isUser: false,
     },
@@ -49,18 +52,24 @@ const ChatScreen = () => {
       const newMessage = {
         id: messages.length + 1,
         text: message,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        time: new Date().toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
         isUser: true,
       };
+
       setMessages([...messages, newMessage]);
       setMessage('');
-      
-      // Auto reply after 2 seconds
+
       setTimeout(() => {
         const autoReply = {
           id: messages.length + 2,
-          text: 'Sure, I\'ll be waiting at the main gate.',
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          text: "Sure, I'll be waiting at the main gate.",
+          time: new Date().toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+          }),
           isUser: false,
         };
         setMessages(prev => [...prev, autoReply]);
@@ -68,85 +77,120 @@ const ChatScreen = () => {
     }
   };
 
+  const headerTop = STATUS_BAR_HEIGHT + 10;
+
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
-      
-      {/* Header */}
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar
+        backgroundColor="transparent"
+        barStyle={isDarkMode ? "light-content" : "dark-content"}
+        translucent
+      />
+
+      <View style={[styles.header, { top: headerTop, backgroundColor: theme.cardBackground }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Image source={require('../../assets/back.png')} style={styles.backIcon} />
+          <Image
+            source={require('../../assets/back.png')}
+            style={[styles.backIcon, { tintColor: theme.text }]}
+          />
         </TouchableOpacity>
+
         <View style={styles.headerInfo}>
-          <Text style={styles.agentName}>Mann Sharma</Text>
-          <Text style={styles.agentStatus}>Delivery Partner • Online</Text>
+          <Text style={[styles.agentName, { color: theme.text }]}>Mann Sharma</Text>
+          <Text style={[styles.agentStatus]}>Delivery Partner • Online</Text>
         </View>
-        <TouchableOpacity style={styles.callButton}>
-          <Image source={require('../../assets/call.png')} style={styles.callIcon} />
+
+        <TouchableOpacity style={[styles.callButton, { backgroundColor: theme.cardBackground }]}>
+          <Image
+            source={require('../../assets/call.png')}
+            style={[styles.callIcon, { tintColor: COLORS.primary }]}
+          />
         </TouchableOpacity>
       </View>
 
-      {/* Chat Messages */}
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         style={styles.chatContainer}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
       >
-        <ScrollView 
+        <ScrollView
           ref={scrollViewRef}
-          style={styles.messagesContainer}
+          style={[styles.messagesContainer]}
           contentContainerStyle={styles.messagesContent}
           showsVerticalScrollIndicator={false}
           onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
         >
-          {messages.map((msg) => (
-            <View
-              key={msg.id}
-              style={[
-                styles.messageBubble,
-                msg.isUser ? styles.userBubble : styles.agentBubble,
-              ]}
-            >
-              <Text style={[
-                styles.messageText,
-                msg.isUser ? styles.userText : styles.agentText,
-              ]}>
-                {msg.text}
-              </Text>
-              <Text style={[
-                styles.messageTime,
-                msg.isUser ? styles.userTime : styles.agentTime,
-              ]}>
-                {msg.time}
-              </Text>
-            </View>
-          ))}
+          {messages.map(msg => {
+            const isSpecial = (msg.id === 1 || msg.id === 3) && !msg.isUser;
+
+            return (
+              <View
+                key={msg.id}
+                style={[
+                  styles.messageBubble,
+
+                  msg.isUser
+                    ? styles.userBubble
+                    : [
+                      styles.agentBubble,
+                      isDarkMode && { backgroundColor: '#1A1A1A' },
+                      isDarkMode && isSpecial && { backgroundColor: '#2A2A2A' }
+                    ],
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.messageText,
+                    msg.isUser ? styles.userText : styles.agentText,
+                    { color: msg.isUser ? '#fff' : theme.text }
+                  ]}
+                >
+                  {msg.text}
+                </Text>
+
+                <Text
+                  style={[
+                    styles.messageTime,
+                    msg.isUser ? styles.userTime : styles.agentTime,
+                    isDarkMode && isSpecial && { color: '#BBBBBB' }
+                  ]}
+                >
+                  {msg.time}
+                </Text>
+              </View>
+            );
+          })}
         </ScrollView>
 
-        {/* Message Input */}
-        <View style={styles.inputContainer}>
+        <View style={[styles.inputContainer, {
+          backgroundColor: theme.cardBackground,
+        }]}>
           <TextInput
-            style={styles.textInput}
+            style={[
+              styles.textInput,
+              { backgroundColor: isDarkMode ? "#313131ff" : "#fff" }
+            ]}
             value={message}
             onChangeText={setMessage}
             placeholder="Type a message..."
-            placeholderTextColor="#999"
+            placeholderTextColor={isDarkMode ? "#999" : "#666"}
             multiline
           />
-          <TouchableOpacity 
+
+          <TouchableOpacity
             style={[
               styles.sendButton,
               !message.trim() && styles.sendButtonDisabled
-            ]} 
+            ]}
             onPress={sendMessage}
             disabled={!message.trim()}
           >
-            <Image 
-              source={require('../../assets/send.png')} 
+            <Image
+              source={require('../../assets/send.png')}
               style={[
                 styles.sendIcon,
                 !message.trim() && styles.sendIconDisabled
-              ]} 
+              ]}
             />
           </TouchableOpacity>
         </View>
@@ -158,156 +202,124 @@ const ChatScreen = () => {
 export default ChatScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
+  container: { flex: 1 },
+
   header: {
+    position: 'absolute',
+    left: 20,
+    right: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
-    backgroundColor: '#fff',
+    justifyContent: 'space-between',
+    zIndex: 10,
+    paddingVertical: 12,
+    borderRadius: 15,
+    elevation: 5,
   },
-  backButton: {
-    padding: 5,
-  },
-  backIcon: {
-    width: 22,
-    height: 22,
-    tintColor: '#000',
-  },
-  headerInfo: {
-    flex: 1,
-    marginLeft: 15,
-  },
+
+  backButton: { padding: 8 },
+
+  backIcon: { width: 22, height: 22 },
+
+  headerInfo: { flex: 1, marginLeft: 15 },
+
   agentName: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#000',
-    fontFamily : 'Figtree-Bold'
+    fontFamily: 'Figtree-Bold',
   },
+
   agentStatus: {
     fontSize: 12,
-    color: '#259E29',
     marginTop: 2,
-    fontFamily : 'Figtree-SemiBold',
-    fontWeight : '600'
+    color: '#259E29',
+    fontFamily: 'Figtree-SemiBold',
   },
+
   callButton: {
     padding: 8,
-    backgroundColor: '#f8f8f8',
     borderRadius: 20,
   },
-  callIcon: {
-    width: 20,
-    height: 20,
-    tintColor: COLORS.primary,
-  },
-  chatContainer: {
-    flex: 1,
-  },
-  messagesContainer: {
-    flex: 1,
-  },
+
+  callIcon: { width: 20, height: 20 },
+
+  chatContainer: { flex: 1, marginTop: 120 },
+
+  messagesContainer: { flex: 1 },
+
   messagesContent: {
     padding: 20,
-    paddingBottom: 10,
+    paddingBottom: 120,
   },
+
   messageBubble: {
     maxWidth: '80%',
-    padding: 12,
-    borderRadius: 18,
-    marginBottom: 15,
+    padding: 14,
+    borderRadius: 20,
+    marginBottom: 16,
   },
+
   userBubble: {
     alignSelf: 'flex-end',
     backgroundColor: COLORS.primary,
-    borderBottomRightRadius: 5,
+    borderBottomRightRadius: 6,
   },
+
   agentBubble: {
     alignSelf: 'flex-start',
-    backgroundColor: '#f0f0f0',
-    borderBottomLeftRadius: 5,
+    backgroundColor: '#f1f3f6',
+    borderBottomLeftRadius: 6,
   },
-  messageText: {
-    fontSize: 14,
-    lineHeight: 20,
-    fontFamily : 'Figtree-Regular',
-    fontWeight : '400'
-  },
-  userText: {
-    color: '#fff',
-    fontFamily : 'Figtree-Regular',
-    fontWeight : '400'
-  },
-  agentText: {
-    color: '#000',
-    fontFamily : 'Figtree-Regular',
-    fontWeight : '400'
-  },
+
+  messageText: { fontSize: 14, lineHeight: 20 },
+
+  userText: { color: '#fff' },
+
+  agentText: { color: '#1a1a1a' },
+
   messageTime: {
-    fontSize: 10,
-    marginTop: 5,
-    opacity: 0.7,
-      fontFamily : 'Figtree-Regular',
-    fontWeight : '400'
+    fontSize: 11,
+    marginTop: 6,
+    opacity: 0.8,
   },
-  userTime: {
-    color: '#fff',
-    textAlign: 'right',
-      fontFamily : 'Figtree-Regular',
-    fontWeight : '400'
-  },
-  agentTime: {
-    color: '#666',
-      fontFamily : 'Figtree-Regular',
-    fontWeight : '400'
-  },
+
+  userTime: { color: 'rgba(255,255,255,0.9)', textAlign: 'right' },
+
+  agentTime: { color: '#666' },
+
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    padding: 15,
-    paddingBottom: Platform.OS === 'ios' ? 25 : 15,
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
+    paddingHorizontal: 20,
+    paddingVertical: 18,
+    position: 'absolute',
+    bottom: 0, left: 0, right: 0,
+    //borderTopWidth: 1,
   },
+
   textInput: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: '#ddd',
+    //borderWidth: 1,
     borderRadius: 25,
-    paddingHorizontal: 15,
-    paddingVertical: 12,
-    paddingTop: 12,
+    paddingHorizontal: 18,
+    paddingVertical: 14,
     maxHeight: 100,
     fontSize: 14,
-    backgroundColor: '#f8f8f8',
-    marginRight: 10,
-      fontFamily : 'Figtree-Regular',
-    fontWeight : '400'
+    marginRight: 12,
   },
+
   sendButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: COLORS.primary,
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
   },
-  sendButtonDisabled: {
-    backgroundColor: '#ccc',
-  },
-  sendIcon: {
-    width: 20,
-    height: 20,
-    tintColor: '#fff',
-    marginLeft: 2,
-  },
-  sendIconDisabled: {
-    tintColor: '#999',
-  },
+
+  sendButtonDisabled: { backgroundColor: '#ccc' },
+
+  sendIcon: { width: 22, height: 22, tintColor: '#fff' },
+
+  sendIconDisabled: { tintColor: '#999' },
 });

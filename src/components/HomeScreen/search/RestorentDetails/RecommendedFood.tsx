@@ -28,157 +28,157 @@ const RecommendedFood = ({
     vibrate(30);
     handlePlusPress(id);
   };
-return (
-  <View style={styles.grid}>
-    {foodItems.map(f => {
-      const isLiked = likedItems.includes(f.id);
+  return (
+    <View style={styles.grid}>
+      {foodItems.map(f => {
+        const isLiked = likedItems.includes(f.id);
 
-      return (
-        <View
-          key={f.id}
-          style={[
-            styles.foodCard,
-            { backgroundColor: isDark ? '#1E1E1E' : '#fff' }
-          ]}
-        >
-          {/* Heart Icon */}
-          <TouchableOpacity
-            style={[
-              styles.productHeartWrapper,
-              {
-                backgroundColor: isLiked
-                  ? 'rgba(255,255,255,0.9)'
-                  : 'rgba(255,255,255,0.3)'
-              }
-            ]}
-            onPress={() => handleHeartPressWithVibration(f.id)}
-            activeOpacity={0.7}
-          >
-            <Animated.Image
-              source={
-                isLiked
-                  ? require('../../../../assets/heartfill.png')
-                  : require('../../../../assets/heart.png')
-              }
-              style={[
-                styles.heartIcon,
-                { tintColor: isLiked ? COLORS.primary : '#fff' },
-                { transform: [{ scale: heartScales[f.id] || 1 }] }
-              ]}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-
-          {/* Food Image */}
-          <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={() => handleFoodItemPress(f)}
-          >
-            <Image
-              source={f.img}
-              style={styles.foodImg}
-              resizeMode="cover"
-            />
-
-            {/* Rating Badge */}
-            <View style={styles.productRatingBadge}>
-              <Image
-                source={require('../../../../assets/star.png')}
-                style={styles.starIcon}
-                resizeMode="contain"
-              />
-              <Text style={styles.ratingText}>4.4</Text>
-            </View>
-          </TouchableOpacity>
-
-          {/* Food Info */}
+        return (
           <View
+            key={f.id}
             style={[
-              styles.foodInfo,
-              { backgroundColor: theme.cardBackground }
+              styles.foodCard,
+              { backgroundColor: isDark ? '#1E1E1E' : '#fff' }
             ]}
           >
-            <Text
+            {/* Heart Icon */}
+            <TouchableOpacity
               style={[
-                styles.foodName,
+                styles.productHeartWrapper,
                 {
-                  color: theme.text,
-                  fontFamily: getFontFamily('Bold'),
-                  fontWeight: getFontWeight('Bold')
+                  backgroundColor: isLiked
+                    ? 'rgba(255,255,255,0.9)'
+                    : 'rgba(255,255,255,0.3)'
                 }
               ]}
+              onPress={() => handleHeartPressWithVibration(f.id)}
+              activeOpacity={0.7}
             >
-              {f.name}
-            </Text>
-
-            {/* Price Row */}
-            <View style={styles.priceRow}>
-              <Text
+              <Animated.Image
+                source={
+                  isLiked
+                    ? require('../../../../assets/heartfill.png')
+                    : require('../../../../assets/heart.png')
+                }
                 style={[
-                  styles.price,
-                  {
-                    color: theme.text,
-                    fontFamily: getFontFamily('SemiBold'),
-                    fontWeight: getFontWeight('SemiBold')
-                  }
+                  styles.heartIcon,
+                  { tintColor: isLiked ? COLORS.primary : '#fff' },
+                  { transform: [{ scale: heartScales[f.id] || 1 }] }
                 ]}
-              >
-                ₹ {f.price.toFixed(2)}
-              </Text>
-
-              <Text
-                style={[
-                  styles.oldPrice,
-                  {
-                    fontFamily: getFontFamily('Regular'),
-                    fontWeight: getFontWeight('Regular')
-                  }
-                ]}
-              >
-                ₹ {f.oldPrice.toFixed(2)}
-              </Text>
-
-              <TouchableOpacity
-                onPress={() => handlePlusPressWithVibration(f.id)}
-                style={styles.plusBtn}
-              >
-                <Animated.Image
-                  source={require('../../../../assets/plus.png')}
-                  style={[
-                    styles.plusIcon,
-                    { transform: [{ scale: plusScales[f.id] || 1 }] }
-                  ]}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            </View>
-
-            {/* Time */}
-            <View style={styles.timeRow}>
-              <Image
-                source={require('../../../../assets/clock.png')}
-                style={styles.clockIcon}
                 resizeMode="contain"
               />
+            </TouchableOpacity>
 
+            {/* Food Image */}
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => handleFoodItemPress(f)}
+            >
+              <Image
+                source={f.img}
+                style={styles.foodImg}
+                resizeMode="cover"
+              />
+
+              {/* Rating Badge */}
+              <View style={styles.productRatingBadge}>
+                <Image
+                  source={require('../../../../assets/star.png')}
+                  style={styles.starIcon}
+                  resizeMode="contain"
+                />
+                <Text style={styles.ratingText}>4.4</Text>
+              </View>
+            </TouchableOpacity>
+
+            {/* Food Info */}
+            <View
+              style={[
+                styles.foodInfo,
+                { backgroundColor: theme.cardBackground }
+              ]}
+            >
               <Text
                 style={[
-                  styles.timeText,
+                  styles.foodName,
                   {
                     color: theme.text,
-                    fontWeight: 'bold'
+                    fontFamily: getFontFamily('Bold'),
+                    fontWeight: getFontWeight('Bold')
                   }
                 ]}
               >
-                {f.time}
+                {f.name}
               </Text>
+
+              {/* Price Row */}
+              <View style={styles.priceRow}>
+                <Text
+                  style={[
+                    styles.price,
+                    {
+                      color: theme.text,
+                      fontFamily: getFontFamily('SemiBold'),
+                      fontWeight: getFontWeight('SemiBold')
+                    }
+                  ]}
+                >
+                  ₹ {f.price.toFixed(2)}
+                </Text>
+
+                <Text
+                  style={[
+                    styles.oldPrice,
+                    {
+                      fontFamily: getFontFamily('Regular'),
+                      fontWeight: getFontWeight('Regular')
+                    }
+                  ]}
+                >
+                  ₹ {f.oldPrice.toFixed(2)}
+                </Text>
+
+                <TouchableOpacity
+                  onPress={() => handlePlusPressWithVibration(f.id)}
+                  style={styles.plusBtn}
+                >
+                  <Animated.Image
+                    source={require('../../../../assets/plus.png')}
+                    style={[
+                      styles.plusIcon,
+                      { transform: [{ scale: plusScales[f.id] || 1 }] }
+                    ]}
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
+              </View>
+
+              {/* Time */}
+              <View style={styles.timeRow}>
+                <Image
+                  source={require('../../../../assets/clock.png')}
+                  style={styles.clockIcon}
+                  resizeMode="contain"
+                />
+
+                <Text
+                  style={[
+                    styles.timeText,
+                    {
+                      color: theme.text,
+                      fontWeight: 'bold'
+                    }
+                  ]}
+                >
+                  {f.time}
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
-      );
-    })}
-  </View>
-);
+        );
+      })}
+    </View>
+  );
 }
 const styles = StyleSheet.create({
   grid: {

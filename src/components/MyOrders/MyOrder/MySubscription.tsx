@@ -1,231 +1,213 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
-import React, { useContext } from 'react'
-import { COLORS } from '../../../theme/colors';
-import { getFontFamily, getFontWeight } from '../../../utils/fontHelper';
-import ActiveOrders from './ActiveOrders';
-import PreviousOrder from './PreviousOrder';
-import { useNavigation } from '@react-navigation/native';
-import { ThemeContext } from '../../../theme/ThemeContext';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import React, { useContext } from "react";
+import { ThemeContext } from "../../../theme/ThemeContext";
+import { COLORS } from "../../../theme/colors";
+import ActiveOrders from "./ActiveOrders";
+import PreviousOrder from "./PreviousOrder";
+import { getFontFamily, getFontWeight } from "../../../utils/fontHelper";
+import { useNavigation } from "@react-navigation/native";
 
 const MySubscription = ({
-    subTab,
-    setSubTab,
-    activeSubs,
-    previousSubs,
-    setRatingModal,
+  subTab,
+  setSubTab,
+  activeSubs,
+  previousSubs,
+  setRatingModal,
 }) => {
+  const navigation = useNavigation();
+  const { theme, isDarkMode } = useContext(ThemeContext);
 
-    const { theme } = useContext(ThemeContext);
-    const navigation = useNavigation();
+  return (
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
 
-    return (
+      {/* ----------- TABS (New UI) ----------- */}
+      <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
         <View
-            style={{
-                backgroundColor: theme.background,
-                flex: 1,
-            }}
+          style={[
+            styles.tabContainer,
+            {
+              backgroundColor: isDarkMode ? "#1A1A1A" : "#F4F4F4",
+              borderColor: isDarkMode ? theme.borderColor : "transparent",
+              borderWidth: isDarkMode ? 1 : 0,
+            },
+          ]}
         >
-            {/* Tabs */}
-            <View style={styles.tabRowOuter}>
-                <View
-                    style={[
-                        styles.tabRow,
-                        { backgroundColor: theme.card, borderColor: theme.cardBackground }
-                    ]}
-                >
-                    {/* Active Tab */}
-                    <TouchableOpacity
-                        style={[
-                            styles.tabBtn,
-                            subTab === 'Active' && {
-                                backgroundColor: COLORS.primary,
-                                borderRadius: 10,
-                            }
-                        ]}
-                        onPress={() => setSubTab('Active')}
-                    >
-                        <Text
-                            style={[
-                                styles.tabText,
-                                { color: theme.text },
-                                subTab === 'Active' && { color: '#FFF' }
-                            ]}
-                        >
-                            Active
-                        </Text>
-                    </TouchableOpacity>
+          {/* Active Tab */}
+          <TouchableOpacity
+            style={[
+              styles.tabBtn,
+              subTab === "Active" && styles.activeTab,
+            ]}
+            onPress={() => setSubTab("Active")}
+          >
+            <Text
+              style={[
+                styles.tabText,
+                { color: subTab === "Active" ? "#fff" : theme.text },
+              ]}
+            >
+              Active
+            </Text>
+          </TouchableOpacity>
 
-                    {/* Previous Tab */}
-                    <TouchableOpacity
-                        style={[
-                            styles.tabBtn,
-                            subTab === 'Previous' && {
-                                backgroundColor: COLORS.primary,
-                                borderRadius: 10,
-                            }
-                        ]}
-                        onPress={() => setSubTab('Previous')}
-                    >
-                        <Text
-                            style={[
-                                styles.tabText,
-                                { color: theme.text },
-                                subTab === 'Previous' && { color: '#FFF' }
-                            ]}
-                        >
-                            Previous
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-
-            {/* Header */}
-            <View style={styles.activeHeader}>
-                <Image
-  source={require('../../../assets/p1.png')}
-  style={[
-    styles.plusIcon,
-    {
-      tintColor: theme.mode === 'dark' ? '#cbc9c9ff' : '#5b5b5bff',
-    },
-  ]}
-/>
-
-                <Text
-                    style={[
-                        styles.activeTitle,
-                        { color: theme.text }
-                    ]}
-                >
-                    {subTab === 'Active'
-                        ? "My active subscription's"
-                        : "Previous subscription's"}
-                </Text>
-            </View>
-
-            {/* Subscription Cards */}
-            {(subTab === 'Active' ? activeSubs : previousSubs).map((s) => (
-                <View
-                    key={s.id}
-                    style={[
-                        styles.subCard,
-                        {
-                            backgroundColor: theme.card,
-                            borderColor: theme.cardBackground,
-                            borderWidth: 1
-                        }
-                    ]}
-                >
-                    <ActiveOrders
-                        sub={s}
-                        isPrevious={false}
-                        openRatingModal={() => setRatingModal(true)}
-                    />
-
-                    {subTab === 'Previous' && (
-                        <PreviousOrder
-                            onRatePress={() => setRatingModal(true)}
-                            onResubscribePress={() =>
-                                navigation.navigate('ReSubscribeScreen')
-                            }
-                        />
-                    )}
-                </View>
-            ))}
-
-            {/* Bottom Note */}
-            {subTab === 'Active' && (
-                <View style={styles.bottomNoteRow}>
-                    <Text
-                        style={[
-                            styles.cancelNote,
-                            { color: theme.mode === 'dark' ? '#FF5555' : '#EA001B' }
-                        ]}
-                    >
-                        Subscription plan cannot be cancelled
-                    </Text>
-
-                    <TouchableOpacity
-                        onPress={() =>
-                            navigation.navigate('AddMoreSubscription')
-                        }
-                    >
-                        <Text
-                            style={[
-                                styles.addText,
-                                { color: theme.mode === 'dark' ? '#00D46E' : '#259E29' }
-                            ]}
-                        >
-                            + Add More
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            )}
+          {/* Previous Tab */}
+          <TouchableOpacity
+            style={[
+              styles.tabBtn,
+              subTab === "Previous" && styles.activeTab,
+            ]}
+            onPress={() => setSubTab("Previous")}
+          >
+            <Text
+              style={[
+                styles.tabText,
+                { color: subTab === "Previous" ? "#fff" : theme.text },
+              ]}
+            >
+              Previous
+            </Text>
+          </TouchableOpacity>
         </View>
-    )
-}
+      </View>
+
+      {/* ---------- HEADING ---------- */}
+      <View style={styles.activeHeader}>
+        <Image
+          source={require("../../../assets/p1.png")}
+          style={styles.plusIcon}
+        />
+
+        <Text style={[styles.activeTitle, { color: theme.text }]}>
+          {subTab === "Active"
+            ? "My active subscription's"
+            : "Previous subscription's"}
+        </Text>
+      </View>
+
+      {/* ---------- CARD LIST ---------- */}
+      {(subTab === "Active" ? activeSubs : previousSubs).map((s) => (
+        <View
+          key={s.id}
+          style={[styles.subCard, { backgroundColor: theme.cardBackground }]}
+        >
+          <ActiveOrders
+            sub={s}
+            isPrevious={false}
+            openRatingModal={() => setRatingModal(true)}
+          />
+
+          {subTab === "Previous" && (
+            <PreviousOrder
+              onRatePress={() => setRatingModal(true)}
+              onResubscribePress={() =>
+                navigation.navigate("ReSubscribeScreen")
+              }
+            />
+          )}
+        </View>
+      ))}
+
+      {/* ---------- FOOTER ---------- */}
+      {subTab === "Active" && (
+        <View style={styles.bottomNoteRow}>
+          <Text style={styles.cancelNote}>
+            Subscription plan cannot be cancelled
+          </Text>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate("AddMoreSubscription")}
+          >
+            <Text style={styles.addText}>+ Add More</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
+  );
+};
 
 export default MySubscription;
 
+/* ----------------------- STYLES ----------------------- */
+
 const styles = StyleSheet.create({
-    tabRowOuter: {
-        marginHorizontal: 20,
-        marginBottom: 14,
-        marginTop: 20,
-    },
-    tabRow: {
-        flexDirection: 'row',
-        borderRadius: 10,
-        overflow: 'hidden',
-        borderWidth: 1,
-    },
-    tabBtn: {
-        flex: 1,
-        alignItems: 'center',
-        paddingVertical: 15,
-    },
-    tabText: {
-        fontSize: 14,
-        fontFamily: getFontFamily('Medium'),
-        fontWeight: getFontWeight('Medium'),
-    },
+  /* ---- Tabs Outer Box ---- */
+  tabContainer: {
+    flexDirection: "row",
+    borderRadius: 10,
+    backgroundColor: "#fff",
+    overflow: 'hidden',
+    elevation: 3,
+  },
 
-    activeHeader: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginHorizontal: 20,
-        marginTop: 10,
-        marginBottom: 10,
-    },
-    plusIcon: { width: 20, height: 20 },
-    activeTitle: {
-        marginLeft: 8,
-        fontSize: 16,
-        fontFamily: getFontFamily('Bold'),
-        fontWeight: getFontWeight('Bold'),
-    },
+  /* ---- Each Tab ---- */
+  tabBtn: {
+    borderRadius: 10,
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 15,
+    backgroundColor: 'transparent',
 
-    subCard: {
-        marginHorizontal: 20,
-        marginBottom: 16,
-        borderRadius: 14,
-        padding: 14,
-    },
+  },
 
-    bottomNoteRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginHorizontal: 20,
-        marginTop: 10,
-    },
-    cancelNote: {
-        fontSize: 13,
-        fontFamily: getFontFamily('Medium'),
-        fontWeight: getFontWeight('Medium'),
-    },
-    addText: {
-        fontSize: 13,
-        fontFamily: getFontFamily('Bold'),
-        fontWeight: getFontWeight('Bold'),
-    },
+  /* ---- Active Tab ---- */
+  activeTab: {
+    backgroundColor: COLORS.primary,
+  },
+
+  tabText: {
+    fontSize: 14,
+    fontFamily: getFontFamily("Medium"),
+    fontWeight: getFontWeight("Medium"),
+  },
+
+  /* ---- Heading Row ---- */
+  activeHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 20,
+    marginTop: 15,
+    marginBottom: 10,
+  },
+
+  plusIcon: { width: 20, height: 20 },
+
+  activeTitle: {
+    marginLeft: 8,
+    fontSize: 16,
+    fontFamily: getFontFamily("Bold"),
+  },
+
+  /* ---- Subscription Card ---- */
+  subCard: {
+    margin: 20,
+    marginBottom: 16,
+    borderRadius: 14,
+    elevation: 3,
+    padding: 14,
+  },
+
+  bottomNoteRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginHorizontal: 20,
+    marginTop: 10,
+  },
+
+  cancelNote: {
+    color: "#EA001B",
+    fontSize: 13,
+    fontFamily: getFontFamily("Medium"),
+  },
+
+  addText: {
+    color: "#259E29",
+    fontSize: 13,
+    fontFamily: getFontFamily("Bold"),
+  },
 });

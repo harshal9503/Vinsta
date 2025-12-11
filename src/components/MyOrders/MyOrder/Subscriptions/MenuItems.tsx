@@ -199,15 +199,15 @@ const MenuItems = () => {
 
               {/* Quantity */}
               <View style={styles.qtyRow}>
-               <TouchableOpacity onPress={() => updateQty(tab, item.id, -1)} style={styles.qtyBtn}> <Text style={[styles.qtySign,
-                {color: theme.mode === 'dark' ? '#FFFFFF' : '#000000',}]} > − </Text> </TouchableOpacity>
+                <TouchableOpacity onPress={() => updateQty(tab, item.id, -1)} style={styles.qtyBtn}> <Text style={[styles.qtySign,
+                { color: theme.mode === 'dark' ? '#FFFFFF' : '#000000', }]} > − </Text> </TouchableOpacity>
 
                 <Text style={[styles.qtyText, { color: textPrimary }]}>
                   {item.qty.toString().padStart(2, '0')}
                 </Text>
 
-                <TouchableOpacity onPress={() => updateQty(tab, item.id, +1)} style={styles.qtyBtn}> 
-                  <Text style={[styles.qtySign, {color: theme.mode === 'dark' ? '#FFFFFF' : '#000000',}]}>+</Text> </TouchableOpacity>
+                <TouchableOpacity onPress={() => updateQty(tab, item.id, +1)} style={styles.qtyBtn}>
+                  <Text style={[styles.qtySign, { color: theme.mode === 'dark' ? '#FFFFFF' : '#000000', }]}>+</Text> </TouchableOpacity>
               </View>
             </View>
 
@@ -233,8 +233,8 @@ const MenuItems = () => {
                         backgroundColor: isActive
                           ? COLORS.primary
                           : isDark
-                          ? '#3A3A3A'
-                          : '#f2f2f2',
+                            ? '#3A3A3A'
+                            : '#f2f2f2',
                       }
                     ]}
                     onPress={() => toggleDay(tab, item.id, d)}

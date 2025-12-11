@@ -19,7 +19,7 @@ const { width, height } = Dimensions.get('window');
 
 const Wishlist = () => {
   const navigation = useNavigation<any>();
-  const { theme } = useContext(ThemeContext);
+  const { theme, isDarkMode } = useContext(ThemeContext);
   const [activeTab, setActiveTab] = useState<'Food' | 'Restaurant'>('Food');
   const [heartScales] = useState<{ [key: number]: Animated.Value }>({});
 
@@ -60,100 +60,81 @@ const Wishlist = () => {
   const subTextColor = theme.mode === 'dark' ? '#AAAAAA' : '#555555';
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background}]}>
-      <StatusBar barStyle={theme.mode === 'dark' ? 'light-content' : 'dark-content'} 
-      backgroundColor="transparent" translucent />
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle={theme.mode === 'dark' ? 'light-content' : 'dark-content'}
+        backgroundColor="transparent" translucent />
 
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../assets/back.png')} style={[styles.backIcon, { tintColor: textColor }]} />
+          <Image source={require('../../assets/back.png')}
+            style={[styles.backIcon, { tintColor: theme.text }]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.text}]}>Favourite's</Text>
+        <Text style={[styles.headerTitle, { color: theme.text }]}>Favourite's</Text>
         <View style={{ width: 22 }} />
       </View>
 
       {/* Tabs */}
-      <View
-  style={[
-    styles.tabRowOuter,
-    {
-      backgroundColor: theme.card,
-      borderColor: theme.borderColor,
-      borderWidth: theme.mode === 'dark' ? 1.2 : 0,
-    },
-  ]}
->
-  <View
-    style={[
-      styles.tabRow,
-         { 
-          backgroundColor: theme.card,
-        borderColor: theme.borderColor,
-        borderWidth: theme.mode === 'dark' ? 1 : 0,
-         }
-    
-    ]}
-  >
-    {/* FOOD TAB */}
-    <TouchableOpacity
-      style={[
-        styles.tabBtn,
-        {
-          backgroundColor:
-            activeTab === 'Food'
-              ? '#e48518ff'
-              : theme.cardBackground,
+      <View style={[
+        styles.tabRowOuter,
+        { backgroundColor: 'transparent' }
+      ]}>
+        <View
+          style={[
+            styles.tabRow,
+            {
+              backgroundColor: theme.cardBackground,
+              borderColor: isDarkMode ? theme.borderColor : 'transparent',
+              borderWidth: isDarkMode ? 1 : 0,
+            },
+          ]}
+        >
 
-         
-        },
-      ]}
-      onPress={() => setActiveTab('Food')}
-      activeOpacity={0.9}
-    >
-      <Text
-        style={[
-          styles.tabText,
-          {
-            color: activeTab === 'Food' ? '#FFF' : theme.text,
-          },
-        ]}
-      >
-        Food Item's
-      </Text>
-    </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.tabBtn,
+              activeTab === 'Food' && styles.activeTab,
+              activeTab === 'Food' && styles.activeTabShadow,
+            ]}
+            onPress={() => setActiveTab('Food')}
+            activeOpacity={0.9}
+          >
+            <Text
+              style={[
+                styles.tabText,
+                { color: isDarkMode ? theme.text : theme.text },
+                activeTab === 'Food' && { color: '#fff' }
 
-    {/* RESTAURANT TAB */}
-    <TouchableOpacity
-      style={[
-        styles.tabBtn,
-        {
-          backgroundColor:
-            activeTab === 'Restaurant'
-              ? '#e57d06ff'
-              : theme.cardBackground,
+              ]}
+            >
+              Food Item's
+            </Text>
+          </TouchableOpacity>
 
-          // ⭐ Border only for inactive tabs in dark mode
-         
-        },
-      ]}
-      onPress={() => setActiveTab('Restaurant')}
-      activeOpacity={0.9}
-    >
-      <Text
-        style={[
-          styles.tabText,
-          {
-            color:
-              activeTab === 'Restaurant' ? '#FFFFFF' : theme.text,
-          },
-        ]}
-      >
-        Restaurant's
-      </Text>
-    </TouchableOpacity>
-  </View>
-</View>
+          <TouchableOpacity
+            style={[
+              styles.tabBtn,
+              activeTab === 'Restaurant' && styles.activeTab,
+              activeTab === 'Restaurant' && styles.activeTabShadow,
+            ]}
+            onPress={() => setActiveTab('Restaurant')}
+            activeOpacity={0.9}
+          >
+            <Text
+              style={[
+                styles.tabText,
+                { color: isDarkMode ? theme.text : theme.text },
+                activeTab === 'Restaurant' && { color: '#fff' },
+              ]}
+            >
+              Restaurant's
+            </Text>
+          </TouchableOpacity>
+
+        </View>
+      </View>
+
+
 
       {/* Content */}
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 80 }}>
@@ -180,26 +161,26 @@ const Wishlist = () => {
                     </TouchableOpacity>
                   </Animated.View>
 
-                 <View
-  style={[
-    styles.foodInfo,
-    { backgroundColor: theme.cardBackground }, // picks dark/light card color automatically
-  ]}
->
-  <Text style={[styles.foodName, { color: theme.text }]}>{f.name}</Text>
+                  <View
+                    style={[
+                      styles.foodInfo,
+                      { backgroundColor: theme.cardBackground }, // picks dark/light card color automatically
+                    ]}
+                  >
+                    <Text style={[styles.foodName, { color: theme.text }]}>{f.name}</Text>
 
-  <View style={styles.priceRow}>
-    <Text style={[styles.price, { color: theme.text }]}>{`₹ ${f.price.toFixed(2)}`}</Text>
-    <Text style={[styles.oldPrice, ]}>{`₹ ${f.oldPrice.toFixed(2)}`}</Text>
-  </View>
+                    <View style={styles.priceRow}>
+                      <Text style={[styles.price, { color: theme.text }]}>{`₹ ${f.price.toFixed(2)}`}</Text>
+                      <Text style={[styles.oldPrice,]}>{`₹ ${f.oldPrice.toFixed(2)}`}</Text>
+                    </View>
 
-  <View style={styles.timeRow}>
-    <Image source={require('../../assets/clock.png')} style={styles.clockIcon} />
-    <Text style={[styles.timeText, { color: theme.textSecondary }]}>{f.time}</Text>
-  </View>
-</View>
+                    <View style={styles.timeRow}>
+                      <Image source={require('../../assets/clock.png')} style={styles.clockIcon} />
+                      <Text style={[styles.timeText, { color: theme.textSecondary }]}>{f.time}</Text>
+                    </View>
+                  </View>
 
-                 
+
                 </TouchableOpacity>
               ))
             ) : (
@@ -217,40 +198,40 @@ const Wishlist = () => {
                   onPress={() => navigation.navigate('restaurentDetails')}
                 >
                   <Image source={r.img} style={styles.cardImg} />
-                 <View
-  style={[
-    styles.cardContent,
-    { backgroundColor: theme.cardBackground } // dark/light card background
-  ]}
->
+                  <View
+                    style={[
+                      styles.cardContent,
+                      { backgroundColor: theme.cardBackground } // dark/light card background
+                    ]}
+                  >
                     <View style={styles.titleRow}>
-                      <Text style={[styles.title, { color: theme.text}]}>{r.name}</Text>
+                      <Text style={[styles.title, { color: theme.text }]}>{r.name}</Text>
                       <View style={styles.ratingBadge}>
                         <Image source={require('../../assets/star.png')} style={styles.starIcon} />
-                        <Text style={[styles.ratingText, ]}>4.4</Text>
+                        <Text style={[styles.ratingText,]}>4.4</Text>
                       </View>
                     </View>
                     <View style={styles.locationRow}>
                       <Image source={require('../../assets/location1.png')} style={styles.locIcon} />
-                      <Text style={[styles.location, { color:  theme.text }]}>Near MC College, Barpeta Town</Text>
+                      <Text style={[styles.location, { color: theme.text }]}>Near MC College, Barpeta Town</Text>
                       <Animated.View style={{ transform: [{ scale: heartScales[r.id] || 1 }] }}>
 
                         <TouchableOpacity
-                        
+
                           onPress={() => handleHeartPress(r.id, 'Restaurant')}
                           activeOpacity={0.7}
                         >
                           <Image source={require('../../assets/heartfill.png')}
-                           style={styles.heartIcon} />
+                            style={styles.heartIcon} />
                         </TouchableOpacity>
                       </Animated.View>
                     </View>
                     <View style={styles.infoRow}>
-                      <Text style={[styles.subInfo, { color: theme.text}]}>FAST FOOD</Text>
+                      <Text style={[styles.subInfo, { color: theme.text }]}>FAST FOOD</Text>
                       <Image source={require('../../assets/meter.png')} style={styles.metaIcon} />
                       <Text style={[styles.metaText, { color: theme.text }]}>590.0 m</Text>
                       <Image source={require('../../assets/clockk.png')} style={styles.metaIcon} />
-                      <Text style={[styles.metaText, { color:  theme.text }]}>25 min</Text>
+                      <Text style={[styles.metaText, { color: theme.text }]}>25 min</Text>
                     </View>
                   </View>
                 </TouchableOpacity>
@@ -268,9 +249,9 @@ const Wishlist = () => {
 export default Wishlist;
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: COLORS.secondary 
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.secondary
   },
 
   header: {
@@ -282,10 +263,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 
-  backIcon: { 
-    width: 22, 
-    height: 22, 
-    tintColor: '#000' 
+  backIcon: {
+    width: 22,
+    height: 22,
+    tintColor: '#000'
   },
   headerTitle: {
     fontSize: width * 0.045,
@@ -362,18 +343,18 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     elevation: 3,
   },
-  foodImg: { 
-    width: '100%', 
-    height: 140, 
-    resizeMode: 'cover' 
+  foodImg: {
+    width: '100%',
+    height: 140,
+    resizeMode: 'cover'
   },
-  foodHeartWrapper: { 
-    position: 'absolute', 
-    top: 10, 
-    right: 10 
+  foodHeartWrapper: {
+    position: 'absolute',
+    top: 10,
+    right: 10
   },
-  foodInfo: { 
-    padding: 10 
+  foodInfo: {
+    padding: 10
   },
   foodName: {
     fontSize: 18,
@@ -400,20 +381,20 @@ const styles = StyleSheet.create({
     fontFamily: getFontFamily('Regular'),
     fontWeight: getFontWeight('Regular'),
   },
-  timeRow: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    marginTop: 4 
+  timeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4
   },
-  clockIcon: { 
-    width: 12, 
-    height: 12, 
-    marginRight: 6, 
-    resizeMode: 'contain' 
+  clockIcon: {
+    width: 12,
+    height: 12,
+    marginRight: 6,
+    resizeMode: 'contain'
   },
-  timeText: { 
-    fontSize: 12, 
-    color: '#555', 
+  timeText: {
+    fontSize: 12,
+    color: '#555',
     fontFamily: getFontFamily('Regular'),
     fontWeight: getFontWeight('Regular')
   },
@@ -427,13 +408,13 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     elevation: 3,
   },
-  cardImg: { 
-    width: '100%', 
-    height: 180, 
-    resizeMode: 'cover' 
+  cardImg: {
+    width: '100%',
+    height: 180,
+    resizeMode: 'cover'
   },
-  cardContent: { 
-    padding: 14 
+  cardContent: {
+    padding: 14
   },
   titleRow: {
     flexDirection: 'row',
@@ -457,11 +438,11 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 8,
   },
-  starIcon: { 
-    width: 12, 
-    height: 12, 
-    tintColor: '#fff', 
-    marginRight: 6 
+  starIcon: {
+    width: 12,
+    height: 12,
+    tintColor: '#fff',
+    marginRight: 6
   },
   ratingText: {
     color: '#fff',
@@ -469,21 +450,21 @@ const styles = StyleSheet.create({
     fontFamily: getFontFamily('SemiBold'),
     fontWeight: getFontWeight('SemiBold'),
   },
-  locationRow: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    marginTop: 6 
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 6
   },
-  locIcon: { 
-    width: 12, 
-    height: 12, 
-    marginRight: 6, 
-    resizeMode: 'contain' 
+  locIcon: {
+    width: 12,
+    height: 12,
+    marginRight: 6,
+    resizeMode: 'contain'
   },
-  location: { 
-    fontSize: 13, 
-    color: '#555', 
-    flex: 1, 
+  location: {
+    fontSize: 13,
+    color: '#555',
+    flex: 1,
     fontFamily: getFontFamily('Regular'),
     fontWeight: getFontWeight('Regular')
   },
@@ -496,32 +477,32 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: 6,
   },
-  heartIcon: { 
-    width: 14, 
-    height: 14, 
-    resizeMode: 'contain' 
+  heartIcon: {
+    width: 14,
+    height: 14,
+    resizeMode: 'contain'
   },
-  infoRow: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    marginTop: 10, 
-    gap: 6 
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+    gap: 6
   },
-  subInfo: { 
-    color: '#777', 
-    fontSize: 13, 
+  subInfo: {
+    color: '#777',
+    fontSize: 13,
     fontFamily: getFontFamily('Medium'),
     fontWeight: getFontWeight('Medium')
   },
-  metaIcon: { 
-    width: 13, 
-    height: 13, 
-    marginHorizontal: 4, 
-    resizeMode: 'contain' 
+  metaIcon: {
+    width: 13,
+    height: 13,
+    marginHorizontal: 4,
+    resizeMode: 'contain'
   },
-  metaText: { 
-    color: '#555', 
-    fontSize: 12, 
+  metaText: {
+    color: '#555',
+    fontSize: 12,
     fontFamily: getFontFamily('Regular'),
     fontWeight: getFontWeight('Regular')
   },

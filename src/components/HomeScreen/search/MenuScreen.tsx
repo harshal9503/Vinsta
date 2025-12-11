@@ -86,24 +86,24 @@ const MenuScreen = () => {
 
           {/* VEG TAB */}
           <TouchableOpacity
-  style={[
-    styles.tabButton,
-    tab === 'Veg' && {
-      backgroundColor: theme.mode === 'dark' ? '#1F6F1F' : '#259E29',
-    },
-  ]}
-  onPress={() => setTab('Veg')}
->
-  <Text
-  style={[
-    styles.tabText,
-    { color: tab === 'Veg' ? '#fff' : '#000' }, // active = white, inactive = black (always)
-  ]}
->
-  Veg
-</Text>
+            style={[
+              styles.tabButton,
+              tab === 'Veg' && {
+                backgroundColor: theme.mode === 'dark' ? '#1F6F1F' : '#259E29',
+              },
+            ]}
+            onPress={() => setTab('Veg')}
+          >
+            <Text
+              style={[
+                styles.tabText,
+                { color: tab === 'Veg' ? '#fff' : '#000' }, // active = white, inactive = black (always)
+              ]}
+            >
+              Veg
+            </Text>
 
-</TouchableOpacity>
+          </TouchableOpacity>
 
 
           {/* NON-VEG TAB */}
@@ -119,7 +119,7 @@ const MenuScreen = () => {
             <Text
               style={[
                 styles.tabText,
-                { color: tab === 'NonVeg' ? '#fff' : '#000' },,
+                { color: tab === 'NonVeg' ? '#fff' : '#000' }, ,
               ]}
             >
               Non-Veg
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: width * 0.06,
     fontWeight: '600',
-    fontFamily : 'Figtree-SemiBold'
+    fontFamily: 'Figtree-SemiBold'
 
   },
 });

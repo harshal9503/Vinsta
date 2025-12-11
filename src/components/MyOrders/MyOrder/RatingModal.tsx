@@ -48,7 +48,10 @@ const RatingModal = ({
           </View>
 
           {/* Food Card */}
-          <View style={[styles.reviewCard, { backgroundColor: theme.card }]}>
+          <View style={[styles.reviewCard, {
+            backgroundColor: theme.cardBackground,
+            borderRadius: 10,
+          }]}>
             <Image
               source={require('../../../assets/poha.png')}
               style={styles.foodImg}
@@ -108,11 +111,11 @@ const RatingModal = ({
               styles.inputBox,
               {
                 backgroundColor:
-                  theme.mode === 'dark' ? '#1E1E1E' : theme.card, 
+                  theme.mode === 'dark' ? '#1E1E1E' : theme.card,
                 color:
-                  theme.mode === 'dark' ? '#FFFFFF' : theme.text,  
+                  theme.mode === 'dark' ? '#FFFFFF' : theme.text,
                 borderColor:
-                  theme.mode === 'dark' ? '#FFFFFF55' : '#D0D0D0', 
+                  theme.mode === 'dark' ? '#FFFFFF55' : '#D0D0D0',
               }
             ]}
             placeholder="Write your review..."
@@ -129,8 +132,8 @@ const RatingModal = ({
               style={[
                 styles.modalCancelBtn,
                 {
-                  backgroundColor: theme.card,   
-                  borderColor: '#808080',        
+                  backgroundColor: theme.card,
+                  borderColor: '#808080',
                 }
               ]}
               onPress={onClose}

@@ -61,8 +61,8 @@ function getFontWeight(weight: keyof typeof fontMap = 'Regular') {
 
 const BestBurgers = () => {
   const navigation = useNavigation<any>();
-   const { theme } = useContext(ThemeContext);
-    const isDarkMode = theme.mode === "dark";
+  const { theme } = useContext(ThemeContext);
+  const isDarkMode = theme.mode === "dark";
 
   const allBurgers = [
     {
@@ -173,7 +173,7 @@ const BestBurgers = () => {
     });
     return scales;
   });
-  
+
   const filters = ['All', 'Veg', 'Non-Veg', 'Under ₹40', 'Rating 4+', 'Fast Delivery'];
 
   // Heart animation function
@@ -300,13 +300,13 @@ const BestBurgers = () => {
         </View>
 
         <View style={[
-        styles.burgerInfo,
-        { backgroundColor: theme.cardBackground},
-      ]}>
+          styles.burgerInfo,
+          { backgroundColor: theme.cardBackground },
+        ]}>
           <Text style={[
-        styles.burgerName,
-        {color:theme.text},
-      ]} numberOfLines={2} ellipsizeMode="tail">
+            styles.burgerName,
+            { color: theme.text },
+          ]} numberOfLines={2} ellipsizeMode="tail">
             {item.name}
           </Text>
           <Text style={styles.restaurantName} numberOfLines={1} ellipsizeMode="tail">
@@ -318,11 +318,11 @@ const BestBurgers = () => {
 
           <View style={styles.priceRow}>
             <View style={styles.priceContainer}>
-              <Text 
-              style={[
-        styles.price,
-        {color:theme.text},
-      ]}>₹{item.price.toFixed(2)}</Text>
+              <Text
+                style={[
+                  styles.price,
+                  { color: theme.text },
+                ]}>₹{item.price.toFixed(2)}</Text>
               <Text style={styles.oldPrice}>₹{item.oldPrice.toFixed(2)}</Text>
             </View>
 
@@ -343,62 +343,62 @@ const BestBurgers = () => {
   };
 
   return (
-    <View 
-     style={[
+    <View
+      style={[
         styles.container,
         { backgroundColor: theme.background },
       ]}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
       <View
-       style={[
-        styles.header,
-        { backgroundColor: theme.background },
-      ]}>
+        style={[
+          styles.header,
+          { backgroundColor: theme.background },
+        ]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../assets/back.png')} 
-         style={[
+          <Image source={require('../../assets/back.png')}
+            style={[
               styles.backIcon,
               { tintColor: theme.text }, // theme.text will be white in dark, black in light
             ]} />
         </TouchableOpacity>
-        <Text 
-        style={[
-        styles.headerTitle,
-        {color:theme.text},
-      ]} >Best Burgers</Text>
+        <Text
+          style={[
+            styles.headerTitle,
+            { color: theme.text },
+          ]} >Best Burgers</Text>
         <View style={{ width: 22 }} />
       </View>
 
-          <View style={[
-                  styles.searchContainer,
-                  { backgroundColor: theme.background },
-                ]}>
-                 <View
+      <View style={[
+        styles.searchContainer,
+        { backgroundColor: theme.background },
+      ]}>
+        <View
+          style={[
+            styles.searchInputContainer,
+            { backgroundColor: theme.cardBackground }, // dynamic background
+          ]}
+        >
+          <Image
+            source={require('../../assets/search.png')}
+            style={[styles.searchIcon, { tintColor: theme.text }]} // icon color
+            resizeMode="contain"
+          />
+
+          <TextInput
             style={[
-              styles.searchInputContainer,
-              { backgroundColor: theme.cardBackground }, // dynamic background
+              styles.searchInput,
+              { color: theme.text }, // text color based on theme
             ]}
-          >
-            <Image
-              source={require('../../assets/search.png')}
-              style={[styles.searchIcon, { tintColor: theme.text }]} // icon color
-              resizeMode="contain"
-            />
-          
-            <TextInput
-              style={[
-                styles.searchInput,
-                { color: theme.text }, // text color based on theme
-              ]}
-           
+
             placeholder="Search burgers, restaurants..."
             value={searchQuery}
             onChangeText={setSearchQuery}
             placeholderTextColor="#999"
             autoCapitalize="none"
             autoCorrect={false}
-            />
+          />
           {searchQuery.length > 0 && (
             <TouchableOpacity onPress={clearSearch} style={styles.clearButton}>
               <Image source={require('../../assets/close.png')} style={styles.clearIcon} />
@@ -407,71 +407,71 @@ const BestBurgers = () => {
         </View>
       </View>
 
-      <View 
-       style={[
-        styles.filterContainer,
-        { backgroundColor: theme.background },
-      ]}>
-       <ScrollView
-  horizontal
-  showsHorizontalScrollIndicator={false}
-  contentContainerStyle={styles.filterScroll}
->
-  {filters.map(filter => {
-    const isActive = selectedFilter === filter;
-
-    return (
-      <TouchableOpacity
-        key={filter}
+      <View
         style={[
-          styles.filterBtn,
-          isActive && styles.activeFilterBtn,
-
-          // IMPORTANT: theme override must be LAST
-          !isActive && {
-            backgroundColor: theme.cardBackground 
-     // backgroundColor: theme.mode === 'dark' ? '#555555' : '#FFFFFF', // inactive grey only in dark
-          },
-        ]}
-        onPress={() => setSelectedFilter(filter)}
-        activeOpacity={0.8}
-      >
-        <Text
-          style={[
-            styles.filterText,
-            isActive && styles.activeFilterText,
-
-            // IMPORTANT: override LAST
-            !isActive && {
-              color:
-                theme.text// text for inactive
-            },
-          ]}
+          styles.filterContainer,
+          { backgroundColor: theme.background },
+        ]}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.filterScroll}
         >
-          {filter}
-        </Text>
-      </TouchableOpacity>
-    );
-  })}
-</ScrollView>
+          {filters.map(filter => {
+            const isActive = selectedFilter === filter;
+
+            return (
+              <TouchableOpacity
+                key={filter}
+                style={[
+                  styles.filterBtn,
+                  isActive && styles.activeFilterBtn,
+
+                  // IMPORTANT: theme override must be LAST
+                  !isActive && {
+                    backgroundColor: theme.cardBackground
+                    // backgroundColor: theme.mode === 'dark' ? '#555555' : '#FFFFFF', // inactive grey only in dark
+                  },
+                ]}
+                onPress={() => setSelectedFilter(filter)}
+                activeOpacity={0.8}
+              >
+                <Text
+                  style={[
+                    styles.filterText,
+                    isActive && styles.activeFilterText,
+
+                    // IMPORTANT: override LAST
+                    !isActive && {
+                      color:
+                        theme.text// text for inactive
+                    },
+                  ]}
+                >
+                  {filter}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
 
 
       </View>
 
-      <View 
-       style={[
-        styles.resultsContainer,
-        { backgroundColor: theme.background },
-      ]}>
+      <View
+        style={[
+          styles.resultsContainer,
+          { backgroundColor: theme.background },
+        ]}>
         <Text
-  style={[
-    styles.resultsText,
-    { color: theme.text }, // dynamic text color
-  ]}
->
-  {filteredBurgers.length} burger
-  {filteredBurgers.length !== 1 ? 's' : ''} found
-</Text>
+          style={[
+            styles.resultsText,
+            { color: theme.text }, // dynamic text color
+          ]}
+        >
+          {filteredBurgers.length} burger
+          {filteredBurgers.length !== 1 ? 's' : ''} found
+        </Text>
 
         {(selectedFilter !== 'All' || searchQuery.trim() !== '') && (
           <TouchableOpacity
@@ -799,7 +799,7 @@ const styles = StyleSheet.create({
   clockIcon: {
     width: 13,
     height: 15,
-    tintColor:  COLORS.primary,
+    tintColor: COLORS.primary,
     marginRight: 4,
   },
   deliveryTime: {

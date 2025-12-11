@@ -92,19 +92,19 @@ const AddMoreSubscription = () => {
       >
         {restaurants.map(item => {
           const isLiked = likedIds.includes(item.id);
-           const { isDarkMode } = useContext(ThemeContext);
+          const { isDarkMode } = useContext(ThemeContext);
           return (
-               <View
-      key={item.id}
-      style={[
-        styles.card,
-        {
-          backgroundColor: isDarkMode ? '#000000' : '#FFFFFF', 
-          // black for dark, white for light
-          shadowColor: isDarkMode ? 'transparent' : '#000',
-        },
-      ]}
-    >
+            <View
+              key={item.id}
+              style={[
+                styles.card,
+                {
+                  backgroundColor: isDarkMode ? '#000000' : '#FFFFFF',
+                  // black for dark, white for light
+                  shadowColor: isDarkMode ? 'transparent' : '#000',
+                },
+              ]}
+            >
 
 
               <View style={styles.imageContainer}>
@@ -118,8 +118,10 @@ const AddMoreSubscription = () => {
                 <TouchableOpacity
                   style={[
                     styles.productHeartWrapper,
-                    { backgroundColor: isLiked ? 'rgba(255, 255, 255, 0.9)' : 
-                      'rgba(242, 234, 234, 0.3)' }
+                    {
+                      backgroundColor: isLiked ? 'rgba(255, 255, 255, 0.9)' :
+                        'rgba(242, 234, 234, 0.3)'
+                    }
                   ]}
                   activeOpacity={0.7}
                   onPress={() => handleHeartPressWithVibration(item.id)}

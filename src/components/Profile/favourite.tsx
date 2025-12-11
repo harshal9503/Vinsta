@@ -29,20 +29,70 @@ const Favourite = () => {
   ]);
 
   const [foodItems, setFoodItems] = useState([
-    { id: 1, name: 'Cheese Burger', price: 45.5, oldPrice: 50.0, time: '10-15 mins', img: require('../../assets/b1.png') },
-    { id: 2, name: 'Veggie Delight', price: 60.0, oldPrice: 70.0, time: '12-18 mins', img: require('../../assets/b2.png') },
-    { id: 3, name: 'Crispy Fries', price: 30.0, oldPrice: 35.0, time: '8-10 mins', img: require('../../assets/b3.png') },
-    { id: 4, name: 'Chicken Roll', price: 55.0, oldPrice: 60.0, time: '10-12 mins', img: require('../../assets/b1.png') },
-    { id: 5, name: 'Paneer Wrap', price: 50.0, oldPrice: 55.0, time: '12-15 mins', img: require('../../assets/b2.png') },
-    { id: 6, name: 'Tandoori Wings', price: 75.0, oldPrice: 80.0, time: '15-20 mins', img: require('../../assets/b3.png') },
+    {
+      id: 1,
+      name: 'Cheese Burger',
+      price: 45.5,
+      oldPrice: 50.0,
+      time: '10-15 mins',
+      img: require('../../assets/b1.png'),
+    },
+    {
+      id: 2,
+      name: 'Veggie Delight',
+      price: 60.0,
+      oldPrice: 70.0,
+      time: '12-18 mins',
+      img: require('../../assets/b2.png'),
+    },
+    {
+      id: 3,
+      name: 'Crispy Fries',
+      price: 30.0,
+      oldPrice: 35.0,
+      time: '8-10 mins',
+      img: require('../../assets/b3.png'),
+    },
+    {
+      id: 4,
+      name: 'Chicken Roll',
+      price: 55.0,
+      oldPrice: 60.0,
+      time: '10-12 mins',
+      img: require('../../assets/b1.png'),
+    },
+    {
+      id: 5,
+      name: 'Paneer Wrap',
+      price: 50.0,
+      oldPrice: 55.0,
+      time: '12-15 mins',
+      img: require('../../assets/b2.png'),
+    },
+    {
+      id: 6,
+      name: 'Tandoori Wings',
+      price: 75.0,
+      oldPrice: 80.0,
+      time: '15-20 mins',
+      img: require('../../assets/b3.png'),
+    },
   ]);
 
   const handleHeartPress = (id: number, type: 'Food' | 'Restaurant') => {
     if (!heartScales[id]) heartScales[id] = new Animated.Value(1);
 
     Animated.sequence([
-      Animated.timing(heartScales[id], { toValue: 1.3, duration: 120, useNativeDriver: true }),
-      Animated.timing(heartScales[id], { toValue: 1, duration: 120, useNativeDriver: true }),
+      Animated.timing(heartScales[id], {
+        toValue: 1.3,
+        duration: 120,
+        useNativeDriver: true,
+      }),
+      Animated.timing(heartScales[id], {
+        toValue: 1,
+        duration: 120,
+        useNativeDriver: true,
+      }),
     ]).start(() => {
       if (type === 'Food') {
         setFoodItems(prev => prev.filter(item => item.id !== id));
@@ -54,20 +104,37 @@ const Favourite = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent
+      />
 
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../assets/back.png')} style={[styles.backIcon, { tintColor: theme.text }]} />
+          <Image
+            source={require('../../assets/back.png')}
+            style={[styles.backIcon, { tintColor: theme.text }]}
+          />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.text }]}>Favourite</Text>
+        <Text style={[styles.headerTitle, { color: theme.text }]}>
+          Favourite
+        </Text>
         <View style={{ width: 22 }} />
       </View>
 
       {/* Tabs */}
       <View style={styles.tabRowOuter}>
-        <View style={[styles.tabRow, { backgroundColor: theme.cardBackground, borderColor: theme.cardBackground }]}>
+        <View
+          style={[
+            styles.tabRow,
+            {
+              backgroundColor: theme.cardBackground,
+              borderColor: theme.cardBackground,
+            },
+          ]}
+        >
           <TouchableOpacity
             style={[
               styles.tabBtn,
@@ -82,7 +149,7 @@ const Favourite = () => {
                 styles.tabText,
                 activeTab === 'Food'
                   ? { color: theme.background }
-                  : { color: theme.text }
+                  : { color: theme.text },
               ]}
             >
               Food Items
@@ -102,7 +169,7 @@ const Favourite = () => {
                 styles.tabText,
                 activeTab === 'Restaurant'
                   ? { color: theme.background }
-                  : { color: theme.text }
+                  : { color: theme.text },
               ]}
             >
               Restaurants
@@ -112,45 +179,70 @@ const Favourite = () => {
       </View>
 
       {/* Content */}
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 80 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 80 }}
+      >
         {activeTab === 'Food' ? (
           <View style={styles.grid}>
             {foodItems.length > 0 ? (
               foodItems.map(f => (
                 <TouchableOpacity
                   key={f.id}
-                  style={[styles.foodCard,{backgroundColor : theme.cardBackground}]}
+                  style={[
+                    styles.foodCard,
+                    { backgroundColor: theme.cardBackground },
+                  ]}
                   activeOpacity={0.9}
                   onPress={() => navigation.navigate('fooddetails')}
                 >
                   <Image source={f.img} style={styles.foodImg} />
                   <Animated.View
-                    style={[styles.foodHeartWrapper, { transform: [{ scale: heartScales[f.id] || 1 }] }]}
+                    style={[
+                      styles.foodHeartWrapper,
+                      { transform: [{ scale: heartScales[f.id] || 1 }] },
+                    ]}
                   >
                     <TouchableOpacity
                       style={styles.heartBtn}
                       onPress={() => handleHeartPress(f.id, 'Food')}
                       activeOpacity={0.7}
                     >
-                      <Image source={require('../../assets/heartfill.png')} style={styles.heartIcon} />
+                      <Image
+                        source={require('../../assets/heartfill.png')}
+                        style={styles.heartIcon}
+                      />
                     </TouchableOpacity>
                   </Animated.View>
 
                   <View style={styles.foodInfo}>
-                    <Text style={[styles.foodName,{color : theme.text}]}>{f.name}</Text>
+                    <Text style={[styles.foodName, { color: theme.text }]}>
+                      {f.name}
+                    </Text>
                     <View style={styles.priceRow}>
-                      <Text style={[styles.price,{color : theme.text}]}>$ {f.price.toFixed(2)}</Text>
-                      <Text style={styles.oldPrice}>$ {f.oldPrice.toFixed(2)}</Text>
+                      <Text style={[styles.price, { color: theme.text }]}>
+                        $ {f.price.toFixed(2)}
+                      </Text>
+                      <Text style={styles.oldPrice}>
+                        $ {f.oldPrice.toFixed(2)}
+                      </Text>
                     </View>
                     <View style={styles.timeRow}>
-                      <Image source={require('../../assets/clock.png')} style={styles.clockIcon} />
-                      <Text style={[styles.timeText,{color : theme.text}]}>{f.time}</Text>
+                      <Image
+                        source={require('../../assets/clock.png')}
+                        style={styles.clockIcon}
+                      />
+                      <Text style={[styles.timeText, { color: theme.text }]}>
+                        {f.time}
+                      </Text>
                     </View>
                   </View>
                 </TouchableOpacity>
               ))
             ) : (
-              <Text style={[styles.emptyText,{color : theme.text}]}>No favourite food items.</Text>
+              <Text style={[styles.emptyText, { color: theme.text }]}>
+                No favourite food items.
+              </Text>
             )}
           </View>
         ) : (
@@ -159,42 +251,93 @@ const Favourite = () => {
               restaurants.map(r => (
                 <TouchableOpacity
                   key={r.id}
-                  style={[styles.card,{backgroundColor : theme.cardBackground}]}
+                  style={[
+                    styles.card,
+                    { backgroundColor: theme.cardBackground },
+                  ]}
                   activeOpacity={0.9}
                   onPress={() => navigation.navigate('restaurentDetails')}
                 >
                   <Image source={r.img} style={styles.cardImg} />
                   <View style={styles.cardContent}>
                     <View style={styles.ratingBadge}>
-                      <Image source={require('../../assets/star.png')} style={styles.starIcon} />
+                      <Image
+                        source={require('../../assets/star.png')}
+                        style={styles.starIcon}
+                      />
                       <Text style={styles.ratingText}>4.4</Text>
                     </View>
-                    <Text style={[styles.title,{color : theme.text}]}>{r.name}</Text>
+                    <Text style={[styles.title, { color: theme.text }]}>
+                      {r.name}
+                    </Text>
                     <View style={styles.locationRow}>
-                      <Image source={require('../../assets/location1.png')} style={styles.locIcon} />
-                      <Text style={[styles.location,{color : theme.textSecondary}]}>Near MC College, Barpeta Town</Text>
-                      <Animated.View style={{ transform: [{ scale: heartScales[r.id] || 1 }] }}>
+                      <Image
+                        source={require('../../assets/location1.png')}
+                        style={styles.locIcon}
+                      />
+                      <Text
+                        style={[
+                          styles.location,
+                          { color: theme.textSecondary },
+                        ]}
+                      >
+                        Near MC College, Barpeta Town
+                      </Text>
+                      <Animated.View
+                        style={{
+                          transform: [{ scale: heartScales[r.id] || 1 }],
+                        }}
+                      >
                         <TouchableOpacity
                           style={styles.heartBtn}
                           onPress={() => handleHeartPress(r.id, 'Restaurant')}
                           activeOpacity={0.7}
                         >
-                          <Image source={require('../../assets/heartfill.png')} style={styles.heartIcon} />
+                          <Image
+                            source={require('../../assets/heartfill.png')}
+                            style={styles.heartIcon}
+                          />
                         </TouchableOpacity>
                       </Animated.View>
                     </View>
                     <View style={styles.infoRow}>
-                      <Text style={[styles.subInfo,{color : theme.textSecondary}]}>FAST FOOD</Text>
-                      <Image source={require('../../assets/meter.png')} style={styles.metaIcon} />
-                      <Text style={[styles.metaText,{color : theme.textSecondary}]}>590.0 m</Text>
-                      <Image source={require('../../assets/clockk.png')} style={styles.metaIcon} />
-                      <Text style={[styles.metaText,{color : theme.textSecondary}]}>25 min</Text>
+                      <Text
+                        style={[styles.subInfo, { color: theme.textSecondary }]}
+                      >
+                        FAST FOOD
+                      </Text>
+                      <Image
+                        source={require('../../assets/meter.png')}
+                        style={styles.metaIcon}
+                      />
+                      <Text
+                        style={[
+                          styles.metaText,
+                          { color: theme.textSecondary },
+                        ]}
+                      >
+                        590.0 m
+                      </Text>
+                      <Image
+                        source={require('../../assets/clockk.png')}
+                        style={styles.metaIcon}
+                      />
+                      <Text
+                        style={[
+                          styles.metaText,
+                          { color: theme.textSecondary },
+                        ]}
+                      >
+                        25 min
+                      </Text>
                     </View>
                   </View>
                 </TouchableOpacity>
               ))
             ) : (
-              <Text style={[styles.emptyText,{color : theme.text}]}>No favourite restaurants.</Text>
+              <Text style={[styles.emptyText, { color: theme.text }]}>
+                No favourite restaurants.
+              </Text>
             )}
           </>
         )}
@@ -280,7 +423,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Figtree-SemiBold',
     marginVertical: 4,
   },
-  priceRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  priceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   price: { fontSize: 14, color: '#000', fontFamily: 'Figtree-Regular' },
   oldPrice: {
     fontSize: 13,
@@ -318,7 +465,12 @@ const styles = StyleSheet.create({
   title: { fontSize: 16, color: '#000', fontFamily: 'Figtree-Bold' },
   locationRow: { flexDirection: 'row', alignItems: 'center', marginTop: 6 },
   locIcon: { width: 12, height: 12, marginRight: 6, resizeMode: 'contain' },
-  location: { fontSize: 13, color: '#555', flex: 1, fontFamily: 'Figtree-Regular' },
+  location: {
+    fontSize: 13,
+    color: '#555',
+    flex: 1,
+    fontFamily: 'Figtree-Regular',
+  },
   heartBtn: {
     backgroundColor: 'rgba(0,0,0,0.25)',
     width: 30,
@@ -329,9 +481,19 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
   heartIcon: { width: 14, height: 14, resizeMode: 'contain' },
-  infoRow: { flexDirection: 'row', alignItems: 'center', marginTop: 10, gap: 6 },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+    gap: 6,
+  },
   subInfo: { color: '#777', fontSize: 13, fontFamily: 'Figtree-Medium' },
-  metaIcon: { width: 13, height: 13, marginHorizontal: 4, resizeMode: 'contain' },
+  metaIcon: {
+    width: 13,
+    height: 13,
+    marginHorizontal: 4,
+    resizeMode: 'contain',
+  },
   metaText: { color: '#555', fontSize: 12, fontFamily: 'Figtree-Regular' },
 
   emptyText: {

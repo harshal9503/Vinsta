@@ -72,31 +72,31 @@ const Notification = () => {
   // Structured Notification State
   const [notifications, setNotifications] = useState(() =>
     Object.fromEntries(
-      Object.keys(data).map((tab) => [
+      Object.keys(data).map(tab => [
         tab,
         {
-          recent: data[tab].map((item) => ({ ...item, read: false })),
-          yesterday: data[tab].map((item) => ({ ...item, read: false })),
+          recent: data[tab].map(item => ({ ...item, read: false })),
+          yesterday: data[tab].map(item => ({ ...item, read: false })),
         },
-      ])
-    )
+      ]),
+    ),
   );
   const getUnreadCount = (section: string) =>
-    notifications[activeTab][section].filter((n) => !n.read).length;
+    notifications[activeTab][section].filter(n => !n.read).length;
 
   const handleMarkAllRead = () => {
     const updated = { ...notifications };
-    updated[activeTab].recent.forEach((n) => (n.read = true));
-    updated[activeTab].yesterday.forEach((n) => (n.read = true));
+    updated[activeTab].recent.forEach(n => (n.read = true));
+    updated[activeTab].yesterday.forEach(n => (n.read = true));
     setNotifications(updated);
   };
 
   const openPopup = (section: string, itemId: number) => {
     const updated = { ...notifications };
-    updated[activeTab][section] = updated[activeTab][section].map((item) =>
-      item.id === itemId ? { ...item, read: true } : item
+    updated[activeTab][section] = updated[activeTab][section].map(item =>
+      item.id === itemId ? { ...item, read: true } : item,
     );
-    const item = updated[activeTab][section].find((i) => i.id === itemId);
+    const item = updated[activeTab][section].find(i => i.id === itemId);
 
     setNotifications(updated);
     setPopupData(item);
@@ -134,7 +134,7 @@ const Notification = () => {
           },
         ]}
       >
-        {Object.keys(data).map((tab) => (
+        {Object.keys(data).map(tab => (
           <TouchableOpacity
             key={tab}
             onPress={() => setActiveTab(tab)}
@@ -163,9 +163,7 @@ const Notification = () => {
 
             {getUnreadCount('recent') > 0 && (
               <View style={[styles.countBadge]}>
-                <Text style={styles.countText}>
-                  {getUnreadCount('recent')}
-                </Text>
+                <Text style={styles.countText}>{getUnreadCount('recent')}</Text>
               </View>
             )}
           </View>
@@ -176,53 +174,53 @@ const Notification = () => {
             </Text>
           </TouchableOpacity>
         </View>
-       {/* Recent Items */}
-{notifications[activeTab].recent.map((item) => (
-  <TouchableOpacity
-    key={item.id}
-    style={[
-      styles.notificationRow,
-      { backgroundColor: theme.cardBackground },
-      !item.read && {
-        backgroundColor: theme.mode === 'dark' ? '#333' : '#faeae1ff',
-        borderLeftColor: COLORS.primary,
-      },
-    ]}
-    onPress={() => openPopup('recent', item.id)}
-  >
-    <View
-      style={[
-        styles.iconCircle,
-        {
-          backgroundColor: theme.mode === 'dark' ? '#444' : '#fff',
-          borderColor: theme.textSecondary,
-        },
-      ]}
-    >
-      <Image source={item.icon} style={styles.icon} />
-    </View>
+        {/* Recent Items */}
+        {notifications[activeTab].recent.map(item => (
+          <TouchableOpacity
+            key={item.id}
+            style={[
+              styles.notificationRow,
+              { backgroundColor: theme.cardBackground },
+              !item.read && {
+                backgroundColor: theme.mode === 'dark' ? '#333' : '#faeae1ff',
+                borderLeftColor: COLORS.primary,
+              },
+            ]}
+            onPress={() => openPopup('recent', item.id)}
+          >
+            <View
+              style={[
+                styles.iconCircle,
+                {
+                  backgroundColor: theme.mode === 'dark' ? '#444' : '#fff',
+                  borderColor: theme.textSecondary,
+                },
+              ]}
+            >
+              <Image source={item.icon} style={styles.icon} />
+            </View>
 
-    <View style={styles.notificationText}>
-      <Text
-        style={[
-          styles.notificationTitle,
-          { color: theme.mode === 'dark' ? '#fff' : '#000' },
-        ]}
-      >
-        {item.title}
-      </Text>
+            <View style={styles.notificationText}>
+              <Text
+                style={[
+                  styles.notificationTitle,
+                  { color: theme.mode === 'dark' ? '#fff' : '#000' },
+                ]}
+              >
+                {item.title}
+              </Text>
 
-      <Text
-        style={[
-          styles.notificationMessage,
-          { color: theme.mode === 'dark' ? '#ccc' : '#444' },
-        ]}
-      >
-        {item.message}
-      </Text>
-    </View>
-  </TouchableOpacity>
-))}
+              <Text
+                style={[
+                  styles.notificationMessage,
+                  { color: theme.mode === 'dark' ? '#ccc' : '#444' },
+                ]}
+              >
+                {item.message}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ))}
         {/* Yesterday */}
         <View style={[styles.sectionHeaderRow, { marginTop: 20 }]}>
           <View style={styles.sectionLeft}>
@@ -238,69 +236,64 @@ const Notification = () => {
             )}
           </View>
         </View>
-         {/* Yesterday Items */}
-      {notifications[activeTab].yesterday.map((item) => (
-        <TouchableOpacity
-          key={item.id}
-          style={[
-            styles.notificationRow,
-            {
-              backgroundColor: theme.mode === 'dark' ? '#333' : '#faeae1ff',
-            },
-            !item.read && {
-              borderLeftColor: COLORS.primary,
-            },
-          ]}
-          onPress={() => openPopup('yesterday', item.id)}
-        >
-          <View
+        {/* Yesterday Items */}
+        {notifications[activeTab].yesterday.map(item => (
+          <TouchableOpacity
+            key={item.id}
             style={[
-              styles.iconCircle,
+              styles.notificationRow,
               {
-                backgroundColor: theme.mode === 'dark' ? '#444' : '#fff',
-                borderColor: theme.textSecondary,
+                backgroundColor: theme.mode === 'dark' ? '#333' : '#faeae1ff',
+              },
+              !item.read && {
+                borderLeftColor: COLORS.primary,
               },
             ]}
+            onPress={() => openPopup('yesterday', item.id)}
           >
-            <Image source={item.icon} style={styles.icon} />
-          </View>
-
-          <View style={styles.notificationText}>
-            <Text
+            <View
               style={[
-                styles.notificationTitle,
-                { color: theme.mode === 'dark' ? '#fff' : '#000' },
+                styles.iconCircle,
+                {
+                  backgroundColor: theme.mode === 'dark' ? '#444' : '#fff',
+                  borderColor: theme.textSecondary,
+                },
               ]}
             >
-              {item.title}
-            </Text>
+              <Image source={item.icon} style={styles.icon} />
+            </View>
 
-            <Text
-              style={[
-                styles.notificationMessage,
-                { color: theme.mode === 'dark' ? '#ccc' : '#444' },
-              ]}
-            >
-              {item.message}
-            </Text>
-          </View>
-        </TouchableOpacity>
+            <View style={styles.notificationText}>
+              <Text
+                style={[
+                  styles.notificationTitle,
+                  { color: theme.mode === 'dark' ? '#fff' : '#000' },
+                ]}
+              >
+                {item.title}
+              </Text>
+
+              <Text
+                style={[
+                  styles.notificationMessage,
+                  { color: theme.mode === 'dark' ? '#ccc' : '#444' },
+                ]}
+              >
+                {item.message}
+              </Text>
+            </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
       {/* POPUP MODAL */}
       <Modal transparent visible={showPopup} animationType="fade">
         <View style={styles.popupOverlay}>
           <View
-            style={[
-              styles.popupBox,
-              { backgroundColor: theme.cardBackground },
-            ]}
+            style={[styles.popupBox, { backgroundColor: theme.cardBackground }]}
           >
             {popupData && (
               <>
-                <Text
-                  style={[styles.popupTitle, { color: theme.text }]}
-                >
+                <Text style={[styles.popupTitle, { color: theme.text }]}>
                   {popupData.title}
                 </Text>
 
