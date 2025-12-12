@@ -118,10 +118,17 @@ const Profile = () => {
 
       {/* ===== Header ===== */}
       <View style={[styles.fixedHeader, { backgroundColor: theme.background }]}>
+         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+  <Image
+    source={require('../../assets/back.png')}
+       style={[styles.backIcon, { tintColor: theme.text}]}
+    resizeMode="contain"
+  />
+</TouchableOpacity>
         <View style={styles.backRow}>
           <TouchableOpacity onPress={() => navigation.navigate('Home')} />
           <TouchableOpacity onPress={() => navigation.navigate('Help')}>
-            <Text style={[styles.helpText, { color: theme.primary }]}>
+            <Text style={[styles.helpText, { color: theme.text}]}>
               Help
             </Text>
           </TouchableOpacity>
@@ -167,7 +174,7 @@ const Profile = () => {
                 styles.topOption,
                 {
                   backgroundColor: theme.cardBackground,
-                  borderColor: theme.border,
+                  borderColor: theme.borderColor,
                 },
               ]}
               onPress={() => navigation.navigate(item.route)}
@@ -207,7 +214,7 @@ const Profile = () => {
               </View>
               <Image
                 source={require('../../assets/right-arrow.png')}
-                style={[styles.arrowIcon, { tintColor: theme.textSecondary }]}
+                style={[styles.arrowIcon, { tintColor: theme.text}]}
               />
             </TouchableOpacity>
           ))}
@@ -314,6 +321,17 @@ const styles = StyleSheet.create({
     height: height * 0.25,
     resizeMode: 'cover',
   },
+ backIcon: {
+  width: 22,        // normal size
+  height: 22,
+},
+backButton: {
+  position: 'absolute',
+  left: 15,
+  top: 40,
+  padding: 5,
+  zIndex: 10,
+},
 
   fixedHeader: {
     position: 'absolute',
@@ -450,3 +468,7 @@ const styles = StyleSheet.create({
   popupConfirmButton: { backgroundColor: COLORS.primary, marginLeft: 10 },
   popupButtonText: { fontSize: width * 0.035, fontFamily: 'Figtree-SemiBold' },
 });
+function wp(arg0: string): any {
+  throw new Error('Function not implemented.');
+}
+

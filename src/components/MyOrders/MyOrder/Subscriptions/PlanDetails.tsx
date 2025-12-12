@@ -3,7 +3,8 @@ import React, { useContext } from 'react'
 import { ThemeContext } from '../../../../theme/ThemeContext';
 import { useNavigation } from '@react-navigation/native'
 import { getFontFamily, getFontWeight } from '../../../../utils/fontHelper';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } 
+from 'react-native-responsive-screen';
 import { COLORS } from '../../../../theme/colors';
 
 const { width, height } = Dimensions.get('window');

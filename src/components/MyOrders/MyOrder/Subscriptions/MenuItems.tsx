@@ -199,15 +199,15 @@ const MenuItems = () => {
 
               {/* Quantity */}
               <View style={styles.qtyRow}>
-                <TouchableOpacity onPress={() => updateQty(tab, item.id, -1)} style={styles.qtyBtn}> <Text style={[styles.qtySign,
-                { color: theme.mode === 'dark' ? '#FFFFFF' : '#000000', }]} > − </Text> </TouchableOpacity>
+               <TouchableOpacity onPress={() => updateQty(tab, item.id, -1)} style={styles.qtyBtn}> <Text style={[styles.qtySign,
+                {color: theme.mode === 'dark' ? '#FFFFFF' : '#000000',}]} > − </Text> </TouchableOpacity>
 
                 <Text style={[styles.qtyText, { color: textPrimary }]}>
                   {item.qty.toString().padStart(2, '0')}
                 </Text>
 
-                <TouchableOpacity onPress={() => updateQty(tab, item.id, +1)} style={styles.qtyBtn}>
-                  <Text style={[styles.qtySign, { color: theme.mode === 'dark' ? '#FFFFFF' : '#000000', }]}>+</Text> </TouchableOpacity>
+                <TouchableOpacity onPress={() => updateQty(tab, item.id, +1)} style={styles.qtyBtn}> 
+                  <Text style={[styles.qtySign, {color: theme.mode === 'dark' ? '#FFFFFF' : '#000000',}]}>+</Text> </TouchableOpacity>
               </View>
             </View>
 
@@ -233,8 +233,8 @@ const MenuItems = () => {
                         backgroundColor: isActive
                           ? COLORS.primary
                           : isDark
-                            ? '#3A3A3A'
-                            : '#f2f2f2',
+                          ? '#3A3A3A'
+                          : '#f2f2f2',
                       }
                     ]}
                     onPress={() => toggleDay(tab, item.id, d)}
@@ -260,17 +260,18 @@ const MenuItems = () => {
 
       {/* ------------------- Modal ------------------- */}
       <Modal visible={showFilterModal} transparent animationType="none">
-        <View style={styles.modalOverlay}>
+        <View style={[styles.modalOverlay]}>
           <TouchableOpacity style={styles.modalBackground} activeOpacity={1} onPress={closeModal} />
 
           <Animated.View
             style={[
               styles.modalContainer,
-              { backgroundColor: cardBg, transform: [{ translateY: modalTranslateY }] }
+              { backgroundColor: theme.cardBackground, transform: [{ translateY: modalTranslateY }] }
             ]}
           >
-            <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
-              <Text style={[styles.closeText, { color: textPrimary }]}>✕</Text>
+            <TouchableOpacity onPress={closeModal}
+             style={[styles.closeButton,{backgroundColor:theme.cardBackground}]}>
+              <Text style={[styles.closeText, { color: theme.text}]}>✕</Text>
             </TouchableOpacity>
 
             {selectedItem && (
@@ -285,7 +286,7 @@ const MenuItems = () => {
                         style={styles.starIcon}
                         resizeMode="contain"
                       />
-                      <Text style={[styles.ratingText, { color: textPrimary }]}>4.4</Text>
+                      <Text style={[styles.ratingText, { color: theme.text}]}>4.4</Text>
                     </View>
                   </View>
 
@@ -307,19 +308,23 @@ const MenuItems = () => {
                   <View style={styles.separator} />
 
                   <Text style={[styles.customizeTitle, { color: textPrimary }]}>Ingredient’s</Text>
-                  <Text style={[styles.customizeSub, { color: textSecondary }]}>
+                  <Text style={[styles.customizeSub, { color: textSecondary ,marginBottom:10,}]}>
                     More than upto 5 ingredients
                   </Text>
 
                   {/* Ingredient List */}
                   {checklistItems.map(item => (
                     <TouchableOpacity key={item.id} style={styles.checklistItem}>
-                      <View style={styles.checkLeft}>
+                      <View 
+                      style={[
+              styles.checkLeft,
+              { flexDirection: 'row', alignItems: 'center',},
+            ]}>
                         <Image
                           source={require('../../../../assets/checkCircle.png')}
                           style={{ height: wp('5%'), width: wp('5%') }}
                         />
-                        <Text style={[styles.itemText, { color: textPrimary }]}>{item.name}</Text>
+                        <Text style={[styles.itemText, { color: textPrimary, marginLeft:10,}]}>{item.name}</Text>
                       </View>
 
                       <Image
@@ -336,19 +341,19 @@ const MenuItems = () => {
                     Add a cooking request (optional)
                   </Text>
 
-                  <TextInput
-                    style={[
-                      styles.textInput,
-                      {
-                        color: textPrimary,
-                        backgroundColor: isDark ? '#2A2A2A' : '#FFFFFF',
-                        borderColor: isDark ? '#444' : '#ddd',
-                      }
-                    ]}
-                    placeholder="e.g. don't make it too spicy"
-                    placeholderTextColor={textSecondary}
-                    multiline
-                  />
+                 <TextInput
+        style={[
+          styles.textInput,
+          {
+            color: textPrimary,
+            backgroundColor: theme.cardBackground,
+            borderColor: theme.borderColor,
+          },
+        ]}
+        placeholder="e.g. don't make it too spicy"
+        placeholderTextColor={textSecondary}
+        multiline
+      />
                 </View>
               </ScrollView>
             )}
