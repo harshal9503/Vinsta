@@ -32,7 +32,7 @@ type Restaurant = {
 
 const AddMoreSubscription = () => {
   const navigation = useNavigation<any>();
-  const { theme } = useContext(ThemeContext); // Using ThemeContext
+  const { theme, isDarkMode } = useContext(ThemeContext);
   const [likedIds, setLikedIds] = useState<number[]>([]);
 
   const restaurants: Restaurant[] = [
@@ -59,7 +59,7 @@ const AddMoreSubscription = () => {
       />
 
       {/* Header */}
-      <View style={[styles.header, { backgroundColor: theme.card }]}>
+      <View style={[styles.header, { backgroundColor: theme.cardBackground }]}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backButton}
@@ -86,13 +86,10 @@ const AddMoreSubscription = () => {
         <Text style={[styles.subtitle, { color: theme.textSecondary }]}>Nearby restaurant's for subscription</Text>
       </View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {restaurants.map(item => {
           const isLiked = likedIds.includes(item.id);
-          const { isDarkMode } = useContext(ThemeContext);
+
           return (
             <View
               key={item.id}
@@ -100,46 +97,39 @@ const AddMoreSubscription = () => {
                 styles.card,
                 {
                   backgroundColor: isDarkMode ? '#000000' : '#FFFFFF',
-                  // black for dark, white for light
                   shadowColor: isDarkMode ? 'transparent' : '#000',
                 },
               ]}
             >
-
-
               <View style={styles.imageContainer}>
-                <Image
-                  source={item.image}
-                  style={styles.image}
-                  resizeMode="cover"
-                />
+                <Image source={item.image} style={styles.image} resizeMode="cover" />
 
                 {/* Heart Icon */}
                 <TouchableOpacity
                   style={[
                     styles.productHeartWrapper,
                     {
-                      backgroundColor: isLiked ? 'rgba(255, 255, 255, 0.9)' :
-                        'rgba(242, 234, 234, 0.3)'
-                    }
+                      backgroundColor: isLiked
+                        ? 'rgba(255, 255, 255, 0.9)'
+                        : 'rgba(242, 234, 234, 0.3)',
+                    },
                   ]}
                   activeOpacity={0.7}
                   onPress={() => handleHeartPressWithVibration(item.id)}
                 >
                   <Image
-                    source={isLiked
-                      ? require('../../../../assets/heartfill.png')
-                      : require('../../../../assets/heart.png')}
-                    style={[
-                      styles.heartIcon,
-                      { tintColor: isLiked ? COLORS.primary : '#fff' }
-                    ]}
+                    source={
+                      isLiked
+                        ? require('../../../../assets/heartfill.png')
+                        : require('../../../../assets/heart.png')
+                    }
+                    style={[styles.heartIcon, { tintColor: isLiked ? COLORS.primary : '#fff' }]}
                     resizeMode="contain"
                   />
                 </TouchableOpacity>
               </View>
 
-              <View style={[styles.contentBox, { backgroundColor: theme.card }]}>
+              <View style={[styles.contentBox, { backgroundColor: theme.cardBackground }]}>
                 <View style={styles.rowBetween}>
                   <Text style={[styles.title, { color: theme.text }]}>{item.name}</Text>
 
@@ -159,7 +149,9 @@ const AddMoreSubscription = () => {
                     style={styles.smallIcon}
                     resizeMode="contain"
                   />
-                  <Text style={[styles.address, { color: theme.textSecondary }]}>{item.address}</Text>
+                  <Text style={[styles.address, { color: theme.textSecondary }]}>
+                    {item.address}
+                  </Text>
                 </View>
 
                 <View style={styles.infoRow}>
@@ -215,11 +207,26 @@ const styles = StyleSheet.create({
   },
   backButton: { padding: wp('1%') },
   backIcon: { width: wp('6%'), height: wp('6%') },
-  headerTitle: { fontSize: wp('5%'), fontFamily: getFontFamily('Bold'), fontWeight: getFontWeight('Bold'), marginTop: hp('0.5%') },
+  headerTitle: {
+    fontSize: wp('5%'),
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+    marginTop: hp('0.5%'),
+  },
 
-  subtitleContainer: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: wp('5%'), paddingVertical: hp('1%') },
+  subtitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: wp('5%'),
+    paddingVertical: hp('1%'),
+  },
   locationIcon: { width: wp('5%'), height: wp('5%') },
-  subtitle: { marginLeft: wp('2%'), fontSize: wp('3.6%'), fontFamily: getFontFamily('SemiBold'), fontWeight: getFontWeight('SemiBold') },
+  subtitle: {
+    marginLeft: wp('2%'),
+    fontSize: wp('3.6%'),
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
+  },
 
   scrollContent: { paddingBottom: hp('4%'), paddingTop: hp('1%') },
 
@@ -253,22 +260,51 @@ const styles = StyleSheet.create({
   contentBox: { paddingHorizontal: wp('4%'), paddingVertical: hp('1.5%') },
 
   rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: hp('0.8%') },
-  title: { fontSize: wp('5.2%'), flex: 1, marginRight: wp('2%'), fontFamily: getFontFamily('Bold'), fontWeight: getFontWeight('Bold') },
+  title: { fontSize: wp('5.2%'), marginRight: wp('2%'), fontFamily: getFontFamily('Bold'), fontWeight: getFontWeight('Bold') },
 
-  productRatingBadge: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.primary, paddingHorizontal: wp('2.5%'), paddingVertical: hp('0.5%'), borderRadius: wp('3%') },
+  productRatingBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: wp('2.5%'),
+    paddingVertical: hp('0.5%'),
+    borderRadius: wp('3%'),
+  },
   starIcon: { width: wp('3%'), height: wp('3%'), marginRight: wp('1%'), tintColor: '#FFFFFF' },
   ratingText: { color: '#FFFFFF', fontSize: wp('3%'), fontFamily: getFontFamily('SemiBold'), fontWeight: getFontWeight('SemiBold') },
 
   row: { flexDirection: 'row', alignItems: 'center', marginVertical: hp('0.5%') },
   smallIcon: { width: wp('3.5%'), height: wp('3.5%') },
-  address: { marginLeft: wp('1.5%'), fontFamily: getFontFamily('Medium'), fontWeight: getFontWeight('Medium'), fontSize: wp('3.2%'), flex: 1 },
+  address: {
+    marginLeft: wp('1.5%'),
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
+    fontSize: wp('3.2%'),
+    flex: 1,
+  },
 
-  infoRow: { flexDirection: 'row', alignItems: 'center', marginTop: hp('0.5%'), marginBottom: hp('1%'), justifyContent: 'space-between' },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: hp('0.5%'),
+    marginBottom: hp('1%'),
+    justifyContent: 'space-between',
+  },
   tag: { fontFamily: getFontFamily('Medium'), fontWeight: getFontWeight('Medium'), fontSize: wp('3.2%') },
   infoItem: { flexDirection: 'row', alignItems: 'center' },
   iconSmallGreen: { width: wp('3.2%'), height: wp('3.2%'), tintColor: '#259E29' },
   infoText: { fontSize: wp('3.1%'), marginLeft: wp('1%'), fontFamily: getFontFamily('Medium'), fontWeight: getFontWeight('Medium') },
 
-  menuButton: { marginTop: hp('1%'), borderRadius: wp('3%'), paddingVertical: hp('1.3%'), alignItems: 'center' },
-  menuText: { color: '#FFFFFF', fontSize: wp('3.8%'), fontFamily: getFontFamily('Bold'), fontWeight: getFontWeight('Bold') },
+  menuButton: {
+    marginTop: hp('1%'),
+    borderRadius: wp('3%'),
+    paddingVertical: hp('1.3%'),
+    alignItems: 'center',
+  },
+  menuText: {
+    color: '#FFFFFF',
+    fontSize: wp('3.8%'),
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
+  },
 });

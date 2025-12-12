@@ -20,7 +20,7 @@ const { width, height } = Dimensions.get('window');
 
 const ViewMenu = () => {
   const navigation = useNavigation<any>();
-  const { isDarkMode } = useContext(ThemeContext); // get dark mode state
+  const { theme,isDarkMode } = useContext(ThemeContext); // get dark mode state
 
   const plans = [
     { id: 1, title: 'Break - Fast', icon: require('../../../../assets/breakfast.png') },
@@ -64,9 +64,21 @@ const ViewMenu = () => {
     <View style={[styles.container, { backgroundColor: isDarkMode ? '#000000' : '#FFFFFF' }]}>
       {/* HEADER */}
       <View style={[styles.header, { backgroundColor: isDarkMode ? '#000000' : '#FFFFFF' }]}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton} activeOpacity={0.7}>
-          <Image source={require('../../../../assets/back.png')} style={styles.backIcon} resizeMode="contain" />
+        <TouchableOpacity onPress={() => navigation.goBack()}
+         style={styles.backButton} activeOpacity={0.7}>
+          <Image
+  source={require('../../../../assets/back.png')}
+  style={[
+    styles.backIcon,
+    {
+      tintColor: theme.text  // Light mode → black arrow
+    }
+  ]}
+  resizeMode="contain"
+/>
+
         </TouchableOpacity>
+
 
         <Text style={[styles.headerTitle, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>Meal Selection</Text>
 
