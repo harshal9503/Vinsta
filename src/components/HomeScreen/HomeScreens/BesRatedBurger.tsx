@@ -1,7 +1,19 @@
-import { Dimensions, FlatList, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext } from 'react'
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
-import { COLORS } from '../../../theme/colors'
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, { useContext } from 'react';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import { COLORS } from '../../../theme/colors';
 import { ThemeContext } from '../../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
@@ -42,15 +54,15 @@ const getFontFamily = (weight = 'Regular') => {
       '700': 'Figtree-Bold',
       '800': 'Figtree-ExtraBold',
       '900': 'Figtree-Black',
-      'Thin': 'Figtree-Thin',
-      'ExtraLight': 'Figtree-ExtraLight',
-      'Light': 'Figtree-Light',
-      'Regular': 'Figtree-Regular',
-      'Medium': 'Figtree-Medium',
-      'SemiBold': 'Figtree-SemiBold',
-      'Bold': 'Figtree-Bold',
-      'ExtraBold': 'Figtree-ExtraBold',
-      'Black': 'Figtree-Black',
+      Thin: 'Figtree-Thin',
+      ExtraLight: 'Figtree-ExtraLight',
+      Light: 'Figtree-Light',
+      Regular: 'Figtree-Regular',
+      Medium: 'Figtree-Medium',
+      SemiBold: 'Figtree-SemiBold',
+      Bold: 'Figtree-Bold',
+      ExtraBold: 'Figtree-ExtraBold',
+      Black: 'Figtree-Black',
     };
     return fontMap[weight] || 'Figtree-Regular';
   }
@@ -64,15 +76,15 @@ const getFontWeight = (weight = 'Regular') => {
 
   // iOS fontWeight mapping
   const weightMap = {
-    'Thin': '100',
-    'ExtraLight': '200',
-    'Light': '300',
-    'Regular': '400',
-    'Medium': '500',
-    'SemiBold': '600',
-    'Bold': '700',
-    'ExtraBold': '800',
-    'Black': '900',
+    Thin: '100',
+    ExtraLight: '200',
+    Light: '300',
+    Regular: '400',
+    Medium: '500',
+    SemiBold: '600',
+    Bold: '700',
+    ExtraBold: '800',
+    Black: '900',
     '100': '100',
     '200': '200',
     '300': '300',
@@ -96,7 +108,12 @@ const getTextStyle = (weight = 'Regular') => {
   };
 };
 
-const BesRatedBurger = ({ getCurrentProducts, handleProductPress, toggleFavorite, isVegMode }) => {
+const BesRatedBurger = ({
+  getCurrentProducts,
+  handleProductPress,
+  toggleFavorite,
+  isVegMode,
+}) => {
   const { theme } = useContext(ThemeContext);
 
   return (
@@ -109,7 +126,10 @@ const BesRatedBurger = ({ getCurrentProducts, handleProductPress, toggleFavorite
       columnWrapperStyle={styles.productRow}
       renderItem={({ item }) => (
         <TouchableOpacity
-          style={[styles.productCard,{backgroundColor : theme.cardBackground}]}
+          style={[
+            styles.productCard,
+            { backgroundColor: theme.cardBackground },
+          ]}
           onPress={() => handleProductPress(item)}
           activeOpacity={0.8}
         >
@@ -121,18 +141,26 @@ const BesRatedBurger = ({ getCurrentProducts, handleProductPress, toggleFavorite
             />
 
             <TouchableOpacity
-              style={styles.productHeartWrapper}
+              style={[
+                styles.productHeartWrapper,
+                {
+                  backgroundColor: item.isFavorite
+                    ? 'rgba(255, 255, 255, 0.9)'
+                    : 'rgba(255, 255, 255, 0.3)',
+                },
+              ]}
               activeOpacity={0.7}
               onPress={() => toggleFavorite(item.id, isVegMode)}
             >
               <Image
-                source={item.isFavorite 
-                  ? require('../../../assets/heartfill.png')
-                  : require('../../../assets/heart.png')
+                source={
+                  item.isFavorite
+                    ? require('../../../assets/heartfill.png')
+                    : require('../../../assets/heart.png')
                 }
                 style={[
                   styles.heartIcon,
-                  { tintColor: item.isFavorite ? COLORS.primary : '#fff' }
+                  { tintColor: item.isFavorite ? COLORS.primary : '#fff' },
                 ]}
                 resizeMode="contain"
               />
@@ -144,17 +172,22 @@ const BesRatedBurger = ({ getCurrentProducts, handleProductPress, toggleFavorite
                 style={styles.starIcon}
                 resizeMode="contain"
               />
-              <Text style={[styles.ratingText,{color: theme.text}]}>{item.rating}</Text>
+              <Text style={styles.ratingText}>{item.rating}</Text>
             </View>
           </View>
 
-          <Text style={[styles.productTitle,{color: theme.text}]} numberOfLines={2}>
+          <Text
+            style={[styles.productTitle, { color: theme.text }]}
+            numberOfLines={2}
+          >
             {item.name}
           </Text>
 
           <View style={styles.priceRow}>
             <View style={styles.priceContainer}>
-              <Text style={[styles.productPrice,{color: theme.text}]}>{item.price}</Text>
+              <Text style={[styles.productPrice, { color: theme.text }]}>
+                {item.price}
+              </Text>
               <Text style={styles.oldPrice}>{item.oldPrice}</Text>
             </View>
 
@@ -173,15 +206,17 @@ const BesRatedBurger = ({ getCurrentProducts, handleProductPress, toggleFavorite
               style={styles.infoIcon}
               resizeMode="contain"
             />
-            <Text style={[styles.infoTxt,{color: theme.text}]}>{item.deliveryTime}</Text>
+            <Text style={[styles.infoTxt, { color: theme.text }]}>
+              {item.deliveryTime}
+            </Text>
           </View>
         </TouchableOpacity>
       )}
     />
-  )
-}
+  );
+};
 
-export default BesRatedBurger
+export default BesRatedBurger;
 
 const styles = StyleSheet.create({
   productGrid: {
@@ -193,66 +228,66 @@ const styles = StyleSheet.create({
   },
   productCard: {
     backgroundColor: COLORS.secondary,
-    width: isTablet ? scaleSize(wp('45%')) : scaleSize(wp('43%')),
-    borderRadius: scaleSize(wp('4%')),
-    padding: scaleSize(wp('3%')),
-    marginBottom: hp('2%'),
+    width: isTablet ? scaleSize(wp('45%')) : scaleSize(wp('43%')), // ✅ SAME WIDTH
+    borderRadius: scaleSize(wp('3.5%')), // ✅ COMPACT: Smaller radius
+    padding: scaleSize(wp('2.5%')), // ✅ COMPACT: Reduced padding
+    marginBottom: hp('2%'), // ✅ SAME spacing between cards
     ...Platform.select({
       ios: {
         shadowColor: COLORS.cardShadow || '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 1.5 }, // ✅ COMPACT: Reduced shadow
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },
   productImg: {
     width: '100%',
-    height: isTablet ? hp('14%') : hp('16%'),
-    borderRadius: scaleSize(wp('3%')),
+    height: isTablet ? hp('12.5%') : hp('14.5%'), // ✅ COMPACT: Reduced height (was 14%/16%)
+    borderRadius: scaleSize(wp('2.5%')), // ✅ COMPACT: Smaller radius
   },
   productHeartWrapper: {
     position: 'absolute',
-    top: scaleSize(wp('3%')),
-    right: scaleSize(wp('3%')),
+    top: scaleSize(wp('2.5%')), // ✅ COMPACT: Adjusted position
+    right: scaleSize(wp('2.5%')), // ✅ COMPACT: Adjusted position
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    borderRadius: scaleSize(wp('5%')),
-    padding: scaleSize(wp('2%')),
+    borderRadius: scaleSize(wp('4%')), // ✅ COMPACT: Smaller
+    padding: scaleSize(wp('1.5%')), // ✅ COMPACT: Reduced padding
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2,
+        shadowOpacity: 0.15,
+        shadowOffset: { width: 0, height: 0.8 },
+        shadowRadius: 1.5,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },
   imageContainer: {
     position: 'relative',
-    marginBottom: hp('1%'),
+    marginBottom: hp('0.8%'), // ✅ COMPACT: Reduced (was 1%)
   },
   productRatingBadge: {
     position: 'absolute',
-    bottom: scaleSize(wp('3%')),
-    left: scaleSize(wp('3%')),
+    bottom: scaleSize(wp('2.5%')), // ✅ COMPACT: Adjusted
+    left: scaleSize(wp('2.5%')), // ✅ COMPACT: Adjusted
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: COLORS.primary,
-    paddingHorizontal: wp('2.5%'),
-    paddingVertical: hp('0.5%'),
-    borderRadius: scaleSize(wp('2%')),
+    paddingHorizontal: wp('2%'), // ✅ COMPACT: Reduced
+    paddingVertical: hp('0.4%'), // ✅ COMPACT: Reduced
+    borderRadius: scaleSize(wp('1.5%')), // ✅ COMPACT: Smaller
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2,
+        shadowOpacity: 0.15,
+        shadowOffset: { width: 0, height: 0.8 },
+        shadowRadius: 1.5,
       },
       android: {
         elevation: 2,
@@ -260,78 +295,77 @@ const styles = StyleSheet.create({
     }),
   },
   heartIcon: {
-    width: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4%')),
-    height: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4%')),
+    width: isTablet ? scaleSize(wp('3.2%')) : scaleSize(wp('3.5%')), // ✅ COMPACT: Smaller
+    height: isTablet ? scaleSize(wp('3.2%')) : scaleSize(wp('3.5%')), // ✅ COMPACT: Smaller
   },
   productTitle: {
     ...getTextStyle('Bold'),
-    fontSize: fontScale(18),
+    fontSize: fontScale(16), // ✅ COMPACT: Smaller (was 18)
     color: COLORS.textDark,
-    marginBottom: hp('0.5%'),
-    marginTop: hp('1%'),
+    marginBottom: hp('0.4%'), // ✅ COMPACT: Reduced
+    marginTop: hp('0.8%'), // ✅ COMPACT: Reduced (was 1%)
   },
   priceRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: hp('0.5%'),
+    marginBottom: hp('0.4%'), // ✅ COMPACT: Reduced
   },
   priceContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: wp('1.5%'),
+    gap: wp('1.2%'), // ✅ COMPACT: Reduced gap
     flex: 1,
   },
   productPrice: {
     ...getTextStyle('Bold'),
-    fontSize: fontScale(15),
+    fontSize: fontScale(13), // ✅ COMPACT: Smaller (was 15)
     color: '#111',
   },
   oldPrice: {
     ...getTextStyle('Regular'),
-    fontSize: fontScale(12),
+    fontSize: fontScale(11), // ✅ COMPACT: Smaller (was 12)
     color: '#666',
     textDecorationLine: 'line-through',
   },
   plusBtn: {
     backgroundColor: COLORS.primary,
     borderRadius: wp('50%'),
-    padding: scaleSize(wp('2%')),
+    padding: scaleSize(wp('1.8%')), // ✅ COMPACT: Reduced
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: scaleSize(wp('8%')),
-    minHeight: scaleSize(wp('8%')),
+    minWidth: scaleSize(wp('7%')), // ✅ COMPACT: Smaller
+    minHeight: scaleSize(wp('7%')), // ✅ COMPACT: Smaller
   },
   plusIcon: {
-    width: isTablet ? scaleSize(wp('3%')) : scaleSize(wp('3.5%')),
-    height: isTablet ? scaleSize(wp('3%')) : scaleSize(wp('3.5%')),
+    width: isTablet ? scaleSize(wp('2.8%')) : scaleSize(wp('3.2%')), // ✅ COMPACT: Smaller
+    height: isTablet ? scaleSize(wp('2.8%')) : scaleSize(wp('3.2%')), // ✅ COMPACT: Smaller
     tintColor: '#fff',
   },
   deliveryTimeRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: wp('1%'),
+    gap: wp('0.8%'), // ✅ COMPACT: Reduced gap
   },
   infoIcon: {
-    width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
-    height: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
+    width: isTablet ? scaleSize(wp('2.2%')) : scaleSize(wp('2.5%')), // ✅ COMPACT: Smaller
+    height: isTablet ? scaleSize(wp('2.2%')) : scaleSize(wp('2.5%')), // ✅ COMPACT: Smaller
     tintColor: COLORS.primary,
   },
   infoTxt: {
     ...getTextStyle('Regular'),
-    fontSize: fontScale(12),
+    fontSize: fontScale(11), // ✅ COMPACT: Smaller (was 12)
     color: COLORS.textLight,
-    marginRight: wp('2%'),
   },
   starIcon: {
-    width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
-    height: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
-    marginRight: wp('1%'),
+    width: isTablet ? scaleSize(wp('2.2%')) : scaleSize(wp('2.5%')), // ✅ COMPACT: Smaller
+    height: isTablet ? scaleSize(wp('2.2%')) : scaleSize(wp('2.5%')), // ✅ COMPACT: Smaller
+    marginRight: wp('0.8%'), // ✅ COMPACT: Reduced
     tintColor: '#fff',
   },
   ratingText: {
     ...getTextStyle('SemiBold'),
-    fontSize: fontScale(11),
+    fontSize: fontScale(10), // ✅ COMPACT: Smaller (was 11)
     color: '#fff',
   },
-})
+});

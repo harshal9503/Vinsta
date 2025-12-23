@@ -1,3 +1,4 @@
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import {
   Dimensions,
   Image,
@@ -7,13 +8,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useContext, useState, useEffect, useRef } from 'react';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import { COLORS } from '../../../theme/colors';
 import { useNavigation } from '@react-navigation/native';
+import { COLORS } from '../../../theme/colors';
 import { ThemeContext } from '../../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
@@ -101,103 +101,56 @@ const getTextStyle = (weight = 'Regular') => {
   };
 };
 
-// Slide data - Add more slides as needed
-const SLIDES = [
-  {
-    id: 1,
-    title: 'Free Delivery',
-    subtitle: 'Enjoy exclusive discount on tasty\nfood today!',
-    image: require('../../../assets/todayoffer.png'),
-    buttonText: 'VIEW OFFERS',
-    onPress: () => navigation.navigate('todayOfferView'),
-  },
-  {
-    id: 2,
-    title: '50% OFF',
-    subtitle: 'Get 50% discount on all\njewellery items today!',
-    image: require('../../../assets/burger.png'), // Replace with actual image
-    buttonText: 'SHOP NOW',
-    onPress: () => navigation.navigate('shopScreen'),
-  },
-  {
-    id: 3,
-    title: 'Buy 1 Get 1',
-    subtitle: 'Special offer on selected\ngold chains today!',
-    image: require('../../../assets/donut.png'), // Replace with actual image
-    buttonText: 'GRAB DEAL',
-    onPress: () => navigation.navigate('dealsScreen'),
-  },
-];
-
+// Static content matching the design in the screenshot
 const OfferSlider = () => {
   const { theme } = useContext(ThemeContext);
   const navigation = useNavigation<any>();
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const autoSlideInterval = useRef(null);
 
-  const handleViewOffer = slide => {
-    slide.onPress();
+  const handleFlatDealsPress = () => {
+    navigation.navigate('todayOfferView');
   };
 
-  // Auto slide every 3 seconds
-  useEffect(() => {
-    autoSlideInterval.current = setInterval(() => {
-      const nextIndex = (currentIndex + 1) % SLIDES.length;
-      setCurrentIndex(nextIndex);
-    }, 3000);
-
-    return () => {
-      if (autoSlideInterval.current) {
-        clearInterval(autoSlideInterval.current);
-      }
-    };
-  }, [currentIndex]);
-
-  const currentSlide = SLIDES[currentIndex];
+  const handleAllOffersPress = () => {
+    navigation.navigate('todayOfferView');
+  };
 
   return (
-    <View style={[styles.offerCard, { backgroundColor: theme.cardBackground }]}>
-      <View style={styles.offerContent}>
-        <Text style={[styles.offerHeader, { color: theme.text }]}>
-          {currentSlide.title}
-        </Text>
-        <Text style={[styles.offerSubTxt, { color: theme.text }]}>
-          {currentSlide.subtitle}
-        </Text>
-        <TouchableOpacity
-          style={styles.offerButton}
-          onPress={() => handleViewOffer(currentSlide)}
-          activeOpacity={0.8}
-        >
-          <Text style={[styles.offerBtnText, { color: theme.background }]}>
-            {currentSlide.buttonText}
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.rightContainer}>
-        <View style={styles.offerImageWrap}>
-          <Image
-            source={currentSlide.image}
-            style={styles.offerImage}
-            resizeMode="contain"
-          />
+    <View style={styles.row}>
+      {/* LEFT CARD – MIN ₹100 OFF / Flat Deals */}
+      <TouchableOpacity
+        activeOpacity={0.85}
+        style={styles.cardLeft}
+        onPress={handleFlatDealsPress}
+      >
+        <View>
+          <Text style={styles.leftTitleTop}>MIN ₹100 OFF</Text>
+          <Text style={styles.leftTitleBottom}>Flat Deals</Text>
         </View>
-        {/* Dots Indicator - Center positioned, smaller size */}
-        <View style={styles.dotsContainer}>
-          {SLIDES.map((_, index) => (
-            <View
-              key={index}
-              style={[
-                styles.dot,
-                {
-                  backgroundColor:
-                    index === currentIndex ? COLORS.primary : theme.text + '40', // 25% opacity
-                },
-              ]}
-            />
-          ))}
+
+        <Image
+          source={require('../../../assets/todayoffer.png')}
+          style={styles.leftIcon}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
+
+      {/* RIGHT CARD – ALL OFFERS / 60% off and more */}
+      <TouchableOpacity
+        activeOpacity={0.85}
+        style={styles.cardRight}
+        onPress={handleAllOffersPress}
+      >
+        <View>
+          <Text style={styles.rightTitleTop}>ALL OFFERS</Text>
+          <Text style={styles.rightTitleBottom}>60% off and more</Text>
         </View>
-      </View>
+
+        <Image
+          source={require('../../../assets/burger.png')} // use your current icon
+          style={styles.rightIcon}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -205,83 +158,88 @@ const OfferSlider = () => {
 export default OfferSlider;
 
 const styles = StyleSheet.create({
-  offerCard: {
-    borderRadius: scaleSize(wp('4%')),
-    backgroundColor: COLORS.secondary,
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: hp('1.5%'),
+  },
+
+  // COMMON CARD BASE
+  cardBase: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: scaleSize(wp('4%')),
-    marginBottom: hp('2%'),
+    paddingHorizontal: wp('3.5%'),
+    paddingVertical: hp('1.4%'),
+    borderRadius: wp('5%'),
+    flex: 1,
     ...Platform.select({
       ios: {
-        shadowColor: COLORS.cardShadow || '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowColor: '#000',
+        shadowOpacity: 0.05,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
       },
       android: {
-        elevation: 3,
+        elevation: 1,
       },
     }),
   },
-  offerContent: {
-    flex: 1,
+
+  cardLeft: {
+    // light pink gradient feel via solid + opacity
+    backgroundColor: '#FFE6F4',
     marginRight: wp('2%'),
-  },
-  rightContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  offerHeader: {
-    ...getTextStyle('Bold'),
-    fontSize: fontScale(20),
-    color: 'black',
-    marginBottom: hp('0.5%'),
-  },
-  offerSubTxt: {
-    ...getTextStyle('Regular'),
-    fontSize: fontScale(13),
-    color: COLORS.textLight,
-    marginBottom: hp('1.5%'),
-    lineHeight: hp('2%'),
-  },
-  offerButton: {
-    backgroundColor: COLORS.primary,
-    borderRadius: scaleSize(wp('2%')),
-    paddingVertical: isIOS ? hp('1.2%') : hp('1%'),
-    paddingHorizontal: wp('4%'),
-    alignSelf: 'flex-start',
-  },
-  offerBtnText: {
-    ...getTextStyle('Bold'),
-    fontSize: fontScale(13),
-    color: COLORS.secondary,
-    letterSpacing: 0.3,
-  },
-  offerImageWrap: {
-    width: isTablet ? scaleSize(wp('25%')) : scaleSize(wp('30%')),
-    height: isTablet ? scaleSize(wp('25%')) : scaleSize(wp('30%')),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  offerImage: {
-    width: '100%',
-    height: '100%',
-  },
-  // Dots styles - Smaller size, perfectly centered
-  dotsContainer: {
+    borderRadius: wp('5%'),
     flexDirection: 'row',
-    position: 'absolute',
-    bottom: scaleSize(wp('2%')),
-    left: 0,
-    right: 0,
-    justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: wp('3.5%'),
+    paddingVertical: hp('1.4%'),
+    flex: 1,
   },
-  dot: {
-    width: wp('1.2%'), // Smaller size
-    height: wp('1.2%'), // Smaller size
-    borderRadius: wp('0.8%'),
-    marginHorizontal: wp('0.3%'), // Tighter spacing
+
+  cardRight: {
+    backgroundColor: '#E7FFF4',
+    marginLeft: wp('2%'),
+    borderRadius: wp('5%'),
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: wp('3.5%'),
+    paddingVertical: hp('1.4%'),
+    flex: 1,
+  },
+
+  leftTitleTop: {
+    ...getTextStyle('Bold'),
+    fontSize: fontScale(13),
+    color: '#E1007B', // strong pink
+  },
+  leftTitleBottom: {
+    ...getTextStyle('Regular'),
+    fontSize: fontScale(11),
+    color: '#C30063',
+    marginTop: hp('0.2%'),
+  },
+
+  rightTitleTop: {
+    ...getTextStyle('Bold'),
+    fontSize: fontScale(13),
+    color: '#008A4A', // strong green
+  },
+  rightTitleBottom: {
+    ...getTextStyle('Regular'),
+    fontSize: fontScale(11),
+    color: '#00713A',
+    marginTop: hp('0.2%'),
+  },
+
+  leftIcon: {
+    width: wp('10%'),
+    height: wp('10%'),
+    marginLeft: wp('2.5%'),
+  },
+  rightIcon: {
+    width: wp('10%'),
+    height: wp('10%'),
+    marginLeft: wp('2.5%'),
   },
 });

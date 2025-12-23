@@ -375,7 +375,7 @@ const HomeScreen = () => {
   };
 
   const applyFilters = () => {
-    setShowl(false);
+    setShowFilterModal(false);
   };
 
   // Get current restaurants and products based on mode
@@ -470,14 +470,14 @@ const HomeScreen = () => {
             </View>
           </View>
 
-          {/* Title Row */}
-          <TitleRow isVegMode={isVegMode} toggleVegMode={toggleVegMode} />
-
           {/* Search Items */}
           <SearchItem
             onOpenFilter={() => setShowFilterModal(true)}
             hasActiveFilters={hasActiveFilters}
           />
+
+          {/* Title Row */}
+          <TitleRow isVegMode={isVegMode} toggleVegMode={toggleVegMode} />
         </View>
 
         {/* Main Content */}
@@ -551,7 +551,7 @@ const HomeScreen = () => {
             isVegMode={isVegMode}
           />
 
-          {/* Bottom info */}
+          {/* Bottom info - ✅ TIGHTENED SPACING */}
           <View style={styles.bottomRow}>
             <Image
               source={require('../../../assets/walk.png')}
@@ -606,7 +606,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: isIOS ? hp('15%') : hp('13%'), // Increased padding for cart card
+    paddingBottom: isIOS ? hp('12%') : hp('10%'), // ✅ REDUCED: Less bottom padding
   },
   headerContainer: {
     backgroundColor: COLORS.primary,
@@ -735,36 +735,37 @@ const styles = StyleSheet.create({
     fontSize: fontScale(14),
     color: COLORS.primary,
   },
+  // ✅ TIGHTENED BOTTOM SECTION SPACING
   bottomRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: hp('2%'),
-    marginBottom: hp('1%'),
-    paddingHorizontal: wp('2%'),
+    marginTop: hp('1.5%'), // ✅ REDUCED: Was 2%
+    marginBottom: hp('0.5%'), // ✅ REDUCED: Was 1%
+    paddingHorizontal: wp('1.5%'), // ✅ REDUCED: Was 2%
   },
   bottomImage: {
-    width: isTablet ? scaleSize(wp('8%')) : scaleSize(wp('10%')),
-    height: isTablet ? scaleSize(wp('8%')) : scaleSize(wp('10%')),
+    width: isTablet ? scaleSize(wp('7.5%')) : scaleSize(wp('9%')), // ✅ SLIGHTLY SMALLER
+    height: isTablet ? scaleSize(wp('7.5%')) : scaleSize(wp('9%')),
   },
   bottomTextContainer: {
     flex: 1,
-    marginLeft: wp('4%'),
+    marginLeft: wp('3%'), // ✅ REDUCED: Was 4%
   },
   reachingTxt: {
     ...getTextStyle('SemiBold'),
     fontSize: fontScale(14),
     color: COLORS.primary,
-    marginBottom: hp('0.4%'),
+    marginBottom: hp('0.2%'), // ✅ REDUCED: Was 0.4%
   },
   deliveryTimeContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: wp('1.5%'),
+    gap: wp('1.2%'), // ✅ REDUCED: Was 1.5%
   },
   deliveryClockIcon: {
-    width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
-    height: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
+    width: isTablet ? scaleSize(wp('2.2%')) : scaleSize(wp('2.7%')), // ✅ SLIGHTLY SMALLER
+    height: isTablet ? scaleSize(wp('2.2%')) : scaleSize(wp('2.7%')),
     tintColor: COLORS.primary,
   },
   getDeliveredTxt: {

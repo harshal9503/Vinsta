@@ -319,10 +319,12 @@ const RestaurentDetails: React.FC = () => {
   };
 
   return (
-    <View style={[
-      styles.container,
-      { backgroundColor: theme.background },  // <-- Correct
-    ]}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: theme.background }, // <-- Correct
+      ]}
+    >
       <StatusBar
         translucent
         backgroundColor="transparent"
@@ -414,17 +416,13 @@ const RestaurentDetails: React.FC = () => {
             style={[
               styles.searchRow,
               {
-                backgroundColor: theme.cardBackground,     // Light: white, Dark: #1E1E1E
-
+                backgroundColor: theme.cardBackground, // Light: white, Dark: #1E1E1E
               },
             ]}
           >
             <Image
               source={require('../../../../assets/search.png')}
-              style={[
-                styles.searchIcon,
-
-              ]}
+              style={[styles.searchIcon]}
             />
             <TextInput
               placeholder="search"
@@ -432,7 +430,7 @@ const RestaurentDetails: React.FC = () => {
               style={[
                 styles.input,
                 {
-                  color: theme.text,                     // Light: black, Dark: white
+                  color: theme.text, // Light: black, Dark: white
                 },
               ]}
               value={searchQuery}
@@ -475,7 +473,7 @@ const RestaurentDetails: React.FC = () => {
         {/* Show content only if items are available */}
         {foodItems.length > 0 ? (
           <>
-            {/* ===== UPDATED CATEGORY SLIDER ===== */}
+            {/* ===== UPDATED COMPACT CATEGORY SLIDER ===== */}
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -491,12 +489,15 @@ const RestaurentDetails: React.FC = () => {
                     style={[
                       styles.categoryBtn,
                       selected && styles.categoryBtnActive,
-                      { backgroundColor: selected ? '#d86705ff' : theme.background },
+                      {
+                        backgroundColor: selected
+                          ? '#d86705ff'
+                          : theme.background,
+                      },
                       isDarkMode && {
                         borderColor: theme.borderColor,
-                        borderWidth: 1
-                      }
-
+                        borderWidth: 1,
+                      },
                     ]}
                     onPress={() => setActiveCategory(cat.name)}
                     activeOpacity={0.8}
@@ -506,11 +507,14 @@ const RestaurentDetails: React.FC = () => {
                         <Image
                           source={cat.img}
                           style={styles.categoryIconSelected}
-
                         />
                       </View>
                     ) : (
-                      <Image source={cat.img} style={styles.categoryIcon} resizeMode="stretch" />
+                      <Image
+                        source={cat.img}
+                        style={styles.categoryIcon}
+                        resizeMode="stretch"
+                      />
                     )}
                     <Text
                       style={[
@@ -559,7 +563,9 @@ const RestaurentDetails: React.FC = () => {
                 source={require('../../../../assets/popular.png')}
                 style={styles.bestBurgerHeaderIcon}
               />
-              <Text style={[styles.bestBurgerHeaderText, { color: theme.text }]}>
+              <Text
+                style={[styles.bestBurgerHeaderText, { color: theme.text }]}
+              >
                 Best In {activeCategory}
               </Text>
             </View>
@@ -743,35 +749,35 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     tintColor: '#999',
   },
-  // ===== UPDATED CATEGORY SLIDER STYLES =====
+  // ===== COMPACT CATEGORY SLIDER STYLES =====
   categorySlider: {
-    paddingVertical: hp('1.5%'),
-    marginVertical: hp('0.5%'),
+    paddingVertical: hp('0.3%'), // ✅ COMPACT: Reduced
+    marginVertical: hp('0.3%'), // ✅ COMPACT: Reduced
     marginLeft: wp('5.5%'),
   },
   categorySliderContent: {
-    paddingRight: wp('5.5%'),
+    paddingRight: wp('4%'), // ✅ COMPACT: Reduced
   },
   categoryBtn: {
     backgroundColor: '#fff',
-    borderRadius: wp('20%'),
+    borderRadius: wp('15%'), // ✅ COMPACT: Smaller radius
     alignItems: 'center',
     justifyContent: 'flex-start',
-    marginRight: wp('3%'),
-    paddingVertical: hp('1.2%'),
+    marginRight: wp('2.5%'), // ✅ COMPACT: Reduced
+    paddingVertical: hp('0.8%'), // ✅ COMPACT: Reduced
     paddingHorizontal: wp('0%'),
     flexDirection: 'row',
-    height: hp('6.5%'),
-    minWidth: wp('28%'),
+    height: hp('5%'), // ✅ COMPACT: Smaller (was 6.5%)
+    minWidth: wp('22%'), // ✅ COMPACT: Smaller (was 28%)
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
+        shadowOffset: { width: 0, height: 1 }, // ✅ COMPACT: Reduced
+        shadowOpacity: 0.08,
+        shadowRadius: 2,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },
@@ -780,19 +786,19 @@ const styles = StyleSheet.create({
   },
   selectedIconCircle: {
     backgroundColor: '#fff',
-    borderRadius: wp('50%'),
-    width: wp('11%'),
-    height: wp('11%'),
+    borderRadius: wp('40%'), // ✅ COMPACT: Smaller
+    width: wp('8.5%'), // ✅ COMPACT: Smaller
+    height: wp('8.5%'), // ✅ COMPACT: Smaller
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: wp('1.5%'),
-    marginRight: wp('2.5%'),
+    marginLeft: wp('1.2%'), // ✅ COMPACT: Reduced
+    marginRight: wp('1.8%'), // ✅ COMPACT: Reduced
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.15,
-        shadowRadius: 1.5,
+        shadowOffset: { width: 0, height: 0.8 },
+        shadowOpacity: 0.12,
+        shadowRadius: 1.2,
       },
       android: {
         elevation: 2,
@@ -800,29 +806,29 @@ const styles = StyleSheet.create({
     }),
   },
   categoryIcon: {
-    width: wp('11%'),
-    height: wp('11%'),
-    marginLeft: wp('4%'),
-    marginRight: wp('2.5%'),
+    width: wp('8.5%'), // ✅ COMPACT: Smaller
+    height: wp('8.5%'), // ✅ COMPACT: Smaller
+    marginLeft: wp('3.2%'), // ✅ COMPACT: Adjusted
+    marginRight: wp('1.8%'),
   },
   categoryIconSelected: {
-    width: wp('9%'),
-    height: wp('9%'),
+    width: wp('7%'), // ✅ COMPACT: Smaller
+    height: wp('7%'), // ✅ COMPACT: Smaller
   },
   categoryTxt: {
     color: COLORS.primary,
-    fontSize: hp('1.8%'),
+    fontSize: hp('1.4%'), // ✅ COMPACT: Smaller text (was 1.8%)
     fontFamily: Platform.OS === 'android' ? 'Figtree-Bold' : 'Figtree',
     fontWeight: Platform.OS === 'android' ? undefined : '700',
-    letterSpacing: 0.2,
+    letterSpacing: 0.15, // ✅ COMPACT: Reduced
     flex: 1,
     textAlign: 'center',
-    marginRight: wp('3%'),
+    marginRight: wp('1.5%'), // ✅ COMPACT: Reduced
   },
   categoryTxtActive: {
     color: COLORS.secondary,
   },
-  // ===== END OF UPDATED CATEGORY SLIDER STYLES =====
+  // ===== END COMPACT CATEGORY STYLES =====
   recommendHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
