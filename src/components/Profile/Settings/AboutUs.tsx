@@ -12,10 +12,11 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
-import font from '../../../assets/fonts';
 import { ThemeContext } from '../../../theme/ThemeContext';
+import { getFontFamily, getFontWeight } from '../../../utils/fontHelper';
 
 const { width, height } = Dimensions.get('window');
+
 const AboutUs = () => {
   const navigation = useNavigation<any>();
   const { theme } = useContext(ThemeContext);
@@ -33,7 +34,10 @@ const AboutUs = () => {
       title: 'Email',
       value: 'support@vinsta.com',
       icon: require('../../../assets/email.png'),
-      action: () => Linking.openURL('mailto:support@vinsta.com?subject=App Support&body=Hello, I need help with...'),
+      action: () =>
+        Linking.openURL(
+          'mailto:support@vinsta.com?subject=App Support&body=Hello, I need help with...'
+        ),
     },
     {
       id: 3,
@@ -48,113 +52,195 @@ const AboutUs = () => {
       value: '123 App Street, Tech City',
       icon: require('../../../assets/location.png'),
       action: () => {
-        Linking.openURL('https://maps.google.com/?q=123+App+Street+Tech+City');
+        Linking.openURL(
+          'https://maps.google.com/?q=123+App+Street+Tech+City'
+        );
       },
     },
   ];
 
   return (
-    <View style={[styles.container,{backgroundColor : theme.background}]}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent
+      />
 
-      <View style={[styles.header,{backgroundColor : theme.background}]}>
+      <View style={[styles.header, { backgroundColor: theme.background }]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/back.png')} style={[styles.backIcon,{tintColor:theme.text}]} />
+          <Image
+            source={require('../../../assets/back.png')}
+            style={[styles.backIcon, { tintColor: theme.text }]}
+          />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color : theme.textSecondary}]}>About Us</Text>
+        <Text style={[styles.headerTitle, { color: theme.textSecondary }]}>
+          About Us
+        </Text>
         <View style={{ width: 24 }} />
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.content}
+      >
         {/* App Logo and Basic Info */}
-        <View style={[styles.appHeader]}>
-          <Image 
-            source={require('../../../assets/Splash.png')} 
-            style={styles.appLogo} 
+        <View style={styles.appHeader}>
+          <Image
+            source={require('../../../assets/Splash.png')}
+            style={styles.appLogo}
           />
-          <Text style={[styles.appName,{color : theme.textSecondary}]}>Vinsta</Text>
-          <Text style={[styles.appVersion,{color : theme.textSecondary}]}>Version 1.0.0</Text>
-          <Text style={[styles.appDescription,{color : theme.textSecondary}]}>
+          <Text style={[styles.appName, { color: theme.textSecondary }]}>
+            Vinsta
+          </Text>
+          <Text style={[styles.appVersion, { color: theme.textSecondary }]}>
+            Version 1.0.0
+          </Text>
+          <Text
+            style={[styles.appDescription, { color: theme.textSecondary }]}
+          >
             Delivering excellence one order at a time
           </Text>
         </View>
 
         {/* App Description */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>Our Story</Text>
-          <Text style={[styles.sectionText,{color : theme.textSecondary}]}>
-            Founded in 2024, our mission is to provide the best food delivery experience 
-            to our customers. We connect you with your favorite restaurants and deliver 
-            delicious meals right to your doorstep.
+          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>
+            Our Story
+          </Text>
+          <Text style={[styles.sectionText, { color: theme.textSecondary }]}>
+            Founded in 2024, our mission is to provide the best food delivery
+            experience to our customers. We connect you with your favorite
+            restaurants and deliver delicious meals right to your doorstep.
           </Text>
         </View>
 
         {/* Features */}
-        <View style={[styles.section,{backgroundColor : theme.background}]}>
-          <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>What We Offer</Text>
-          <View style={[styles.featuresList,{backgroundColor : theme.background}]}>
+        <View style={[styles.section, { backgroundColor: theme.background }]}>
+          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>
+            What We Offer
+          </Text>
+          <View
+            style={[styles.featuresList, { backgroundColor: theme.background }]}
+          >
             <View style={styles.featureItem}>
-              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:theme.text}]} />
-              <Text style={[styles.featureText,{color : theme.textSecondary}]}>Fast Delivery</Text>
+              <Image
+                source={require('../../../assets/tick.png')}
+                style={[styles.featureIcon, { tintColor: theme.text }]}
+              />
+              <Text style={[styles.featureText, { color: theme.textSecondary }]}>
+                Fast Delivery
+              </Text>
             </View>
             <View style={styles.featureItem}>
-              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:theme.text}]} />
-              <Text style={[styles.featureText,{color : theme.textSecondary}]}>Wide Restaurant Selection</Text>
+              <Image
+                source={require('../../../assets/tick.png')}
+                style={[styles.featureIcon, { tintColor: theme.text }]}
+              />
+              <Text style={[styles.featureText, { color: theme.textSecondary }]}>
+                Wide Restaurant Selection
+              </Text>
             </View>
             <View style={styles.featureItem}>
-              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:theme.text}]} />
-              <Text style={[styles.featureText,{color : theme.textSecondary}]}>Secure Payments</Text>
+              <Image
+                source={require('../../../assets/tick.png')}
+                style={[styles.featureIcon, { tintColor: theme.text }]}
+              />
+              <Text style={[styles.featureText, { color: theme.textSecondary }]}>
+                Secure Payments
+              </Text>
             </View>
             <View style={styles.featureItem}>
-              <Image source={require('../../../assets/tick.png')} style={[styles.featureIcon,{tintColor:theme.text}]} />
-              <Text style={[styles.featureText,{color : theme.textSecondary}]}>24/7 Customer Support</Text>
+              <Image
+                source={require('../../../assets/tick.png')}
+                style={[styles.featureIcon, { tintColor: theme.text }]}
+              />
+              <Text style={[styles.featureText, { color: theme.textSecondary }]}>
+                24/7 Customer Support
+              </Text>
             </View>
           </View>
         </View>
 
         {/* Contact Information */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>Contact Us</Text>
-          {contactInfo.map((item) => (
+          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>
+            Contact Us
+          </Text>
+          {contactInfo.map(item => (
             <TouchableOpacity
               key={item.id}
-              style={[styles.contactItem,{backgroundColor : theme.background}]}
+              style={[styles.contactItem, { backgroundColor: theme.background }]}
               onPress={item.action}
             >
               <View style={styles.contactLeft}>
-                <Image source={item.icon} style={[styles.contactIcon,{tintColor:theme.text}]} />
+                <Image
+                  source={item.icon}
+                  style={[styles.contactIcon, { tintColor: theme.text }]}
+                />
                 <View>
-                  <Text style={[styles.contactTitle,{color : theme.textSecondary}]}>{item.title}</Text>
-                  <Text style={[styles.contactValue,{color : theme.textSecondary}]}>{item.value}</Text>
+                  <Text
+                    style={[
+                      styles.contactTitle,
+                      { color: theme.textSecondary },
+                    ]}
+                  >
+                    {item.title}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.contactValue,
+                      { color: theme.textSecondary },
+                    ]}
+                  >
+                    {item.value}
+                  </Text>
                 </View>
               </View>
-              <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor:theme.text}]} />
+              <Image
+                source={require('../../../assets/right-arrow.png')}
+                style={[styles.arrowIcon, { tintColor: theme.text }]}
+              />
             </TouchableOpacity>
           ))}
         </View>
 
         {/* Legal */}
-        <View style={[styles.section]}>
-          <Text style={[styles.sectionTitle,{color : theme.textSecondary}]}>Legal</Text>
-          <TouchableOpacity 
-            style={[styles.legalItem,{backgroundColor : theme.background}]}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>
+            Legal
+          </Text>
+          <TouchableOpacity
+            style={[styles.legalItem, { backgroundColor: theme.background }]}
             onPress={() => navigation.navigate('PrivacyPolicy')}
           >
-            <Text style={[styles.legalText,{color : theme.textSecondary}]}>Privacy Policy</Text>
-            <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor:theme.text}]} />
+            <Text style={[styles.legalText, { color: theme.textSecondary }]}>
+              Privacy Policy
+            </Text>
+            <Image
+              source={require('../../../assets/right-arrow.png')}
+              style={[styles.arrowIcon, { tintColor: theme.text }]}
+            />
           </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.legalItem,{backgroundColor : theme.background}]}
+          <TouchableOpacity
+            style={[styles.legalItem, { backgroundColor: theme.background }]}
             onPress={() => navigation.navigate('TermsConditions')}
           >
-            <Text style={[styles.legalText,{color : theme.textSecondary}]}>Terms & Conditions</Text>
-            <Image source={require('../../../assets/right-arrow.png')} style={[styles.arrowIcon,{tintColor:theme.text}]} />
+            <Text style={[styles.legalText, { color: theme.textSecondary }]}>
+              Terms & Conditions
+            </Text>
+            <Image
+              source={require('../../../assets/right-arrow.png')}
+              style={[styles.arrowIcon, { tintColor: theme.text }]}
+            />
           </TouchableOpacity>
         </View>
 
         {/* Copyright */}
         <View style={styles.copyrightSection}>
-          <Text style={[styles.copyrightText,{color : theme.textSecondary}]}>
+          <Text
+            style={[styles.copyrightText, { color: theme.textSecondary }]}
+          >
             © 2024 Vinsta. All rights reserved.
           </Text>
         </View>
@@ -180,13 +266,12 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     resizeMode: 'contain',
-    tintColor: '#000000',
   },
   headerTitle: {
     fontSize: width * 0.045,
-    fontWeight: '700',
     color: '#616161',
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   content: {
     padding: 20,
@@ -203,44 +288,43 @@ const styles = StyleSheet.create({
   },
   appName: {
     fontSize: width * 0.05,
-    fontWeight: '700',
     color: '#616161',
     marginBottom: 4,
-    fontFamily : 'Figtree-Bold'
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   appVersion: {
     fontSize: width * 0.035,
     color: '#616161',
     marginBottom: 8,
-    fontFamily : 'Figtree-SemiBold',
-    fontWeight  :'600'
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   appDescription: {
     fontSize: width * 0.036,
     color: COLORS.primary,
-    fontWeight: '500',
     textAlign: 'center',
-    fontFamily : 'Figtree-Medium',
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   section: {
     marginBottom: 25,
   },
   sectionTitle: {
     fontSize: width * 0.04,
-    fontWeight: '700',
     color: '#616161',
     marginBottom: 12,
-    fontFamily : 'Figtree-Bold',
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   sectionText: {
     fontSize: width * 0.035,
     color: '#616161',
     lineHeight: 20,
-    fontFamily : 'Figtree-Medium',
-    fontWeight  :'500'
+    fontFamily: getFontFamily('Medium'),
+    fontWeight: getFontWeight('Medium'),
   },
   featuresList: {
-    backgroundColor: '#fff',
     borderRadius: 12,
     padding: 16,
     shadowColor: '#000',
@@ -264,14 +348,13 @@ const styles = StyleSheet.create({
   featureText: {
     fontSize: width * 0.035,
     color: '#616161',
-    fontFamily : 'Figtree-SemiBold',
-    fontWeight  :'600'
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   contactItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
     padding: 16,
     borderRadius: 12,
     marginBottom: 8,
@@ -297,14 +380,14 @@ const styles = StyleSheet.create({
     fontSize: width * 0.035,
     color: '#616161',
     marginBottom: 2,
-    fontFamily : 'Figtree-Bold',
-    fontWeight  :'700'
+    fontFamily: getFontFamily('Bold'),
+    fontWeight: getFontWeight('Bold'),
   },
   contactValue: {
     fontSize: width * 0.032,
     color: '#616161',
-    fontFamily : 'Figtree-SemiBold',
-    fontWeight  :'600'
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   arrowIcon: {
     width: 14,
@@ -316,7 +399,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
     padding: 16,
     borderRadius: 12,
     marginBottom: 8,
@@ -329,8 +411,8 @@ const styles = StyleSheet.create({
   legalText: {
     fontSize: width * 0.035,
     color: '#616161',
-    fontFamily : 'Figtree-SemiBold',
-    fontWeight  :'600'
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
   copyrightSection: {
     marginTop: 20,
@@ -343,8 +425,8 @@ const styles = StyleSheet.create({
     fontSize: width * 0.03,
     color: '#616161',
     textAlign: 'center',
-    fontFamily : 'Figtree-SemiBold',
-    fontWeight  :'600'
+    fontFamily: getFontFamily('SemiBold'),
+    fontWeight: getFontWeight('SemiBold'),
   },
 });
 

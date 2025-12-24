@@ -1,7 +1,19 @@
-import { Dimensions, Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext } from 'react'
+import {
+  Dimensions,
+  Image,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, { useContext } from 'react';
 const { width, height } = Dimensions.get('window');
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import { COLORS } from '../../../theme/colors';
 import { ThemeContext } from '../../../theme/ThemeContext';
 
@@ -9,95 +21,94 @@ const isTablet = width >= 768;
 const isSmallScreen = width < 380;
 const screenRatio = width / height;
 const isIOS = Platform.OS === 'ios';
+
 const fontScale = size => {
-    if (isIOS) {
-        return isTablet ? size * 0.85 : size * 0.95;
-    }
-    return isTablet ? size * 0.85 : size;
+  if (isIOS) {
+    return isTablet ? size * 0.85 : size * 0.95;
+  }
+  return isTablet ? size * 0.85 : size;
 };
 
-// iOS-specific dimension scaling
 const scaleSize = size => {
-    if (isIOS) {
-        return isTablet ? size * 0.9 : size * 1.02;
-    }
-    return size;
+  if (isIOS) {
+    return isTablet ? size * 0.9 : size * 1.02;
+  }
+  return size;
 };
 
-// ✅ UNIVERSAL Font family helper with proper iOS and Android support
 const getFontFamily = (weight = 'Regular') => {
-    if (Platform.OS === 'ios') {
-        // iOS uses base font family name + fontWeight property
-        return 'Figtree';
-    } else {
-        // Android needs specific font file names
-        const fontMap = {
-            '100': 'Figtree-Thin',
-            '200': 'Figtree-ExtraLight',
-            '300': 'Figtree-Light',
-            '400': 'Figtree-Regular',
-            '500': 'Figtree-Medium',
-            '600': 'Figtree-SemiBold',
-            '700': 'Figtree-Bold',
-            '800': 'Figtree-ExtraBold',
-            '900': 'Figtree-Black',
-            'Thin': 'Figtree-Thin',
-            'ExtraLight': 'Figtree-ExtraLight',
-            'Light': 'Figtree-Light',
-            'Regular': 'Figtree-Regular',
-            'Medium': 'Figtree-Medium',
-            'SemiBold': 'Figtree-SemiBold',
-            'Bold': 'Figtree-Bold',
-            'ExtraBold': 'Figtree-ExtraBold',
-            'Black': 'Figtree-Black',
-        };
-        return fontMap[weight] || 'Figtree-Regular';
-    }
+  if (Platform.OS === 'ios') {
+    return 'Figtree';
+  } else {
+    const fontMap = {
+      '100': 'Figtree-Thin',
+      '200': 'Figtree-ExtraLight',
+      '300': 'Figtree-Light',
+      '400': 'Figtree-Regular',
+      '500': 'Figtree-Medium',
+      '600': 'Figtree-SemiBold',
+      '700': 'Figtree-Bold',
+      '800': 'Figtree-ExtraBold',
+      '900': 'Figtree-Black',
+      Thin: 'Figtree-Thin',
+      ExtraLight: 'Figtree-ExtraLight',
+      Light: 'Figtree-Light',
+      Regular: 'Figtree-Regular',
+      Medium: 'Figtree-Medium',
+      SemiBold: 'Figtree-SemiBold',
+      Bold: 'Figtree-Bold',
+      ExtraBold: 'Figtree-ExtraBold',
+      Black: 'Figtree-Black',
+    };
+    return fontMap[weight] || 'Figtree-Regular';
+  }
 };
 
-// ✅ Get fontWeight for iOS (Android ignores this)
 const getFontWeight = (weight = 'Regular') => {
-    if (Platform.OS === 'android') {
-        return undefined; // Android doesn't use fontWeight with custom fonts
-    }
+  if (Platform.OS === 'android') {
+    return undefined;
+  }
 
-    // iOS fontWeight mapping
-    const weightMap = {
-        'Thin': '100',
-        'ExtraLight': '200',
-        'Light': '300',
-        'Regular': '400',
-        'Medium': '500',
-        'SemiBold': '600',
-        'Bold': '700',
-        'ExtraBold': '800',
-        'Black': '900',
-        '100': '100',
-        '200': '200',
-        '300': '300',
-        '400': '400',
-        '500': '500',
-        '600': '600',
-        '700': '700',
-        '800': '800',
-        '900': '900',
-    };
-    return weightMap[weight] || '400';
+  const weightMap = {
+    Thin: '100',
+    ExtraLight: '200',
+    Light: '300',
+    Regular: '400',
+    Medium: '500',
+    SemiBold: '600',
+    Bold: '700',
+    ExtraBold: '800',
+    Black: '900',
+    '100': '100',
+    '200': '200',
+    '300': '300',
+    '400': '400',
+    '500': '500',
+    '600': '600',
+    '700': '700',
+    '800': '800',
+    '900': '900',
+  };
+  return weightMap[weight] || '400';
 };
 
-// ✅ Complete font style helper
 const getTextStyle = (weight = 'Regular') => {
-    return {
-        fontFamily: getFontFamily(weight),
-        ...(Platform.OS === 'ios' && { fontWeight: getFontWeight(weight) }),
-        includeFontPadding: false,
-        textAlignVertical: 'center',
-    };
+  return {
+    fontFamily: getFontFamily(weight),
+    ...(Platform.OS === 'ios' && { fontWeight: getFontWeight(weight) }),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  };
 };
 
-const FeaturedRestaurant = ({ getCurrentRestaurants, handleRestaurantPress, toggleFavorite, isVegMode }) => {
-  const {theme} = useContext(ThemeContext);
-  
+const FeaturedRestaurant = ({
+  getCurrentRestaurants,
+  handleRestaurantPress,
+  toggleFavorite,
+  isVegMode,
+}) => {
+  const { theme } = useContext(ThemeContext);
+
   return (
     <ScrollView
       horizontal
@@ -108,7 +119,10 @@ const FeaturedRestaurant = ({ getCurrentRestaurants, handleRestaurantPress, togg
       {getCurrentRestaurants().map(restaurant => (
         <TouchableOpacity
           key={restaurant.id}
-          style={[styles.restaurantCard,{backgroundColor : theme.cardBackground}]}
+          style={[
+            styles.restaurantCard,
+            { backgroundColor: theme.cardBackground },
+          ]}
           onPress={() => handleRestaurantPress(restaurant)}
           activeOpacity={0.8}
         >
@@ -119,22 +133,29 @@ const FeaturedRestaurant = ({ getCurrentRestaurants, handleRestaurantPress, togg
               resizeMode="cover"
             />
 
-            <TouchableOpacity 
+            <TouchableOpacity
               style={[
                 styles.productHeartWrapper,
-                { backgroundColor: restaurant.isFavorite ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)' }
-              ]} 
+                {
+                  backgroundColor: restaurant.isFavorite
+                    ? 'rgba(255, 255, 255, 0.9)'
+                    : 'rgba(255, 255, 255, 0.3)',
+                },
+              ]}
               activeOpacity={0.7}
               onPress={() => toggleFavorite(restaurant.id, isVegMode)}
             >
               <Image
-                source={restaurant.isFavorite 
-                  ? require('../../../assets/heartfill.png')
-                  : require('../../../assets/heart.png')
+                source={
+                  restaurant.isFavorite
+                    ? require('../../../assets/heartfill.png')
+                    : require('../../../assets/heart.png')
                 }
                 style={[
                   styles.heartIcon,
-                  { tintColor: restaurant.isFavorite ? COLORS.primary : '#fff' }
+                  {
+                    tintColor: restaurant.isFavorite ? COLORS.primary : '#fff',
+                  },
                 ]}
                 resizeMode="contain"
               />
@@ -150,7 +171,9 @@ const FeaturedRestaurant = ({ getCurrentRestaurants, handleRestaurantPress, togg
             </View>
           </View>
 
-          <Text style={[styles.restaurantTitle,{color: theme.text}]}>{restaurant.name}</Text>
+          <Text style={[styles.restaurantTitle, { color: theme.text }]}>
+            {restaurant.name}
+          </Text>
 
           <View style={styles.restaurantInfoRow}>
             <Image
@@ -158,21 +181,26 @@ const FeaturedRestaurant = ({ getCurrentRestaurants, handleRestaurantPress, togg
               style={styles.infoIcon}
               resizeMode="contain"
             />
-            <Text style={[styles.infoTxt,{color: theme.text}]}>free delivery</Text>
+            <Text style={[styles.infoTxt, { color: theme.text }]}>
+              free delivery
+            </Text>
 
             <Image
               source={require('../../../assets/clock.png')}
               style={styles.infoIcon}
               resizeMode="contain"
             />
-            <Text style={[styles.infoTxt,{color: theme.text}]}>{restaurant.deliveryTime}</Text>
+            <Text style={[styles.infoTxt, { color: theme.text }]}>
+              {restaurant.deliveryTime}
+            </Text>
           </View>
 
+          {/* FIXED: Tags container with proper wrapping and max width */}
           <View style={styles.tagsContainer}>
             {restaurant.tags.map((tag, index) => (
-              <Text key={index} style={styles.restaurantTags}>
-                {tag}
-              </Text>
+              <View key={index} style={styles.tagWrapper}>
+                <Text style={styles.restaurantTags}>{tag}</Text>
+              </View>
             ))}
           </View>
         </TouchableOpacity>
@@ -181,80 +209,80 @@ const FeaturedRestaurant = ({ getCurrentRestaurants, handleRestaurantPress, togg
   );
 };
 
-export default FeaturedRestaurant
+export default FeaturedRestaurant;
 
-const styles = StyleSheet.create({ 
+const styles = StyleSheet.create({
   restaurantScrollContent: {
     paddingHorizontal: wp('1%'),
-    paddingBottom: hp('1%'),
+    paddingBottom: hp('0.8%'),
   },
   restaurantCard: {
-    width: isTablet ? scaleSize(wp('48%')) : scaleSize(wp('55%')),
+    width: isTablet ? scaleSize(wp('45%')) : scaleSize(wp('52%')),
     backgroundColor: COLORS.secondary,
-    marginHorizontal: wp('1.5%'),
-    marginBottom: hp('1%'),
-    borderRadius: scaleSize(wp('4%')),
-    padding: scaleSize(wp('3%')),
+    marginHorizontal: wp('1.2%'),
+    marginBottom: hp('0.8%'),
+    borderRadius: scaleSize(wp('3.5%')),
+    padding: scaleSize(wp('2.5%')),
     ...Platform.select({
       ios: {
         shadowColor: COLORS.cardShadow || '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 1.5 },
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },
   imageContainer: {
     position: 'relative',
-    marginBottom: hp('1%'),
+    marginBottom: hp('0.8%'),
   },
   restaurantImg: {
     width: '100%',
-    height: isTablet ? hp('12%') : hp('15%'),
-    borderRadius: scaleSize(wp('3%')),
+    height: isTablet ? hp('11%') : hp('13.5%'),
+    borderRadius: scaleSize(wp('2.5%')),
   },
   productHeartWrapper: {
     position: 'absolute',
-    top: scaleSize(wp('3%')),
-    right: scaleSize(wp('3%')),
+    top: scaleSize(wp('2.5%')),
+    right: scaleSize(wp('2.5%')),
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    borderRadius: scaleSize(wp('5%')),
-    padding: scaleSize(wp('2%')),
+    borderRadius: scaleSize(wp('4%')),
+    padding: scaleSize(wp('1.5%')),
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2,
+        shadowOpacity: 0.15,
+        shadowOffset: { width: 0, height: 0.8 },
+        shadowRadius: 1.5,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },
   heartIcon: {
-    width: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4%')),
-    height: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4%')),
+    width: isTablet ? scaleSize(wp('3.2%')) : scaleSize(wp('3.5%')),
+    height: isTablet ? scaleSize(wp('3.2%')) : scaleSize(wp('3.5%')),
   },
   productRatingBadge: {
     position: 'absolute',
-    bottom: scaleSize(wp('3%')),
-    left: scaleSize(wp('3%')),
+    bottom: scaleSize(wp('2.5%')),
+    left: scaleSize(wp('2.5%')),
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: COLORS.primary,
-    paddingHorizontal: wp('2.5%'),
-    paddingVertical: hp('0.5%'),
-    borderRadius: scaleSize(wp('2%')),
+    paddingHorizontal: wp('2%'),
+    paddingVertical: hp('0.4%'),
+    borderRadius: scaleSize(wp('1.5%')),
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2,
+        shadowOpacity: 0.15,
+        shadowOffset: { width: 0, height: 0.8 },
+        shadowRadius: 1.5,
       },
       android: {
         elevation: 2,
@@ -262,51 +290,63 @@ const styles = StyleSheet.create({
     }),
   },
   starIcon: {
-    width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
-    height: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
-    marginRight: wp('1%'),
+    width: isTablet ? scaleSize(wp('2.2%')) : scaleSize(wp('2.5%')),
+    height: isTablet ? scaleSize(wp('2.2%')) : scaleSize(wp('2.5%')),
+    marginRight: wp('0.8%'),
     tintColor: '#fff',
   },
   ratingText: {
     ...getTextStyle('SemiBold'),
-    fontSize: fontScale(11),
+    fontSize: fontScale(10),
     color: '#fff',
   },
   restaurantTitle: {
     ...getTextStyle('Bold'),
-    fontSize: fontScale(18),
+    fontSize: fontScale(16),
     color: COLORS.textDark,
-    marginBottom: hp('0.5%'),
+    marginBottom: hp('0.4%'),
   },
   restaurantInfoRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: hp('0.5%'),
-    gap: wp('1%'),
+    marginBottom: hp('0.8%'), // Increased for better spacing
+    gap: wp('0.8%'),
   },
   infoIcon: {
-    width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
-    height: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
+    width: isTablet ? scaleSize(wp('2.2%')) : scaleSize(wp('2.5%')),
+    height: isTablet ? scaleSize(wp('2.2%')) : scaleSize(wp('2.5%')),
     tintColor: COLORS.primary,
   },
   infoTxt: {
     ...getTextStyle('Regular'),
-    fontSize: fontScale(12),
+    fontSize: fontScale(11),
     color: COLORS.textLight,
-    marginRight: wp('2%'),
+    marginRight: wp('1.5%'),
   },
+  // FIXED: Tags container styling
   tagsContainer: {
     flexDirection: 'row',
-    gap: wp('1.5%'),
     flexWrap: 'wrap',
+    gap: wp('0.8%'), // Reduced gap
+    marginTop: hp('0.2%'),
+  },
+  tagWrapper: {
+    // Added wrapper for better control
+    flexShrink: 1,
   },
   restaurantTags: {
     ...getTextStyle('Regular'),
-    fontSize: fontScale(11),
+    fontSize: fontScale(9.5), // Slightly smaller font
     color: COLORS.primary,
     backgroundColor: '#f3f1f1',
-    paddingHorizontal: wp('2.5%'),
-    paddingVertical: isIOS ? hp('0.3%') : hp('0.25%'),
-    borderRadius: scaleSize(wp('5%')),
+    paddingHorizontal: wp('1.8%'), // Reduced padding
+    paddingVertical: isIOS ? hp('0.25%') : hp('0.15%'), // Reduced padding
+    borderRadius: scaleSize(wp('4%')),
+    // Ensure text doesn't get cut off
+    overflow: 'hidden',
+    // Limit tag width
+    maxWidth: isTablet ? wp('12%') : wp('15%'),
+    // Make sure text fits
+    textAlign: 'center',
   },
-})
+});

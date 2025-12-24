@@ -13,8 +13,13 @@ import {
   Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useContext } from 'react';
+import { ThemeContext } from '../../theme/ThemeContext';
 import { COLORS } from '../../theme/colors';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import { getFontFamily, getFontWeight } from '../../utils/fontHelper';
 import { vibrate } from '../../utils/vibrationHelper';
 
@@ -22,6 +27,8 @@ const { width, height } = Dimensions.get('window');
 
 const FeaturedRestaurants = () => {
   const navigation = useNavigation<any>();
+  const { theme } = useContext(ThemeContext);
+  const isDarkMode = theme.mode === 'dark';
 
   const allRestaurants = [
     {
@@ -122,7 +129,15 @@ const FeaturedRestaurants = () => {
   const [restaurants, setRestaurants] = useState(allRestaurants);
 
   const filterOptions = {
-    category: ['All', 'Italian', 'Asian', 'Indian', 'Fast Food', 'Japanese', 'Mediterranean'],
+    category: [
+      'All',
+      'Italian',
+      'Asian',
+      'Indian',
+      'Fast Food',
+      'Japanese',
+      'Mediterranean',
+    ],
     rating: ['All', '4.0+', '4.5+'],
     priceRange: ['All', 'Low', 'Medium', 'High'],
     deliveryTime: ['All', 'Under 15 mins', 'Under 20 mins'],
@@ -132,15 +147,22 @@ const FeaturedRestaurants = () => {
     let filtered = restaurants;
 
     if (searchQuery.trim() !== '') {
-      filtered = filtered.filter(restaurant =>
-        restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        restaurant.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        restaurant.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+      filtered = filtered.filter(
+        restaurant =>
+          restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          restaurant.description
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          restaurant.tags.some(tag =>
+            tag.toLowerCase().includes(searchQuery.toLowerCase()),
+          ),
       );
     }
 
     if (appliedFilters.category !== 'All') {
-      filtered = filtered.filter(restaurant => restaurant.category === appliedFilters.category);
+      filtered = filtered.filter(
+        restaurant => restaurant.category === appliedFilters.category,
+      );
     }
 
     if (appliedFilters.rating !== 'All') {
@@ -149,7 +171,9 @@ const FeaturedRestaurants = () => {
     }
 
     if (appliedFilters.priceRange !== 'All') {
-      filtered = filtered.filter(restaurant => restaurant.priceRange === appliedFilters.priceRange);
+      filtered = filtered.filter(
+        restaurant => restaurant.priceRange === appliedFilters.priceRange,
+      );
     }
 
     if (appliedFilters.deliveryTime !== 'All') {
@@ -200,69 +224,125 @@ const FeaturedRestaurants = () => {
       prevRestaurants.map(restaurant =>
         restaurant.id === id
           ? { ...restaurant, isFavorite: !restaurant.isFavorite }
-          : restaurant
-      )
+          : restaurant,
+      ),
     );
   };
 
   const filteredRestaurants = getFilteredRestaurants();
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar
+        barStyle={
+          theme.cardBackground === 'dark' ? 'light-content' : 'dark-content'
+        }
+        translucent
+        backgroundColor="transparent"
+      />
 
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Image source={require('../../assets/back.png')} style={styles.backIcon} resizeMode="contain" />
+      <View style={[styles.header, { backgroundColor: theme.background }]}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
+          <Image
+            source={require('../../assets/back.png')}
+            style={[
+              styles.backIcon,
+              { tintColor: theme.text }, // theme.text will be white in dark, black in light
+            ]}
+          />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Featured Restaurants</Text>
-        <TouchableOpacity onPress={() => setShowFilterModal(true)} style={styles.filterButton}>
+        <Text style={[styles.headerTitle, { color: theme.text }]}>
+          Featured Restaurants
+        </Text>
+        <TouchableOpacity
+          onPress={() => setShowFilterModal(true)}
+          style={styles.filterButton}
+        >
           <View style={styles.filterButtonContainer}>
-            <Image source={require('../../assets/filter.png')} style={styles.filterIcon} resizeMode="contain" />
+            <Image
+              source={require('../../assets/filter.png')}
+              style={styles.filterIcon}
+              resizeMode="contain"
+            />
             {hasActiveFilters() && <View style={styles.filterDot} />}
           </View>
         </TouchableOpacity>
       </View>
 
       {/* Search Bar */}
-      <View style={styles.searchContainer}>
-        <View style={styles.searchInputContainer}>
-          <Image source={require('../../assets/search.png')} style={styles.searchIcon} resizeMode="contain" />
+      <View
+        style={[styles.searchContainer, { backgroundColor: theme.background }]}
+      >
+        <View
+          style={[
+            styles.searchInputContainer,
+            { backgroundColor: theme.cardBackground }, // dynamic background
+          ]}
+        >
+          <Image
+            source={require('../../assets/search.png')}
+            style={[styles.searchIcon, { tintColor: theme.text }]} // icon color
+            resizeMode="contain"
+          />
+
           <TextInput
-            style={styles.searchInput}
+            style={[
+              styles.searchInput,
+              { color: theme.text }, // text color based on theme
+            ]}
             placeholder="Search restaurants, cuisines..."
             value={searchQuery}
             onChangeText={setSearchQuery}
-            placeholderTextColor="#999"
+            placeholderTextColor={theme.textSecondary} // dynamic placeholder color
             autoCapitalize="none"
             autoCorrect={false}
           />
+
           {searchQuery.length > 0 && (
             <TouchableOpacity onPress={clearSearch} style={styles.clearButton}>
-              <Image source={require('../../assets/close.png')} style={styles.clearIcon} resizeMode="contain" />
+              <Image
+                source={require('../../assets/close.png')}
+                style={styles.clearIcon}
+                resizeMode="contain"
+              />
             </TouchableOpacity>
           )}
         </View>
       </View>
 
       {/* Results Count */}
-      <View style={styles.resultsContainer}>
-        <Text style={styles.resultsText}>
-          {filteredRestaurants.length} restaurant{filteredRestaurants.length !== 1 ? 's' : ''} found
+      <View
+        style={[styles.resultsContainer, { backgroundColor: theme.background }]}
+      >
+        <Text
+          style={[
+            styles.resultsText,
+            { color: theme.text }, // white in dark, black in light
+          ]}
+        >
+          {filteredRestaurants.length} restaurant
+          {filteredRestaurants.length !== 1 ? 's' : ''} found
         </Text>
+
         {hasActiveFilters() && (
-          <TouchableOpacity onPress={resetFilters} style={styles.clearFiltersBtn}>
+          <TouchableOpacity
+            onPress={resetFilters}
+            style={styles.clearFiltersBtn}
+          >
             <Text style={styles.clearFiltersText}>Clear Filters</Text>
           </TouchableOpacity>
         )}
       </View>
 
-      <ScrollView 
-        showsVerticalScrollIndicator={false} 
+      <ScrollView
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={[
           styles.scrollContent,
-          filteredRestaurants.length === 0 && styles.emptyScrollContent
+          filteredRestaurants.length === 0 && styles.emptyScrollContent,
         ]}
       >
         {filteredRestaurants.length > 0 ? (
@@ -275,21 +355,31 @@ const FeaturedRestaurants = () => {
                 onPress={() => handleRestaurantPress(restaurant)}
               >
                 <View style={styles.imageContainer}>
-                  <Image source={restaurant.image} style={styles.restaurantImage} resizeMode="cover" />
+                  <Image
+                    source={restaurant.image}
+                    style={styles.restaurantImage}
+                    resizeMode="cover"
+                  />
 
                   {/* Discount Badge */}
                   <View style={styles.discountBadge}>
-                    <Text style={styles.discountText}>{restaurant.discount}</Text>
+                    <Text style={styles.discountText}>
+                      {restaurant.discount}
+                    </Text>
                   </View>
 
                   {/* Heart Icon - Same style as previous components */}
                   <TouchableOpacity
                     style={[
                       styles.productHeartWrapper,
-                      { backgroundColor: restaurant.isFavorite ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)' }
+                      {
+                        backgroundColor: restaurant.isFavorite
+                          ? 'rgba(255, 255, 255, 0.9)'
+                          : 'rgba(255, 255, 255, 0.3)',
+                      },
                     ]}
                     activeOpacity={0.7}
-                    onPress={(e) => {
+                    onPress={e => {
                       e.stopPropagation();
                       handleHeartPressWithVibration(restaurant.id);
                     }}
@@ -302,7 +392,11 @@ const FeaturedRestaurants = () => {
                       }
                       style={[
                         styles.heartIcon,
-                        { tintColor: restaurant.isFavorite ? COLORS.primary : '#fff' }
+                        {
+                          tintColor: restaurant.isFavorite
+                            ? COLORS.primary
+                            : '#fff',
+                        },
                       ]}
                       resizeMode="contain"
                     />
@@ -310,36 +404,99 @@ const FeaturedRestaurants = () => {
 
                   {/* Rating Badge - Same style as previous components */}
                   <View style={styles.productRatingBadge}>
-                    <Image source={require('../../assets/star.png')} style={styles.starIcon} resizeMode="contain" />
+                    <Image
+                      source={require('../../assets/star.png')}
+                      style={styles.starIcon}
+                      resizeMode="contain"
+                    />
                     <Text style={styles.ratingText}>{restaurant.rating}</Text>
                   </View>
                 </View>
 
-                <View style={styles.restaurantInfo}>
+                <View
+                  style={[
+                    styles.restaurantInfo,
+                    {
+                      backgroundColor: theme.cardBackground, // dark/light card background
+                      borderColor:
+                        theme.mode === 'dark'
+                          ? theme.borderColor
+                          : 'transparent',
+                      borderWidth: theme.mode === 'dark' ? 1 : 0,
+                    },
+                  ]}
+                >
                   <View style={styles.titleRow}>
-                    <Text style={styles.restaurantName}>{restaurant.name}</Text>
+                    <Text
+                      style={[
+                        styles.restaurantName,
+                        { color: theme.text }, // white in dark, black in light
+                      ]}
+                    >
+                      {restaurant.name}
+                    </Text>
+
                     <View style={styles.ratingContainer}>
-                      <Image source={require('../../assets/star.png')} style={styles.starIcon} resizeMode="contain" />
+                      <Image
+                        source={require('../../assets/star.png')}
+                        style={styles.starIcon}
+                        resizeMode="contain"
+                      />
                       <Text style={styles.ratingText}>{restaurant.rating}</Text>
                     </View>
                   </View>
 
-                  <Text style={styles.description}>{restaurant.description}</Text>
+                  <Text style={styles.description}>
+                    {restaurant.description}
+                  </Text>
 
                   <View style={styles.infoRow}>
                     <View style={styles.infoItem}>
-                      <Image source={require('../../assets/clock.png')} style={styles.infoIcon} resizeMode="contain" />
-                      <Text style={styles.infoText}>{restaurant.deliveryTime}</Text>
+                      <Image
+                        source={require('../../assets/clock.png')}
+                        style={styles.infoIcon}
+                        resizeMode="contain"
+                      />
+                      <Text
+                        style={[
+                          styles.infoText,
+                          { color: theme.text }, // white in dark, black in light
+                        ]}
+                      >
+                        {restaurant.deliveryTime}
+                      </Text>
                     </View>
 
                     <View style={styles.infoItem}>
-                      <Image source={require('../../assets/location1.png')} style={styles.infoIcon} resizeMode="contain" />
-                      <Text style={styles.infoText}>{restaurant.distance}</Text>
+                      <Image
+                        source={require('../../assets/location1.png')}
+                        style={styles.infoIcon}
+                        resizeMode="contain"
+                      />
+                      <Text
+                        style={[
+                          styles.infoText,
+                          { color: theme.text }, // white in dark, black in light
+                        ]}
+                      >
+                        {restaurant.distance}
+                      </Text>
                     </View>
 
                     <View style={styles.infoItem}>
-                      <Image source={require('../../assets/bike.png')} style={styles.infoIcon} resizeMode="contain" />
-                      <Text style={styles.infoText}>Free delivery</Text>
+                      <Image
+                        source={require('../../assets/bike.png')}
+                        style={styles.infoIcon}
+                        resizeMode="contain"
+                      />
+                      <Text
+                        style={[
+                          styles.infoText,
+                          { color: theme.text }, // white in dark, black in light
+                        ]}
+                      >
+                        Free delivery
+                      </Text>
                     </View>
                   </View>
 
@@ -356,10 +513,16 @@ const FeaturedRestaurants = () => {
           })
         ) : (
           <View style={styles.noResultsContainer}>
-            <Image source={require('../../assets/emptycart.png')} style={styles.noResultsImage} resizeMode="contain" />
+            <Image
+              source={require('../../assets/emptycart.png')}
+              style={styles.noResultsImage}
+              resizeMode="contain"
+            />
             <Text style={styles.noResultsText}>No restaurants found</Text>
-            <Text style={styles.noResultsSubtext}>Try adjusting your search or filters</Text>
-            <TouchableOpacity 
+            <Text style={styles.noResultsSubtext}>
+              Try adjusting your search or filters
+            </Text>
+            <TouchableOpacity
               style={styles.tryAgainButton}
               onPress={() => {
                 setSearchQuery('');
@@ -379,93 +542,247 @@ const FeaturedRestaurants = () => {
         animationType="slide"
         onRequestClose={() => setShowFilterModal(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
+        // render
+        <View style={[styles.modalOverlay]}>
+          <View
+            style={[
+              styles.modalContainer,
+              { backgroundColor: theme.background },
+            ]}
+          >
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Filter Restaurants</Text>
+              <Text style={[styles.modalTitle, { color: theme.text }]}>
+                Filter Restaurants
+              </Text>
               <TouchableOpacity onPress={() => setShowFilterModal(false)}>
-                <Image source={require('../../assets/close.png')} style={styles.closeIcon} resizeMode="contain" />
+                <Image
+                  source={require('../../assets/close.png')}
+                  style={[styles.closeIcon, { tintColor: theme.text }]}
+                  resizeMode="contain"
+                />
               </TouchableOpacity>
             </View>
 
-            <ScrollView showsVerticalScrollIndicator={false} style={styles.modalScroll}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              style={styles.modalScroll}
+            >
               {/* Category Filter */}
               <View style={styles.filterSection}>
-                <Text style={styles.filterSectionTitle}>Category</Text>
+                <Text
+                  style={[styles.filterSectionTitle, { color: theme.text }]}
+                >
+                  Category
+                </Text>
+
                 <View style={styles.filterOptions}>
-                  {filterOptions.category.map(option => (
-                    <TouchableOpacity
-                      key={option}
-                      style={[styles.filterOption, appliedFilters.category === option && styles.activeFilterOption]}
-                      onPress={() => setAppliedFilters(prev => ({ ...prev, category: option }))}
-                    >
-                      <Text style={[styles.filterOptionText, appliedFilters.category === option && styles.activeFilterOptionText]}>
-                        {option}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                  {filterOptions.category.map(option => {
+                    const isActive = appliedFilters.category === option;
+                    const darkMode = theme.mode?.toLowerCase().includes('dark');
+
+                    return (
+                      <TouchableOpacity
+                        key={option}
+                        style={[
+                          styles.filterOption,
+                          isActive && styles.activeFilterOption,
+                          {
+                            backgroundColor: isActive
+                              ? '#d86705ff'
+                              : theme.cardBackground,
+                            borderColor: theme.borderColor,
+                            borderWidth: 1,
+                          },
+                        ]}
+                        onPress={() =>
+                          setAppliedFilters(prev => ({
+                            ...prev,
+                            category: option,
+                          }))
+                        }
+                        activeOpacity={0.9}
+                      >
+                        <Text
+                          style={[
+                            styles.filterOptionText,
+                            isActive && styles.activeFilterOptionText,
+                            //{ color: isActive ? '#ffff' : theme.text }
+                          ]}
+                        >
+                          {option}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
                 </View>
               </View>
 
               {/* Rating Filter */}
               <View style={styles.filterSection}>
-                <Text style={styles.filterSectionTitle}>Rating</Text>
+                <Text
+                  style={[styles.filterSectionTitle, { color: theme.text }]}
+                >
+                  Rating
+                </Text>
                 <View style={styles.filterOptions}>
-                  {filterOptions.rating.map(option => (
-                    <TouchableOpacity
-                      key={option}
-                      style={[styles.filterOption, appliedFilters.rating === option && styles.activeFilterOption]}
-                      onPress={() => setAppliedFilters(prev => ({ ...prev, rating: option }))}
-                    >
-                      <Text style={[styles.filterOptionText, appliedFilters.rating === option && styles.activeFilterOptionText]}>
-                        {option}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                  {filterOptions.rating.map(option => {
+                    const isActive = appliedFilters.rating === option; // ✅ FIX
+
+                    return (
+                      <TouchableOpacity
+                        key={option}
+                        style={[
+                          styles.filterOption,
+                          isActive && styles.activeFilterOption,
+                          {
+                            backgroundColor: isActive
+                              ? '#d86705ff' // ACTIVE ORANGE
+                              : theme.cardBackground, // INACTIVE COLOR (theme-based)
+
+                            borderColor: theme.borderColor,
+                            borderWidth: 1,
+                          },
+                        ]}
+                        onPress={() =>
+                          setAppliedFilters(prev => ({
+                            ...prev,
+                            rating: option,
+                          }))
+                        }
+                      >
+                        <Text
+                          style={[
+                            styles.filterOptionText,
+                            isActive && styles.activeFilterOptionText,
+                          ]}
+                        >
+                          {option}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
                 </View>
               </View>
 
               {/* Price Range Filter */}
               <View style={styles.filterSection}>
-                <Text style={styles.filterSectionTitle}>Price Range</Text>
+                <Text
+                  style={[styles.filterSectionTitle, { color: theme.text }]}
+                >
+                  Price Range
+                </Text>
                 <View style={styles.filterOptions}>
-                  {filterOptions.priceRange.map(option => (
-                    <TouchableOpacity
-                      key={option}
-                      style={[styles.filterOption, appliedFilters.priceRange === option && styles.activeFilterOption]}
-                      onPress={() => setAppliedFilters(prev => ({ ...prev, priceRange: option }))}
-                    >
-                      <Text style={[styles.filterOptionText, appliedFilters.priceRange === option && styles.activeFilterOptionText]}>
-                        {option}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                  {filterOptions.priceRange.map(option => {
+                    const isActive = appliedFilters.priceRange === option; // ✅ FIX
+
+                    return (
+                      <TouchableOpacity
+                        key={option}
+                        style={[
+                          styles.filterOption,
+                          isActive && styles.activeFilterOption,
+                          {
+                            backgroundColor: isActive
+                              ? '#d86705ff' // ACTIVE ORANGE
+                              : theme.cardBackground, // INACTIVE COLOR (theme-based)
+
+                            borderColor: theme.borderColor,
+                            borderWidth: 1,
+                          },
+                        ]}
+                        onPress={() =>
+                          setAppliedFilters(prev => ({
+                            ...prev,
+                            priceRange: option,
+                          }))
+                        }
+                      >
+                        <Text
+                          style={[
+                            styles.filterOptionText,
+                            isActive && styles.activeFilterOptionText,
+                          ]}
+                        >
+                          {option}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
                 </View>
               </View>
 
               {/* Delivery Time Filter */}
               <View style={styles.filterSection}>
-                <Text style={styles.filterSectionTitle}>Delivery Time</Text>
+                <Text
+                  style={[styles.filterSectionTitle, { color: theme.text }]}
+                >
+                  Delivery time
+                </Text>
                 <View style={styles.filterOptions}>
-                  {filterOptions.deliveryTime.map(option => (
-                    <TouchableOpacity
-                      key={option}
-                      style={[styles.filterOption, appliedFilters.deliveryTime === option && styles.activeFilterOption]}
-                      onPress={() => setAppliedFilters(prev => ({ ...prev, deliveryTime: option }))}
-                    >
-                      <Text style={[styles.filterOptionText, appliedFilters.deliveryTime === option && styles.activeFilterOptionText]}>
-                        {option}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                  {filterOptions.deliveryTime.map(option => {
+                    const isActive = appliedFilters.deliveryTime === option; // ⭐ REQUIRED
+
+                    return (
+                      <TouchableOpacity
+                        key={option}
+                        onPress={() =>
+                          setAppliedFilters(prev => ({
+                            ...prev,
+                            deliveryTime: option,
+                          }))
+                        }
+                        style={[
+                          styles.filterOption,
+                          isActive && styles.activeFilterOption,
+                          {
+                            backgroundColor: isActive
+                              ? '#d86705ff' // ACTIVE ORANGE
+                              : theme.cardBackground, // INACTIVE COLOR (theme-based)
+
+                            borderColor: theme.borderColor,
+                            borderWidth: 1,
+                          },
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            styles.filterOptionText,
+                            isActive && styles.activeFilterOptionText,
+                          ]}
+                        >
+                          {option}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
                 </View>
               </View>
             </ScrollView>
 
             <View style={styles.modalActions}>
-              <TouchableOpacity style={styles.resetBtn} onPress={resetFilters}>
-                <Text style={styles.resetBtnText}>Reset</Text>
+              <TouchableOpacity
+                style={[
+                  styles.resetBtn,
+                  {
+                    backgroundColor: theme.cardBackground, // LIGHT MODE BUTTON BG
+                    borderColor: theme.borderColor,
+                    borderWidth: 1,
+                  },
+                ]}
+                onPress={resetFilters}
+              >
+                <Text
+                  style={[
+                    styles.resetBtnText,
+                    {
+                      color: theme.text,
+                    },
+                  ]}
+                >
+                  Reset
+                </Text>
               </TouchableOpacity>
+
               <TouchableOpacity style={styles.applyBtn} onPress={applyFilters}>
                 <Text style={styles.applyBtnText}>Apply Filters</Text>
               </TouchableOpacity>

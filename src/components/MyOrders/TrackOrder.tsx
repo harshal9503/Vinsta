@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Text,
@@ -13,8 +13,8 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme/colors';
+import { ThemeContext } from '../../theme/ThemeContext';
 import font from '../../assets/fonts';
-
 
 const { width, height } = Dimensions.get('window');
 const MAP_HEIGHT = height * 0.32;
@@ -40,7 +40,7 @@ const deliverySteps = [
 
 const TrackOrder = () => {
   const navigation = useNavigation();
-
+  const { theme, isDarkMode } = useContext(ThemeContext);
   // Responsive calculations
   const headerTop = STATUS_BAR_HEIGHT + 10;
   const markerSize = width * 0.08;
@@ -60,20 +60,47 @@ const TrackOrder = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar backgroundColor="transparent" barStyle="dark-content" translucent />
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar
+        backgroundColor="transparent"
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        translucent
+      />
 
       {/* Fixed Map Area with proper status bar handling */}
       <View style={styles.fixedMapArea}>
-        <View style={styles.statusBarOverlay} />
-        <Image source={require('../../assets/mapbg.png')} style={styles.mapBg} />
+        <View
+          style={[
+            styles.statusBarOverlay,
+            {
+              backgroundColor: isDarkMode
+                ? 'rgba(0,0,0,0.4)'
+                : 'rgba(255,255,255,0.9)',
+            },
+          ]}
+        />
+        <Image
+          source={require('../../assets/mapbg.png')}
+          style={styles.mapBg}
+        />
+
+        {/* SHADOW OVERLAY AT BOTTOM OF MAP */}
+        <View
+          style={[
+            styles.mapShadowOverlay,
+            { backgroundColor: theme.background },
+          ]}
+        />
 
         {/* HEADER */}
         <View style={[styles.header, { top: headerTop }]}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Image source={require('../../assets/back.png')} style={styles.backIcon} />
+            <Image
+              source={require('../../assets/back.png')}
+              style={[styles.backIcon, ,]}
+            />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Track Order</Text>
+          <Text style={[styles.headerTitle, ,]}>Track Order</Text>
           <View style={{ width: 20 }} />
         </View>
 
@@ -117,10 +144,12 @@ const TrackOrder = () => {
         {/* ICONS ON LINE */}
         <View style={[styles.absFill, { alignItems: 'center' }]}>
           {/* Pickup */}
-          <View style={[
-            styles.mapMarkerContainer,
-            { top: MAP_HEIGHT * 0.26, left: width / 2 - markerSize / 2 }
-          ]}>
+          <View
+            style={[
+              styles.mapMarkerContainer,
+              { top: MAP_HEIGHT * 0.26, left: width / 2 - markerSize / 2 },
+            ]}
+          >
             <Image
               source={ICONS.location}
               style={[
@@ -172,19 +201,28 @@ const TrackOrder = () => {
 
       {/* SCROLLABLE SECTION (Starts below fixed MAP) */}
       <ScrollView
-        style={styles.scrollSection}
+        style={[styles.scrollSection, { backgroundColor: theme.background }]}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         {/* ORDER CARD */}
-        <View style={styles.orderCard}>
-          <Image source={require('../../assets/poha.png')} style={styles.foodImg} />
+        <View
+          style={[styles.orderCard, { backgroundColor: theme.cardBackground }]}
+        >
+          <Image
+            source={require('../../assets/poha.png')}
+            style={styles.foodImg}
+          />
           <View style={styles.orderInfoContainer}>
             <View style={styles.rowBetween}>
-              <Text style={styles.orderId}>#265896</Text>
-              <Text style={styles.price}>₹ 50.00</Text>
+              <Text style={[styles.orderId, { color: COLORS.primary }]}>
+                #265896
+              </Text>
+              <Text style={[styles.price, { color: theme.text }]}>₹ 50.00</Text>
             </View>
-            <Text style={styles.foodName}>Masala Poha</Text>
+            <Text style={[styles.foodName, { color: theme.text }]}>
+              Masala Poha
+            </Text>
             <Text style={styles.orderInfo}>22 Sep, 9.00 • 3 Items</Text>
             <View style={styles.rowBetween}>
               <View>
@@ -192,8 +230,12 @@ const TrackOrder = () => {
                 <Text style={styles.estimateTime}>25 min</Text>
               </View>
               <View style={{ alignItems: 'flex-end' }}>
-                <Text style={styles.estimateLabel}>Now</Text>
-                <Text style={styles.foodStatus}>Food on the way</Text>
+                <Text style={[styles.estimateLabel, { color: '#666' }]}>
+                  Now
+                </Text>
+                <Text style={[styles.foodStatus, { color: theme.text }]}>
+                  Food on the way
+                </Text>
               </View>
             </View>
           </View>
@@ -222,26 +264,62 @@ const TrackOrder = () => {
                 )}
               </View>
               {/* Show connector line except after the last icon */}
-              {idx !== deliverySteps.length - 1 && <View style={styles.connectorLine} />}
+              {idx !== deliverySteps.length - 1 && (
+                <View style={styles.connectorLine} />
+              )}
             </React.Fragment>
           ))}
         </View>
 
-        <Text style={styles.deliveryText}>Packet In Delivery</Text>
+        <Text style={[styles.deliveryText, { color: theme.text }]}>
+          Packet In Delivery
+        </Text>
 
         {/* ORDER STATUS DETAILS */}
         <View style={styles.statusSection}>
-          <Text style={styles.statusTitle}>Order Status Details</Text>
+          <Text style={[styles.statusTitle, { color: theme.text }]}>
+            Order Status Details
+          </Text>
           {[
-            { title: 'Order placed', time: '10.40 a.m.', date: '12 Aug', done: true },
-            { title: 'Restaurant confirmed', time: '10.42 a.m.', date: '12 Aug', done: true },
-            { title: 'Preparing food', time: '10.45 a.m.', date: '12 Aug', done: false },
-            { title: 'Order Picked', time: '10.50 a.m.', date: '12 Aug', done: false },
-            { title: 'Out for delivery', time: '10.52 a.m.', date: '12 Aug', done: false },
+            {
+              title: 'Order placed',
+              time: '10.40 a.m.',
+              date: '12 Aug',
+              done: true,
+            },
+            {
+              title: 'Restaurant confirmed',
+              time: '10.42 a.m.',
+              date: '12 Aug',
+              done: true,
+            },
+            {
+              title: 'Preparing food',
+              time: '10.45 a.m.',
+              date: '12 Aug',
+              done: false,
+            },
+            {
+              title: 'Order Picked',
+              time: '10.50 a.m.',
+              date: '12 Aug',
+              done: false,
+            },
+            {
+              title: 'Out for delivery',
+              time: '10.52 a.m.',
+              date: '12 Aug',
+              done: false,
+            },
           ].map((item, index) => (
             <View key={index} style={styles.statusRow}>
               <View style={styles.statusLeft}>
-                <View style={[styles.circle, { backgroundColor: item.done ? '#259E29' : '#C7C7C7' }]} />
+                <View
+                  style={[
+                    styles.circle,
+                    { backgroundColor: item.done ? '#259E29' : '#C7C7C7' },
+                  ]}
+                />
                 {index < 4 && (
                   <View
                     style={[
@@ -252,7 +330,9 @@ const TrackOrder = () => {
                 )}
               </View>
               <View style={styles.statusContent}>
-                <Text style={styles.statusText}>{item.title}</Text>
+                <Text style={[styles.statusText, { color: theme.text }]}>
+                  {item.title}
+                </Text>
                 <Text style={styles.statusTime}>{item.time}</Text>
               </View>
               <Text style={styles.statusDate}>{item.date}</Text>
@@ -262,18 +342,27 @@ const TrackOrder = () => {
 
         {/* DELIVERY AGENT SECTION */}
         <View style={styles.agentSection}>
-          <Image source={require('../../assets/user.png')} style={styles.agentImg} />
+          <Image
+            source={require('../../assets/user.png')}
+            style={styles.agentImg}
+          />
           <View style={styles.agentInfo}>
             <Text style={styles.agentId}>ID: DKS-501F9</Text>
             <Text style={styles.agentName}>Mann Sharma</Text>
           </View>
           <View style={styles.actionBtns}>
             <TouchableOpacity style={styles.callBtn} onPress={handleCall}>
-              <Image source={require('../../assets/call.png')} style={styles.callIcon} />
+              <Image
+                source={require('../../assets/call.png')}
+                style={styles.callIcon}
+              />
               <Text style={styles.callText}>Call</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.msgBtn} onPress={handleMessage}>
-              <Image source={require('../../assets/message.png')} style={styles.msgIcon} />
+              <Image
+                source={require('../../assets/message.png')}
+                style={styles.msgIcon}
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -310,6 +399,31 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     position: 'absolute',
   },
+  // Shadow overlay at the bottom of map
+  mapShadowOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 20,
+    // backgroundColor: '#fff',
+    //backgroundColor: theme.cardBackground,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    zIndex: 3,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 10,
+        shadowColor: '#000',
+      },
+    }),
+  },
   header: {
     position: 'absolute',
     left: 20,
@@ -320,7 +434,12 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   backIcon: { width: 22, height: 22, tintColor: '#000' },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: '#000' ,fontFamily :'Figtree-Bold'},
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#000',
+    fontFamily: 'Figtree-Bold',
+  },
 
   // ZIG-ZAG LINE
   zigzagLine: {
@@ -356,7 +475,7 @@ const styles = StyleSheet.create({
   // Scroll area
   scrollSection: {
     flex: 1,
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     marginTop: -20,
@@ -370,7 +489,6 @@ const styles = StyleSheet.create({
   orderCard: {
     flexDirection: 'row',
     padding: 15,
-    backgroundColor: '#fff',
     borderRadius: 15,
     marginHorizontal: 15,
     marginTop: 18,
@@ -386,6 +504,12 @@ const styles = StyleSheet.create({
       },
     }),
   },
+
+  subMeta: {
+    fontSize: 14,
+    // ❌ remove color from here
+  },
+
   orderInfoContainer: {
     flex: 1,
     marginLeft: 10,
@@ -399,46 +523,45 @@ const styles = StyleSheet.create({
     color: '#E63946',
     fontWeight: '500',
     fontSize: 13,
-    fontFamily : 'Figtree-Medium'
+    fontFamily: 'Figtree-Medium',
   },
   price: {
     color: '#000',
     fontWeight: '700',
     fontSize: 15,
-    fontFamily : 'Figtree-Bold'
+    fontFamily: 'Figtree-Bold',
   },
   foodName: {
     fontWeight: '600',
     fontSize: 16,
     color: '#000',
     marginTop: 2,
-    fontFamily : 'Figtree-SemiBold'
+    fontFamily: 'Figtree-SemiBold',
   },
   orderInfo: {
     fontSize: 12,
     color: '#777',
     marginBottom: 5,
-    fontFamily : 'Figtree-Medium',
-    fontWeight : '500'
+    fontFamily: 'Figtree-Medium',
+    fontWeight: '500',
   },
   estimateLabel: {
     fontSize: 12,
     color: '#777',
-    fontFamily : 'Figtree-Medium',
-    fontWeight : '500'
+    fontFamily: 'Figtree-Medium',
+    fontWeight: '500',
   },
   estimateTime: {
     color: '#259E29',
-   
     fontSize: 14,
-    fontFamily : 'Figtree-SemiBold',
-    fontWeight : '600'
+    fontFamily: 'Figtree-SemiBold',
+    fontWeight: '600',
   },
   foodStatus: {
     fontSize: 13,
     color: '#000',
-    fontFamily : 'Figtree-SemiBold',
-    fontWeight : '600'
+    fontFamily: 'Figtree-SemiBold',
+    fontWeight: '600',
   },
 
   rowBetween: {
@@ -500,7 +623,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginTop: 10,
     fontSize: 14,
-    fontFamily : 'Figtree-SemiBold'
+    fontFamily: 'Figtree-SemiBold',
   },
 
   statusSection: {
@@ -512,7 +635,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#000',
     marginBottom: 15,
-    fontFamily : 'Figtree-SemiBold'
+    fontFamily: 'Figtree-SemiBold',
   },
   statusRow: {
     flexDirection: 'row',
@@ -536,9 +659,24 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   statusContent: { flex: 1 },
-  statusText: { color: '#000', fontWeight: '600', fontSize: 14 ,fontFamily : 'Figtree-SemiBold' },
-  statusTime: { color: '#777', fontSize: 12,fontFamily : 'Figtree-Medium',fontWeight : '500' },
-  statusDate: { color: '#777', fontSize: 12,fontFamily : 'Figtree-Medium',fontWeight : '500' },
+  statusText: {
+    color: '#000',
+    fontWeight: '600',
+    fontSize: 14,
+    fontFamily: 'Figtree-SemiBold',
+  },
+  statusTime: {
+    color: '#777',
+    fontSize: 12,
+    fontFamily: 'Figtree-Medium',
+    fontWeight: '500',
+  },
+  statusDate: {
+    color: '#777',
+    fontSize: 12,
+    fontFamily: 'Figtree-Medium',
+    fontWeight: '500',
+  },
 
   agentSection: {
     flexDirection: 'row',
@@ -556,8 +694,18 @@ const styles = StyleSheet.create({
     height: 55,
     borderRadius: 27.5,
   },
-  agentId: { fontSize: 12, color: '#777' ,fontFamily : 'Figtree-Regular',fontWeight : '400'},
-  agentName: { fontSize: 15, color: '#000',fontFamily : 'Figtree-SemiBold',fontWeight : '600' },
+  agentId: {
+    fontSize: 12,
+    color: '#777',
+    fontFamily: 'Figtree-Regular',
+    fontWeight: '400',
+  },
+  agentName: {
+    fontSize: 15,
+    color: '#000',
+    fontFamily: 'Figtree-SemiBold',
+    fontWeight: '600',
+  },
 
   actionBtns: {
     flexDirection: 'row',
@@ -581,7 +729,8 @@ const styles = StyleSheet.create({
   callText: {
     color: '#fff',
     fontSize: 13,
-    fontFamily : 'Figtree-SemiBold',fontWeight : '600'
+    fontFamily: 'Figtree-SemiBold',
+    fontWeight: '600',
   },
   msgBtn: {
     backgroundColor: '#fff',

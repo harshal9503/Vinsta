@@ -8,32 +8,32 @@ const { width, height } = Dimensions.get('window');
 
 const MyOrder = () => {
   const navigation = useNavigation<any>();
-  const {theme} = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   return (
-    <View style={[styles.container,{backgroundColor : theme.background}]}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <StatusBar barStyle="dark-content" translucent />
 
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../assets/back.png')} style={[styles.backIcon,{tintColor : theme.text}]} />
+          <Image source={require('../../assets/back.png')} style={[styles.backIcon, { tintColor: theme.text }]} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle,{color : theme.text}]}>My Orders</Text>
+        <Text style={[styles.headerTitle, { color: theme.text }]}>My Orders</Text>
         <View style={{ width: 24 }} />
       </View>
 
       {/* Content */}
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={[styles.card,{backgroundColor : theme.cardBackground}]}>
+        <View style={[styles.card, { backgroundColor: theme.cardBackground }]}>
           <Text style={styles.orderTitle}>Order #12345</Text>
-          <Text style={[styles.text,{color : theme.textSecondary}]}>Status: Delivered</Text>
-          <Text style={[styles.text,{color : theme.textSecondary}]}>Date: 25 Oct 2025</Text>
+          <Text style={[styles.text, { color: theme.textSecondary }]}>Status: Delivered</Text>
+          <Text style={[styles.text, { color: theme.textSecondary }]}>Date: 25 Oct 2025</Text>
         </View>
 
-        <View style={[styles.card,{backgroundColor : theme.cardBackground}]}>
+        <View style={[styles.card, { backgroundColor: theme.cardBackground }]}>
           <Text style={styles.orderTitle}>Order #67890</Text>
-          <Text style={[styles.text,{color : theme.textSecondary}]}>Status: In Transit</Text>
-          <Text style={[styles.text,{color : theme.textSecondary}]}>Date: 27 Oct 2025</Text>
+          <Text style={[styles.text, { color: theme.textSecondary }]}>Status: In Transit</Text>
+          <Text style={[styles.text, { color: theme.textSecondary }]}>Date: 27 Oct 2025</Text>
         </View>
       </ScrollView>
     </View>

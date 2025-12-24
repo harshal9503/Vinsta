@@ -1,10 +1,10 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { useContext } from 'react';
 import { COLORS } from '../../../theme/colors';
 import { getFontFamily, getFontWeight } from '../../../utils/fontHelper';
 import UpcomingOrders from './UpcomingOrders';
 import PastOrders from './PastOrders';
-
+import { ThemeContext } from '../../../theme/ThemeContext';
 const MyOrdersTab = ({
     orderTab,
     setOrderTab,
@@ -14,11 +14,24 @@ const MyOrdersTab = ({
     navigateToOrderDetail,
     setRatingModal,
 }) => {
+    const { theme, isDarkMode } = useContext(ThemeContext);
     return (
         <>
             {/* SUB TABS CONTAINER */}
-            <View style={styles.tabRowOuter}>
-                <View style={styles.tabRow}>
+            <View style={[
+                styles.tabRowOuter,
+                { backgroundColor: 'transparent' }
+            ]}>
+                <View
+                    style={[
+                        styles.tabRow,
+                        {
+                            backgroundColor: theme.cardBackground,
+                            borderColor: isDarkMode ? theme.borderColor : 'transparent',
+                            borderWidth: isDarkMode ? 1 : 0,
+                        },
+                    ]}
+                >
                     <TouchableOpacity
                         style={[
                             styles.tabBtn,
@@ -30,7 +43,8 @@ const MyOrdersTab = ({
                         <Text
                             style={[
                                 styles.tabText,
-                                orderTab === 'Upcoming' && styles.activeTabText,
+                                { color: isDarkMode ? theme.text : theme.text },
+                                orderTab === 'Upcoming' && { color: '#fff' },
                             ]}
                         >
                             Upcoming Order
@@ -48,7 +62,8 @@ const MyOrdersTab = ({
                         <Text
                             style={[
                                 styles.tabText,
-                                orderTab === 'Past' && styles.activeTabText,
+                                { color: isDarkMode ? theme.text : theme.text },
+                                orderTab === 'Past' && { color: '#fff' },
                             ]}
                         >
                             Past Orders

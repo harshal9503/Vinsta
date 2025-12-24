@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -15,11 +15,12 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
 import { vibrate } from '../../../utils/vibrationHelper';
-
+import { ThemeContext } from '../../../theme/ThemeContext';
 const { width, height } = Dimensions.get('window');
 
 const SearchScreen = () => {
   const navigation = useNavigation<any>();
+  const { theme ,isDarkMode} = useContext(ThemeContext);
   const [activeTab, setActiveTab] = useState<'Restaurant' | 'Food'>(
     'Restaurant',
   );
@@ -114,7 +115,7 @@ const SearchScreen = () => {
   const handlePlusPress = (id: number) => {
     // Vibration effect for plus button as well
     vibrate(40);
-    
+
     if (!plusScales[id]) plusScales[id] = new Animated.Value(1);
     Animated.sequence([
       Animated.timing(plusScales[id], {
@@ -134,7 +135,7 @@ const SearchScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+     <View style={[styles.container, { backgroundColor:theme.background }]}>
       <StatusBar
         barStyle="dark-content"
         backgroundColor="transparent"
@@ -144,24 +145,24 @@ const SearchScreen = () => {
         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
           <Image
             source={require('../../../assets/back.png')}
-            style={styles.backIcon}
+            style={[styles.backIcon, {tintColor:theme.text}]}
           />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Search Food</Text>
+        <Text style={[styles.headerTitle, { color: theme.text}]}>Search Food</Text>
         <View style={{ width: 22 }} />
       </View>
 
       {/* ===== SEARCH BAR + FILTER ===== */}
       <View style={styles.searchWrapper}>
-        <View style={styles.searchRow}>
+        <View  style={[styles.searchRow, { backgroundColor: theme.cardBackground }]}>
           <Image
             source={require('../../../assets/search.png')}
-            style={styles.searchIcon}
+          style={[styles.searchIcon, { tintColor: theme.text }]}
           />
           <TextInput
             placeholder="Find for food or restaurant..."
             placeholderTextColor="#999"
-            style={styles.input}
+           style={[styles.input, { color: theme.text }]}
           />
         </View>
         <TouchableOpacity style={styles.filterContainer} activeOpacity={0.8}>
@@ -173,8 +174,18 @@ const SearchScreen = () => {
       </View>
 
       {/* ===== TOGGLE TABS ===== */}
-      <View style={styles.tabRowOuter}>
-        <View style={styles.tabRow}>
+      <View style={[
+                styles.tabRowOuter,
+                { backgroundColor: 'transparent' }
+            ]}>
+        <View style={[
+                        styles.tabRow,
+                        {
+                            backgroundColor: theme.cardBackground,
+                            borderColor: isDarkMode ? theme.borderColor : 'transparent',
+                            borderWidth: isDarkMode ? 1 : 0,
+                        },
+                    ]}>
           <TouchableOpacity
             style={[
               styles.tabBtn,
@@ -187,7 +198,8 @@ const SearchScreen = () => {
             <Text
               style={[
                 styles.tabText,
-                activeTab === 'Restaurant' && styles.activeTabText,
+                 { color: isDarkMode ? theme.text : theme.text },
+                activeTab === 'Restaurant' && { color: '#fff' },
               ]}
             >
               Restaurant
@@ -205,7 +217,8 @@ const SearchScreen = () => {
             <Text
               style={[
                 styles.tabText,
-                activeTab === 'Food' && styles.activeTabText,
+                 { color: isDarkMode ? theme.text : theme.text },
+                activeTab === 'Food' && { color: '#fff' },
               ]}
             >
               Food Item
@@ -223,20 +236,20 @@ const SearchScreen = () => {
           restaurants.map(r => (
             <TouchableOpacity
               key={r.id}
-              style={styles.card}
+             style={[styles.card, { backgroundColor: theme.cardBackground}]}
               activeOpacity={0.9}
               onPress={() => navigation.navigate('restaurentDetails')}
             >
-              <View style={styles.cardImageContainer}>
+              <View style={[styles.cardImageContainer]}>
                 <Image source={r.img} style={styles.cardImg} />
-                
+
                 {/* Heart Button for Restaurant - Same exact style as FoodDetails */}
                 <TouchableOpacity
                   style={[
                     styles.productHeartWrapper,
-                    { 
-                      backgroundColor: likedItems.includes(r.id) 
-                        ? 'rgba(255, 255, 255, 0.9)' 
+                    {
+                      backgroundColor: likedItems.includes(r.id)
+                        ? 'rgba(255, 255, 255, 0.9)'
                         : 'rgba(255, 255, 255, 0.3)',
                       position: 'absolute',
                       top: 10,
@@ -254,10 +267,10 @@ const SearchScreen = () => {
                     }
                     style={[
                       styles.heartIcon,
-                      { 
-                        tintColor: likedItems.includes(r.id) 
-                          ? COLORS.primary 
-                          : '#fff' 
+                      {
+                        tintColor: likedItems.includes(r.id)
+                          ? COLORS.primary
+                          : '#fff'
                       },
                       { transform: [{ scale: heartScales[r.id] || 1 }] },
                     ]}
@@ -277,30 +290,30 @@ const SearchScreen = () => {
               </View>
 
               <View style={styles.cardContent}>
-                <Text style={styles.title}>{r.name}</Text>
+                <Text style={[styles.title, {color:theme.text}]}>{r.name}</Text>
 
                 <View style={styles.locationRow}>
                   <Image
                     source={require('../../../assets/location1.png')}
                     style={styles.locIcon}
                   />
-                  <Text style={styles.location}>
+                  <Text style={[styles.location, {color:theme.text}]}>
                     Near MC College, Barpeta Town
                   </Text>
                 </View>
 
                 <View style={styles.infoRow}>
-                  <Text style={styles.subInfo}>FAST FOOD</Text>
+                  <Text style={[styles.subInfo, {color:theme.text}]}>FAST FOOD</Text>
                   <Image
                     source={require('../../../assets/meter.png')}
                     style={styles.metaIcon}
                   />
-                  <Text style={styles.metaText}>590.0 m</Text>
+                  <Text style={[styles.metaText, {color:theme.text}]}>590.0 m</Text>
                   <Image
                     source={require('../../../assets/clockk.png')}
                     style={styles.metaIcon}
                   />
-                  <Text style={styles.metaText}>25 min</Text>
+                  <Text style={[styles.metaText, {color:theme.text}]}>25 min</Text>
                 </View>
               </View>
             </TouchableOpacity>
@@ -314,16 +327,16 @@ const SearchScreen = () => {
                 activeOpacity={0.9}
                 onPress={() => navigation.navigate('fooddetails')}
               >
-                <View style={styles.foodImageContainer}>
+                <View style={[styles.foodImageContainer, {backgroundColor:theme.cardBackground}]}>
                   <Image source={f.img} style={styles.foodImg} />
-                  
+
                   {/* Heart Button for Food - Same exact style as FoodDetails */}
                   <TouchableOpacity
                     style={[
                       styles.productHeartWrapper,
-                      { 
-                        backgroundColor: likedItems.includes(f.id) 
-                          ? 'rgba(255, 255, 255, 0.9)' 
+                      {
+                        backgroundColor: likedItems.includes(f.id)
+                          ? 'rgba(255, 255, 255, 0.9)'
                           : 'rgba(255, 255, 255, 0.3)',
                         position: 'absolute',
                         top: 10,
@@ -341,10 +354,10 @@ const SearchScreen = () => {
                       }
                       style={[
                         styles.heartIcon,
-                        { 
-                          tintColor: likedItems.includes(f.id) 
-                            ? COLORS.primary 
-                            : '#fff' 
+                        {
+                          tintColor: likedItems.includes(f.id)
+                            ? COLORS.primary
+                            : '#fff'
                         },
                         { transform: [{ scale: heartScales[f.id] || 1 }] },
                       ]}
@@ -363,13 +376,13 @@ const SearchScreen = () => {
                   </View>
                 </View>
 
-                <View style={styles.foodInfo}>
-                  <Text style={styles.foodName}>{f.name}</Text>
+                <View style={[styles.foodInfo, {backgroundColor:theme.cardBackground}]}>
+                  <Text style={[styles.foodName, { color: theme.text }]}>{f.name}</Text>
 
                   <View style={styles.priceRow}>
                     <View style={styles.priceContainer}>
-                      <Text style={styles.price}>₹ {f.price.toFixed(2)}</Text>
-                      <Text style={styles.oldPrice}>
+                      <Text style={[styles.price, { color: theme.text }]}>₹ {f.price.toFixed(2)}</Text>
+                      <Text style={[styles.oldPrice, { color: theme.text }]}>
                         ₹ {f.oldPrice.toFixed(2)}
                       </Text>
                     </View>
@@ -394,7 +407,7 @@ const SearchScreen = () => {
                       source={require('../../../assets/clock.png')}
                       style={styles.clockIcon}
                     />
-                    <Text style={styles.timeText}>{f.time}</Text>
+                    <Text style={[styles.timeText, { color: theme.text }]}>{f.time}</Text>
                   </View>
                 </View>
               </TouchableOpacity>
@@ -422,11 +435,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   backIcon: { width: 22, height: 22, tintColor: '#000' },
-  headerTitle: { 
-    fontSize: width * 0.045, 
-    fontWeight: '700', 
+  headerTitle: {
+    fontSize: width * 0.045,
+    fontWeight: '700',
     color: '#000',
-    fontFamily: 'Figtree-Bold' 
+    fontFamily: 'Figtree-Bold'
   },
 
   /** SEARCH **/
@@ -452,13 +465,13 @@ const styles = StyleSheet.create({
     marginRight: 8,
     resizeMode: 'contain',
   },
-  input: { 
-    flex: 1, 
-    paddingVertical: 12, 
-    fontSize: 14, 
+  input: {
+    flex: 1,
+    paddingVertical: 12,
+    fontSize: 14,
     color: '#000',
-    fontFamily: "Figtree-Medium", 
-    fontWeight: '500' 
+    fontFamily: "Figtree-Medium",
+    fontWeight: '500'
   },
   filterContainer: {
     width: 48,
@@ -502,11 +515,11 @@ const styles = StyleSheet.create({
   activeTabSides: {
     borderRadius: 10,
   },
-  tabText: { 
-    fontSize: 14, 
-    fontWeight: '700', 
-    color: '#000', 
-    fontFamily: 'Figtree-Bold' 
+  tabText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#000',
+    fontFamily: 'Figtree-Bold'
   },
 
   /** RESTAURANT CARD **/
@@ -521,13 +534,13 @@ const styles = StyleSheet.create({
   cardImageContainer: {
     position: 'relative',
   },
-  cardImg: { 
-    width: '100%', 
-    height: 180, 
-    resizeMode: 'cover' 
+  cardImg: {
+    width: '100%',
+    height: 180,
+    resizeMode: 'cover'
   },
-  cardContent: { 
-    padding: 14 
+  cardContent: {
+    padding: 14
   },
   // Heart wrapper styles - Exact same as FoodDetails component
   productHeartWrapper: {
@@ -546,9 +559,9 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  heartIcon: { 
-    width: 14, 
-    height: 14, 
+  heartIcon: {
+    width: 14,
+    height: 14,
   },
   // Rating badge styles - Same as FoodDetails
   productRatingBadge: {
@@ -573,54 +586,54 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  starIcon: { 
-    width: 12, 
-    height: 12, 
-    tintColor: '#fff', 
-    marginRight: 4 
+  starIcon: {
+    width: 12,
+    height: 12,
+    tintColor: '#fff',
+    marginRight: 4
   },
-  ratingText: { 
-    color: '#fff', 
-    fontSize: 12, 
-    fontWeight: '700', 
-    fontFamily: 'Figtree-Bold' 
+  ratingText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '700',
+    fontFamily: 'Figtree-Bold'
   },
-  title: { 
-    fontSize: 20, 
-    fontWeight: '700', 
+  title: {
+    fontSize: 20,
+    fontWeight: '700',
     color: '#000',
     fontFamily: 'Figtree-Bold',
     marginBottom: 4,
   },
-  locationRow: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 8,
   },
-  locIcon: { 
-    width: 12, 
-    height: 12, 
-    marginRight: 6, 
+  locIcon: {
+    width: 12,
+    height: 12,
+    marginRight: 6,
     resizeMode: 'contain',
     tintColor: COLORS.primary,
   },
-  location: { 
-    fontSize: 13, 
-    color: '#555', 
+  location: {
+    fontSize: 13,
+    color: '#555',
     flex: 1,
-    fontFamily: 'Figtree-Medium', 
-    fontWeight: '500' 
+    fontFamily: 'Figtree-Medium',
+    fontWeight: '500'
   },
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
   },
-  subInfo: { 
-    color: '#777', 
+  subInfo: {
+    color: '#777',
     fontSize: 13,
     fontFamily: 'Figtree-Medium',
-    fontWeight: '500' 
+    fontWeight: '500'
   },
   metaIcon: {
     width: 13,
@@ -629,8 +642,8 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     tintColor: COLORS.primary,
   },
-  metaText: { 
-    color: '#555', 
+  metaText: {
+    color: '#555',
     fontSize: 12,
     fontFamily: 'Figtree-Medium',
     fontWeight: '500',
@@ -656,13 +669,13 @@ const styles = StyleSheet.create({
   foodImageContainer: {
     position: 'relative',
   },
-  foodImg: { 
-    width: '100%', 
-    height: 140, 
-    resizeMode: 'cover' 
+  foodImg: {
+    width: '100%',
+    height: 140,
+    resizeMode: 'cover'
   },
-  foodInfo: { 
-    padding: 10 
+  foodInfo: {
+    padding: 10
   },
   foodName: {
     fontSize: 18,
@@ -681,9 +694,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  price: { 
-    fontSize: 14, 
-    fontWeight: '600', 
+  price: {
+    fontSize: 14,
+    fontWeight: '600',
     color: '#000',
     fontFamily: 'Figtree-SemiBold',
     marginRight: 6,
@@ -713,25 +726,25 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  plusIcon: { 
-    width: 14, 
-    height: 14, 
-    tintColor: '#fff' 
+  plusIcon: {
+    width: 14,
+    height: 14,
+    tintColor: '#fff'
   },
-  timeRow: { 
-    flexDirection: 'row', 
-    alignItems: 'center' 
+  timeRow: {
+    flexDirection: 'row',
+    alignItems: 'center'
   },
-  clockIcon: { 
-    width: 12, 
-    height: 12, 
-    marginRight: 6, 
+  clockIcon: {
+    width: 12,
+    height: 12,
+    marginRight: 6,
     resizeMode: 'contain',
     tintColor: COLORS.primary,
   },
-  timeText: { 
-    fontSize: 12, 
+  timeText: {
+    fontSize: 12,
     color: '#555',
-    fontFamily: 'Figtree-Regular' 
+    fontFamily: 'Figtree-Regular'
   },
 });

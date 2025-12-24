@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -14,31 +14,21 @@ import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../../theme/colors';
 import { getFontFamily, getFontWeight } from '../../../../utils/fontHelper';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { ThemeContext } from '../../../../theme/ThemeContext'; // import your ThemeContext
 
 const { width, height } = Dimensions.get('window');
 
 const ViewMenu = () => {
   const navigation = useNavigation<any>();
+  const { theme,isDarkMode } = useContext(ThemeContext); // get dark mode state
 
   const plans = [
-    {
-      id: 1,
-      title: 'Break - Fast',
-      icon: require('../../../../assets/breakfast.png'),
-    },
-    {
-      id: 2,
-      title: 'Lunch',
-      icon: require('../../../../assets/lunch.png'),
-    },
-    {
-      id: 3,
-      title: 'Dinner',
-      icon: require('../../../../assets/dinner.png'),
-    },
+    { id: 1, title: 'Break - Fast', icon: require('../../../../assets/breakfast.png') },
+    { id: 2, title: 'Lunch', icon: require('../../../../assets/lunch.png') },
+    { id: 3, title: 'Dinner', icon: require('../../../../assets/dinner.png') },
   ];
 
-  const [selected, setSelected] = useState<number[]>([]); // nothing selected by default
+  const [selected, setSelected] = useState<number[]>([]);
 
   const togglePlan = (id: number) => {
     if (selected.includes(id)) {
@@ -49,45 +39,48 @@ const ViewMenu = () => {
   };
 
   const handleNext = () => {
-    navigation.navigate('MenuItems'); // Change route as needed
+    navigation.navigate('MenuItems');
   };
 
-  // Smaller checkbox props aligned with WelcomeScreen style but downsized
   const checkBoxSize = 20;
   const checkBoxProps =
     Platform.OS === 'ios'
       ? {
-          onCheckColor: COLORS.secondary,
-          onFillColor: COLORS.primary,
-          onTintColor: COLORS.primary,
-          tintColor: COLORS.primary,
-          boxType: 'square',
-          lineWidth: 1.2,
-          animationDuration: 0.1,
-          style: { width: checkBoxSize, height: checkBoxSize },
-        }
+        onCheckColor: COLORS.secondary,
+        onFillColor: COLORS.primary,
+        onTintColor: COLORS.primary,
+        tintColor: COLORS.primary,
+        boxType: 'square',
+        lineWidth: 1.2,
+        animationDuration: 0.1,
+        style: { width: checkBoxSize, height: checkBoxSize },
+      }
       : {
-          tintColors: { true: COLORS.primary, false: COLORS.primary },
-          style: { width: checkBoxSize, height: checkBoxSize },
-        };
+        tintColors: { true: COLORS.primary, false: COLORS.primary },
+        style: { width: checkBoxSize, height: checkBoxSize },
+      };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: isDarkMode ? '#000000' : '#FFFFFF' }]}>
       {/* HEADER */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-          activeOpacity={0.7}
-        >
+      <View style={[styles.header, { backgroundColor: isDarkMode ? '#000000' : '#FFFFFF' }]}>
+        <TouchableOpacity onPress={() => navigation.goBack()}
+         style={styles.backButton} activeOpacity={0.7}>
           <Image
-            source={require('../../../../assets/back.png')}
-            style={styles.backIcon}
-            resizeMode="contain"
-          />
+  source={require('../../../../assets/back.png')}
+  style={[
+    styles.backIcon,
+    {
+      tintColor: theme.text  // Light mode → black arrow
+    }
+  ]}
+  resizeMode="contain"
+/>
+
         </TouchableOpacity>
 
-        <Text style={styles.headerTitle}>Meal Selection</Text>
+
+        <Text style={[styles.headerTitle, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>Meal Selection</Text>
 
         <View style={{ width: width * 0.06 }} />
       </View>
@@ -95,7 +88,9 @@ const ViewMenu = () => {
       {/* SUBTITLE */}
       <View style={styles.subtitleRow}>
         <Image source={require('../../../../assets/check.png')} style={styles.greenCheck} />
-        <Text style={styles.subtitle}>Select your subscription plan for</Text>
+        <Text style={[styles.subtitle, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>
+          Select your subscription plan for
+        </Text>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
@@ -104,19 +99,28 @@ const ViewMenu = () => {
           return (
             <TouchableOpacity
               key={item.id}
-              style={styles.planCard}
+              style={[
+                styles.planCard,
+                {
+                  backgroundColor: isDarkMode ? '#303030ff' : '#FFFFFF',
+                  // card bg dark/light
+                  shadowColor: isDarkMode ? 'transparent' : '#000',
+                },
+              ]}
               onPress={() => togglePlan(item.id)}
               activeOpacity={0.8}
             >
-              {/* Icon */}
-              <View style={styles.iconWrapper}>
+              <View
+                style={[
+                  styles.iconWrapper,
+                  { backgroundColor: isDarkMode ? '#1a1a1a' : '#FFFFFF' }, // icon bg dark/light
+                ]}
+              >
                 <Image source={item.icon} style={styles.planIcon} />
               </View>
 
-              {/* Title */}
-              <Text style={styles.planTitle}>{item.title}</Text>
+              <Text style={[styles.planTitle, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>{item.title}</Text>
 
-              {/* Smaller Native Checkbox */}
               <CheckBox value={isSelected} onValueChange={() => togglePlan(item.id)} {...checkBoxProps} />
             </TouchableOpacity>
           );
@@ -134,10 +138,7 @@ const ViewMenu = () => {
 export default ViewMenu;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
+  container: { flex: 1 },
 
   header: {
     flexDirection: 'row',
@@ -146,95 +147,36 @@ const styles = StyleSheet.create({
     paddingTop: height * 0.06,
     paddingBottom: height * 0.01,
     paddingHorizontal: width * 0.05,
-    backgroundColor: '#FFFFFF',
   },
-  backButton: {
-    padding: width * 0.015,
-  },
-  backIcon: {
-    width: width * 0.06,
-    height: width * 0.06,
-  },
-  headerTitle: {
-    fontSize: width * 0.05,
-    color: '#000',
-    fontFamily: getFontFamily('Bold'),
-    fontWeight: getFontWeight('Bold'),
-    marginTop: height * 0.005,
-  },
+  backButton: { padding: width * 0.015 },
+  backIcon: { width: width * 0.06, height: width * 0.06 },
+  headerTitle: { fontSize: width * 0.05, fontFamily: getFontFamily('Bold'), fontWeight: getFontWeight('Bold'), marginTop: height * 0.005 },
 
-  subtitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: width * 0.05,
-    marginTop: height * 0.02,
-    marginBottom: height * 0.025,
-  },
-  greenCheck: {
-    width: width * 0.05,
-    height: width * 0.05,
-  },
-  subtitle: {
-    marginLeft: width * 0.02,
-    fontSize: width * 0.036,
-    color: '#000',
-    fontFamily: getFontFamily('SemiBold'),
-    fontWeight: getFontWeight('SemiBold'),
-  },
+  subtitleRow: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: width * 0.05, marginTop: height * 0.02, marginBottom: height * 0.025 },
+  greenCheck: { width: width * 0.05, height: width * 0.05 },
+  subtitle: { marginLeft: width * 0.02, fontSize: width * 0.036, fontFamily: getFontFamily('SemiBold'), fontWeight: getFontWeight('SemiBold') },
 
-  scrollContent: {
-    paddingBottom: height * 0.04,
-    paddingHorizontal: width * 0.05,
-  },
+  scrollContent: { paddingBottom: height * 0.04, paddingHorizontal: width * 0.05 },
 
   planCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
     borderRadius: 16,
     padding: 18,
     marginBottom: 18,
     elevation: 4,
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: Platform.OS === 'ios' ? 0.1 : 0.3,
     shadowRadius: 4,
   },
 
-  iconWrapper: {
-    backgroundColor: '#fff',
-    padding: 12,
-    borderRadius: 50,
-    elevation: 3,
-  },
+  iconWrapper: { padding: 12, borderRadius: 50, elevation: 3 },
 
-  planIcon: {
-    width: 36,
-    height: 36,
-    resizeMode: 'contain',
-  },
+  planIcon: { width: 36, height: 36, resizeMode: 'contain' },
 
-  planTitle: {
-    flex: 1,
-    marginLeft: 16,
-    fontSize: width * 0.045,
-    color: '#000',
-    fontFamily: getFontFamily('Medium'),
-    fontWeight: getFontWeight('Medium'),
-  },
+  planTitle: { flex: 1, marginLeft: 16, fontSize: width * 0.045, fontFamily: getFontFamily('Medium'), fontWeight: getFontWeight('Medium') },
 
-  menuButton: {
-    marginTop: hp('1%'),
-    backgroundColor: COLORS.primary,
-    borderRadius: wp('3%'),
-    paddingVertical: hp('1.5%'),
-    alignItems: 'center',
-  },
+  menuButton: { marginTop: hp('1%'), backgroundColor: COLORS.primary, borderRadius: wp('3%'), paddingVertical: hp('1.5%'), alignItems: 'center' },
 
-  menuText: {
-    color: '#FFFFFF',
-    fontSize: wp('3.8%'),
-    fontFamily: getFontFamily('Bold'),
-    fontWeight: getFontWeight('Bold'),
-  },
+  menuText: { color: '#FFFFFF', fontSize: wp('3.8%'), fontFamily: getFontFamily('Bold'), fontWeight: getFontWeight('Bold') },
 });

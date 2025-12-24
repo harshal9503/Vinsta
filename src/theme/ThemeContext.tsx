@@ -4,6 +4,11 @@ import { COLORS } from '../theme/colors';
 
 // ----- Theme Interfaces -----
 interface Theme {
+  modalOverlay: string;
+  isDarkMode: string;
+  primary: string;
+  card: ColorValue | undefined;
+  mode: string;
   background: string;
   cardBackground: string;
   text: string;
@@ -12,6 +17,7 @@ interface Theme {
 }
 
 interface ThemeContextType {
+  background: ColorValue | undefined;
   isDarkMode: boolean;
   toggleDarkMode: () => void;
   theme: Theme;

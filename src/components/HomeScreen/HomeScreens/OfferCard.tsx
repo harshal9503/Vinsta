@@ -1,194 +1,245 @@
-import { Dimensions, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext } from 'react'
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
-import { COLORS } from '../../../theme/colors'
+import React, { useContext, useState, useEffect, useRef } from 'react';
+import {
+  Dimensions,
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
+import { COLORS } from '../../../theme/colors';
 import { ThemeContext } from '../../../theme/ThemeContext';
+
 const { width, height } = Dimensions.get('window');
 
 const isTablet = width >= 768;
 const isSmallScreen = width < 380;
 const screenRatio = width / height;
 const isIOS = Platform.OS === 'ios';
+
 const fontScale = size => {
-    if (isIOS) {
-        return isTablet ? size * 0.85 : size * 0.95;
-    }
-    return isTablet ? size * 0.85 : size;
+  if (isIOS) {
+    return isTablet ? size * 0.85 : size * 0.95;
+  }
+  return isTablet ? size * 0.85 : size;
 };
 
-// iOS-specific dimension scaling
 const scaleSize = size => {
-    if (isIOS) {
-        return isTablet ? size * 0.9 : size * 1.02;
-    }
-    return size;
+  if (isIOS) {
+    return isTablet ? size * 0.9 : size * 1.02;
+  }
+  return size;
 };
 
-// ✅ UNIVERSAL Font family helper with proper iOS and Android support
 const getFontFamily = (weight = 'Regular') => {
-    if (Platform.OS === 'ios') {
-        // iOS uses base font family name + fontWeight property
-        return 'Figtree';
-    } else {
-        // Android needs specific font file names
-        const fontMap = {
-            '100': 'Figtree-Thin',
-            '200': 'Figtree-ExtraLight',
-            '300': 'Figtree-Light',
-            '400': 'Figtree-Regular',
-            '500': 'Figtree-Medium',
-            '600': 'Figtree-SemiBold',
-            '700': 'Figtree-Bold',
-            '800': 'Figtree-ExtraBold',
-            '900': 'Figtree-Black',
-            'Thin': 'Figtree-Thin',
-            'ExtraLight': 'Figtree-ExtraLight',
-            'Light': 'Figtree-Light',
-            'Regular': 'Figtree-Regular',
-            'Medium': 'Figtree-Medium',
-            'SemiBold': 'Figtree-SemiBold',
-            'Bold': 'Figtree-Bold',
-            'ExtraBold': 'Figtree-ExtraBold',
-            'Black': 'Figtree-Black',
-        };
-        return fontMap[weight] || 'Figtree-Regular';
-    }
+  if (Platform.OS === 'ios') {
+    return 'Figtree';
+  } else {
+    const fontMap = {
+      '100': 'Figtree-Thin',
+      '200': 'Figtree-ExtraLight',
+      '300': 'Figtree-Light',
+      '400': 'Figtree-Regular',
+      '500': 'Figtree-Medium',
+      '600': 'Figtree-SemiBold',
+      '700': 'Figtree-Bold',
+      '800': 'Figtree-ExtraBold',
+      '900': 'Figtree-Black',
+      Thin: 'Figtree-Thin',
+      ExtraLight: 'Figtree-ExtraLight',
+      Light: 'Figtree-Light',
+      Regular: 'Figtree-Regular',
+      Medium: 'Figtree-Medium',
+      SemiBold: 'Figtree-SemiBold',
+      Bold: 'Figtree-Bold',
+      ExtraBold: 'Figtree-ExtraBold',
+      Black: 'Figtree-Black',
+    };
+    return fontMap[weight] || 'Figtree-Regular';
+  }
 };
 
-// ✅ Get fontWeight for iOS (Android ignores this)
 const getFontWeight = (weight = 'Regular') => {
-    if (Platform.OS === 'android') {
-        return undefined; // Android doesn't use fontWeight with custom fonts
-    }
-
-    // iOS fontWeight mapping
-    const weightMap = {
-        'Thin': '100',
-        'ExtraLight': '200',
-        'Light': '300',
-        'Regular': '400',
-        'Medium': '500',
-        'SemiBold': '600',
-        'Bold': '700',
-        'ExtraBold': '800',
-        'Black': '900',
-        '100': '100',
-        '200': '200',
-        '300': '300',
-        '400': '400',
-        '500': '500',
-        '600': '600',
-        '700': '700',
-        '800': '800',
-        '900': '900',
-    };
-    return weightMap[weight] || '400';
+  if (Platform.OS === 'android') {
+    return undefined;
+  }
+  const weightMap = {
+    Thin: '100',
+    ExtraLight: '200',
+    Light: '300',
+    Regular: '400',
+    Medium: '500',
+    SemiBold: '600',
+    Bold: '700',
+    ExtraBold: '800',
+    Black: '900',
+    '100': '100',
+    '200': '200',
+    '300': '300',
+    '400': '400',
+    '500': '500',
+    '600': '600',
+    '700': '700',
+    '800': '800',
+    '900': '900',
+  };
+  return weightMap[weight] || '400';
 };
 
-// ✅ Complete font style helper
 const getTextStyle = (weight = 'Regular') => {
-    return {
-        fontFamily: getFontFamily(weight),
-        ...(Platform.OS === 'ios' && { fontWeight: getFontWeight(weight) }),
-        includeFontPadding: false,
-        textAlignVertical: 'center',
-    };
+  return {
+    fontFamily: getFontFamily(weight),
+    ...(Platform.OS === 'ios' && { fontWeight: getFontWeight(weight) }),
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  };
 };
 
-const OfferCard = () => {
-    const {theme} = useContext(ThemeContext);
-      const navigation = useNavigation<any>();
-    const handleViewOffers = () => {
+// Static content matching the design in the screenshot
+const OfferSlider = () => {
+  const { theme } = useContext(ThemeContext);
+  const navigation = useNavigation<any>();
+
+  const handleFlatDealsPress = () => {
     navigation.navigate('todayOfferView');
   };
 
-    return (
-        <View style={[styles.offerCard,{backgroundColor : theme.cardBackground}]}>
-            <View style={styles.offerContent}>
-                <Text style={[styles.offerHeader,{color : theme.text}]}>Free Delivery</Text>
-                <Text style={[styles.offerSubTxt,{color : theme.text}]}>
-                    Enjoy exclusive discount on tasty{'\n'}food today!
-                </Text>
-                <TouchableOpacity
-                    style={styles.offerButton}
-                    onPress={handleViewOffers}
-                    activeOpacity={0.8}
-                >
-                    <Text style={[styles.offerBtnText,{color : theme.background}]}>VIEW OFFER'S</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.offerImageWrap}>
-                <Image
-                    source={require('../../../assets/todayoffer.png')}
-                    style={styles.offerImage}
-                    resizeMode="contain"
-                />
-            </View>
-        </View>
-    )
-}
+  const handleAllOffersPress = () => {
+    navigation.navigate('todayOfferView');
+  };
 
-export default OfferCard
+  return (
+    <View style={styles.row}>
+      {/* LEFT CARD – MIN ₹100 OFF / Flat Deals */}
+      <TouchableOpacity
+        activeOpacity={0.85}
+        style={styles.cardLeft}
+        onPress={handleFlatDealsPress}
+      >
+        <View>
+          <Text style={styles.leftTitleTop}>MIN ₹100 OFF</Text>
+          <Text style={styles.leftTitleBottom}>Flat Deals</Text>
+        </View>
+
+        <Image
+          source={require('../../../assets/todayoffer.png')}
+          style={styles.leftIcon}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
+
+      {/* RIGHT CARD – ALL OFFERS / 60% off and more */}
+      <TouchableOpacity
+        activeOpacity={0.85}
+        style={styles.cardRight}
+        onPress={handleAllOffersPress}
+      >
+        <View>
+          <Text style={styles.rightTitleTop}>ALL OFFERS</Text>
+          <Text style={styles.rightTitleBottom}>60% off and more</Text>
+        </View>
+
+        <Image
+          source={require('../../../assets/burger.png')} // use your current icon
+          style={styles.rightIcon}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+export default OfferSlider;
 
 const styles = StyleSheet.create({
-    offerCard: {
-        borderRadius: scaleSize(wp('4%')),
-        backgroundColor: COLORS.secondary,
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: scaleSize(wp('4%')),
-        marginBottom: hp('2%'),
-        ...Platform.select({
-            ios: {
-                shadowColor: COLORS.cardShadow || '#000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.1,
-                shadowRadius: 4,
-            },
-            android: {
-                elevation: 3,
-            },
-        }),
-    },
-    offerContent: {
-        flex: 1,
-        marginRight: wp('2%'),
-    },
-    offerHeader: {
-        ...getTextStyle('Bold'),
-        fontSize: fontScale(20),
-        color: 'black',
-        marginBottom: hp('0.5%'),
-    },
-    offerSubTxt: {
-        ...getTextStyle('Regular'),
-        fontSize: fontScale(13),
-        color: COLORS.textLight,
-        marginBottom: hp('1.5%'),
-        lineHeight: hp('2%'),
-    },
-    offerButton: {
-        backgroundColor: COLORS.primary,
-        borderRadius: scaleSize(wp('2%')),
-        paddingVertical: isIOS ? hp('1.2%') : hp('1%'),
-        paddingHorizontal: wp('4%'),
-        alignSelf: 'flex-start',
-    },
-    offerBtnText: {
-        ...getTextStyle('Bold'),
-        fontSize: fontScale(13),
-        color: COLORS.secondary,
-        letterSpacing: 0.3,
-    },
-    offerImageWrap: {
-        width: isTablet ? scaleSize(wp('25%')) : scaleSize(wp('30%')),
-        height: isTablet ? scaleSize(wp('25%')) : scaleSize(wp('30%')),
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    offerImage: {
-        width: '100%',
-        height: '100%',
-    },
-})
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: hp('1.5%'),
+  },
+
+  // COMMON CARD BASE
+  cardBase: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: wp('3.5%'),
+    paddingVertical: hp('1.4%'),
+    borderRadius: wp('5%'),
+    flex: 1,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.05,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 1,
+      },
+    }),
+  },
+
+  cardLeft: {
+    // light pink gradient feel via solid + opacity
+    backgroundColor: '#FFE6F4',
+    marginRight: wp('2%'),
+    borderRadius: wp('5%'),
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: wp('3.5%'),
+    paddingVertical: hp('1.4%'),
+    flex: 1,
+  },
+
+  cardRight: {
+    backgroundColor: '#E7FFF4',
+    marginLeft: wp('2%'),
+    borderRadius: wp('5%'),
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: wp('3.5%'),
+    paddingVertical: hp('1.4%'),
+    flex: 1,
+  },
+
+  leftTitleTop: {
+    ...getTextStyle('Bold'),
+    fontSize: fontScale(13),
+    color: '#E1007B', // strong pink
+  },
+  leftTitleBottom: {
+    ...getTextStyle('Regular'),
+    fontSize: fontScale(11),
+    color: '#C30063',
+    marginTop: hp('0.2%'),
+  },
+
+  rightTitleTop: {
+    ...getTextStyle('Bold'),
+    fontSize: fontScale(13),
+    color: '#008A4A', // strong green
+  },
+  rightTitleBottom: {
+    ...getTextStyle('Regular'),
+    fontSize: fontScale(11),
+    color: '#00713A',
+    marginTop: hp('0.2%'),
+  },
+
+  leftIcon: {
+    width: wp('10%'),
+    height: wp('10%'),
+    marginLeft: wp('2.5%'),
+  },
+  rightIcon: {
+    width: wp('10%'),
+    height: wp('10%'),
+    marginLeft: wp('2.5%'),
+  },
+});

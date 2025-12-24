@@ -1,8 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   ScrollView,
   Image,
@@ -13,32 +12,36 @@ import {
   Animated,
   FlatList,
   Modal,
+  Alert,
 } from 'react-native';
-import { COLORS, FONT_STYLES } from '../../../theme/colors';
+import { COLORS } from '../../../theme/colors';
 import { useNavigation } from '@react-navigation/native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import Categories from './Categories';
 import OfferCard from './OfferCard';
-import TitleRow from './TitleRow';
 import SearchItem from './SearchItem';
 import FeaturedRestaurant from './FeaturedRestaurant';
 import BesRatedBurger from './BesRatedBurger';
+import AllRestaurants from './AllRestaurants'; // NEW COMPONENT
 import SearchModal from './SearchModal';
 import { ThemeContext } from '../../../theme/ThemeContext';
 import { vibrate } from '../../../utils/vibrationHelper';
+import ViewCartCard from './ViewCartCard';
+
 
 const { width, height } = Dimensions.get('window');
+
 
 // Calculate responsive dimensions with iOS optimizations
 const isTablet = width >= 768;
 const isSmallScreen = width < 380;
 const screenRatio = width / height;
 const isIOS = Platform.OS === 'ios';
+
 
 // iOS-specific font scaling
 const fontScale = size => {
@@ -48,6 +51,7 @@ const fontScale = size => {
   return isTablet ? size * 0.85 : size;
 };
 
+
 // iOS-specific dimension scaling
 const scaleSize = size => {
   if (isIOS) {
@@ -56,13 +60,12 @@ const scaleSize = size => {
   return size;
 };
 
+
 // ✅ UNIVERSAL Font family helper with proper iOS and Android support
 const getFontFamily = (weight = 'Regular') => {
   if (Platform.OS === 'ios') {
-    // iOS uses base font family name + fontWeight property
     return 'Figtree';
   } else {
-    // Android needs specific font file names
     const fontMap = {
       '100': 'Figtree-Thin',
       '200': 'Figtree-ExtraLight',
@@ -73,37 +76,38 @@ const getFontFamily = (weight = 'Regular') => {
       '700': 'Figtree-Bold',
       '800': 'Figtree-ExtraBold',
       '900': 'Figtree-Black',
-      'Thin': 'Figtree-Thin',
-      'ExtraLight': 'Figtree-ExtraLight',
-      'Light': 'Figtree-Light',
-      'Regular': 'Figtree-Regular',
-      'Medium': 'Figtree-Medium',
-      'SemiBold': 'Figtree-SemiBold',
-      'Bold': 'Figtree-Bold',
-      'ExtraBold': 'Figtree-ExtraBold',
-      'Black': 'Figtree-Black',
+      Thin: 'Figtree-Thin',
+      ExtraLight: 'Figtree-ExtraLight',
+      Light: 'Figtree-Light',
+      Regular: 'Figtree-Regular',
+      Medium: 'Figtree-Medium',
+      SemiBold: 'Figtree-SemiBold',
+      Bold: 'Figtree-Bold',
+      ExtraBold: 'Figtree-ExtraBold',
+      Black: 'Figtree-Black',
     };
     return fontMap[weight] || 'Figtree-Regular';
   }
 };
 
+
 // ✅ Get fontWeight for iOS (Android ignores this)
 const getFontWeight = (weight = 'Regular') => {
   if (Platform.OS === 'android') {
-    return undefined; // Android doesn't use fontWeight with custom fonts
+    return undefined;
   }
 
-  // iOS fontWeight mapping
+
   const weightMap = {
-    'Thin': '100',
-    'ExtraLight': '200',
-    'Light': '300',
-    'Regular': '400',
-    'Medium': '500',
-    'SemiBold': '600',
-    'Bold': '700',
-    'ExtraBold': '800',
-    'Black': '900',
+    Thin: '100',
+    ExtraLight: '200',
+    Light: '300',
+    Regular: '400',
+    Medium: '500',
+    SemiBold: '600',
+    Bold: '700',
+    ExtraBold: '800',
+    Black: '900',
     '100': '100',
     '200': '200',
     '300': '300',
@@ -117,6 +121,7 @@ const getFontWeight = (weight = 'Regular') => {
   return weightMap[weight] || '400';
 };
 
+
 // ✅ Complete font style helper
 const getTextStyle = (weight = 'Regular') => {
   return {
@@ -126,6 +131,7 @@ const getTextStyle = (weight = 'Regular') => {
     textAlignVertical: 'center',
   };
 };
+
 
 // Separate veg and non-veg products
 const vegProducts = [
@@ -171,6 +177,7 @@ const vegProducts = [
   },
 ];
 
+
 const nonVegProducts = [
   {
     id: 1,
@@ -214,16 +221,18 @@ const nonVegProducts = [
   },
 ];
 
+
 const HomeScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState('Burger');
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isVegMode, setIsVegMode] = useState(true);
-  const {theme} = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const [vegProductsState, setVegProductsState] = useState(vegProducts);
-  const [nonVegProductsState, setNonVegProductsState] = useState(nonVegProducts);
+  const [nonVegProductsState, setNonVegProductsState] =
+    useState(nonVegProducts);
   const [vegRestaurantsState, setVegRestaurantsState] = useState([
     {
       id: 1,
@@ -265,80 +274,102 @@ const HomeScreen = () => {
     },
   ]);
 
+
+  // Cart states
+  const [cartItemsCount, setCartItemsCount] = useState(4);
+  const [cartTotal, setCartTotal] = useState(234.5);
+
+
   const toggleVegMode = () => {
     setIsVegMode(prev => !prev);
   };
 
+
   // Toggle favorite status for products with vibration
   const toggleFavoriteProduct = (productId: number, isVeg: boolean) => {
-    vibrate(40); // Use the vibration helper
-    
+    vibrate(40);
+
+
     if (isVeg) {
       setVegProductsState(prevProducts =>
         prevProducts.map(product =>
           product.id === productId
             ? { ...product, isFavorite: !product.isFavorite }
-            : product
-        )
+            : product,
+        ),
       );
     } else {
       setNonVegProductsState(prevProducts =>
         prevProducts.map(product =>
           product.id === productId
             ? { ...product, isFavorite: !product.isFavorite }
-            : product
-        )
+            : product,
+        ),
       );
     }
   };
 
+
   // Toggle favorite status for restaurants with vibration
   const toggleFavoriteRestaurant = (restaurantId: number, isVeg: boolean) => {
-    vibrate(40); // Use the vibration helper
-    
+    vibrate(40);
+
+
     if (isVeg) {
       setVegRestaurantsState(prevRestaurants =>
         prevRestaurants.map(restaurant =>
           restaurant.id === restaurantId
             ? { ...restaurant, isFavorite: !restaurant.isFavorite }
-            : restaurant
-        )
+            : restaurant,
+        ),
       );
     } else {
       setNonVegRestaurantsState(prevRestaurants =>
         prevRestaurants.map(restaurant =>
           restaurant.id === restaurantId
             ? { ...restaurant, isFavorite: !restaurant.isFavorite }
-            : restaurant
-        )
+            : restaurant,
+        ),
       );
     }
   };
+
 
   // Navigation handlers
   const handleTodayOfferViewAll = () => {
     navigation.navigate('todayOfferView');
   };
 
+
   const handleFeaturedRestaurantViewAll = () => {
     navigation.navigate('featuredRestrorents');
   };
+
 
   const handleBestBurgerViewAll = () => {
     navigation.navigate('bestBurger');
   };
 
+
+  const handleAllRestaurantsViewAll = () => {
+    navigation.navigate('featuredRestrorents');
+  };
+
+
   const handleProductPress = product => {
     navigation.navigate('fooddetails', { product });
   };
+
 
   const handleWalletPress = () => {
     navigation.navigate('Wallet');
   };
 
+
   const handleCartPress = () => {
     navigation.navigate('Cart');
   };
+
 
   // Calculate proper status bar height for both platforms
   const getStatusBarHeight = () => {
@@ -349,13 +380,16 @@ const HomeScreen = () => {
     }
   };
 
+
   const handleRestaurantPress = (restaurant: any) => {
     navigation.navigate('restaurentDetails', { restaurant });
   };
 
+
   const clearSearch = () => {
     setSearchQuery('');
   };
+
 
   const resetFilters = () => {
     setAppliedFilters({
@@ -366,18 +400,22 @@ const HomeScreen = () => {
     });
   };
 
+
   const applyFilters = () => {
     setShowFilterModal(false);
   };
+
 
   // Get current restaurants and products based on mode
   const getCurrentRestaurants = () => {
     return isVegMode ? vegRestaurantsState : nonVegRestaurantsState;
   };
 
+
   const getCurrentProducts = () => {
     return isVegMode ? vegProductsState : nonVegProductsState;
   };
+
 
   const [appliedFilters, setAppliedFilters] = useState({
     category: 'All',
@@ -386,6 +424,7 @@ const HomeScreen = () => {
     sortBy: 'Recent',
   });
 
+
   const filterOptions = {
     category: ['All', 'Cold Drink', 'Fast Food', 'Paneer'],
     rating: ['All', '4.0', '4.5'],
@@ -393,18 +432,133 @@ const HomeScreen = () => {
     sortBy: ['Popular', 'Recent', 'Price High', 'Price Low'],
   };
 
+
   const hasActiveFilters = () => {
     return Object.values(appliedFilters).some(filter => filter !== 'All');
   };
 
+
+  // Veg/Non-Veg Toggle Component
+  const VegToggleSwitch = () => {
+    const toggleAnimRef = useRef(new Animated.Value(0));
+    const toggleAnim = toggleAnimRef.current;
+
+
+    // Compact dimensions
+    const switchWidth = isTablet ? scaleSize(wp('9.5%')) : scaleSize(wp('11%'));
+    const switchHeight = isTablet ? hp('2.3%') : hp('2.6%');
+    const circleSize = isTablet ? hp('1.8%') : hp('2%');
+    const padding = wp('0.5%');
+    const maxTranslateX = switchWidth - circleSize - padding * 2;
+
+
+    const translateX = toggleAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: [padding, maxTranslateX],
+    });
+
+
+    // FIXED: When isVegMode is true (Veg Mode), the circle should be green
+    // When isVegMode is false (Non-Veg Mode), the circle should be red
+    const toggleBgColor = toggleAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['#FF6B6B', '#4CAF50'], // Red for Non-Veg, Green for Veg
+    });
+
+
+    useEffect(() => {
+      // Set animation value based on isVegMode
+      // isVegMode = true (Veg) -> animated value = 1 (green)
+      // isVegMode = false (Non-Veg) -> animated value = 0 (red)
+      Animated.timing(toggleAnimRef.current, {
+        toValue: isVegMode ? 1 : 0,
+        duration: 200,
+        useNativeDriver: false,
+      }).start();
+    }, [isVegMode]);
+
+
+    return (
+      <View style={styles.vegToggleContainer}>
+        <TouchableOpacity
+          style={[
+            styles.switchOuter,
+            {
+              backgroundColor: theme.background,
+              width: switchWidth,
+              height: switchHeight,
+            },
+          ]}
+          onPress={toggleVegMode}
+          activeOpacity={0.8}
+        >
+          <View style={styles.switchBackground} />
+
+
+          <Animated.View
+            style={[
+              styles.switchCircle,
+              {
+                width: circleSize,
+                height: circleSize,
+                borderRadius: circleSize / 2,
+                transform: [{ translateX }],
+                backgroundColor: toggleBgColor,
+              },
+            ]}
+          />
+
+
+          <View style={styles.switchLabelsContainer}>
+            <Text
+              style={[
+                styles.switchTextLeft,
+                {
+                  color: isVegMode ? '#fff' : theme.text,
+                },
+              ]}
+            >
+              OFF
+            </Text>
+            <Text
+              style={[
+                styles.switchTextRight,
+                {
+                  color: !isVegMode ? '#fff' : theme.text,
+                },
+              ]}
+            >
+              ON
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+
+        <Text
+          style={[
+            styles.vegModeTxt,
+            {
+              color: theme.background,
+            },
+          ]}
+          numberOfLines={1}
+        >
+          {isVegMode ? 'Veg Mode' : 'Non-Veg Mode'}
+        </Text>
+      </View>
+    );
+  };
+
+
   return (
-    <View style={[styles.container,{backgroundColor : theme.background}]}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <StatusBar
         backgroundColor={COLORS.primary}
         barStyle="light-content"
         translucent={false}
       />
       <View style={[styles.statusBarArea, { height: getStatusBarHeight() }]} />
+
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -419,19 +573,28 @@ const HomeScreen = () => {
               <View style={styles.locationRow}>
                 <Image
                   source={require('../../../assets/location.png')}
-                  style={[styles.icon,{tintColor : theme.background}]}
+                  style={[styles.icon, { tintColor: theme.background }]}
                 />
-                <Text style={[styles.locationText,{color :  theme.background}]}>Location</Text>
+                <Text
+                  style={[styles.locationText, { color: theme.background }]}
+                >
+                  Location
+                </Text>
                 <Image
                   source={require('../../../assets/dropdown.png')}
-                  style={[styles.dropdownIcon,{tintColor : theme.background}]}
+                  style={[styles.dropdownIcon, { tintColor: theme.background }]}
                 />
               </View>
-              <Text style={[styles.addressText,{color :  theme.background}]}>4102 Pretty View Lane</Text>
+              <Text style={[styles.addressText, { color: theme.background }]}>
+                4102 Pretty View Lane
+              </Text>
             </View>
             <View style={styles.walletBagRow}>
               <TouchableOpacity
-                style={[styles.walletBtn,{backgroundColor :  theme.background}]}
+                style={[
+                  styles.walletBtn,
+                  { backgroundColor: theme.background },
+                ]}
                 activeOpacity={0.7}
                 onPress={handleWalletPress}
               >
@@ -441,7 +604,7 @@ const HomeScreen = () => {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.bagBtn,{backgroundColor : theme.background}]}
+                style={[styles.bagBtn, { backgroundColor: theme.background }]}
                 activeOpacity={0.7}
                 onPress={handleCartPress}
               >
@@ -453,21 +616,30 @@ const HomeScreen = () => {
             </View>
           </View>
 
-          {/* Title Row */}
-          <TitleRow isVegMode={isVegMode} toggleVegMode={toggleVegMode} />
 
-          {/* Search Items */}
-          <SearchItem
-            onOpenFilter={() => setShowFilterModal(true)}
-            hasActiveFilters={hasActiveFilters}
-          />
+          {/* Search and Veg Toggle in same row */}
+          <View style={styles.searchRow}>
+            <View style={styles.searchItemContainer}>
+              <SearchItem
+                onOpenFilter={() => setShowFilterModal(true)}
+                hasActiveFilters={hasActiveFilters}
+              />
+            </View>
+            
+            <VegToggleSwitch />
+          </View>
         </View>
 
+
         {/* Main Content */}
-        <View style={[styles.mainContent,{backgroundColor :  theme.background}]}>
+        <View
+          style={[styles.mainContent, { backgroundColor: theme.background }]}
+        >
           {/* Today's Offers */}
           <View style={styles.sectionRowBetween}>
-            <Text style={[styles.sectionTitle,{color : theme.text}]}>Today's Offer's</Text>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>
+              Today's Offer's
+            </Text>
             <TouchableOpacity
               onPress={handleTodayOfferViewAll}
               activeOpacity={0.7}
@@ -476,16 +648,21 @@ const HomeScreen = () => {
             </TouchableOpacity>
           </View>
 
+
           {/* Offer Card */}
           <OfferCard />
+
 
           {/* Categories */}
           <Categories />
 
+
           {/* Featured Restaurants */}
           <View style={styles.sectionRowBetween}>
             <View style={styles.sectionTitleRow}>
-              <Text style={[styles.sectionTitle,{color : theme.text}]}>Featured restaurants</Text>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>
+                Featured restaurants
+              </Text>
             </View>
             <TouchableOpacity
               onPress={handleFeaturedRestaurantViewAll}
@@ -501,6 +678,7 @@ const HomeScreen = () => {
             isVegMode={isVegMode}
           />
 
+
           {/* Best-Rated Burgers */}
           <View style={styles.sectionRowBetween}>
             <View style={styles.sectionTitleRow}>
@@ -509,7 +687,7 @@ const HomeScreen = () => {
                 style={styles.sectionIcon}
                 resizeMode="contain"
               />
-              <Text style={[styles.sectionTitle,{color : theme.text}]}>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>
                 {isVegMode ? 'Best-Rated Burgers' : 'Best-Rated Non-Veg'}
               </Text>
             </View>
@@ -521,12 +699,38 @@ const HomeScreen = () => {
             </TouchableOpacity>
           </View>
 
+
           <BesRatedBurger
             getCurrentProducts={getCurrentProducts}
             handleProductPress={handleProductPress}
             toggleFavorite={toggleFavoriteProduct}
             isVegMode={isVegMode}
           />
+
+
+          {/* NEW: All Restaurants Section */}
+          <View style={styles.sectionRowBetween}>
+            <View style={styles.sectionTitleRow}>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>
+                Restaurants Near You
+              </Text>
+            </View>
+            <TouchableOpacity
+              onPress={handleAllRestaurantsViewAll}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.sectionLink}>View All</Text>
+            </TouchableOpacity>
+          </View>
+
+
+          <AllRestaurants
+            getCurrentRestaurants={getCurrentRestaurants}
+            handleRestaurantPress={handleRestaurantPress}
+            toggleFavorite={toggleFavoriteRestaurant}
+            isVegMode={isVegMode}
+          />
+
 
           {/* Bottom info */}
           <View style={styles.bottomRow}>
@@ -536,14 +740,19 @@ const HomeScreen = () => {
               resizeMode="contain"
             />
             <View style={styles.bottomTextContainer}>
-              <Text style={[styles.reachingTxt]}>Reaching at your doorstep</Text>
+              <Text style={[styles.reachingTxt]}>
+                Reaching at your doorstep
+              </Text>
               <View style={styles.deliveryTimeContainer}>
                 <Image
                   source={require('../../../assets/clock.png')}
-                  style={[styles.deliveryClockIcon,{tintColor : COLORS.primary}]}
+                  style={[
+                    styles.deliveryClockIcon,
+                    { tintColor: COLORS.primary },
+                  ]}
                   resizeMode="contain"
                 />
-                <Text style={[styles.getDeliveredTxt,{color : theme.text}]}>
+                <Text style={[styles.getDeliveredTxt, { color: theme.text }]}>
                   Get delivered in 15 minutes
                 </Text>
               </View>
@@ -551,6 +760,12 @@ const HomeScreen = () => {
           </View>
         </View>
       </ScrollView>
+
+
+      {/* View Cart Card Component */}
+      <ViewCartCard cartItemsCount={cartItemsCount} cartTotal={cartTotal} />
+
+
       <SearchModal
         showFilterModal={showFilterModal}
         setShowFilterModal={setShowFilterModal}
@@ -564,6 +779,7 @@ const HomeScreen = () => {
   );
 };
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -574,7 +790,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: isIOS ? hp('4%') : hp('3%'),
+    paddingBottom: isIOS ? hp('12%') : hp('10%'),
   },
   headerContainer: {
     backgroundColor: COLORS.primary,
@@ -671,6 +887,96 @@ const styles = StyleSheet.create({
     height: isTablet ? scaleSize(wp('3.5%')) : scaleSize(wp('4.5%')),
     tintColor: COLORS.primary,
   },
+  // Search and Veg Toggle Row
+  searchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: hp('0.5%'),
+    gap: wp('2%'),
+  },
+  searchItemContainer: {
+    flex: 1,
+  },
+  // Veg Toggle Styles
+  vegToggleContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: hp('0.5%'),
+  },
+  switchOuter: {
+    borderRadius: hp('1.15%'),
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    overflow: 'hidden',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 0.5 },
+        shadowOpacity: 0.1,
+        shadowRadius: 1.5,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  switchBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.08)',
+    borderRadius: hp('1.15%'),
+  },
+  switchCircle: {
+    position: 'absolute',
+    left: 0,
+    top: '50%',
+    marginTop: -(isTablet ? hp('1.8%') : hp('2%')) / 2,
+    zIndex: 2,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 0.5 },
+        shadowOpacity: 0.15,
+        shadowRadius: 1.5,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  switchLabelsContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: wp('1.4%'),
+    zIndex: 1,
+  },
+  switchTextLeft: {
+    ...getTextStyle('SemiBold'),
+    fontSize: fontScale(7),
+  },
+  switchTextRight: {
+    ...getTextStyle('SemiBold'),
+    fontSize: fontScale(7),
+  },
+  vegModeTxt: {
+    ...getTextStyle('Bold'),
+    fontSize: fontScale(9),
+    marginTop: hp('0.3%'),
+    color: COLORS.secondary,
+    width: wp('18%'),
+    textAlign: 'center',
+  },
   mainContent: {
     marginTop: hp('2%'),
     paddingHorizontal: wp('4%'),
@@ -707,32 +1013,32 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: hp('2%'),
-    marginBottom: hp('1%'),
-    paddingHorizontal: wp('2%'),
+    marginTop: hp('1.5%'),
+    marginBottom: hp('0.5%'),
+    paddingHorizontal: wp('1.5%'),
   },
   bottomImage: {
-    width: isTablet ? scaleSize(wp('8%')) : scaleSize(wp('10%')),
-    height: isTablet ? scaleSize(wp('8%')) : scaleSize(wp('10%')),
+    width: isTablet ? scaleSize(wp('7.5%')) : scaleSize(wp('9%')),
+    height: isTablet ? scaleSize(wp('7.5%')) : scaleSize(wp('9%')),
   },
   bottomTextContainer: {
     flex: 1,
-    marginLeft: wp('4%'),
+    marginLeft: wp('3%'),
   },
   reachingTxt: {
     ...getTextStyle('SemiBold'),
     fontSize: fontScale(14),
     color: COLORS.primary,
-    marginBottom: hp('0.4%'),
+    marginBottom: hp('0.2%'),
   },
   deliveryTimeContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: wp('1.5%'),
+    gap: wp('1.2%'),
   },
   deliveryClockIcon: {
-    width: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
-    height: isTablet ? scaleSize(wp('2.5%')) : scaleSize(wp('3%')),
+    width: isTablet ? scaleSize(wp('2.2%')) : scaleSize(wp('2.7%')),
+    height: isTablet ? scaleSize(wp('2.2%')) : scaleSize(wp('2.7%')),
     tintColor: COLORS.primary,
   },
   getDeliveredTxt: {
@@ -741,5 +1047,6 @@ const styles = StyleSheet.create({
     color: COLORS.textLight,
   },
 });
+
 
 export default HomeScreen;

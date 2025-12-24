@@ -1,15 +1,17 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions, ScrollView } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
+import { ThemeContext } from '../../../../theme/ThemeContext';
 import { useNavigation } from '@react-navigation/native'
 import { getFontFamily, getFontWeight } from '../../../../utils/fontHelper';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } 
+from 'react-native-responsive-screen';
 import { COLORS } from '../../../../theme/colors';
 
 const { width, height } = Dimensions.get('window');
 
 const PlanDetails = () => {
   const navigation = useNavigation();
-
+  const { theme } = useContext(ThemeContext);
   // Sample data
   const planData = {
     id: '265896',
@@ -54,26 +56,42 @@ const PlanDetails = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: theme.background }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <Image
             source={require('../../../../assets/back.png')}
-            style={styles.backIcon}
+            style={[styles.backIcon, { tintColor: theme.text }]} // Icon color changes in dark mode
           />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Break-fast plan</Text>
+        <Text style={[styles.headerTitle, { color: theme.text }]}>
+          Break-fast plan
+        </Text>
         <View style={{ width: width * 0.06 }} />
       </View>
+
+
+
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Year Month */}
         <View style={styles.yearMonthContainer}>
           <Image source={require('../../../../assets/calender.png')} style={{ width: wp('5%'), height: wp('5%') }} />
-          <Text style={styles.yearMonthText}>{planData.day}</Text>
+          <Text style={[styles.yearMonthText, { color: theme?.text ?? (theme?.mode === 'dark' ? '#FFFFFF' : '#000000') }]}>
+            {planData.day}
+          </Text>
+
         </View>
-        <View style={{ backgroundColor: '#E3E3E3', borderRadius: wp('3%'), marginBottom: hp('3%') }}>
+        <View
+          style={{
+            backgroundColor: theme.cardBackground,
+            borderRadius: wp('3%'),
+            marginBottom: hp('3%')
+          }}
+        >
+
+
           <View style={styles.currentOrderCard}>
             <View style={styles.orderImageContainer}>
               <Image source={planData.currentOrder.image} style={styles.orderImage} />
@@ -81,11 +99,20 @@ const PlanDetails = () => {
             <View style={styles.orderInfo}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text style={{ color: COLORS.primary }}>#{planData.id}</Text>
-                <Text>
+                <Text style={{ color: theme.text }}>
                   ₹ {planData.price}
                 </Text>
+
               </View>
-              <Text style={styles.orderTitle}>{planData.currentOrder.title}</Text>
+              <Text
+                style={[
+                  styles.orderTitle,
+                  { color: theme.text }
+                ]}
+              >
+                {planData.currentOrder.title}
+              </Text>
+
               <Text style={styles.orderDetails}>
                 {planData.currentOrder.date} - {planData.currentOrder.ingredients}
               </Text>
@@ -116,18 +143,29 @@ const PlanDetails = () => {
               {/* Day Header with Percentage */}
               <View style={styles.dayHeader}>
                 <Image source={require('../../../../assets/calender.png')} style={{ width: wp('5%'), height: wp('5%') }} />
-                <Text style={styles.dayText}>{order.day}</Text>
+                <Text
+                  style={[
+                    styles.dayText,
+                    { color: theme.mode === 'dark' ? '#FFFFFF' : theme.text }
+                  ]}
+                >
+                  {order.day}
+                </Text>
+
               </View>
 
               {/* Order Item */}
-              <View style={{
-                backgroundColor: '#f7f6f6ff',
-                borderRadius: wp('3%'),
-                padding: wp('4%'),
-                marginBottom: hp('2%'),
-                borderColor: '#E3E3E3',
-                borderWidth: 1
-              }}>
+              <View
+                style={{
+                  backgroundColor: theme.cardBackground,
+                  borderRadius: wp('3%'),
+                  padding: wp('4%'),
+                  marginBottom: hp('2%'),
+                  borderColor: theme.borderColor,
+                  borderWidth: 1
+                }}
+              >
+
                 <View style={styles.upcomingOrderCard}>
                   <View style={styles.orderImageContainer}>
                     <Image source={order.image} style={styles.orderImage} />
@@ -135,11 +173,20 @@ const PlanDetails = () => {
                   <View style={styles.orderInfo}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                       <Text style={{ color: COLORS.primary }}>#{planData.id}</Text>
-                      <Text>
+                      <Text style={{ color: theme.text }}>
                         ₹ {planData.price}
                       </Text>
+
                     </View>
-                    <Text style={styles.upcomingOrderTitle}>{order.title}</Text>
+                    <Text
+                      style={[
+                        styles.upcomingOrderTitle,
+                        { color: theme.text }
+                      ]}
+                    >
+                      {order.title}
+                    </Text>
+
                     <Text style={styles.upcomingOrderDetails}>
                       {order.date} - {order.ingredients}
                     </Text>
@@ -357,8 +404,8 @@ const styles = StyleSheet.create({
     height: 4,
     backgroundColor: '#F4F4F4',
     marginVertical: hp('2%'),
-    width : '110%',
-    alignSelf : 'center'
+    width: '110%',
+    alignSelf: 'center'
   },
   shipContainer: {
     flexDirection: 'row',

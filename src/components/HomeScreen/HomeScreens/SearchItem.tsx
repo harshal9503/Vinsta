@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { useNavigation } from '@react-navigation/native'
 import { ThemeContext } from '../../../theme/ThemeContext';
+import { COLORS } from '../../../theme/colors';
 const { width, height } = Dimensions.get('window');
 
 const isTablet = width >= 768;
@@ -94,12 +95,13 @@ const getTextStyle = (weight = 'Regular') => {
     textAlignVertical: 'center',
   };
 };
+
 const SearchItem = ({ onOpenFilter, hasActiveFilters }) => {
   const navigation = useNavigation();
   const { theme } = useContext(ThemeContext);
+  
   return (
     <View style={[styles.searchContainer]}>
-
       <TouchableOpacity
         style={[styles.searchBarContainer, { backgroundColor: theme.cardBackground }]}
         onPress={() => navigation.navigate('Search')}
@@ -112,44 +114,41 @@ const SearchItem = ({ onOpenFilter, hasActiveFilters }) => {
         <Text style={[styles.searchPlaceholder, { color: theme.text }]}>
           Find for food or restaurant...
         </Text>
+        
+        {/* Filter icon inside search bar - no dot */}
+        <TouchableOpacity
+          style={styles.filterBtnInside}
+          activeOpacity={0.8}
+          onPress={onOpenFilter}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <Image
+            source={require('../../../assets/filter.png')}
+            style={[styles.filterIconInside, { tintColor: COLORS.primary }]}
+          />
+        </TouchableOpacity>
       </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[styles.filterBtn, { backgroundColor: theme.cardBackground }]}
-        activeOpacity={0.8}
-        onPress={onOpenFilter}
-        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-      >
-        <Image
-          source={require('../../../assets/filter.png')}
-          style={styles.filterIcon}
-        />
-
-        {hasActiveFilters() && <View style={styles.filterDot} />}
-      </TouchableOpacity>
-
     </View>
   );
 };
 
-export default SearchItem
+export default SearchItem;
 
 const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: hp('1%'),
+    justifyContent: 'center',
+    marginTop: hp('0%'),
   },
   searchBarContainer: {
     backgroundColor: '#fff',
     borderRadius: scaleSize(wp('3%')),
-    paddingVertical: isIOS ? hp('1.8%') : hp('2%'),
+    paddingVertical: isIOS ? hp('1.2%') : hp('0.7%'), // Further reduced height
     paddingHorizontal: wp('3%'),
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
-    marginRight: wp('3%'),
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -167,46 +166,23 @@ const styles = StyleSheet.create({
     height: isTablet ? scaleSize(wp('4%')) : scaleSize(wp('5%')),
     resizeMode: 'contain',
     marginRight: wp('2%'),
-    tintColor: '#999',
   },
   searchPlaceholder: {
     ...getTextStyle('Regular'),
     fontSize: fontScale(14),
     flex: 1,
     color: '#999',
+    marginRight: wp('2%'),
   },
-  filterBtn: {
-    backgroundColor: '#fff',
-    borderRadius: scaleSize(wp('3%')),
-    padding: scaleSize(wp('3%')),
+  // Filter button inside search bar
+  filterBtnInside: {
+    padding: wp('1%'),
     justifyContent: 'center',
     alignItems: 'center',
-    width: isTablet ? scaleSize(wp('11%')) : scaleSize(wp('13%')),
-    height: isTablet ? scaleSize(wp('11%')) : scaleSize(wp('13%')),
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
   },
-  filterIcon: {
-    width: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
-    height: isTablet ? scaleSize(wp('5%')) : scaleSize(wp('6%')),
+  filterIconInside: {
+    width: isTablet ? scaleSize(wp('4.5%')) : scaleSize(wp('5.5%')),
+    height: isTablet ? scaleSize(wp('4.5%')) : scaleSize(wp('5.5%')),
     resizeMode: 'contain',
   },
-  filterDot: {
-    position: 'absolute',
-    top: scaleSize(wp('1.3%')),
-    right: scaleSize(wp('1.3%')),
-    width: scaleSize(wp('0%')),
-    height: scaleSize(wp('0%')),
-    borderRadius: scaleSize(wp('1.5%')),
-    backgroundColor: 'red',
-  },
-})
+});

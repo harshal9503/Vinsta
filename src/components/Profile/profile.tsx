@@ -24,20 +24,75 @@ const Profile = () => {
   const [popupAction, setPopupAction] = useState<null | (() => void)>(null);
 
   const topOptions = [
-    { id: 1, icon: require('../../assets/address1.png'), label: 'Address', route: 'Address' },
-    { id: 2, icon: require('../../assets/myorders.png'), label: 'My Order', route: 'MyOrder' },
-    { id: 3, icon: require('../../assets/subscription.png'), label: 'Subscriptions', route: 'Subscription' },
-    { id: 4, icon: require('../../assets/wallet.png'), label: 'Wallet', route: 'Wallet' },
+    {
+      id: 1,
+      icon: require('../../assets/address1.png'),
+      label: 'Address',
+      route: 'Address',
+    },
+    {
+      id: 2,
+      icon: require('../../assets/myorders.png'),
+      label: 'My Order',
+      route: 'MyOrder',
+    },
+    {
+      id: 3,
+      icon: require('../../assets/subs1.png'),
+      label: 'Subscriptions',
+      route: 'Subscription',
+    },
+    {
+      id: 4,
+      icon: require('../../assets/wallet.png'),
+      label: 'Wallet',
+      route: 'Wallet',
+    },
   ];
 
   const bottomOptions = [
-    { id: 1, icon: require('../../assets/profile.png'), label: 'Profile', route: 'ProfileEdit' },
-    { id: 2, icon: require('../../assets/favourite.png'), label: "Favourite's", route: 'Favourite' },
-    { id: 3, icon: require('../../assets/offers.png'), label: "My Offer's", route: 'todayOfferView' },
-    { id: 4, icon: require('../../assets/refer.png'), label: 'Refer To Earn', route: 'Refer' },
-    { id: 5, icon: require('../../assets/dark.png'), label: 'Dark Mode', route: 'DarkMode' },
-    { id: 6, icon: require('../../assets/support.png'), label: 'Support', route: 'Support' },
-    { id: 7, icon: require('../../assets/settings2.png'), label: "Setting's", route: 'Settings' },
+    {
+      id: 1,
+      icon: require('../../assets/profile.png'),
+      label: 'Profile',
+      route: 'ProfileEdit',
+    },
+    {
+      id: 2,
+      icon: require('../../assets/favourite.png'),
+      label: "Favourite's",
+      route: 'Favourite',
+    },
+    {
+      id: 3,
+      icon: require('../../assets/offers.png'),
+      label: "My Offer's",
+      route: 'todayOfferView',
+    },
+    {
+      id: 4,
+      icon: require('../../assets/refer.png'),
+      label: 'Refer To Earn',
+      route: 'Refer',
+    },
+    {
+      id: 5,
+      icon: require('../../assets/dark.png'),
+      label: 'Dark Mode',
+      route: 'DarkMode',
+    },
+    {
+      id: 6,
+      icon: require('../../assets/support.png'),
+      label: 'Support',
+      route: 'Support',
+    },
+    {
+      id: 7,
+      icon: require('../../assets/settings2.png'),
+      label: "Setting's",
+      route: 'Settings',
+    },
   ];
 
   const openPopup = (message: string, onConfirm: () => void) => {
@@ -63,10 +118,20 @@ const Profile = () => {
 
       {/* ===== Header ===== */}
       <View style={[styles.fixedHeader, { backgroundColor: theme.background }]}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
+          <Image
+            source={require('../../assets/back.png')}
+            style={[styles.backIcon, { tintColor: theme.text }]}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
         <View style={styles.backRow}>
           <TouchableOpacity onPress={() => navigation.navigate('Home')} />
           <TouchableOpacity onPress={() => navigation.navigate('Help')}>
-            <Text style={[styles.helpText, { color: theme.primary }]}>Help</Text>
+            <Text style={[styles.helpText, { color: theme.text }]}>Help</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -75,16 +140,28 @@ const Profile = () => {
       <ScrollView
         style={{ flex: 1 }}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 60, backgroundColor: theme.background }}
+        contentContainerStyle={{
+          paddingBottom: 60,
+          backgroundColor: theme.background,
+        }}
       >
         {/* ===== Profile Header ===== */}
         <View style={styles.profileHeader}>
           <View style={styles.userRow}>
-            <Image source={require('../../assets/user.png')} style={styles.userImage} />
+            <Image
+              source={require('../../assets/user.png')}
+              style={styles.userImage}
+            />
             <View style={styles.userInfo}>
-              <Text style={[styles.userName, { color: theme.text }]}>{`Harshal Sharma`}</Text>
-              <Text style={[styles.userEmail, { color: theme.textSecondary }]}>harshal@gmail.com</Text>
-              <Text style={[styles.userPhone, { color: theme.textSecondary }]}>+91 1234567890</Text>
+              <Text
+                style={[styles.userName, { color: theme.text }]}
+              >{`Harshal Sharma`}</Text>
+              <Text style={[styles.userEmail, { color: theme.textSecondary }]}>
+                harshal@gmail.com
+              </Text>
+              <Text style={[styles.userPhone, { color: theme.textSecondary }]}>
+                +91 1234567890
+              </Text>
             </View>
           </View>
         </View>
@@ -96,12 +173,20 @@ const Profile = () => {
               key={item.id}
               style={[
                 styles.topOption,
-                { backgroundColor: theme.cardBackground, borderColor: theme.border },
+                {
+                  backgroundColor: theme.cardBackground,
+                  borderColor: theme.borderColor,
+                },
               ]}
               onPress={() => navigation.navigate(item.route)}
             >
-              <Image source={item.icon} style={[styles.topIcon, { tintColor: theme.text }]} />
-              <Text style={[styles.topLabel, { color: theme.textSecondary }]}>{item.label}</Text>
+              <Image
+                source={item.icon}
+                style={[styles.topIcon, { tintColor: theme.text }]}
+              />
+              <Text style={[styles.topLabel, { color: theme.textSecondary }]}>
+                {item.label}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -115,10 +200,23 @@ const Profile = () => {
               onPress={() => handleNavigation(item.route)}
             >
               <View style={styles.optionLeft}>
-                <Image source={item.icon} style={[styles.optionIcon, { tintColor: theme.textSecondary }]} />
-                <Text style={[styles.optionLabel, { color: theme.textSecondary }]}>{item.label}</Text>
+                <Image
+                  source={item.icon}
+                  style={[
+                    styles.optionIcon,
+                    { tintColor: theme.textSecondary },
+                  ]}
+                />
+                <Text
+                  style={[styles.optionLabel, { color: theme.textSecondary }]}
+                >
+                  {item.label}
+                </Text>
               </View>
-              <Image source={require('../../assets/right-arrow.png')} style={[styles.arrowIcon, { tintColor: theme.textSecondary }]} />
+              <Image
+                source={require('../../assets/right-arrow.png')}
+                style={[styles.arrowIcon, { tintColor: theme.text }]}
+              />
             </TouchableOpacity>
           ))}
 
@@ -126,12 +224,19 @@ const Profile = () => {
           <TouchableOpacity
             style={[styles.optionRow, { borderBottomColor: theme.border }]}
             onPress={() =>
-              openPopup('Are you sure you want to logout?', () => navigation.navigate('SignIn'))
+              openPopup('Are you sure you want to logout?', () =>
+                navigation.navigate('SignIn'),
+              )
             }
           >
             <View style={styles.optionLeft}>
-              <Image source={require('../../assets/logout.png')} style={[styles.optionIcon, { tintColor: '#E53935' }]} />
-              <Text style={[styles.optionLabel, { color: '#E53935' }]}>Logout</Text>
+              <Image
+                source={require('../../assets/logout.png')}
+                style={[styles.optionIcon, { tintColor: '#E53935' }]}
+              />
+              <Text style={[styles.optionLabel, { color: '#E53935' }]}>
+                Logout
+              </Text>
             </View>
           </TouchableOpacity>
 
@@ -139,28 +244,46 @@ const Profile = () => {
           <TouchableOpacity
             style={[styles.optionRow, { borderBottomColor: theme.border }]}
             onPress={() =>
-              openPopup('Are you sure you want to delete your account?', () => navigation.navigate('SignIn'))
+              openPopup('Are you sure you want to delete your account?', () =>
+                navigation.navigate('SignIn'),
+              )
             }
           >
             <View style={styles.optionLeft}>
-              <Image source={require('../../assets/delete.png')} style={[styles.optionIcon, { tintColor: '#E53935' }]} />
-              <Text style={[styles.optionLabel, { color: '#E53935' }]}>Delete Account</Text>
+              <Image
+                source={require('../../assets/delete.png')}
+                style={[styles.optionIcon, { tintColor: '#E53935' }]}
+              />
+              <Text style={[styles.optionLabel, { color: '#E53935' }]}>
+                Delete Account
+              </Text>
             </View>
           </TouchableOpacity>
         </View>
       </ScrollView>
 
       {/* ===== Popup Modal ===== */}
-      <Modal transparent visible={showPopup} animationType="fade" onRequestClose={() => setShowPopup(false)}>
+      <Modal
+        transparent
+        visible={showPopup}
+        animationType="fade"
+        onRequestClose={() => setShowPopup(false)}
+      >
         <View style={styles.popupOverlay}>
-          <View style={[styles.popupBox, { backgroundColor: theme.cardBackground }]}>
-            <Text style={[styles.popupText, { color: theme.text }]}>{popupMessage}</Text>
+          <View
+            style={[styles.popupBox, { backgroundColor: theme.cardBackground }]}
+          >
+            <Text style={[styles.popupText, { color: theme.text }]}>
+              {popupMessage}
+            </Text>
             <View style={styles.popupButtonsContainer}>
               <TouchableOpacity
                 style={[styles.popupButton, styles.popupCancelButton]}
                 onPress={() => setShowPopup(false)}
               >
-                <Text style={[styles.popupButtonText, { color: theme.text }]}>Cancel</Text>
+                <Text style={[styles.popupButtonText, { color: theme.text }]}>
+                  Cancel
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.popupButton, styles.popupConfirmButton]}
@@ -169,7 +292,14 @@ const Profile = () => {
                   popupAction && popupAction();
                 }}
               >
-                <Text style={[styles.popupButtonText, { color: theme.cardBackground }]}>OK</Text>
+                <Text
+                  style={[
+                    styles.popupButtonText,
+                    { color: theme.cardBackground },
+                  ]}
+                >
+                  OK
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -184,7 +314,25 @@ export default Profile;
 const styles = StyleSheet.create({
   container: { flex: 1 },
 
-  bgImage: { position: 'absolute', top: 0, left: 0, width, height: height * 0.25, resizeMode: 'cover' },
+  bgImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width,
+    height: height * 0.25,
+    resizeMode: 'cover',
+  },
+  backIcon: {
+    width: 22, // normal size
+    height: 22,
+  },
+  backButton: {
+    position: 'absolute',
+    left: 15,
+    top: 40,
+    padding: 5,
+    zIndex: 10,
+  },
 
   fixedHeader: {
     position: 'absolute',
@@ -207,8 +355,18 @@ const styles = StyleSheet.create({
   },
 
   profileHeader: { width: '100%', marginTop: height * 0.13 },
-  userRow: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20 },
-  userImage: { width: 85, height: 85, borderRadius: 42, borderWidth: 2, borderColor: '#fff' },
+  userRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  userImage: {
+    width: 85,
+    height: 85,
+    borderRadius: 42,
+    borderWidth: 2,
+    borderColor: '#fff',
+  },
   userInfo: { flex: 1, marginLeft: 15 },
   userName: {
     fontSize: width * 0.048,
@@ -239,12 +397,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     ...Platform.select({
-      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 3 },
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+      },
       android: { elevation: 4 },
     }),
   },
   topIcon: { width: 26, height: 26, resizeMode: 'contain', marginBottom: 5 },
-  topLabel: { fontSize: width * 0.030, textAlign: 'center', fontFamily: 'Figtree-Medium' },
+  topLabel: {
+    fontSize: width * 0.03,
+    textAlign: 'center',
+    fontFamily: 'Figtree-Medium',
+  },
 
   bottomSection: { marginTop: 30, paddingHorizontal: 20 },
   optionRow: {
@@ -259,21 +426,49 @@ const styles = StyleSheet.create({
   optionLabel: { fontSize: width * 0.037, fontFamily: 'Figtree-SemiBold' },
   arrowIcon: { width: 14, height: 14, resizeMode: 'contain' },
 
-  popupOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', alignItems: 'center', justifyContent: 'center' },
+  popupOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   popupBox: {
     width: width * 0.8,
     borderRadius: 12,
     padding: 20,
     alignItems: 'center',
     ...Platform.select({
-      ios: { shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 4, shadowOffset: { width: 0, height: 2 } },
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 2 },
+      },
       android: { elevation: 6 },
     }),
   },
-  popupText: { fontSize: width * 0.04, textAlign: 'center', marginBottom: 20, fontFamily: 'Figtree-Medium' },
-  popupButtonsContainer: { flexDirection: 'row', justifyContent: 'space-between', width: '100%' },
-  popupButton: { borderRadius: 8, paddingVertical: 10, paddingHorizontal: 20, minWidth: 80, alignItems: 'center' },
+  popupText: {
+    fontSize: width * 0.04,
+    textAlign: 'center',
+    marginBottom: 20,
+    fontFamily: 'Figtree-Medium',
+  },
+  popupButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  popupButton: {
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    minWidth: 80,
+    alignItems: 'center',
+  },
   popupCancelButton: { backgroundColor: '#f0f0f0', marginRight: 10 },
   popupConfirmButton: { backgroundColor: COLORS.primary, marginLeft: 10 },
   popupButtonText: { fontSize: width * 0.035, fontFamily: 'Figtree-SemiBold' },
 });
+function wp(arg0: string): any {
+  throw new Error('Function not implemented.');
+}

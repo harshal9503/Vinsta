@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -11,77 +11,39 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../theme/colors';
-import font from '../../../assets/fonts'
+import font from '../../../assets/fonts';
+import { ThemeContext } from '../../../theme/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
 const MenuScreen = () => {
   const navigation = useNavigation<any>();
   const [tab, setTab] = useState<'Veg' | 'NonVeg'>('Veg');
+  const { theme } = useContext(ThemeContext);
 
   const vegItems = [
-    {
-      id: 1,
-      name: 'Fast food',
-      price: 23,
-      img: require('../../../assets/b1.png'),
-    },
-    {
-      id: 2,
-      name: 'Colddrink',
-      price: 13,
-      img: require('../../../assets/b2.png'),
-    },
-    {
-      id: 3,
-      name: 'Paneer',
-      price: 33,
-      img: require('../../../assets/b3.png'),
-    },
+    { id: 1, name: 'Fast food', price: 23, img: require('../../../assets/b1.png') },
+    { id: 2, name: 'Colddrink', price: 13, img: require('../../../assets/b2.png') },
+    { id: 3, name: 'Paneer', price: 33, img: require('../../../assets/b3.png') },
     { id: 4, name: 'Dal', price: 25, img: require('../../../assets/r1.png') },
     { id: 5, name: 'Roti', price: 28, img: require('../../../assets/r2.png') },
     { id: 6, name: 'Salad', price: 21, img: require('../../../assets/r3.png') },
     { id: 7, name: 'Pizza', price: 13, img: require('../../../assets/b1.png') },
-    {
-      id: 8,
-      name: 'Icecream',
-      price: 23,
-      img: require('../../../assets/b2.png'),
-    },
-    {
-      id: 9,
-      name: `Vegie's`,
-      price: 33,
-      img: require('../../../assets/b3.png'),
-    },
+    { id: 8, name: 'Icecream', price: 23, img: require('../../../assets/b2.png') },
+    { id: 9, name: `Vegie's`, price: 33, img: require('../../../assets/b3.png') },
   ];
 
-  const nonVegItems = [
-    // {
-    //   id: 1,
-    //   name: 'Chicken Curry',
-    //   price: 45,
-    //   img: require('../../../assets/r1.png'),
-    // },
-    // {
-    //   id: 2,
-    //   name: 'Mutton Biryani',
-    //   price: 60,
-    //   img: require('../../../assets/r2.png'),
-    // },
-    // { id: 3, name: 'Fish Fry', price: 50, img: require('../../../assets/r3.png') },
-  ];
+  const nonVegItems: any[] = [];
 
   const data = tab === 'Veg' ? vegItems : nonVegItems;
 
-  // Empty State Component
   const EmptyState = () => (
     <View style={styles.emptyContainer}>
       <Image
         source={require('../../../assets/emptycart.png')}
         style={styles.emptyImage}
       />
-      <Text style={styles.emptyText}>
+      <Text style={[styles.emptyText, { color: theme.text }]}>
         {tab === 'NonVeg'
           ? "Non-veg option is not available here you can explore from veg option's."
           : "Veg option is not available here you can explore from non-veg option's."}
@@ -97,9 +59,9 @@ const MenuScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <StatusBar
-        barStyle="dark-content"
+        barStyle={theme.mode === 'dark' ? 'light-content' : 'dark-content'}
         translucent
         backgroundColor="transparent"
       />
@@ -109,50 +71,65 @@ const MenuScreen = () => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
             source={require('../../../assets/back.png')}
-            style={styles.backIcon}
+            style={[styles.backIcon, { tintColor: theme.text }]}
           />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Menu</Text>
+
+        <Text style={[styles.headerTitle, { color: theme.text }]}>Menu</Text>
+
         <View style={{ width: width * 0.06 }} />
       </View>
 
-      {/* TABS WITH CURVE */}
+      {/* TABS */}
       <View style={styles.tabRowOuter}>
         <View style={styles.tabRow}>
+
+          {/* VEG TAB */}
           <TouchableOpacity
             style={[
               styles.tabButton,
-              tab === 'Veg' && styles.tabActive,
-              tab === 'Veg' && { backgroundColor: '#259E29' },
+              tab === 'Veg' && {
+                backgroundColor: theme.mode === 'dark' ? '#1F6F1F' : '#259E29',
+              },
             ]}
             onPress={() => setTab('Veg')}
-            activeOpacity={0.8}
           >
             <Text
-              style={[styles.tabText, tab === 'Veg' && styles.tabTextActive]}
+              style={[
+                styles.tabText,
+                { color: tab === 'Veg' ? '#fff' : '#000' }, // active = white, inactive = black (always)
+              ]}
             >
               Veg
             </Text>
+
           </TouchableOpacity>
+
+
+          {/* NON-VEG TAB */}
           <TouchableOpacity
             style={[
               styles.tabButton,
-              tab === 'NonVeg' && styles.tabActive,
-              tab === 'NonVeg' && { backgroundColor: '#FE0505' },
+              tab === 'NonVeg' && {
+                backgroundColor: theme.mode === 'dark' ? '#8A0000' : '#FE0505',
+              },
             ]}
             onPress={() => setTab('NonVeg')}
-            activeOpacity={0.8}
           >
             <Text
-              style={[styles.tabText, tab === 'NonVeg' && styles.tabTextActive]}
+              style={[
+                styles.tabText,
+                { color: tab === 'NonVeg' ? '#fff' : '#000' }, ,
+              ]}
             >
               Non-Veg
             </Text>
           </TouchableOpacity>
+
         </View>
       </View>
 
-      {/* MENU LIST OR EMPTY STATE */}
+      {/* LIST OR EMPTY */}
       {data.length > 0 ? (
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -161,23 +138,39 @@ const MenuScreen = () => {
           {data.map((item, index) => (
             <View key={item.id}>
               <TouchableOpacity
-                style={styles.menuRow}
-                activeOpacity={0.7}
+                style={[
+                  styles.menuRow,
+                  { backgroundColor: theme.card },
+                ]}
                 onPress={() => handleMenuItemPress(item)}
               >
                 <View style={styles.menuLeft}>
                   <Image source={item.img} style={styles.foodImg} />
-                  <Text style={styles.foodName}>{item.name}</Text>
+                  <Text style={[styles.foodName, { color: theme.text }]}>
+                    {item.name}
+                  </Text>
                 </View>
+
                 <View style={styles.menuRight}>
-                  <Text style={styles.foodPrice}>₹ {item.price}</Text>
+                  <Text style={[styles.foodPrice, { color: theme.text }]}>
+                    ₹ {item.price}
+                  </Text>
+
                   <Image
                     source={require('../../../assets/rightarrow.png')}
-                    style={styles.rightArrow}
+                    style={[styles.rightArrow, { tintColor: theme.text }]}
                   />
                 </View>
               </TouchableOpacity>
-              {index === 0 && <View style={styles.divider} />}
+
+              {index === 0 && (
+                <View
+                  style={[
+                    styles.divider,
+                    { backgroundColor: theme.borderColor },
+                  ]}
+                />
+              )}
             </View>
           ))}
         </ScrollView>
@@ -189,7 +182,6 @@ const MenuScreen = () => {
 };
 
 export default MenuScreen;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -323,7 +315,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: width * 0.06,
     fontWeight: '600',
-    fontFamily : 'Figtree-SemiBold'
+    fontFamily: 'Figtree-SemiBold'
 
   },
 });

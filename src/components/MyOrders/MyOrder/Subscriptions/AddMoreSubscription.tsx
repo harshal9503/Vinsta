@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../../theme/colors';
+import { ThemeContext } from '../../../../theme/ThemeContext';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { getFontFamily, getFontWeight } from '../../../../utils/fontHelper';
 import { vibrate } from '../../../../utils/vibrationHelper';
@@ -31,46 +32,18 @@ type Restaurant = {
 
 const AddMoreSubscription = () => {
   const navigation = useNavigation<any>();
+  const { theme, isDarkMode } = useContext(ThemeContext);
   const [likedIds, setLikedIds] = useState<number[]>([]);
 
   const restaurants: Restaurant[] = [
-    {
-      id: 1,
-      name: 'Bistro Excellence',
-      image: require('../../../../assets/r1.png'),
-      rating: 4.4,
-      address: 'Near MC College, Barpeta Town',
-      type: 'FAST FOOD',
-      distance: '590.0 m',
-      time: '25 min',
-    },
-    {
-      id: 2,
-      name: 'Bistro Excellence',
-      image: require('../../../../assets/r2.png'),
-      rating: 4.4,
-      address: 'Near MC College, Barpeta Town',
-      type: 'FAST FOOD',
-      distance: '590.0 m',
-      time: '25 min',
-    },
-    {
-      id: 3,
-      name: 'Bistro Excellence',
-      image: require('../../../../assets/r3.png'),
-      rating: 4.4,
-      address: 'Near MC College, Barpeta Town',
-      type: 'FAST FOOD',
-      distance: '590.0 m',
-      time: '25 min',
-    },
+    { id: 1, name: 'Bistro Excellence', image: require('../../../../assets/r1.png'), rating: 4.4, address: 'Near MC College, Barpeta Town', type: 'FAST FOOD', distance: '590.0 m', time: '25 min' },
+    { id: 2, name: 'Bistro Excellence', image: require('../../../../assets/r2.png'), rating: 4.4, address: 'Near MC College, Barpeta Town', type: 'FAST FOOD', distance: '590.0 m', time: '25 min' },
+    { id: 3, name: 'Bistro Excellence', image: require('../../../../assets/r3.png'), rating: 4.4, address: 'Near MC College, Barpeta Town', type: 'FAST FOOD', distance: '590.0 m', time: '25 min' },
   ];
 
   const handleHeartPressWithVibration = (id: number) => {
-    vibrate(40); // Use vibrationHelper with consistent duration
-    setLikedIds(prev =>
-      prev.includes(id) ? prev.filter(lid => lid !== id) : [...prev, id],
-    );
+    vibrate(40);
+    setLikedIds(prev => prev.includes(id) ? prev.filter(lid => lid !== id) : [...prev, id]);
   };
 
   const handleViewMenuPress = (restaurant: Restaurant) => {
@@ -78,11 +51,15 @@ const AddMoreSubscription = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle={theme.mode === 'dark' ? 'light-content' : 'dark-content'}
+      />
 
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: theme.cardBackground }]}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backButton}
@@ -90,14 +67,12 @@ const AddMoreSubscription = () => {
         >
           <Image
             source={require('../../../../assets/back.png')}
-            style={styles.backIcon}
+            style={[styles.backIcon, { tintColor: theme.text }]}
             resizeMode="contain"
           />
         </TouchableOpacity>
 
-        <Text style={styles.headerTitle}>Add Subscription</Text>
-
-        {/* Spacer for right side */}
+        <Text style={[styles.headerTitle, { color: theme.text }]}>Add Subscription</Text>
         <View style={{ width: wp('6%') }} />
       </View>
 
@@ -108,29 +83,36 @@ const AddMoreSubscription = () => {
           style={styles.locationIcon}
           resizeMode="contain"
         />
-        <Text style={styles.subtitle}>Nearby restaurant's for subscription</Text>
+        <Text style={[styles.subtitle, { color: theme.textSecondary }]}>Nearby restaurant's for subscription</Text>
       </View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {restaurants.map(item => {
           const isLiked = likedIds.includes(item.id);
-          return (
-            <View key={item.id} style={styles.card}>
-              <View style={styles.imageContainer}>
-                <Image
-                  source={item.image}
-                  style={styles.image}
-                  resizeMode="cover"
-                />
 
-                {/* Heart Icon - Same style as previous components */}
+          return (
+            <View
+              key={item.id}
+              style={[
+                styles.card,
+                {
+                  backgroundColor: isDarkMode ? '#000000' : '#FFFFFF',
+                  shadowColor: isDarkMode ? 'transparent' : '#000',
+                },
+              ]}
+            >
+              <View style={styles.imageContainer}>
+                <Image source={item.image} style={styles.image} resizeMode="cover" />
+
+                {/* Heart Icon */}
                 <TouchableOpacity
                   style={[
                     styles.productHeartWrapper,
-                    { backgroundColor: isLiked ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)' }
+                    {
+                      backgroundColor: isLiked
+                        ? 'rgba(255, 255, 255, 0.9)'
+                        : 'rgba(242, 234, 234, 0.3)',
+                    },
                   ]}
                   activeOpacity={0.7}
                   onPress={() => handleHeartPressWithVibration(item.id)}
@@ -141,20 +123,16 @@ const AddMoreSubscription = () => {
                         ? require('../../../../assets/heartfill.png')
                         : require('../../../../assets/heart.png')
                     }
-                    style={[
-                      styles.heartIcon,
-                      { tintColor: isLiked ? COLORS.primary : '#fff' }
-                    ]}
+                    style={[styles.heartIcon, { tintColor: isLiked ? COLORS.primary : '#fff' }]}
                     resizeMode="contain"
                   />
                 </TouchableOpacity>
               </View>
 
-              <View style={styles.contentBox}>
+              <View style={[styles.contentBox, { backgroundColor: theme.cardBackground }]}>
                 <View style={styles.rowBetween}>
-                  <Text style={styles.title}>{item.name}</Text>
+                  <Text style={[styles.title, { color: theme.text }]}>{item.name}</Text>
 
-                  {/* Rating positioned inside content */}
                   <View style={styles.productRatingBadge}>
                     <Image
                       source={require('../../../../assets/star.png')}
@@ -165,19 +143,19 @@ const AddMoreSubscription = () => {
                   </View>
                 </View>
 
-                {/* Address */}
                 <View style={styles.row}>
                   <Image
                     source={require('../../../../assets/location1.png')}
                     style={styles.smallIcon}
                     resizeMode="contain"
                   />
-                  <Text style={styles.address}>{item.address}</Text>
+                  <Text style={[styles.address, { color: theme.textSecondary }]}>
+                    {item.address}
+                  </Text>
                 </View>
 
-                {/* Info Row */}
                 <View style={styles.infoRow}>
-                  <Text style={styles.tag}>{item.type}</Text>
+                  <Text style={[styles.tag, { color: theme.text }]}>{item.type}</Text>
 
                   <View style={styles.infoItem}>
                     <Image
@@ -185,7 +163,7 @@ const AddMoreSubscription = () => {
                       style={styles.iconSmallGreen}
                       resizeMode="contain"
                     />
-                    <Text style={styles.infoText}>{item.distance}</Text>
+                    <Text style={[styles.infoText, { color: theme.text }]}>{item.distance}</Text>
                   </View>
 
                   <View style={styles.infoItem}>
@@ -194,13 +172,12 @@ const AddMoreSubscription = () => {
                       style={styles.iconSmallGreen}
                       resizeMode="contain"
                     />
-                    <Text style={styles.infoText}>{item.time}</Text>
+                    <Text style={[styles.infoText, { color: theme.text }]}>{item.time}</Text>
                   </View>
                 </View>
 
-                {/* Button */}
                 <TouchableOpacity
-                  style={styles.menuButton}
+                  style={[styles.menuButton, { backgroundColor: COLORS.primary }]}
                   activeOpacity={0.9}
                   onPress={() => handleViewMenuPress(item)}
                 >
@@ -218,10 +195,7 @@ const AddMoreSubscription = () => {
 export default AddMoreSubscription;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
+  container: { flex: 1 },
 
   header: {
     flexDirection: 'row',
@@ -230,18 +204,11 @@ const styles = StyleSheet.create({
     paddingTop: hp('6%'),
     paddingBottom: hp('1%'),
     paddingHorizontal: wp('5%'),
-    backgroundColor: '#FFFFFF',
   },
-  backButton: {
-    padding: wp('1%'),
-  },
-  backIcon: {
-    width: wp('6%'),
-    height: wp('6%'),
-  },
+  backButton: { padding: wp('1%') },
+  backIcon: { width: wp('6%'), height: wp('6%') },
   headerTitle: {
     fontSize: wp('5%'),
-    color: '#000',
     fontFamily: getFontFamily('Bold'),
     fontWeight: getFontWeight('Bold'),
     marginTop: hp('0.5%'),
@@ -253,96 +220,48 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp('5%'),
     paddingVertical: hp('1%'),
   },
-  locationIcon: {
-    width: wp('5%'),
-    height: wp('5%'),
-  },
+  locationIcon: { width: wp('5%'), height: wp('5%') },
   subtitle: {
     marginLeft: wp('2%'),
     fontSize: wp('3.6%'),
-    color: '#000',
     fontFamily: getFontFamily('SemiBold'),
     fontWeight: getFontWeight('SemiBold'),
   },
 
-  scrollContent: {
-    paddingBottom: hp('4%'),
-    paddingTop: hp('1%'),
-  },
+  scrollContent: { paddingBottom: hp('4%'), paddingTop: hp('1%') },
 
-  /* CARD */
   card: {
-    backgroundColor: '#FFFFFF',
     marginHorizontal: wp('5%'),
     marginBottom: hp('2%'),
     borderRadius: wp('4%'),
     overflow: 'hidden',
     elevation: 3,
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: Platform.OS === 'ios' ? 0.1 : 0.15,
     shadowRadius: 4,
   },
 
-  imageContainer: {
-    position: 'relative',
-    width: '100%',
-    height: hp('20%'),
-  },
+  imageContainer: { position: 'relative', width: '100%', height: hp('20%') },
+  image: { width: '100%', height: '100%' },
 
-  image: {
-    width: '100%',
-    height: '100%',
-  },
-
-  // Heart wrapper styles - Same as previous components
   productHeartWrapper: {
     position: 'absolute',
     top: hp('1.5%'),
     right: wp('4%'),
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
     borderRadius: wp('5%'),
     padding: wp('2%'),
     ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2,
-      },
-      android: {
-        elevation: 3,
-      },
+      ios: { shadowColor: '#000', shadowOpacity: 0.2, shadowOffset: { width: 0, height: 1 }, shadowRadius: 2 },
+      android: { elevation: 3 },
     }),
   },
-  heartIcon: {
-    width: wp('4%'),
-    height: wp('4%'),
-  },
+  heartIcon: { width: wp('4%'), height: wp('4%') },
 
-  contentBox: {
-    paddingHorizontal: wp('4%'),
-    paddingVertical: hp('1.5%'),
-    backgroundColor: '#FFFFFF',
-  },
+  contentBox: { paddingHorizontal: wp('4%'), paddingVertical: hp('1.5%') },
 
-  rowBetween: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: hp('0.8%'),
-  },
+  rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: hp('0.8%') },
+  title: { fontSize: wp('5.2%'), marginRight: wp('2%'), fontFamily: getFontFamily('Bold'), fontWeight: getFontWeight('Bold') },
 
-  title: {
-    fontSize: wp('5.2%'),
-    color: '#000',
-    flex: 1,
-    marginRight: wp('2%'),
-    fontFamily: getFontFamily('Bold'),
-    fontWeight: getFontWeight('Bold'),
-  },
-
-  // Rating badge styles - Same as previous components
   productRatingBadge: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -350,44 +269,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp('2.5%'),
     paddingVertical: hp('0.5%'),
     borderRadius: wp('3%'),
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
   },
-  starIcon: {
-    width: wp('3%'),
-    height: wp('3%'),
-    marginRight: wp('1%'),
-    tintColor: '#FFFFFF',
-  },
-  ratingText: {
-    color: '#FFFFFF',
-    fontSize: wp('3%'),
-    fontFamily: getFontFamily('SemiBold'),
-    fontWeight: getFontWeight('SemiBold'),
-  },
+  starIcon: { width: wp('3%'), height: wp('3%'), marginRight: wp('1%'), tintColor: '#FFFFFF' },
+  ratingText: { color: '#FFFFFF', fontSize: wp('3%'), fontFamily: getFontFamily('SemiBold'), fontWeight: getFontWeight('SemiBold') },
 
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: hp('0.5%'),
-  },
-
-  smallIcon: {
-    width: wp('3.5%'),
-    height: wp('3.5%'),
-  },
-
+  row: { flexDirection: 'row', alignItems: 'center', marginVertical: hp('0.5%') },
+  smallIcon: { width: wp('3.5%'), height: wp('3.5%') },
   address: {
-    color: '#555',
     marginLeft: wp('1.5%'),
     fontFamily: getFontFamily('Medium'),
     fontWeight: getFontWeight('Medium'),
@@ -402,41 +290,17 @@ const styles = StyleSheet.create({
     marginBottom: hp('1%'),
     justifyContent: 'space-between',
   },
-
-  tag: {
-    color: '#000',
-    fontFamily: getFontFamily('Medium'),
-    fontWeight: getFontWeight('Medium'),
-    fontSize: wp('3.2%'),
-  },
-
-  infoItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-
-  iconSmallGreen: {
-    width: wp('3.2%'),
-    height: wp('3.2%'),
-    tintColor: '#259E29',
-  },
-
-  infoText: {
-    fontSize: wp('3.1%'),
-    color: '#000',
-    marginLeft: wp('1%'),
-    fontFamily: getFontFamily('Medium'),
-    fontWeight: getFontWeight('Medium'),
-  },
+  tag: { fontFamily: getFontFamily('Medium'), fontWeight: getFontWeight('Medium'), fontSize: wp('3.2%') },
+  infoItem: { flexDirection: 'row', alignItems: 'center' },
+  iconSmallGreen: { width: wp('3.2%'), height: wp('3.2%'), tintColor: '#259E29' },
+  infoText: { fontSize: wp('3.1%'), marginLeft: wp('1%'), fontFamily: getFontFamily('Medium'), fontWeight: getFontWeight('Medium') },
 
   menuButton: {
     marginTop: hp('1%'),
-    backgroundColor: COLORS.primary,
     borderRadius: wp('3%'),
     paddingVertical: hp('1.3%'),
     alignItems: 'center',
   },
-
   menuText: {
     color: '#FFFFFF',
     fontSize: wp('3.8%'),
