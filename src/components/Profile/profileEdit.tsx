@@ -33,6 +33,7 @@ const ProfileEdit = () => {
 
   const defaultUserImage = require('../../assets/user.png');
   const closeIcon = require('../../assets/close1.png');
+  const editIcon = require('../../assets/edit2.png'); // Replace camera icon
 
   const clearField = (field: string) => {
     if (field === 'name') setName('');
@@ -125,25 +126,41 @@ const ProfileEdit = () => {
             onPress={openPicker}
             style={styles.profileWrapper}
           >
-            <Image
-              source={
-                profileImage?.uri ? { uri: profileImage.uri } : defaultUserImage
-              }
-              style={[
-                styles.profileImage,
-                { borderColor: theme.cardBackground },
-              ]}
-            />
+            {/* ===== Circle Container with Gray User Icon (Default) ===== */}
+            {profileImage?.uri ? (
+              // User uploaded image
+              <Image
+                source={{ uri: profileImage.uri }}
+                style={[
+                  styles.profileImage,
+                  { borderColor: theme.cardBackground },
+                ]}
+              />
+            ) : (
+              // Default gray circle container
+              <View style={[styles.userCircleContainer, { backgroundColor: theme.cardBackground, borderColor: theme.cardBackground }]}>
+                <Image
+                  source={defaultUserImage}
+                  style={[styles.userCircleIcon, { tintColor: 'gray' }]}
+                  resizeMode="contain"
+                />
+              </View>
+            )}
+            
             <View
               style={[
-                styles.cameraBadge,
+                styles.editBadge,
                 {
                   backgroundColor: theme.background,
                   borderColor: theme.cardBackground,
                 },
               ]}
             >
-              <Text style={styles.cameraIcon}>📷</Text>
+              <Image
+                source={editIcon}
+                style={styles.editIcon}
+                resizeMode="contain"
+              />
             </View>
           </TouchableOpacity>
         </View>
@@ -446,26 +463,50 @@ const styles = StyleSheet.create({
   profileWrapper: {
     position: 'relative',
   },
+  
+  // ===== NEW CIRCLE CONTAINER STYLES (Default State) =====
+  userCircleContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    overflow: 'hidden',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 2 },
+      },
+      android: { elevation: 4 },
+    }),
+  },
+  userCircleIcon: {
+    width: 55,
+    height: 55,
+  },
+  
   profileImage: {
     width: 100,
     height: 100,
     borderRadius: 50,
     resizeMode: 'cover',
     borderWidth: 2,
-    borderColor: '#f0f0f0',
   },
-  cameraBadge: {
+  
+  // ===== EDIT BADGE (Replaced camera badge) =====
+  editBadge: {
     position: 'absolute',
     bottom: 0,
     right: -5,
-    backgroundColor: COLORS.primary,
     width: 32,
     height: 32,
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: COLORS.secondary,
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -476,9 +517,10 @@ const styles = StyleSheet.create({
       android: { elevation: 4 },
     }),
   },
-  cameraIcon: {
-    fontSize: 16,
-    fontFamily: 'Figtree-Regular',
+  editIcon: {
+    width: 18,
+    height: 18,
+    tintColor: 'gray', // You can adjust this color
   },
 
   /** FORM **/

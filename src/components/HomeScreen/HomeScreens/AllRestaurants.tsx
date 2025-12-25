@@ -402,7 +402,7 @@ const styles = StyleSheet.create({
   },
   restaurantTitle: {
     ...getTextStyle('Bold'),
-    fontSize: fontScale(14), // SMALLER: Reduced from 16 to 14
+    fontSize: fontScale(20), // SMALLER: Reduced from 16 to 14
     color: COLORS.textDark,
     flex: 1,
     marginRight: wp('2%'),

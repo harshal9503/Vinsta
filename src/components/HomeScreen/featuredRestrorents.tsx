@@ -1018,7 +1018,7 @@ const styles = StyleSheet.create({
     marginBottom: hp('0.8%'),
   },
   restaurantName: {
-    fontSize: wp('5.2%'),
+    fontSize: wp('4.5%'),
     color: '#000',
     flex: 1,
     marginRight: wp('2%'),
