@@ -148,10 +148,15 @@ const Profile = () => {
         {/* ===== Profile Header ===== */}
         <View style={styles.profileHeader}>
           <View style={styles.userRow}>
-            <Image
-              source={require('../../assets/user.png')}
-              style={styles.userImage}
-            />
+            {/* ===== Circle Container with Gray User Icon ===== */}
+            <View style={[styles.userCircleContainer, { backgroundColor: theme.cardBackground }]}>
+              <Image
+                source={require('../../assets/user.png')}
+                style={[styles.userCircleIcon, { tintColor: 'gray' }]}
+                resizeMode="contain"
+              />
+            </View>
+            
             <View style={styles.userInfo}>
               <Text
                 style={[styles.userName, { color: theme.text }]}
@@ -323,7 +328,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   backIcon: {
-    width: 22, // normal size
+    width: 22,
     height: 22,
   },
   backButton: {
@@ -360,13 +365,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
   },
-  userImage: {
+  
+  // ===== NEW CIRCLE CONTAINER STYLES =====
+  userCircleContainer: {
     width: 85,
     height: 85,
-    borderRadius: 42,
+    borderRadius: 42.5,
+    justifyContent: 'center',
+    alignItems: 'center',
     borderWidth: 2,
     borderColor: '#fff',
+    overflow: 'hidden',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: { elevation: 4 },
+    }),
   },
+  userCircleIcon: {
+    width: 50,
+    height: 50,
+  },
+
   userInfo: { flex: 1, marginLeft: 15 },
   userName: {
     fontSize: width * 0.048,
@@ -469,6 +493,3 @@ const styles = StyleSheet.create({
   popupConfirmButton: { backgroundColor: COLORS.primary, marginLeft: 10 },
   popupButtonText: { fontSize: width * 0.035, fontFamily: 'Figtree-SemiBold' },
 });
-function wp(arg0: string): any {
-  throw new Error('Function not implemented.');
-}
