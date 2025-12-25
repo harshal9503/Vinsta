@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -8,6 +8,11 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Modal,
+  Animated,
+  Pressable,
+  ScrollView,
+  TextInput,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -102,6 +107,12 @@ const getTextStyle = (weight = 'Regular') => {
   };
 };
 
+const FILTER_TAG_COLORS = {
+  background: '#FFF9F3',
+  border: '#FFE0C8',
+  text: '#F99C38',
+};
+
 const BesRatedBurger = ({
   getCurrentProducts,
   handleProductPress,
@@ -109,6 +120,13 @@ const BesRatedBurger = ({
   isVegMode,
 }) => {
   const { theme } = useContext(ThemeContext);
+  const [selectedFood, setSelectedFood] = useState(null);
+  const [foodModalVisible, setFoodModalVisible] = useState(false);
+  const [selectedCheese, setSelectedCheese] = useState([]);
+  const [quantity, setQuantity] = useState(1);
+  const [cookingRequest, setCookingRequest] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupScale] = useState(new Animated.Value(0));
 
   const getCurrentProductsWithMore = () => {
     const currentProducts = getCurrentProducts();
@@ -181,19 +199,108 @@ const BesRatedBurger = ({
 
   const allProducts = getCurrentProductsWithMore();
 
-  // CHANGED: Split products into 2 rows - first 6 items row 1, rest row 2
-  const firstRowProducts = allProducts.slice(0, 6);
-  const secondRowProducts = allProducts.slice(6);
+  const handleFoodItemPress = (item) => {
+    const foodItem = {
+      id: item.id,
+      name: item.name,
+      price: parseFloat(item.price.replace('₹', '')),
+      oldPrice: parseFloat(item.oldPrice.replace('₹', '')),
+      time: item.deliveryTime,
+      img: item.img,
+      description: 'A flavorful burger with fresh veggies, creamy sauces, and the perfect blend of spices in a toasted bun. Perfect for those craving a hearty and satisfying meal.',
+      restaurant: 'Bistro Excellence',
+      isVeg: true,
+      rating: parseFloat(item.rating),
+    };
+    
+    setSelectedFood(foodItem);
+    setQuantity(1);
+    setSelectedCheese([]);
+    setCookingRequest('');
+    setFoodModalVisible(true);
+  };
 
-  const renderProductCard = (item, index, rowProducts) => (
+  const toggleCheeseSelection = (cheese) => {
+    setSelectedCheese(prev => {
+      if (prev.includes(cheese)) {
+        return prev.filter(c => c !== cheese);
+      } else {
+        if (prev.length < 2) {
+          return [...prev, cheese];
+        }
+        return prev;
+      }
+    });
+  };
+
+  const incrementQuantity = () => {
+    setQuantity(prev => prev + 1);
+  };
+
+  const decrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(prev => prev - 1);
+    }
+  };
+
+  const getTotalPrice = () => {
+    if (!selectedFood) return 0;
+    let basePrice = selectedFood.price;
+
+    selectedCheese.forEach(cheese => {
+      if (cheese === 'Single Cheese Slice') {
+        basePrice += 25.0;
+      } else if (cheese === 'Double Cheese Slice') {
+        basePrice += 39.0;
+      }
+    });
+
+    return basePrice * quantity;
+  };
+
+  const showAddedToCartPopup = () => {
+    setShowPopup(true);
+    Animated.spring(popupScale, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+
+    setTimeout(() => {
+      hidePopup();
+    }, 2000);
+  };
+
+  const hidePopup = () => {
+    Animated.timing(popupScale, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start(() => {
+      setShowPopup(false);
+    });
+  };
+
+  const handleAddToCart = () => {
+    console.log('Added to cart:', {
+      food: selectedFood,
+      cheese: selectedCheese,
+      quantity,
+      cookingRequest,
+      totalPrice: getTotalPrice(),
+    });
+
+    showAddedToCartPopup();
+    setFoodModalVisible(false);
+  };
+
+  const renderProductCard = (item, index) => (
     <TouchableOpacity
       style={[
         styles.productCard,
         { backgroundColor: theme.cardBackground },
-        index === 0 && { marginLeft: wp('4%') },
-        index === rowProducts.length - 1 && { marginRight: wp('4%') },
       ]}
-      onPress={() => handleProductPress(item)}
+      onPress={() => handleFoodItemPress(item)}
       activeOpacity={0.8}
     >
       <View style={styles.imageContainer}>
@@ -278,27 +385,185 @@ const BesRatedBurger = ({
 
   return (
     <View style={styles.container}>
-      {/* CHANGED: First Row - Horizontal scroll for first 6 items */}
+      {/* Added to Cart Popup */}
+      <Modal
+        visible={showPopup}
+        transparent
+        animationType="none"
+        onRequestClose={hidePopup}
+      >
+        <View style={styles.popupOverlay}>
+          <Animated.View
+            style={[
+              styles.popupContainer,
+              {
+                transform: [{ scale: popupScale }],
+                opacity: popupScale,
+              },
+            ]}
+          >
+            <View style={styles.popupContent}>
+              <Image
+                source={require('../../../assets/sucess.png')}
+                style={styles.successIcon}
+                resizeMode="contain"
+              />
+              <Text style={styles.popupTitle}>Added to Cart!</Text>
+              <Text style={styles.popupSubtitle}>
+                {selectedFood?.name} has been added to your cart
+              </Text>
+            </View>
+          </Animated.View>
+        </View>
+      </Modal>
+
+      {/* Food Detail Modal */}
+      <Modal
+        visible={foodModalVisible}
+        animationType="slide"
+        transparent
+        statusBarTranslucent
+        onRequestClose={() => setFoodModalVisible(false)}
+      >
+        <View style={modalStyles.overlay}>
+          <Pressable style={modalStyles.backdrop} onPress={() => setFoodModalVisible(false)} />
+
+          <View style={modalStyles.container}>
+            {/* CLOSE BUTTON */}
+            <TouchableOpacity style={modalStyles.closeBtn} onPress={() => setFoodModalVisible(false)}>
+              <Image
+                source={require('../../../assets/close.png')}
+                style={modalStyles.closeIcon}
+              />
+            </TouchableOpacity>
+
+            <View style={modalStyles.modal}>
+              {selectedFood && (
+                <>
+                  {/* IMAGE */}
+                  <Image source={selectedFood.img} style={modalStyles.image} />
+
+                  {/* RATING */}
+                  <View style={modalStyles.rating}>
+                    <Image
+                      source={require('../../../assets/star.png')}
+                      style={modalStyles.star}
+                    />
+                    <Text style={modalStyles.ratingText}>{selectedFood.rating}</Text>
+                  </View>
+
+                  {/* CONTENT */}
+                  <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={modalStyles.scrollContent}
+                  >
+                    <View style={modalStyles.tags}>
+                      <Image
+                        source={
+                          selectedFood.isVeg
+                            ? require('../../../assets/veg.png')
+                            : require('../../../assets/nonveg.png')
+                        }
+                        style={modalStyles.veg}
+                      />
+                      <View style={modalStyles.spicy}>
+                        <Image
+                          source={require('../../../assets/spicy.png')}
+                          style={modalStyles.spicyIcon}
+                        />
+                        <Text style={modalStyles.spicyText}>Spicy</Text>
+                      </View>
+                    </View>
+
+                    <Text style={modalStyles.name}>{selectedFood.name}</Text>
+                    <Text style={modalStyles.restaurant}>{selectedFood.restaurant}</Text>
+                    <Text style={modalStyles.desc}>{selectedFood.description}</Text>
+
+                    <Text style={modalStyles.section}>Extra Cheese</Text>
+                    <Text style={modalStyles.sub}>Select up to 2 option</Text>
+
+                    {[
+                      { label: 'Single Cheese Slice', price: '₹25.00' },
+                      { label: 'Double Cheese Slice', price: '₹39.00' },
+                    ].map(item => (
+                      <TouchableOpacity
+                        key={item.label}
+                        style={modalStyles.option}
+                        onPress={() => toggleCheeseSelection(item.label)}
+                      >
+                        <View style={modalStyles.optionLeft}>
+                          <Image
+                            source={require('../../../assets/veg.png')}
+                            style={modalStyles.optionVeg}
+                          />
+                          <Text style={modalStyles.optionText}>{item.label}</Text>
+                        </View>
+
+                        <View style={modalStyles.optionRight}>
+                          <Text style={modalStyles.optionPrice}>{item.price}</Text>
+                          {selectedCheese.includes(item.label) ? (
+                            <Image
+                              source={require('../../../assets/tick.png')}
+                              style={modalStyles.tick}
+                            />
+                          ) : (
+                            <View style={modalStyles.unchecked} />
+                          )}
+                        </View>
+                      </TouchableOpacity>
+                    ))}
+
+                    <Text style={modalStyles.section}>Add a cooking request (optional)</Text>
+
+                    <TextInput
+                      style={modalStyles.input}
+                      placeholder="e.g. don't make it too spicy"
+                      placeholderTextColor="#999"
+                      value={cookingRequest}
+                      onChangeText={setCookingRequest}
+                      multiline
+                    />
+                  </ScrollView>
+
+                  {/* BOTTOM ACTION BAR */}
+                  <View style={modalStyles.bottomWrapper}>
+                    <View style={modalStyles.bottom}>
+                      <View style={modalStyles.qty}>
+                        <TouchableOpacity onPress={decrementQuantity}>
+                          <Text style={modalStyles.qtyBtn}>-</Text>
+                        </TouchableOpacity>
+
+                        <Text style={modalStyles.qtyText}>{quantity}</Text>
+
+                        <TouchableOpacity onPress={incrementQuantity}>
+                          <Text style={modalStyles.qtyBtn}>+</Text>
+                        </TouchableOpacity>
+                      </View>
+
+                      <TouchableOpacity style={modalStyles.cart} onPress={handleAddToCart}>
+                        <Image
+                          source={require('../../../assets/bag.png')}
+                          style={modalStyles.bag}
+                        />
+                        <Text style={modalStyles.cartText}>ADD TO CART</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </>
+              )}
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       <FlatList
-        data={firstRowProducts}
-        keyExtractor={(item) => `row1-${item.id}`}
+        data={allProducts}
+        keyExtractor={(item) => `product-${item.id}`}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
-        renderItem={({ item, index }) => renderProductCard(item, index, firstRowProducts)}
+        renderItem={({ item, index }) => renderProductCard(item, index)}
       />
-      
-      {/* CHANGED: Second Row - Horizontal scroll for remaining items, with top margin */}
-      {secondRowProducts.length > 0 && (
-        <FlatList
-          data={secondRowProducts}
-          keyExtractor={(item) => `row2-${item.id}`}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContentSecondRow}
-          renderItem={({ item, index }) => renderProductCard(item, index, secondRowProducts)}
-        />
-      )}
     </View>
   );
 };
@@ -310,18 +575,12 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingVertical: hp('1%'),
   },
-  // CHANGED: New style for second row scroll content with top margin
-  scrollContentSecondRow: {
-    paddingVertical: hp('0.5%'), // CHANGED: Less vertical padding
-    paddingTop: hp('1.2%'), // CHANGED: Added top margin between rows
-  },
-  // CHANGED: MADE SMALLER - Width: wp('32%') → wp('28%'), Padding: wp('1.5%') → wp('1.2%')
   productCard: {
     backgroundColor: COLORS.secondary,
-    width: wp('28%'), // CHANGED: was wp('32%') - 12.5% smaller width
-    borderRadius: scaleSize(wp('2.5%')), // CHANGED: was wp('2.8%') - smaller radius
-    padding: scaleSize(wp('1.2%')), // CHANGED: was wp('1.5%') - 20% less padding (shorter height)
-    marginRight: wp('2%'), // CHANGED: was wp('2.5%') - tighter spacing
+    width: wp('34%'),
+    borderRadius: scaleSize(wp('2.8%')),
+    padding: scaleSize(wp('1.4%')),
+    marginRight: wp('2.2%'),
     ...Platform.select({
       ios: {
         shadowColor: COLORS.cardShadow || '#000',
@@ -334,25 +593,22 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  // CHANGED: Even tighter image spacing for shorter height
   imageContainer: {
     position: 'relative',
-    marginBottom: hp('0.3%'), // CHANGED: was hp('0.4%') - tighter
+    marginBottom: hp('0.25%'),
   },
-  // CHANGED: Smaller image height
   productImg: {
     width: '100%',
-    height: wp('22%'), // CHANGED: was wp('25%') - 12% smaller image
-    borderRadius: scaleSize(wp('1.8%')), // CHANGED: was wp('2%') - smaller border
+    height: wp('21%'),
+    borderRadius: scaleSize(wp('2%')),
   },
-  // CHANGED: Repositioned for smaller card
   productHeartWrapper: {
     position: 'absolute',
-    top: scaleSize(wp('1%')), // CHANGED: was wp('1.2%')
-    right: scaleSize(wp('1%')), // CHANGED: was wp('1.2%')
+    top: scaleSize(wp('1.1%')),
+    right: scaleSize(wp('1.1%')),
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    borderRadius: scaleSize(wp('2.2%')), // CHANGED: was wp('2.5%')
-    padding: scaleSize(wp('0.8%')), // CHANGED: was wp('1%')
+    borderRadius: scaleSize(wp('2.4%')),
+    padding: scaleSize(wp('0.9%')),
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -365,17 +621,16 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  // CHANGED: Repositioned for smaller card
   productRatingBadge: {
     position: 'absolute',
-    bottom: scaleSize(wp('1%')), // CHANGED: was wp('1.2%')
-    left: scaleSize(wp('1%')), // CHANGED: was wp('1.2%')
+    bottom: scaleSize(wp('1.1%')),
+    left: scaleSize(wp('1.1%')),
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: COLORS.primary,
-    paddingHorizontal: wp('1.3%'), // CHANGED: was wp('1.5%')
-    paddingVertical: hp('0.25%'), // CHANGED: was hp('0.3%')
-    borderRadius: scaleSize(wp('1%')), // CHANGED: was wp('1.2%')
+    paddingHorizontal: wp('1.4%'),
+    paddingVertical: hp('0.3%'),
+    borderRadius: scaleSize(wp('1.1%')),
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -388,92 +643,287 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  // CHANGED: Smaller icons
   heartIcon: {
-    width: isTablet ? scaleSize(wp('2%')) : scaleSize(wp('2.2%')), // CHANGED: was 2.2-2.4%
-    height: isTablet ? scaleSize(wp('2%')) : scaleSize(wp('2.2%')),
+    width: isTablet ? scaleSize(wp('2.3%')) : scaleSize(wp('2.5%')),
+    height: isTablet ? scaleSize(wp('2.3%')) : scaleSize(wp('2.5%')),
   },
-  // CHANGED: Tighter title spacing
   productTitle: {
     ...getTextStyle('SemiBold'),
-    fontSize: fontScale(11), // CHANGED: was 12 - smaller font
+    fontSize: fontScale(14),
     color: COLORS.textDark,
-    marginBottom: hp('0.2%'), // CHANGED: was hp('0.3%')
-    marginTop: hp('0.3%'), // CHANGED: was hp('0.4%')
+    marginBottom: hp('0.25%'),
+    marginTop: hp('0.35%'),
   },
-  // CHANGED: Even tighter price row
   priceRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: hp('0.15%'), // CHANGED: was hp('0.2%')
+    marginBottom: hp('0.18%'),
   },
-  // CHANGED: Tighter price gap
   priceContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: wp('0.6%'), // CHANGED: was wp('0.8%')
+    gap: wp('0.8%'),
     flex: 1,
   },
-  // CHANGED: Smaller price fonts
   productPrice: {
     ...getTextStyle('Bold'),
-    fontSize: fontScale(10), // CHANGED: was 11
+    fontSize: fontScale(13),
     color: '#111',
   },
   oldPrice: {
     ...getTextStyle('Regular'),
-    fontSize: fontScale(8), // CHANGED: was 9
+    fontSize: fontScale(11),
     color: '#666',
     textDecorationLine: 'line-through',
   },
-  // CHANGED: Smaller plus button
   plusBtn: {
     backgroundColor: COLORS.primary,
     borderRadius: wp('50%'),
-    padding: scaleSize(wp('1%')), // CHANGED: was wp('1.2%')
+    padding: scaleSize(wp('1.2%')),
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: scaleSize(wp('4.8%')), // CHANGED: was wp('5.5%')
-    minHeight: scaleSize(wp('4.8%')),
+    minWidth: scaleSize(wp('5.5%')),
+    minHeight: scaleSize(wp('5.5%')),
   },
-  // CHANGED: Smaller plus icon
   plusIcon: {
-    width: isTablet ? scaleSize(wp('1.8%')) : scaleSize(wp('2%')), // CHANGED: was 2-2.2%
-    height: isTablet ? scaleSize(wp('1.8%')) : scaleSize(wp('2%')),
+    width: isTablet ? scaleSize(wp('2.1%')) : scaleSize(wp('2.3%')),
+    height: isTablet ? scaleSize(wp('2.1%')) : scaleSize(wp('2.3%')),
     tintColor: '#fff',
   },
-  // CHANGED: Tighter delivery gap
   deliveryTimeRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: wp('0.5%'), // CHANGED: was wp('0.6%')
+    gap: wp('0.7%'),
   },
-  // CHANGED: Smaller info icon
   infoIcon: {
-    width: isTablet ? scaleSize(wp('1.6%')) : scaleSize(wp('1.8%')), // CHANGED: was 1.8-2%
-    height: isTablet ? scaleSize(wp('1.6%')) : scaleSize(wp('1.8%')),
+    width: isTablet ? scaleSize(wp('1.9%')) : scaleSize(wp('2.1%')),
+    height: isTablet ? scaleSize(wp('1.9%')) : scaleSize(wp('2.1%')),
     tintColor: COLORS.primary,
   },
-  // CHANGED: Smaller delivery font
   infoTxt: {
     ...getTextStyle('Regular'),
-    fontSize: fontScale(9), // CHANGED: was 10
+    fontSize: fontScale(11),
     color: COLORS.textLight,
   },
-  // CHANGED: Smaller star icon
   starIcon: {
-    width: isTablet ? scaleSize(wp('1.6%')) : scaleSize(wp('1.8%')), // CHANGED: was 1.8-2%
-    height: isTablet ? scaleSize(wp('1.6%')) : scaleSize(wp('1.8%')),
-    marginRight: wp('0.5%'), // CHANGED: was wp('0.6%')
+    width: isTablet ? scaleSize(wp('1.9%')) : scaleSize(wp('2.1%')),
+    height: isTablet ? scaleSize(wp('1.9%')) : scaleSize(wp('2.1%')),
+    marginRight: wp('0.6%'),
     tintColor: '#fff',
   },
-  // CHANGED: Smaller rating text
   ratingText: {
     ...getTextStyle('SemiBold'),
-    fontSize: fontScale(8), // CHANGED: was 9
+    fontSize: fontScale(10),
     color: '#fff',
   },
+  
+  // Popup Styles
+  popupOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  popupContainer: {
+    backgroundColor: '#fff',
+    borderRadius: wp('5%'),
+    padding: wp('6%'),
+    marginHorizontal: wp('10%'),
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  popupContent: {
+    alignItems: 'center',
+  },
+  successIcon: {
+    width: wp('15%'),
+    height: wp('15%'),
+    marginBottom: hp('2%'),
+  },
+  popupTitle: {
+    fontSize: hp('2.2%'),
+    fontWeight: '700',
+    color: '#000',
+    marginBottom: hp('1%'),
+    textAlign: 'center',
+  },
+  popupSubtitle: {
+    fontSize: hp('1.6%'),
+    fontWeight: '400',
+    color: '#666',
+    textAlign: 'center',
+    lineHeight: hp('2.2%'),
+  },
+});
+
+const modalStyles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.35)',
+  },
+  backdrop: { flex: 1 },
+  container: { justifyContent: 'flex-end' },
+
+  modal: {
+    height: hp('82%'),
+    backgroundColor: '#fff',
+    borderTopLeftRadius: wp('6%'),
+    borderTopRightRadius: wp('6%'),
+    overflow: 'hidden',
+  },
+
+  image: {
+    width: '100%',
+    height: hp('22%'),
+    resizeMode: 'cover',
+  },
+
+  closeBtn: {
+    position: 'absolute',
+    top: -wp('6%'),
+    alignSelf: 'center',
+    zIndex: 10,
+    backgroundColor: '#fff',
+    width: wp('14%'),
+    height: wp('14%'),
+    borderRadius: wp('7%'),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  closeIcon: {
+    width: wp('7%'),
+    height: wp('7%'),
+    tintColor: COLORS.primary,
+  },
+
+  rating: {
+    position: 'absolute',
+    right: wp('5%'),
+    top: hp('24%'),
+    backgroundColor: COLORS.primary,
+    borderRadius: wp('3%'),
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: wp('3%'),
+    paddingVertical: hp('0.5%'),
+  },
+
+  star: { width: wp('3%'), height: wp('3%'), tintColor: '#fff' },
+  ratingText: { color: '#fff', marginLeft: wp('1%'), fontWeight: '700' },
+
+  scrollContent: {
+    padding: wp('5%'),
+    paddingBottom: hp('3%'),
+  },
+
+  tags: { flexDirection: 'row', alignItems: 'center', marginBottom: hp('1%') },
+  veg: { width: wp('4%'), height: wp('4%'), marginRight: wp('2%') },
+
+  spicy: {
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: FILTER_TAG_COLORS.border,
+    backgroundColor: FILTER_TAG_COLORS.background,
+    borderRadius: wp('2%'),
+    paddingHorizontal: wp('2%'),
+    paddingVertical: hp('0.3%'),
+  },
+
+  spicyIcon: { width: wp('3%'), height: wp('3%'), marginRight: wp('1%') },
+  spicyText: { color: FILTER_TAG_COLORS.text, fontWeight: '600' },
+
+  name: { fontSize: hp('2.4%'), fontWeight: '700' },
+  restaurant: { color: '#666', marginBottom: hp('1%') },
+  desc: { color: '#555', marginBottom: hp('2%') },
+
+  section: { fontSize: hp('1.9%'), fontWeight: '700', marginTop: hp('1%') },
+  sub: { color: '#888', marginBottom: hp('1%') },
+
+  option: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: hp('1.5%'),
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+
+  optionLeft: { flexDirection: 'row', alignItems: 'center' },
+  optionVeg: { width: wp('4%'), height: wp('4%'), marginRight: wp('2%') },
+  optionText: { fontWeight: '600' },
+  optionRight: { flexDirection: 'row', alignItems: 'center' },
+  optionPrice: { marginRight: wp('3%'), fontWeight: '700' },
+
+  tick: { width: wp('5%'), height: wp('5%') },
+  unchecked: {
+    width: wp('5%'),
+    height: wp('5%'),
+    borderRadius: wp('2.5%'),
+    borderWidth: 2,
+    borderColor: '#ccc',
+  },
+
+  input: {
+    marginTop: hp('1%'),
+    borderWidth: 1,
+    borderColor: '#eee',
+    borderRadius: wp('3%'),
+    padding: wp('4%'),
+    height: hp('10%'),
+    textAlignVertical: 'top',
+  },
+
+  /* WHITE CONTAINER */
+  bottomWrapper: {
+    backgroundColor: '#fff',
+    paddingBottom: hp('2%'),
+  },
+
+  bottom: {
+    flexDirection: 'row',
+    marginHorizontal: wp('4%'),
+    marginTop: hp('1%'),
+    alignItems: 'center',
+  },
+
+  qty: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#FFE0C8',
+    backgroundColor: '#FFF9F3',
+    borderRadius: wp('3%'),
+    paddingHorizontal: wp('3%'),
+    height: hp('6%'),
+  },
+
+  qtyBtn: { fontSize: hp('2.6%'), color: COLORS.primary, fontWeight: '700' },
+  qtyText: { marginHorizontal: wp('4%'), fontWeight: '700' },
+
+  cart: {
+    flex: 1,
+    marginLeft: wp('4%'),
+    height: hp('6%'),
+    backgroundColor: COLORS.primary,
+    borderRadius: wp('3%'),
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  bag: {
+    width: wp('5%'),
+    height: wp('5%'),
+    tintColor: '#fff',
+    marginRight: wp('2%'),
+  },
+
+  cartText: { color: '#fff', fontWeight: '700' },
 });
 
 export default BesRatedBurger;

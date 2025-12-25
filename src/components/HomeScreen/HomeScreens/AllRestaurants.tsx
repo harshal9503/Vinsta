@@ -434,7 +434,8 @@ const styles = StyleSheet.create({
   detailItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 1,
+    flex: 0,
+    marginBottom: hp('0.6%'), // SMALLER: Reduced from 0.8% to 0.6%
   },
   detailIcon: {
     width: scaleSize(wp('2.5%')), // SMALLER: Reduced from 2.8% to 2.5%

@@ -109,6 +109,8 @@ const FeaturedRestaurant = ({
 }) => {
   const { theme } = useContext(ThemeContext);
 
+  const currentRestaurants = getCurrentRestaurants();
+
   return (
     <ScrollView
       horizontal
@@ -116,12 +118,14 @@ const FeaturedRestaurant = ({
       contentContainerStyle={styles.restaurantScrollContent}
       bounces={false}
     >
-      {getCurrentRestaurants().map(restaurant => (
+      {currentRestaurants.map((restaurant, index) => (
         <TouchableOpacity
           key={restaurant.id}
           style={[
             styles.restaurantCard,
             { backgroundColor: theme.cardBackground },
+            index === 0 && styles.firstCard,
+            index === currentRestaurants.length - 1 && styles.lastCard,
           ]}
           onPress={() => handleRestaurantPress(restaurant)}
           activeOpacity={0.8}
@@ -195,7 +199,7 @@ const FeaturedRestaurant = ({
             </Text>
           </View>
 
-          {/* FIXED: Tags container with proper wrapping and max width */}
+          {/* Tags container */}
           <View style={styles.tagsContainer}>
             {restaurant.tags.map((tag, index) => (
               <View key={index} style={styles.tagWrapper}>
@@ -213,13 +217,12 @@ export default FeaturedRestaurant;
 
 const styles = StyleSheet.create({
   restaurantScrollContent: {
-    paddingHorizontal: wp('1%'),
     paddingBottom: hp('0.8%'),
   },
   restaurantCard: {
     width: isTablet ? scaleSize(wp('45%')) : scaleSize(wp('52%')),
     backgroundColor: COLORS.secondary,
-    marginHorizontal: wp('1.2%'),
+    marginRight: wp('2.5%'),
     marginBottom: hp('0.8%'),
     borderRadius: scaleSize(wp('3.5%')),
     padding: scaleSize(wp('2.5%')),
@@ -234,6 +237,12 @@ const styles = StyleSheet.create({
         elevation: 2,
       },
     }),
+  },
+  firstCard: {
+    marginLeft: 0, // First card has no left margin
+  },
+  lastCard: {
+    marginRight: 0, // Last card has no right margin
   },
   imageContainer: {
     position: 'relative',
@@ -309,7 +318,7 @@ const styles = StyleSheet.create({
   restaurantInfoRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: hp('0.8%'), // Increased for better spacing
+    marginBottom: hp('0.8%'),
     gap: wp('0.8%'),
   },
   infoIcon: {
@@ -323,30 +332,25 @@ const styles = StyleSheet.create({
     color: COLORS.textLight,
     marginRight: wp('1.5%'),
   },
-  // FIXED: Tags container styling
   tagsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: wp('0.8%'), // Reduced gap
+    gap: wp('0.8%'),
     marginTop: hp('0.2%'),
   },
   tagWrapper: {
-    // Added wrapper for better control
     flexShrink: 1,
   },
   restaurantTags: {
     ...getTextStyle('Regular'),
-    fontSize: fontScale(9.5), // Slightly smaller font
+    fontSize: fontScale(9.5),
     color: COLORS.primary,
     backgroundColor: '#f3f1f1',
-    paddingHorizontal: wp('1.8%'), // Reduced padding
-    paddingVertical: isIOS ? hp('0.25%') : hp('0.15%'), // Reduced padding
+    paddingHorizontal: wp('1.8%'),
+    paddingVertical: isIOS ? hp('0.25%') : hp('0.15%'),
     borderRadius: scaleSize(wp('4%')),
-    // Ensure text doesn't get cut off
     overflow: 'hidden',
-    // Limit tag width
     maxWidth: isTablet ? wp('12%') : wp('15%'),
-    // Make sure text fits
     textAlign: 'center',
   },
 });

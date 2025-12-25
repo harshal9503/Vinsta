@@ -26,22 +26,19 @@ import OfferCard from './OfferCard';
 import SearchItem from './SearchItem';
 import FeaturedRestaurant from './FeaturedRestaurant';
 import BesRatedBurger from './BesRatedBurger';
-import AllRestaurants from './AllRestaurants'; // NEW COMPONENT
+import AllRestaurants from './AllRestaurants';
 import SearchModal from './SearchModal';
 import { ThemeContext } from '../../../theme/ThemeContext';
 import { vibrate } from '../../../utils/vibrationHelper';
 import ViewCartCard from './ViewCartCard';
 
-
 const { width, height } = Dimensions.get('window');
-
 
 // Calculate responsive dimensions with iOS optimizations
 const isTablet = width >= 768;
 const isSmallScreen = width < 380;
 const screenRatio = width / height;
 const isIOS = Platform.OS === 'ios';
-
 
 // iOS-specific font scaling
 const fontScale = size => {
@@ -51,7 +48,6 @@ const fontScale = size => {
   return isTablet ? size * 0.85 : size;
 };
 
-
 // iOS-specific dimension scaling
 const scaleSize = size => {
   if (isIOS) {
@@ -59,7 +55,6 @@ const scaleSize = size => {
   }
   return size;
 };
-
 
 // ✅ UNIVERSAL Font family helper with proper iOS and Android support
 const getFontFamily = (weight = 'Regular') => {
@@ -90,13 +85,11 @@ const getFontFamily = (weight = 'Regular') => {
   }
 };
 
-
 // ✅ Get fontWeight for iOS (Android ignores this)
 const getFontWeight = (weight = 'Regular') => {
   if (Platform.OS === 'android') {
     return undefined;
   }
-
 
   const weightMap = {
     Thin: '100',
@@ -121,7 +114,6 @@ const getFontWeight = (weight = 'Regular') => {
   return weightMap[weight] || '400';
 };
 
-
 // ✅ Complete font style helper
 const getTextStyle = (weight = 'Regular') => {
   return {
@@ -131,7 +123,6 @@ const getTextStyle = (weight = 'Regular') => {
     textAlignVertical: 'center',
   };
 };
-
 
 // Separate veg and non-veg products
 const vegProducts = [
@@ -177,7 +168,6 @@ const vegProducts = [
   },
 ];
 
-
 const nonVegProducts = [
   {
     id: 1,
@@ -220,7 +210,6 @@ const nonVegProducts = [
     isFavorite: false,
   },
 ];
-
 
 const HomeScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState('Burger');
@@ -274,21 +263,17 @@ const HomeScreen = () => {
     },
   ]);
 
-
   // Cart states
   const [cartItemsCount, setCartItemsCount] = useState(4);
   const [cartTotal, setCartTotal] = useState(234.5);
-
 
   const toggleVegMode = () => {
     setIsVegMode(prev => !prev);
   };
 
-
   // Toggle favorite status for products with vibration
   const toggleFavoriteProduct = (productId: number, isVeg: boolean) => {
     vibrate(40);
-
 
     if (isVeg) {
       setVegProductsState(prevProducts =>
@@ -309,11 +294,9 @@ const HomeScreen = () => {
     }
   };
 
-
   // Toggle favorite status for restaurants with vibration
   const toggleFavoriteRestaurant = (restaurantId: number, isVeg: boolean) => {
     vibrate(40);
-
 
     if (isVeg) {
       setVegRestaurantsState(prevRestaurants =>
@@ -334,42 +317,34 @@ const HomeScreen = () => {
     }
   };
 
-
   // Navigation handlers
   const handleTodayOfferViewAll = () => {
     navigation.navigate('todayOfferView');
   };
 
-
   const handleFeaturedRestaurantViewAll = () => {
     navigation.navigate('featuredRestrorents');
   };
-
 
   const handleBestBurgerViewAll = () => {
     navigation.navigate('bestBurger');
   };
 
-
   const handleAllRestaurantsViewAll = () => {
     navigation.navigate('featuredRestrorents');
   };
-
 
   const handleProductPress = product => {
     navigation.navigate('fooddetails', { product });
   };
 
-
   const handleWalletPress = () => {
     navigation.navigate('Wallet');
   };
 
-
   const handleCartPress = () => {
     navigation.navigate('Cart');
   };
-
 
   // Calculate proper status bar height for both platforms
   const getStatusBarHeight = () => {
@@ -380,16 +355,13 @@ const HomeScreen = () => {
     }
   };
 
-
   const handleRestaurantPress = (restaurant: any) => {
     navigation.navigate('restaurentDetails', { restaurant });
   };
 
-
   const clearSearch = () => {
     setSearchQuery('');
   };
-
 
   const resetFilters = () => {
     setAppliedFilters({
@@ -400,22 +372,18 @@ const HomeScreen = () => {
     });
   };
 
-
   const applyFilters = () => {
     setShowFilterModal(false);
   };
-
 
   // Get current restaurants and products based on mode
   const getCurrentRestaurants = () => {
     return isVegMode ? vegRestaurantsState : nonVegRestaurantsState;
   };
 
-
   const getCurrentProducts = () => {
     return isVegMode ? vegProductsState : nonVegProductsState;
   };
-
 
   const [appliedFilters, setAppliedFilters] = useState({
     category: 'All',
@@ -424,7 +392,6 @@ const HomeScreen = () => {
     sortBy: 'Recent',
   });
 
-
   const filterOptions = {
     category: ['All', 'Cold Drink', 'Fast Food', 'Paneer'],
     rating: ['All', '4.0', '4.5'],
@@ -432,17 +399,21 @@ const HomeScreen = () => {
     sortBy: ['Popular', 'Recent', 'Price High', 'Price Low'],
   };
 
-
   const hasActiveFilters = () => {
     return Object.values(appliedFilters).some(filter => filter !== 'All');
   };
 
+  // Calculate total number of restaurants
+  const getTotalRestaurantsCount = () => {
+    const currentRestaurants = getCurrentRestaurants();
+    // Add additional restaurants count (3 additional restaurants as per your data)
+    return currentRestaurants.length + 3; // 2 current + 3 additional = 5 total
+  };
 
   // Veg/Non-Veg Toggle Component
   const VegToggleSwitch = () => {
     const toggleAnimRef = useRef(new Animated.Value(0));
     const toggleAnim = toggleAnimRef.current;
-
 
     // Compact dimensions
     const switchWidth = isTablet ? scaleSize(wp('9.5%')) : scaleSize(wp('11%'));
@@ -451,12 +422,10 @@ const HomeScreen = () => {
     const padding = wp('0.5%');
     const maxTranslateX = switchWidth - circleSize - padding * 2;
 
-
     const translateX = toggleAnim.interpolate({
       inputRange: [0, 1],
       outputRange: [padding, maxTranslateX],
     });
-
 
     // FIXED: When isVegMode is true (Veg Mode), the circle should be green
     // When isVegMode is false (Non-Veg Mode), the circle should be red
@@ -464,7 +433,6 @@ const HomeScreen = () => {
       inputRange: [0, 1],
       outputRange: ['#FF6B6B', '#4CAF50'], // Red for Non-Veg, Green for Veg
     });
-
 
     useEffect(() => {
       // Set animation value based on isVegMode
@@ -476,7 +444,6 @@ const HomeScreen = () => {
         useNativeDriver: false,
       }).start();
     }, [isVegMode]);
-
 
     return (
       <View style={styles.vegToggleContainer}>
@@ -494,7 +461,6 @@ const HomeScreen = () => {
         >
           <View style={styles.switchBackground} />
 
-
           <Animated.View
             style={[
               styles.switchCircle,
@@ -507,7 +473,6 @@ const HomeScreen = () => {
               },
             ]}
           />
-
 
           <View style={styles.switchLabelsContainer}>
             <Text
@@ -533,7 +498,6 @@ const HomeScreen = () => {
           </View>
         </TouchableOpacity>
 
-
         <Text
           style={[
             styles.vegModeTxt,
@@ -549,7 +513,6 @@ const HomeScreen = () => {
     );
   };
 
-
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <StatusBar
@@ -558,7 +521,6 @@ const HomeScreen = () => {
         translucent={false}
       />
       <View style={[styles.statusBarArea, { height: getStatusBarHeight() }]} />
-
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -616,7 +578,6 @@ const HomeScreen = () => {
             </View>
           </View>
 
-
           {/* Search and Veg Toggle in same row */}
           <View style={styles.searchRow}>
             <View style={styles.searchItemContainer}>
@@ -629,7 +590,6 @@ const HomeScreen = () => {
             <VegToggleSwitch />
           </View>
         </View>
-
 
         {/* Main Content */}
         <View
@@ -648,14 +608,11 @@ const HomeScreen = () => {
             </TouchableOpacity>
           </View>
 
-
           {/* Offer Card */}
           <OfferCard />
 
-
           {/* Categories */}
           <Categories />
-
 
           {/* Featured Restaurants */}
           <View style={styles.sectionRowBetween}>
@@ -678,7 +635,6 @@ const HomeScreen = () => {
             isVegMode={isVegMode}
           />
 
-
           {/* Best-Rated Burgers */}
           <View style={styles.sectionRowBetween}>
             <View style={styles.sectionTitleRow}>
@@ -699,7 +655,6 @@ const HomeScreen = () => {
             </TouchableOpacity>
           </View>
 
-
           <BesRatedBurger
             getCurrentProducts={getCurrentProducts}
             handleProductPress={handleProductPress}
@@ -707,13 +662,17 @@ const HomeScreen = () => {
             isVegMode={isVegMode}
           />
 
-
           {/* NEW: All Restaurants Section */}
           <View style={styles.sectionRowBetween}>
             <View style={styles.sectionTitleRow}>
-              <Text style={[styles.sectionTitle, { color: theme.text }]}>
-                Restaurants Near You
-              </Text>
+              <View style={styles.restaurantTitleContainer}>
+                <Text style={[styles.sectionTitle, { color: theme.text }]}>
+                  Restaurants Near You
+                </Text>
+                <Text style={[styles.restaurantCountText, { color: theme.text }]}>
+                  ({getTotalRestaurantsCount()})
+                </Text>
+              </View>
             </View>
             <TouchableOpacity
               onPress={handleAllRestaurantsViewAll}
@@ -723,14 +682,12 @@ const HomeScreen = () => {
             </TouchableOpacity>
           </View>
 
-
           <AllRestaurants
             getCurrentRestaurants={getCurrentRestaurants}
             handleRestaurantPress={handleRestaurantPress}
             toggleFavorite={toggleFavoriteRestaurant}
             isVegMode={isVegMode}
           />
-
 
           {/* Bottom info */}
           <View style={styles.bottomRow}>
@@ -761,10 +718,8 @@ const HomeScreen = () => {
         </View>
       </ScrollView>
 
-
       {/* View Cart Card Component */}
       <ViewCartCard cartItemsCount={cartItemsCount} cartTotal={cartTotal} />
-
 
       <SearchModal
         showFilterModal={showFilterModal}
@@ -778,7 +733,6 @@ const HomeScreen = () => {
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -990,6 +944,11 @@ const styles = StyleSheet.create({
     marginBottom: hp('1.5%'),
     marginTop: hp('1%'),
   },
+  restaurantTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    gap: wp('1%'),
+  },
   sectionTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1003,6 +962,12 @@ const styles = StyleSheet.create({
     ...getTextStyle('Bold'),
     fontSize: fontScale(18),
     color: COLORS.textDark,
+  },
+  restaurantCountText: {
+    ...getTextStyle('Medium'),
+    fontSize: fontScale(14), // Smaller size than the title
+    color: COLORS.textLight,
+    marginLeft: wp('0.5%'),
   },
   sectionLink: {
     ...getTextStyle('Medium'),
@@ -1047,6 +1012,5 @@ const styles = StyleSheet.create({
     color: COLORS.textLight,
   },
 });
-
 
 export default HomeScreen;
